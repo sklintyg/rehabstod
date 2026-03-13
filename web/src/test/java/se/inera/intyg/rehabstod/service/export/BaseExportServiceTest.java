@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -33,139 +33,135 @@ import se.inera.intyg.rehabstod.web.model.Sortering;
 
 public class BaseExportServiceTest {
 
-    private BaseExportService baseExportService = new BaseExportService() {
-    };
+  private BaseExportService baseExportService = new BaseExportService() {};
 
+  @Test
+  public void testGetFilterDate() {
+    LangdIntervall interval = new LangdIntervall();
+    interval.setMin("2017-12-01");
+    interval.setMax("2017-12-12");
 
-    @Test
-    public void testGetFilterDate() {
-        LangdIntervall interval = new LangdIntervall();
-        interval.setMin("2017-12-01");
-        interval.setMax("2017-12-12");
+    String date = baseExportService.getFilterDate(interval);
 
-        String date = baseExportService.getFilterDate(interval);
+    String expected = "2017-12-01 - 2017-12-12";
 
-        String expected = "2017-12-01 - 2017-12-12";
+    assertEquals(expected, date);
+  }
 
-        assertEquals(expected, date);
-    }
+  @Test
+  public void testGetFilterDateEmpty() {
+    LangdIntervall interval = new LangdIntervall();
 
-    @Test
-    public void testGetFilterDateEmpty() {
-        LangdIntervall interval = new LangdIntervall();
+    String date = baseExportService.getFilterDate(interval);
 
-        String date = baseExportService.getFilterDate(interval);
+    String expected = "-";
 
-        String expected = "-";
+    assertEquals(expected, date);
+  }
 
-        assertEquals(expected, date);
-    }
+  @Test
+  public void testGetFilterDateSame() {
+    LangdIntervall interval = new LangdIntervall();
+    interval.setMin("2017-12-01");
+    interval.setMax("2017-12-01");
 
-    @Test
-    public void testGetFilterDateSame() {
-        LangdIntervall interval = new LangdIntervall();
-        interval.setMin("2017-12-01");
-        interval.setMax("2017-12-01");
+    String date = baseExportService.getFilterDate(interval);
 
-        String date = baseExportService.getFilterDate(interval);
+    String expected = "2017-12-01";
 
-        String expected = "2017-12-01";
+    assertEquals(expected, date);
+  }
 
-        assertEquals(expected, date);
-    }
+  @Test
+  public void testDiagnoseListToStringNull() {
+    String diagnoseString = baseExportService.diagnoseListToString(null);
 
-    @Test
-    public void testDiagnoseListToStringNull() {
-        String diagnoseString = baseExportService.diagnoseListToString(null);
+    String expected = "";
 
-        String expected = "";
+    assertEquals(expected, diagnoseString);
+  }
 
-        assertEquals(expected, diagnoseString);
-    }
+  @Test
+  public void testDiagnoseListToStringEmpty() {
+    List<Diagnos> diagnoses = new ArrayList<>();
+    String diagnoseString = baseExportService.diagnoseListToString(diagnoses);
 
-    @Test
-    public void testDiagnoseListToStringEmpty() {
-        List<Diagnos> diagnoses = new ArrayList<>();
-        String diagnoseString = baseExportService.diagnoseListToString(diagnoses);
+    String expected = "";
 
-        String expected = "";
+    assertEquals(expected, diagnoseString);
+  }
 
-        assertEquals(expected, diagnoseString);
-    }
+  @Test
+  public void testDiagnoseListToStringOne() {
+    List<Diagnos> diagnoses = new ArrayList<>();
+    diagnoses.add(new Diagnos("J20V", "J20", "Test"));
+    String diagnoseString = baseExportService.diagnoseListToString(diagnoses);
 
-    @Test
-    public void testDiagnoseListToStringOne() {
-        List<Diagnos> diagnoses = new ArrayList<>();
-        diagnoses.add(new Diagnos("J20V", "J20", "Test"));
-        String diagnoseString = baseExportService.diagnoseListToString(diagnoses);
+    String expected = ", J20V";
 
-        String expected = ", J20V";
+    assertEquals(expected, diagnoseString);
+  }
 
-        assertEquals(expected, diagnoseString);
-    }
+  @Test
+  public void testDiagnoseListToStringList() {
+    List<Diagnos> diagnoses = new ArrayList<>();
+    diagnoses.add(new Diagnos("J20V", "J20", "Test"));
+    diagnoses.add(new Diagnos("J21V", "J21", "Test2"));
+    String diagnoseString = baseExportService.diagnoseListToString(diagnoses);
 
-    @Test
-    public void testDiagnoseListToStringList() {
-        List<Diagnos> diagnoses = new ArrayList<>();
-        diagnoses.add(new Diagnos("J20V", "J20", "Test"));
-        diagnoses.add(new Diagnos("J21V", "J21", "Test2"));
-        String diagnoseString = baseExportService.diagnoseListToString(diagnoses);
+    String expected = ", J20V, J21V";
 
-        String expected = ", J20V, J21V";
+    assertEquals(expected, diagnoseString);
+  }
 
-        assertEquals(expected, diagnoseString);
-    }
+  @Test
+  public void testNotEmpty() {
+    PrintSjukfallRequest request = new PrintSjukfallRequest();
+    request.setFritext("Search");
 
-    @Test
-    public void testNotEmpty() {
-        PrintSjukfallRequest request = new PrintSjukfallRequest();
-        request.setFritext("Search");
+    boolean notEmpty = baseExportService.notEmpty(request);
 
-        boolean notEmpty = baseExportService.notEmpty(request);
+    assertTrue(notEmpty);
+  }
 
-        assertTrue(notEmpty);
-    }
+  @Test
+  public void testNotEmptyBlank() {
+    PrintSjukfallRequest request = new PrintSjukfallRequest();
+    request.setFritext("");
 
-    @Test
-    public void testNotEmptyBlank() {
-        PrintSjukfallRequest request = new PrintSjukfallRequest();
-        request.setFritext("");
+    boolean notEmpty = baseExportService.notEmpty(request);
 
-        boolean notEmpty = baseExportService.notEmpty(request);
+    assertFalse(notEmpty);
+  }
 
-        assertFalse(notEmpty);
-    }
+  @Test
+  public void testNotEmptyNull() {
+    PrintSjukfallRequest request = new PrintSjukfallRequest();
 
-    @Test
-    public void testNotEmptyNull() {
-        PrintSjukfallRequest request = new PrintSjukfallRequest();
+    boolean notEmpty = baseExportService.notEmpty(request);
 
-        boolean notEmpty = baseExportService.notEmpty(request);
+    assertFalse(notEmpty);
+  }
 
-        assertFalse(notEmpty);
-    }
+  @Test
+  public void testShouldShowSort() {
+    PrintSjukfallRequest request = new PrintSjukfallRequest();
+    List<ExportField> fields = Arrays.asList(ExportField.DAYS, ExportField.DIAGNOSE);
 
-    @Test
-    public void testShouldShowSort() {
-        PrintSjukfallRequest request = new PrintSjukfallRequest();
-        List<ExportField> fields = Arrays.asList(ExportField.DAYS, ExportField.DIAGNOSE);
+    assertFalse(baseExportService.shouldShowSortering(request, fields));
 
-        assertFalse(baseExportService.shouldShowSortering(request, fields));
+    Sortering sortering = new Sortering();
+    sortering.setKolumn(null);
+    request.setSortering(sortering);
 
-        Sortering sortering = new Sortering();
-        sortering.setKolumn(null);
-        request.setSortering(sortering);
+    assertFalse(baseExportService.shouldShowSortering(request, fields));
+    sortering.setKolumn("");
+    assertFalse(baseExportService.shouldShowSortering(request, fields));
 
-        assertFalse(baseExportService.shouldShowSortering(request, fields));
-        sortering.setKolumn("");
-        assertFalse(baseExportService.shouldShowSortering(request, fields));
+    sortering.setKolumn(ExportField.ENDDATE.getJsonId());
+    assertFalse(baseExportService.shouldShowSortering(request, fields));
 
-        sortering.setKolumn(ExportField.ENDDATE.getJsonId());
-        assertFalse(baseExportService.shouldShowSortering(request, fields));
-
-        sortering.setKolumn(ExportField.DIAGNOSE.getJsonId());
-        assertTrue(baseExportService.shouldShowSortering(request, fields));
-
-    }
-
+    sortering.setKolumn(ExportField.DIAGNOSE.getJsonId());
+    assertTrue(baseExportService.shouldShowSortering(request, fields));
+  }
 }

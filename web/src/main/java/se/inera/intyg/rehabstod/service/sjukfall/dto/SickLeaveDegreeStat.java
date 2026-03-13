@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,55 +18,52 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
-/**
- * Created by marced on 15/03/16.
- */
+/** Created by marced on 15/03/16. */
 public class SickLeaveDegreeStat {
 
-    private int id;
-    private String name;
-    private int count;
-    private float percentage;
+  private int id;
+  private String name;
+  private int count;
+  private float percentage;
 
-    public SickLeaveDegreeStat() {
-    }
+  public SickLeaveDegreeStat() {}
 
-    public SickLeaveDegreeStat(int id, String name, int count, float percentage) {
-        this.id = id;
-        this.name = name;
-        this.count = count;
-        this.percentage = percentage;
-    }
+  public SickLeaveDegreeStat(int id, String name, int count, float percentage) {
+    this.id = id;
+    this.name = name;
+    this.count = count;
+    this.percentage = percentage;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public int getCount() {
-        return count;
-    }
+  public int getCount() {
+    return count;
+  }
 
-    public void setCount(int count) {
-        this.count = count;
-    }
+  public void setCount(int count) {
+    this.count = count;
+  }
 
-    public float getPercentage() {
-        return percentage;
-    }
+  public float getPercentage() {
+    return percentage;
+  }
 
-    public void setPercentage(float percentage) {
-        this.percentage = percentage;
-    }
+  public void setPercentage(float percentage) {
+    this.percentage = percentage;
+  }
 }

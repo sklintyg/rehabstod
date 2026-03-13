@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,32 +28,31 @@ import lombok.Data;
 @Builder
 public class AGCertificate {
 
-    private String certificateId;
-    private String certificateType;
+  private String certificateId;
+  private String certificateType;
 
-    private String careProviderId;
-    private String careProviderName;
-    private String careUnitId;
-    private String careUnitName;
+  private String careProviderId;
+  private String careProviderName;
+  private String careUnitId;
+  private String careUnitName;
 
-    private Lakare doctor;
+  private Lakare doctor;
 
-    private Patient patient;
+  private Patient patient;
 
-    private Diagnos diagnosis;
-    private List<Diagnos> biDiagnoses;
+  private Diagnos diagnosis;
+  private List<Diagnos> biDiagnoses;
 
-    private LocalDateTime signingTimeStamp;
+  private LocalDateTime signingTimeStamp;
 
-    private int unAnsweredComplement;
-    private int unAnsweredOther;
+  private int unAnsweredComplement;
+  private int unAnsweredOther;
 
-    private LocalDate start;
-    private LocalDate end;
-    private int days;
+  private LocalDate start;
+  private LocalDate end;
+  private int days;
 
-    private List<Integer> degree;
+  private List<Integer> degree;
 
-    private List<String> occupation;
-
+  private List<String> occupation;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -49,198 +49,210 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 @ExtendWith(MockitoExtension.class)
 public class SickLeaveControllerTest {
 
-    @Mock
-    private GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
-    @Mock
-    private PopulateFiltersService populateFiltersService;
-    @Mock
-    private GetSickLeaveSummaryService getSickLeaveSummaryService;
-    @Mock
-    private PdlLogSickLeavesService pdlLogSickLeavesService;
+  @Mock private GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
+  @Mock private PopulateFiltersService populateFiltersService;
+  @Mock private GetSickLeaveSummaryService getSickLeaveSummaryService;
+  @Mock private PdlLogSickLeavesService pdlLogSickLeavesService;
 
-    @InjectMocks
-    private SickLeaveController sickLeaveController = new SickLeaveController();
-    private static final String TEXT_SEARCH = "textSearch";
-    private static final String UNANSWERED_COMMUNICATION = "uac";
+  @InjectMocks private SickLeaveController sickLeaveController = new SickLeaveController();
+  private static final String TEXT_SEARCH = "textSearch";
+  private static final String UNANSWERED_COMMUNICATION = "uac";
 
-    @Test
-    void shouldCallGetActiveSickLeavesService() {
-        final var expectedRequest =
-            getExpectedRequest();
-        when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean())).thenReturn(
-            new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, true)
-        );
-        sickLeaveController.getSickLeavesForUnit(expectedRequest);
-        verify(getActiveSickLeavesResponseService).get(expectedRequest, true, true);
-    }
+  @Test
+  void shouldCallGetActiveSickLeavesService() {
+    final var expectedRequest = getExpectedRequest();
+    when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean()))
+        .thenReturn(new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, true));
+    sickLeaveController.getSickLeavesForUnit(expectedRequest);
+    verify(getActiveSickLeavesResponseService).get(expectedRequest, true, true);
+  }
 
-    @Test
-    void shouldConvertContentInResponse() {
-        final var expectedRequest = getExpectedRequest();
+  @Test
+  void shouldConvertContentInResponse() {
+    final var expectedRequest = getExpectedRequest();
 
-        final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, true);
-        when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean())).thenReturn(expectedResponse);
+    final var expectedResponse =
+        new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, true);
+    when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean()))
+        .thenReturn(expectedResponse);
 
-        final var response = sickLeaveController.getSickLeavesForUnit(expectedRequest);
+    final var response = sickLeaveController.getSickLeavesForUnit(expectedRequest);
 
-        assertEquals(expectedResponse.getContent(), response.getContent());
-    }
+    assertEquals(expectedResponse.getContent(), response.getContent());
+  }
 
-    @Test
-    void shouldConvertSRSErrorInResponse() {
-        final var expectedRequest = getExpectedRequest();
+  @Test
+  void shouldConvertSRSErrorInResponse() {
+    final var expectedRequest = getExpectedRequest();
 
-        final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, false);
-        when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean())).thenReturn(expectedResponse);
+    final var expectedResponse =
+        new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, false);
+    when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean()))
+        .thenReturn(expectedResponse);
 
-        final var response = sickLeaveController.getSickLeavesForUnit(expectedRequest);
+    final var response = sickLeaveController.getSickLeavesForUnit(expectedRequest);
 
-        assertEquals(expectedResponse.isSrsError(), response.isSrsError());
-    }
+    assertEquals(expectedResponse.isSrsError(), response.isSrsError());
+  }
 
-    @Test
-    void shouldSetIncludeParametersToFalse() {
-        final var includeParametersCaptur = ArgumentCaptor.forClass(boolean.class);
-        final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, false);
-        when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean())).thenReturn(expectedResponse);
-        sickLeaveController.getSickLeavesForUnit(getExpectedRequest());
-        verify(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), includeParametersCaptur.capture(),
+  @Test
+  void shouldSetIncludeParametersToFalse() {
+    final var includeParametersCaptur = ArgumentCaptor.forClass(boolean.class);
+    final var expectedResponse =
+        new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, false);
+    when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean()))
+        .thenReturn(expectedResponse);
+    sickLeaveController.getSickLeavesForUnit(getExpectedRequest());
+    verify(getActiveSickLeavesResponseService)
+        .get(
+            any(SickLeavesFilterRequestDTO.class),
+            includeParametersCaptur.capture(),
             any(boolean.class));
-        assertTrue(includeParametersCaptur.getValue());
-    }
+    assertTrue(includeParametersCaptur.getValue());
+  }
 
-    @Test
-    void shouldSetShouldPdlLogToFalse() {
-        final var pdlLogArgumentCaptor = ArgumentCaptor.forClass(boolean.class);
-        final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, false);
-        when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean())).thenReturn(expectedResponse);
-        sickLeaveController.getSickLeavesForUnit(getExpectedRequest());
-        verify(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class),
+  @Test
+  void shouldSetShouldPdlLogToFalse() {
+    final var pdlLogArgumentCaptor = ArgumentCaptor.forClass(boolean.class);
+    final var expectedResponse =
+        new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, false);
+    when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean()))
+        .thenReturn(expectedResponse);
+    sickLeaveController.getSickLeavesForUnit(getExpectedRequest());
+    verify(getActiveSickLeavesResponseService)
+        .get(
+            any(SickLeavesFilterRequestDTO.class),
+            any(boolean.class),
             pdlLogArgumentCaptor.capture());
-        assertTrue(pdlLogArgumentCaptor.getValue());
+    assertTrue(pdlLogArgumentCaptor.getValue());
+  }
+
+  @Test
+  void shouldConvertUnansweredCommunicationErrorInResponse() {
+    final var expectedRequest = getExpectedRequest();
+    final var expectedResponse =
+        new GetActiveSickLeavesResponseDTO(Collections.emptyList(), false, true);
+    when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean()))
+        .thenReturn(expectedResponse);
+
+    final var response = sickLeaveController.getSickLeavesForUnit(expectedRequest);
+
+    assertEquals(
+        expectedResponse.isUnansweredCommunicationError(),
+        response.isUnansweredCommunicationError());
+  }
+
+  private static SickLeavesFilterRequestDTO getExpectedRequest() {
+    return new SickLeavesFilterRequestDTO(
+        Collections.singletonList("doctorId"),
+        Collections.emptyList(),
+        Collections.emptyList(),
+        1,
+        150,
+        LocalDate.now(),
+        LocalDate.now(),
+        Collections.emptyList(),
+        Collections.emptyList(),
+        TEXT_SEARCH,
+        UNANSWERED_COMMUNICATION);
+  }
+
+  @Nested
+  class GetPopulatedFiltersService {
+
+    PopulateSickLeaveFilterResponseDTO expectedResponse;
+
+    @BeforeEach
+    void setup() {
+      expectedResponse =
+          new PopulateSickLeaveFilterResponseDTO(
+              Collections.emptyList(),
+              Collections.emptyList(),
+              Collections.emptyList(),
+              10,
+              true,
+              Collections.emptyList(),
+              Collections.emptyList(),
+              Collections.emptyList(),
+              true);
+
+      when(populateFiltersService.populateSickLeaveFilters()).thenReturn(expectedResponse);
     }
 
     @Test
-    void shouldConvertUnansweredCommunicationErrorInResponse() {
-        final var expectedRequest = getExpectedRequest();
-        final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), false, true);
-        when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean())).thenReturn(expectedResponse);
-
-        final var response = sickLeaveController.getSickLeavesForUnit(expectedRequest);
-
-        assertEquals(expectedResponse.isUnansweredCommunicationError(), response.isUnansweredCommunicationError());
-    }
-
-    private static SickLeavesFilterRequestDTO getExpectedRequest() {
-        return new SickLeavesFilterRequestDTO(
-            Collections.singletonList("doctorId"),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            1,
-            150,
-            LocalDate.now(),
-            LocalDate.now(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            TEXT_SEARCH,
-            UNANSWERED_COMMUNICATION
-        );
-    }
-
-    @Nested
-    class GetPopulatedFiltersService {
-
-        PopulateSickLeaveFilterResponseDTO expectedResponse;
-
-        @BeforeEach
-        void setup() {
-            expectedResponse = new PopulateSickLeaveFilterResponseDTO(
-                Collections.emptyList(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                10,
-                true,
-                Collections.emptyList(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                true
-            );
-
-            when(populateFiltersService.populateSickLeaveFilters()).thenReturn(expectedResponse);
-        }
-
-        @Test
-        void shouldCallPopulateFiltersService() {
-            sickLeaveController.populateFilters();
-            verify(populateFiltersService).populateSickLeaveFilters();
-        }
-
-        @Test
-        void shouldTransformResponseDoctors() {
-            final var response = sickLeaveController.populateFilters();
-            assertEquals(expectedResponse.getActiveDoctors(), response.getActiveDoctors());
-        }
-
-        @Test
-        void shouldTransformResponseAllDiagnoses() {
-            final var response = sickLeaveController.populateFilters();
-            assertEquals(expectedResponse.getAllDiagnosisChapters(), response.getAllDiagnosisChapters());
-        }
-
-        @Test
-        void shouldTransformResponseEnabledDiagnoses() {
-            final var response = sickLeaveController.populateFilters();
-            assertEquals(expectedResponse.getEnabledDiagnosisChapters(), response.getEnabledDiagnosisChapters());
-        }
-
-        @Test
-        void shouldTransformResponseTotalNbrOfSickLeaves() {
-            final var response = sickLeaveController.populateFilters();
-            assertEquals(expectedResponse.getNbrOfSickLeaves(), response.getNbrOfSickLeaves());
-        }
-
-        @Test
-        void shouldTransformResponseHasOngoingSickLeaves() {
-            final var response = sickLeaveController.populateFilters();
-            assertEquals(expectedResponse.isHasOngoingSickLeaves(), response.isHasOngoingSickLeaves());
-        }
-
-        @Test
-        void shouldTransformResponseRekoStatusTypes() {
-            final var response = sickLeaveController.populateFilters();
-            assertEquals(expectedResponse.getRekoStatusTypes(), response.getRekoStatusTypes());
-        }
-
-        @Test
-        void shouldTransformResponseOccupationsStatusTypes() {
-            final var response = sickLeaveController.populateFilters();
-            assertEquals(expectedResponse.getOccupationTypes(), response.getOccupationTypes());
-        }
-
-        @Test
-        void shouldTransformResponseUnansweredCommunicationFilterTypes() {
-            final var response = sickLeaveController.populateFilters();
-            assertEquals(expectedResponse.getUnansweredCommunicationFilterTypes(),
-                response.getUnansweredCommunicationFilterTypes());
-        }
-    }
-
-    @Nested
-    class Print {
-
-        @Test
-        void shouldLogPrintWithSickLeavesFromRequest() {
-            final var request = SickLeavePrintRequestDTO.builder()
-                .sickLeaves(List.of(new SjukfallEnhet()))
-                .build();
-            sickLeaveController.print(request);
-            verify(pdlLogSickLeavesService).logPrint(request.getSickLeaves());
-        }
+    void shouldCallPopulateFiltersService() {
+      sickLeaveController.populateFilters();
+      verify(populateFiltersService).populateSickLeaveFilters();
     }
 
     @Test
-    void shouldTransformPopulateFiltersResponse() {
-        final var expectedResponse = new PopulateSickLeaveFilterResponseDTO(
+    void shouldTransformResponseDoctors() {
+      final var response = sickLeaveController.populateFilters();
+      assertEquals(expectedResponse.getActiveDoctors(), response.getActiveDoctors());
+    }
+
+    @Test
+    void shouldTransformResponseAllDiagnoses() {
+      final var response = sickLeaveController.populateFilters();
+      assertEquals(expectedResponse.getAllDiagnosisChapters(), response.getAllDiagnosisChapters());
+    }
+
+    @Test
+    void shouldTransformResponseEnabledDiagnoses() {
+      final var response = sickLeaveController.populateFilters();
+      assertEquals(
+          expectedResponse.getEnabledDiagnosisChapters(), response.getEnabledDiagnosisChapters());
+    }
+
+    @Test
+    void shouldTransformResponseTotalNbrOfSickLeaves() {
+      final var response = sickLeaveController.populateFilters();
+      assertEquals(expectedResponse.getNbrOfSickLeaves(), response.getNbrOfSickLeaves());
+    }
+
+    @Test
+    void shouldTransformResponseHasOngoingSickLeaves() {
+      final var response = sickLeaveController.populateFilters();
+      assertEquals(expectedResponse.isHasOngoingSickLeaves(), response.isHasOngoingSickLeaves());
+    }
+
+    @Test
+    void shouldTransformResponseRekoStatusTypes() {
+      final var response = sickLeaveController.populateFilters();
+      assertEquals(expectedResponse.getRekoStatusTypes(), response.getRekoStatusTypes());
+    }
+
+    @Test
+    void shouldTransformResponseOccupationsStatusTypes() {
+      final var response = sickLeaveController.populateFilters();
+      assertEquals(expectedResponse.getOccupationTypes(), response.getOccupationTypes());
+    }
+
+    @Test
+    void shouldTransformResponseUnansweredCommunicationFilterTypes() {
+      final var response = sickLeaveController.populateFilters();
+      assertEquals(
+          expectedResponse.getUnansweredCommunicationFilterTypes(),
+          response.getUnansweredCommunicationFilterTypes());
+    }
+  }
+
+  @Nested
+  class Print {
+
+    @Test
+    void shouldLogPrintWithSickLeavesFromRequest() {
+      final var request =
+          SickLeavePrintRequestDTO.builder().sickLeaves(List.of(new SjukfallEnhet())).build();
+      sickLeaveController.print(request);
+      verify(pdlLogSickLeavesService).logPrint(request.getSickLeaves());
+    }
+  }
+
+  @Test
+  void shouldTransformPopulateFiltersResponse() {
+    final var expectedResponse =
+        new PopulateSickLeaveFilterResponseDTO(
             Collections.emptyList(),
             Collections.emptyList(),
             Collections.emptyList(),
@@ -249,27 +261,31 @@ public class SickLeaveControllerTest {
             Collections.emptyList(),
             Collections.emptyList(),
             Collections.emptyList(),
-            true
-        );
-        when(populateFiltersService.populateSickLeaveFilters()).thenReturn(expectedResponse);
+            true);
+    when(populateFiltersService.populateSickLeaveFilters()).thenReturn(expectedResponse);
 
-        final var actualResponse = sickLeaveController.populateFilters();
+    final var actualResponse = sickLeaveController.populateFilters();
 
-        assertEquals(expectedResponse.getActiveDoctors(), actualResponse.getActiveDoctors());
-        assertEquals(expectedResponse.getAllDiagnosisChapters(), actualResponse.getAllDiagnosisChapters());
-        assertEquals(expectedResponse.getEnabledDiagnosisChapters(), actualResponse.getEnabledDiagnosisChapters());
-        assertEquals(expectedResponse.getNbrOfSickLeaves(), actualResponse.getNbrOfSickLeaves());
-        assertEquals(expectedResponse.getRekoStatusTypes(), actualResponse.getRekoStatusTypes());
-        assertEquals(expectedResponse.getOccupationTypes(), actualResponse.getOccupationTypes());
-        assertEquals(expectedResponse.getUnansweredCommunicationFilterTypes(),
-            actualResponse.getUnansweredCommunicationFilterTypes());
-        assertEquals(expectedResponse.isSrsActivated(), actualResponse.isSrsActivated());
-        assertEquals(expectedResponse.isHasOngoingSickLeaves(), actualResponse.isHasOngoingSickLeaves());
-    }
+    assertEquals(expectedResponse.getActiveDoctors(), actualResponse.getActiveDoctors());
+    assertEquals(
+        expectedResponse.getAllDiagnosisChapters(), actualResponse.getAllDiagnosisChapters());
+    assertEquals(
+        expectedResponse.getEnabledDiagnosisChapters(),
+        actualResponse.getEnabledDiagnosisChapters());
+    assertEquals(expectedResponse.getNbrOfSickLeaves(), actualResponse.getNbrOfSickLeaves());
+    assertEquals(expectedResponse.getRekoStatusTypes(), actualResponse.getRekoStatusTypes());
+    assertEquals(expectedResponse.getOccupationTypes(), actualResponse.getOccupationTypes());
+    assertEquals(
+        expectedResponse.getUnansweredCommunicationFilterTypes(),
+        actualResponse.getUnansweredCommunicationFilterTypes());
+    assertEquals(expectedResponse.isSrsActivated(), actualResponse.isSrsActivated());
+    assertEquals(
+        expectedResponse.isHasOngoingSickLeaves(), actualResponse.isHasOngoingSickLeaves());
+  }
 
-    @Test
-    void shouldCallGetSickLeaveSummaryService() {
-        sickLeaveController.getSummary();
-        verify(getSickLeaveSummaryService).get();
-    }
+  @Test
+  void shouldCallGetSickLeaveSummaryService() {
+    sickLeaveController.getSummary();
+    verify(getSickLeaveSummaryService).get();
+  }
 }

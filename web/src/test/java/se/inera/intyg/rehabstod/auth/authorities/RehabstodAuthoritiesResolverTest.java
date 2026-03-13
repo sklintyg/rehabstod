@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -37,77 +37,79 @@ import se.inera.intyg.infra.security.common.model.Title;
 
 /**
  * Should _only_ contain asserts specific to the Rehabstöd authorities-test.yaml file.
- * <p>
- * Created by eriklupander on 2016-05-17.
+ *
+ * <p>Created by eriklupander on 2016-05-17.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class RehabstodAuthoritiesResolverTest {
 
-    private final String authoritiesConfigurationFile = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
-    private final String featuresConfigurationsFile = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
-    private final Integer defaultMaxAliasesForCollections = 300;
+  private final String authoritiesConfigurationFile =
+      "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+  private final String featuresConfigurationsFile =
+      "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
+  private final Integer defaultMaxAliasesForCollections = 300;
 
-    @Mock
-    private HsaPersonService hsaPersonService;
+  @Mock private HsaPersonService hsaPersonService;
 
-    @Spy
-    private SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationFile,
-        featuresConfigurationsFile, defaultMaxAliasesForCollections);
+  @Spy
+  private SecurityConfigurationLoader configurationLoader =
+      new SecurityConfigurationLoader(
+          authoritiesConfigurationFile,
+          featuresConfigurationsFile,
+          defaultMaxAliasesForCollections);
 
-    @InjectMocks
-    private CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();
+  @InjectMocks
+  private CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();
 
-    @Before
-    public void setup() throws Exception {
-        configurationLoader.afterPropertiesSet();
-    }
+  @Before
+  public void setup() throws Exception {
+    configurationLoader.afterPropertiesSet();
+  }
 
-    @Test
-    public void testGetIntygsTyper() {
-        // Arrange
+  @Test
+  public void testGetIntygsTyper() {
+    // Arrange
 
-        // Act
-        final List<String> intygstyper = authoritiesResolver.getIntygstyper();
+    // Act
+    final List<String> intygstyper = authoritiesResolver.getIntygstyper();
 
-        // Verify
-        // (We don't have any in rehabstod)
-        assertEquals(0, intygstyper.size());
-    }
+    // Verify
+    // (We don't have any in rehabstod)
+    assertEquals(0, intygstyper.size());
+  }
 
-    @Test
-    public void testGetPrivileges() {
-        // Arrange
+  @Test
+  public void testGetPrivileges() {
+    // Arrange
 
-        // Act
-        final List<Privilege> privileges = authoritiesResolver.getPrivileges();
+    // Act
+    final List<Privilege> privileges = authoritiesResolver.getPrivileges();
 
-        // Verify
-        assertEquals(1, privileges.size());
-        assertEquals("VISA_SJUKFALL", privileges.get(0).getName());
-    }
+    // Verify
+    assertEquals(1, privileges.size());
+    assertEquals("VISA_SJUKFALL", privileges.get(0).getName());
+  }
 
-    @Test
-    public void testGetRequestOrigins() {
-        // Arrange
+  @Test
+  public void testGetRequestOrigins() {
+    // Arrange
 
-        // Act
-        final List<RequestOrigin> requestOrigins = authoritiesResolver.getRequestOrigins();
+    // Act
+    final List<RequestOrigin> requestOrigins = authoritiesResolver.getRequestOrigins();
 
-        // Verify
-        assertEquals(1, requestOrigins.size());
-        assertEquals("NORMAL", requestOrigins.get(0).getName());
-    }
+    // Verify
+    assertEquals(1, requestOrigins.size());
+    assertEquals("NORMAL", requestOrigins.get(0).getName());
+  }
 
-    @Test
-    public void testGetTitles() {
-        // Arrange
+  @Test
+  public void testGetTitles() {
+    // Arrange
 
-        // Act
-        final List<Title> titles = authoritiesResolver.getTitles();
+    // Act
+    final List<Title> titles = authoritiesResolver.getTitles();
 
-        // Verify
-        assertEquals(2, titles.size());
-
-    }
-
+    // Verify
+    assertEquals(2, titles.size());
+  }
 }

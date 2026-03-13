@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -58,187 +58,239 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-/**
- * Created by Magnus Ekstrand on 03/02/16.
- */
+/** Created by Magnus Ekstrand on 03/02/16. */
 @RestController
 @RequestMapping("/api/sjukfall")
 public class SjukfallController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SjukfallController.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SjukfallController.class);
 
-    private static final String SRS_UNAVAILABLE_HEADER = "SRS_UNAVAILABLE";
-    private static final String KOMPLETTERING_INFO_UNAVAILABLE_HEADER = "KOMPLETTERING_INFO_UNAVAILABLE";
-    private final SjukfallService sjukfallService;
-    private final UserService userService;
-    private final LogService logService;
-    private final PatientIdEncryption patientIdEncryption;
+  private static final String SRS_UNAVAILABLE_HEADER = "SRS_UNAVAILABLE";
+  private static final String KOMPLETTERING_INFO_UNAVAILABLE_HEADER =
+      "KOMPLETTERING_INFO_UNAVAILABLE";
+  private final SjukfallService sjukfallService;
+  private final UserService userService;
+  private final LogService logService;
+  private final PatientIdEncryption patientIdEncryption;
 
-    public SjukfallController(SjukfallService sjukfallService, UserService userService, LogService logService,
-        PatientIdEncryption patientIdEncryption) {
-        this.sjukfallService = sjukfallService;
-        this.userService = userService;
-        this.logService = logService;
-        this.patientIdEncryption = patientIdEncryption;
-    }
+  public SjukfallController(
+      SjukfallService sjukfallService,
+      UserService userService,
+      LogService logService,
+      PatientIdEncryption patientIdEncryption) {
+    this.sjukfallService = sjukfallService;
+    this.userService = userService;
+    this.logService = logService;
+    this.patientIdEncryption = patientIdEncryption;
+  }
 
-    @PostMapping(value = "/patient", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "get-sick-leave-for-patient", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public ResponseEntity<SjukfallPatientResponse> getSjukfallForPatient(@RequestBody GetSjukfallForPatientRequest request) {
+  @PostMapping(value = "/patient", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "get-sick-leave-for-patient",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public ResponseEntity<SjukfallPatientResponse> getSjukfallForPatient(
+      @RequestBody GetSjukfallForPatientRequest request) {
 
-        // Get user from session
-        RehabstodUser user = userService.getUser();
-        Personnummer personnummer = Personnummer.createPersonnummer(
-                request.getEncryptedPatientId() != null ? patientIdEncryption.decrypt(request.getEncryptedPatientId())
+    // Get user from session
+    RehabstodUser user = userService.getUser();
+    Personnummer personnummer =
+        Personnummer.createPersonnummer(
+                request.getEncryptedPatientId() != null
+                    ? patientIdEncryption.decrypt(request.getEncryptedPatientId())
                     : request.getPatientId())
-            .orElseThrow(() -> new IllegalArgumentException("Could not parse personnummer: " + request.getPatientId()));
+            .orElseThrow(
+                () ->
+                    new IllegalArgumentException(
+                        "Could not parse personnummer: " + request.getPatientId()));
 
-        Collection<String> vardgivareIds = user.getSjfPatientVardgivare(personnummer.getPersonnummer());
-        Collection<String> vardenhetIds = user.getSjfPatientVardenhet(personnummer.getPersonnummer());
+    Collection<String> vardgivareIds = user.getSjfPatientVardgivare(personnummer.getPersonnummer());
+    Collection<String> vardenhetIds = user.getSjfPatientVardenhet(personnummer.getPersonnummer());
 
-        // Fetch sjukfall
-        SjukfallPatientResponse response =
-            getSjukfallForPatient(user, personnummer.getPersonnummer(), request.getAktivtDatum(), vardgivareIds, vardenhetIds);
-        List<SjukfallPatient> sjukfall = response.getSjukfallList();
+    // Fetch sjukfall
+    SjukfallPatientResponse response =
+        getSjukfallForPatient(
+            user,
+            personnummer.getPersonnummer(),
+            request.getAktivtDatum(),
+            vardgivareIds,
+            vardenhetIds);
+    List<SjukfallPatient> sjukfall = response.getSjukfallList();
 
-        // All filtrering av samtycke och spärrar har redan gjorts! De sjukfall vi har tillgång till
-        // är de vi har rätt att ta del av. PDL-loggning behöver endast ske för den patientvy som har öppnats.
-        // Loggning behöver bara ske första gången som patientens patientvy visats under den pågående
-        // inloggningen för användaren.
+    // All filtrering av samtycke och spärrar har redan gjorts! De sjukfall vi har tillgång till
+    // är de vi har rätt att ta del av. PDL-loggning behöver endast ske för den patientvy som har
+    // öppnats.
+    // Loggning behöver bara ske första gången som patientens patientvy visats under den pågående
+    // inloggningen för användaren.
 
-        // PDL-logging based on which sjukfall that are about to be displayed to user.
-        LOG.debug("PDL logging - log which 'sjukfall' information that will be displayed to the user.");
-        Consumer<PatientData> logPatientData = pd -> logSjukfallData(user, pd, ActivityType.READ, ResourceType.RESOURCE_TYPE_INTYG);
-        sjukfall.stream()
-            .flatMap(sp -> sp.getIntyg().stream())
-            .forEach(logPatientData);
+    // PDL-logging based on which sjukfall that are about to be displayed to user.
+    LOG.debug("PDL logging - log which 'sjukfall' information that will be displayed to the user.");
+    Consumer<PatientData> logPatientData =
+        pd -> logSjukfallData(user, pd, ActivityType.READ, ResourceType.RESOURCE_TYPE_INTYG);
+    sjukfall.stream().flatMap(sp -> sp.getIntyg().stream()).forEach(logPatientData);
 
-        // If at least one intyg for the patient has an SRS prediction, log this.
-        if (sjukfall.stream().flatMap(sf -> sf.getIntyg().stream()).anyMatch(anyIntygHasRiskSignal()) && isActivatedForSRS(user)) {
-            logSjukfallData(user, sjukfall.get(0).getIntyg().get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
-        }
-
-        return buildSjukfallPatientResponse(response.isSrsError(), response);
+    // If at least one intyg for the patient has an SRS prediction, log this.
+    if (sjukfall.stream().flatMap(sf -> sf.getIntyg().stream()).anyMatch(anyIntygHasRiskSignal())
+        && isActivatedForSRS(user)) {
+      logSjukfallData(
+          user,
+          sjukfall.get(0).getIntyg().get(0),
+          ActivityType.READ,
+          ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
     }
 
-    /**
-     * Register a 'vardgivare' to be included in the calculation of the patient sjukfall view.
-     */
-    @PostMapping(value = "/patient/addVardgivare", consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "add-care-provider-to-patient-view", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
-    public ResponseEntity<Collection<String>> addVgToPatientView(@RequestBody AddVgToPatientViewRequest request) {
-        // Get logged in user
-        RehabstodUser user = userService.getUser();
+    return buildSjukfallPatientResponse(response.isSrsError(), response);
+  }
 
-        try {
-            Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
-            if (personnummer.isEmpty()) {
-                throw new RuntimeException("error parsing personnummer");
-            }
+  /** Register a 'vardgivare' to be included in the calculation of the patient sjukfall view. */
+  @PostMapping(
+      value = "/patient/addVardgivare",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "add-care-provider-to-patient-view",
+      eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
+  public ResponseEntity<Collection<String>> addVgToPatientView(
+      @RequestBody AddVgToPatientViewRequest request) {
+    // Get logged in user
+    RehabstodUser user = userService.getUser();
 
-            user.addSjfPatientVardgivare(personnummer.get().getPersonnummer(), request.getVardgivareId());
-            return ResponseEntity.ok(user.getSjfPatientVardgivare().get(personnummer.get().getPersonnummer()));
+    try {
+      Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
+      if (personnummer.isEmpty()) {
+        throw new RuntimeException("error parsing personnummer");
+      }
 
-        } catch (Exception e) {
-            LOG.error("Error adding 'vardgivare' to be included in calculation of a patients sjukfall", e);
-            return ResponseEntity.unprocessableEntity().body(new ArrayList<>());
-        }
+      user.addSjfPatientVardgivare(personnummer.get().getPersonnummer(), request.getVardgivareId());
+      return ResponseEntity.ok(
+          user.getSjfPatientVardgivare().get(personnummer.get().getPersonnummer()));
+
+    } catch (Exception e) {
+      LOG.error(
+          "Error adding 'vardgivare' to be included in calculation of a patients sjukfall", e);
+      return ResponseEntity.unprocessableEntity().body(new ArrayList<>());
+    }
+  }
+
+  /** Register a 'vardenhet' to be included in the calculation of the patient sjukfall view. */
+  @PostMapping(
+      value = "/patient/addVardenhet",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "add-care-unit-to-patient-view",
+      eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
+  public ResponseEntity<Collection<String>> addVeToPatientView(
+      @RequestBody AddVeToPatientViewRequest request) {
+    // Get logged in user
+    RehabstodUser user = userService.getUser();
+
+    try {
+      Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
+      if (personnummer.isEmpty()) {
+        throw new RuntimeException("error parsing personnummer");
+      }
+
+      user.addSjfPatientVardenhet(personnummer.get().getPersonnummer(), request.getVardenhetId());
+      return ResponseEntity.ok(
+          user.getSjfPatientVardenhet().get(personnummer.get().getPersonnummer()));
+
+    } catch (Exception e) {
+      LOG.error("Error adding 'vardenhet' to be included in calculation of a patients sjukfall", e);
+      return ResponseEntity.unprocessableEntity().body(new ArrayList<>());
+    }
+  }
+
+  // For PatientData
+  private Predicate<PatientData> anyIntygHasRiskSignal() {
+    return pd -> pd.getRiskSignal() != null && pd.getRiskSignal().getRiskKategori() >= 1;
+  }
+
+  private SjukfallPatientResponse getSjukfallForPatient(
+      RehabstodUser user,
+      String patientId,
+      LocalDate date,
+      Collection<String> vgHsaId,
+      Collection<String> veHsaId) {
+
+    String currentVardgivarId = user.getValdVardgivare().getId();
+    String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
+    String lakareId = user.getHsaId();
+    Urval urval = user.getUrval();
+
+    IntygParametrar parameters =
+        new IntygParametrar(
+            ControllerUtil.getMaxGlapp(user),
+            ControllerUtil.getMaxDagarSedanSjukfallAvslut(user),
+            date);
+
+    LOG.debug(
+        "Calling the 'sjukfall' service to get a list of detailed 'sjukfall' for one patient.");
+    return sjukfallService.getByPatient(
+        currentVardgivarId, enhetsId, lakareId, patientId, urval, parameters, vgHsaId, veHsaId);
+  }
+
+  private void logSjukfallData(
+      RehabstodUser user,
+      PatientData patientData,
+      ActivityType activityType,
+      ResourceType resourceType) {
+
+    if (patientData == null) {
+      throw new IllegalArgumentException(
+          "Cannot create PDL log statements, sjukfallPatient was null");
+    }
+    logSjukfallData(user, patientData, patientData.getVardenhetId(), activityType, resourceType);
+  }
+
+  private void logSjukfallData(
+      RehabstodUser user,
+      PatientData patientData,
+      String enhetsId,
+      ActivityType activityType,
+      ResourceType resourceType) {
+
+    if (patientData == null) {
+      throw new IllegalArgumentException("Cannot create PDL log statements, patientData was null");
+    }
+    if (enhetsId == null) {
+      throw new IllegalArgumentException("Cannot create PDL log statements, enhetsId was null");
     }
 
-    /**
-     * Register a 'vardenhet' to be included in the calculation of the patient sjukfall view.
-     */
-    @PostMapping(value = "/patient/addVardenhet", consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "add-care-unit-to-patient-view", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
-    public ResponseEntity<Collection<String>> addVeToPatientView(@RequestBody AddVeToPatientViewRequest request) {
-        // Get logged in user
-        RehabstodUser user = userService.getUser();
+    String patientId = patientData.getPatient().getId();
+    boolean isInStore =
+        PDLActivityStore.isActivityInStore(
+            enhetsId, patientId, activityType, resourceType, user.getStoredActivities());
 
-        try {
-            Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
-            if (personnummer.isEmpty()) {
-                throw new RuntimeException("error parsing personnummer");
-            }
-
-            user.addSjfPatientVardenhet(personnummer.get().getPersonnummer(), request.getVardenhetId());
-            return ResponseEntity.ok(user.getSjfPatientVardenhet().get(personnummer.get().getPersonnummer()));
-
-        } catch (Exception e) {
-            LOG.error("Error adding 'vardenhet' to be included in calculation of a patients sjukfall", e);
-            return ResponseEntity.unprocessableEntity().body(new ArrayList<>());
-        }
+    if (!isInStore) {
+      logService.logSjukfallData(patientData, activityType, resourceType);
+      PDLActivityStore.addActivityToStore(
+          enhetsId, patientId, activityType, resourceType, user.getStoredActivities());
     }
+  }
 
-    // For PatientData
-    private Predicate<PatientData> anyIntygHasRiskSignal() {
-        return pd -> pd.getRiskSignal() != null && pd.getRiskSignal().getRiskKategori() >= 1;
+  private ResponseEntity<SjukfallPatientResponse> buildSjukfallPatientResponse(
+      boolean srsError, SjukfallPatientResponse payload) {
+    if (!srsError) {
+      return new ResponseEntity<>(payload, HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(
+          payload, buildServicesUnavailableHeader(srsError, false), HttpStatus.OK);
     }
+  }
 
-    private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, String patientId, LocalDate date,
-        Collection<String> vgHsaId, Collection<String> veHsaId) {
-
-        String currentVardgivarId = user.getValdVardgivare().getId();
-        String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
-        String lakareId = user.getHsaId();
-        Urval urval = user.getUrval();
-
-        IntygParametrar parameters = new IntygParametrar(
-            ControllerUtil.getMaxGlapp(user), ControllerUtil.getMaxDagarSedanSjukfallAvslut(user), date);
-
-        LOG.debug("Calling the 'sjukfall' service to get a list of detailed 'sjukfall' for one patient.");
-        return sjukfallService.getByPatient(currentVardgivarId, enhetsId, lakareId, patientId, urval, parameters, vgHsaId, veHsaId);
+  private HttpHeaders buildServicesUnavailableHeader(
+      boolean srsError, boolean kompletteringInfoError) {
+    HttpHeaders headers = new HttpHeaders();
+    if (srsError) {
+      headers.put(SRS_UNAVAILABLE_HEADER, Collections.singletonList("true"));
     }
-
-    private void logSjukfallData(RehabstodUser user, PatientData patientData, ActivityType activityType, ResourceType resourceType) {
-
-        if (patientData == null) {
-            throw new IllegalArgumentException("Cannot create PDL log statements, sjukfallPatient was null");
-        }
-        logSjukfallData(user, patientData, patientData.getVardenhetId(), activityType, resourceType);
+    if (kompletteringInfoError) {
+      headers.put(KOMPLETTERING_INFO_UNAVAILABLE_HEADER, Collections.singletonList("true"));
     }
+    return headers;
+  }
 
-    private void logSjukfallData(RehabstodUser user, PatientData patientData, String enhetsId,
-        ActivityType activityType, ResourceType resourceType) {
-
-        if (patientData == null) {
-            throw new IllegalArgumentException("Cannot create PDL log statements, patientData was null");
-        }
-        if (enhetsId == null) {
-            throw new IllegalArgumentException("Cannot create PDL log statements, enhetsId was null");
-        }
-
-        String patientId = patientData.getPatient().getId();
-        boolean isInStore =
-            PDLActivityStore.isActivityInStore(enhetsId, patientId, activityType, resourceType, user.getStoredActivities());
-
-        if (!isInStore) {
-            logService.logSjukfallData(patientData, activityType, resourceType);
-            PDLActivityStore.addActivityToStore(enhetsId, patientId, activityType, resourceType, user.getStoredActivities());
-        }
-    }
-
-    private ResponseEntity<SjukfallPatientResponse> buildSjukfallPatientResponse(boolean srsError, SjukfallPatientResponse payload) {
-        if (!srsError) {
-            return new ResponseEntity<>(payload, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(payload, buildServicesUnavailableHeader(srsError, false), HttpStatus.OK);
-        }
-    }
-
-    private HttpHeaders buildServicesUnavailableHeader(boolean srsError, boolean kompletteringInfoError) {
-        HttpHeaders headers = new HttpHeaders();
-        if (srsError) {
-            headers.put(SRS_UNAVAILABLE_HEADER, Collections.singletonList("true"));
-        }
-        if (kompletteringInfoError) {
-            headers.put(KOMPLETTERING_INFO_UNAVAILABLE_HEADER, Collections.singletonList("true"));
-        }
-        return headers;
-    }
-
-    private boolean isActivatedForSRS(RehabstodUser user) {
-        return user.isFeatureActive(AuthoritiesConstants.FEATURE_SRS);
-    }
+  private boolean isActivatedForSRS(RehabstodUser user) {
+    return user.isFeatureActive(AuthoritiesConstants.FEATURE_SRS);
+  }
 }

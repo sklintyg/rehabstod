@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,54 +32,48 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/**
- * Created by martin on 10/02/16.
- */
+/** Created by martin on 10/02/16. */
 @RunWith(MockitoJUnitRunner.class)
 public class DiagnosBeskrivningServiceImplTest {
 
-    private static final String KOD_1 = "M123";
-    private static final String KOD_2 = "A123B";
-    private static final String KOD_3 = "J123";
-    private static final String KOD_4 = "M123A";
-    private static final String BESKRIVNING_1 = "Test beskrivning";
-    private static final String BESKRIVNING_2 = "En annan beskrivning";
+  private static final String KOD_1 = "M123";
+  private static final String KOD_2 = "A123B";
+  private static final String KOD_3 = "J123";
+  private static final String KOD_4 = "M123A";
+  private static final String BESKRIVNING_1 = "Test beskrivning";
+  private static final String BESKRIVNING_2 = "En annan beskrivning";
 
-    @Mock
-    private DiagnosKoderLoader diagnosKoderLoader;
+  @Mock private DiagnosKoderLoader diagnosKoderLoader;
 
-    @InjectMocks
-    private DiagnosBeskrivningServiceImpl testee;
+  @InjectMocks private DiagnosBeskrivningServiceImpl testee;
 
-    @Before
-    public void init() throws IOException {
-        when(diagnosKoderLoader.loadDiagnosKoder()).thenReturn(buildDiagnosKoderMap());
-        testee.init();
-    }
+  @Before
+  public void init() throws IOException {
+    when(diagnosKoderLoader.loadDiagnosKoder()).thenReturn(buildDiagnosKoderMap());
+    testee.init();
+  }
 
-    @Test
-    public void testGetDiagnosBeskrivning() {
+  @Test
+  public void testGetDiagnosBeskrivning() {
 
-        assertEquals(BESKRIVNING_1, testee.getDiagnosBeskrivning(KOD_1));
-        assertEquals(BESKRIVNING_2, testee.getDiagnosBeskrivning(KOD_2));
-        assertNull(testee.getDiagnosBeskrivning(KOD_3));
-        assertNull(testee.getDiagnosBeskrivning(KOD_4));
-    }
+    assertEquals(BESKRIVNING_1, testee.getDiagnosBeskrivning(KOD_1));
+    assertEquals(BESKRIVNING_2, testee.getDiagnosBeskrivning(KOD_2));
+    assertNull(testee.getDiagnosBeskrivning(KOD_3));
+    assertNull(testee.getDiagnosBeskrivning(KOD_4));
+  }
 
-    @Test(expected = DiagnosServiceException.class)
-    public void testDiagnosServiceExceptionOnFailedInit() throws IOException {
-        when(diagnosKoderLoader.loadDiagnosKoder()).thenThrow(new IOException("Faked IO Exception"));
-        testee.init();
-    }
+  @Test(expected = DiagnosServiceException.class)
+  public void testDiagnosServiceExceptionOnFailedInit() throws IOException {
+    when(diagnosKoderLoader.loadDiagnosKoder()).thenThrow(new IOException("Faked IO Exception"));
+    testee.init();
+  }
 
+  private Map<String, String> buildDiagnosKoderMap() {
+    Map<String, String> map = new HashMap<>();
 
-    private Map<String, String> buildDiagnosKoderMap() {
-        Map<String, String> map = new HashMap<>();
+    map.put(KOD_1, BESKRIVNING_1);
+    map.put(KOD_2, BESKRIVNING_2);
 
-        map.put(KOD_1, BESKRIVNING_1);
-        map.put(KOD_2, BESKRIVNING_2);
-
-        return map;
-
-    }
+    return map;
+  }
 }

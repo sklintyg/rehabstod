@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,35 +31,35 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
 
-/**
- * Created by eriklupander on 2016-04-14.
- */
+/** Created by eriklupander on 2016-04-14. */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DiagnosGruppLoaderImpl.class)
 public class DiagnosGruppLoaderImplTest {
 
-    @Autowired
-    private DiagnosGruppLoaderImpl testee;
+  @Autowired private DiagnosGruppLoaderImpl testee;
 
-    @Test
-    public void testLoadDiagnosGrupp() throws IOException {
-        ReflectionTestUtils.setField(testee, "diagnosGruppFile", "classpath:DiagnosGruppLoaderTest/diagnosgrupper.txt");
-        List<DiagnosGrupp> diagnosGrupper = testee.loadDiagnosGrupper();
-        assertNotNull(diagnosGrupper);
-        assertEquals(7, diagnosGrupper.size());
-    }
+  @Test
+  public void testLoadDiagnosGrupp() throws IOException {
+    ReflectionTestUtils.setField(
+        testee, "diagnosGruppFile", "classpath:DiagnosGruppLoaderTest/diagnosgrupper.txt");
+    List<DiagnosGrupp> diagnosGrupper = testee.loadDiagnosGrupper();
+    assertNotNull(diagnosGrupper);
+    assertEquals(7, diagnosGrupper.size());
+  }
 
-    @Test
-    public void testLoadDiagnosGruppEmptyFile() throws IOException {
-        ReflectionTestUtils.setField(testee, "diagnosGruppFile", "classpath:DiagnosGruppLoaderTest/diagnosgrupper_tom.txt");
-        List<DiagnosGrupp> diagnosGrupper = testee.loadDiagnosGrupper();
-        assertNotNull(diagnosGrupper);
-        assertEquals(0, diagnosGrupper.size());
-    }
+  @Test
+  public void testLoadDiagnosGruppEmptyFile() throws IOException {
+    ReflectionTestUtils.setField(
+        testee, "diagnosGruppFile", "classpath:DiagnosGruppLoaderTest/diagnosgrupper_tom.txt");
+    List<DiagnosGrupp> diagnosGrupper = testee.loadDiagnosGrupper();
+    assertNotNull(diagnosGrupper);
+    assertEquals(0, diagnosGrupper.size());
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testLoadDiagnosGruppInvaludFileThrowsException() throws IOException {
-        ReflectionTestUtils.setField(testee, "diagnosGruppFile", "classpath:DiagnosGruppLoaderTest/diagnosgrupper_invalid.txt");
-        testee.loadDiagnosGrupper();
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void testLoadDiagnosGruppInvaludFileThrowsException() throws IOException {
+    ReflectionTestUtils.setField(
+        testee, "diagnosGruppFile", "classpath:DiagnosGruppLoaderTest/diagnosgrupper_invalid.txt");
+    testee.loadDiagnosGrupper();
+  }
 }

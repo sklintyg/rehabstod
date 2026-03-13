@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.user;
 
 import java.util.Optional;
@@ -26,17 +25,17 @@ import se.inera.intyg.infra.security.common.model.Feature;
 @Service
 public class FeatureServiceImpl implements FeatureService {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    public FeatureServiceImpl(UserService userService) {
-        this.userService = userService;
-    }
+  public FeatureServiceImpl(UserService userService) {
+    this.userService = userService;
+  }
 
-    @Override
-    public boolean isFeatureActive(String authoritiesConstants) {
-        return Optional.ofNullable(userService.getUser().getFeatures())
-            .map(features -> features.get(authoritiesConstants))
-            .map(Feature::getGlobal)
-            .orElse(false);
-    }
+  @Override
+  public boolean isFeatureActive(String authoritiesConstants) {
+    return Optional.ofNullable(userService.getUser().getFeatures())
+        .map(features -> features.get(authoritiesConstants))
+        .map(Feature::getGlobal)
+        .orElse(false);
+  }
 }

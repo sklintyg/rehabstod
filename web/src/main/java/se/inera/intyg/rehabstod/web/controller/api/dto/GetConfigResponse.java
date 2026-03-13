@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,15 +23,13 @@ import lombok.Data;
 import se.inera.intyg.infra.driftbannerdto.Banner;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
-/**
- * Created by marced on 2016-01-18.
- */
+/** Created by marced on 2016-01-18. */
 @Data
 public class GetConfigResponse {
 
-    private List<DiagnosKapitel> diagnosKapitelList;
-    private String webcertLaunchUrlTemplate;
-    private String sithsIdpUrl;
-    private String version;
-    private List<Banner> banners;
+  private List<DiagnosKapitel> diagnosKapitelList;
+  private String webcertLaunchUrlTemplate;
+  private String sithsIdpUrl;
+  private String version;
+  private List<Banner> banners;
 }

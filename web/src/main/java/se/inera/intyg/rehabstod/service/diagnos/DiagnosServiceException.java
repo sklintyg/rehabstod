@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,29 +20,25 @@ package se.inera.intyg.rehabstod.service.diagnos;
 
 import se.inera.intyg.rehabstod.service.exceptions.ServiceException;
 
-/**
- * Created by Magnus Ekstrand on 2016-04-12.
- */
+/** Created by Magnus Ekstrand on 2016-04-12. */
 public class DiagnosServiceException extends ServiceException {
 
-    /**
-     * Constructs an {@code ServiceException} with the specified message and root
-     * cause.
-     *
-     * @param msg the detail message
-     * @param t the root cause
-     */
-    public DiagnosServiceException(String msg, Throwable t) {
-        super(msg, t);
-    }
+  /**
+   * Constructs an {@code ServiceException} with the specified message and root cause.
+   *
+   * @param msg the detail message
+   * @param t the root cause
+   */
+  public DiagnosServiceException(String msg, Throwable t) {
+    super(msg, t);
+  }
 
-    /**
-     * Constructs an {@code ServiceException} with the specified message and no
-     * root cause.
-     *
-     * @param msg the detail message
-     */
-    public DiagnosServiceException(String msg) {
-        super(msg);
-    }
+  /**
+   * Constructs an {@code ServiceException} with the specified message and no root cause.
+   *
+   * @param msg the detail message
+   */
+  public DiagnosServiceException(String msg) {
+    super(msg);
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,47 +22,51 @@ import java.util.List;
 
 public class SjukfallSummary {
 
-    private int total;
-    private List<GenderStat> genders;
-    private List<DiagnosGruppStat> groups;
-    private List<SickLeaveDegreeStat> sickLeaveDegrees;
+  private int total;
+  private List<GenderStat> genders;
+  private List<DiagnosGruppStat> groups;
+  private List<SickLeaveDegreeStat> sickLeaveDegrees;
 
-    public SjukfallSummary(int total, List<GenderStat> genders, List<DiagnosGruppStat> groups, List<SickLeaveDegreeStat> sickLeaveDegrees) {
-        this.total = total;
-        this.genders = genders;
-        this.groups = groups;
-        this.sickLeaveDegrees = sickLeaveDegrees;
-    }
+  public SjukfallSummary(
+      int total,
+      List<GenderStat> genders,
+      List<DiagnosGruppStat> groups,
+      List<SickLeaveDegreeStat> sickLeaveDegrees) {
+    this.total = total;
+    this.genders = genders;
+    this.groups = groups;
+    this.sickLeaveDegrees = sickLeaveDegrees;
+  }
 
-    public int getTotal() {
-        return total;
-    }
+  public int getTotal() {
+    return total;
+  }
 
-    public void setTotal(int total) {
-        this.total = total;
-    }
+  public void setTotal(int total) {
+    this.total = total;
+  }
 
-    public List<GenderStat> getGenders() {
-        return genders;
-    }
+  public List<GenderStat> getGenders() {
+    return genders;
+  }
 
-    public void setGenders(List<GenderStat> genders) {
-        this.genders = genders;
-    }
+  public void setGenders(List<GenderStat> genders) {
+    this.genders = genders;
+  }
 
-    public List<DiagnosGruppStat> getGroups() {
-        return groups;
-    }
+  public List<DiagnosGruppStat> getGroups() {
+    return groups;
+  }
 
-    public void setGroups(List<DiagnosGruppStat> groups) {
-        this.groups = groups;
-    }
+  public void setGroups(List<DiagnosGruppStat> groups) {
+    this.groups = groups;
+  }
 
-    public List<SickLeaveDegreeStat> getSickLeaveDegrees() {
-        return sickLeaveDegrees;
-    }
+  public List<SickLeaveDegreeStat> getSickLeaveDegrees() {
+    return sickLeaveDegrees;
+  }
 
-    public void setSickLeaveDegrees(List<SickLeaveDegreeStat> sickLeaveDegrees) {
-        this.sickLeaveDegrees = sickLeaveDegrees;
-    }
+  public void setSickLeaveDegrees(List<SickLeaveDegreeStat> sickLeaveDegrees) {
+    this.sickLeaveDegrees = sickLeaveDegrees;
+  }
 }

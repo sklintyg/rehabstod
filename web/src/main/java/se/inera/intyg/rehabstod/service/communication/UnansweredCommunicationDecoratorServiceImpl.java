@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.communication;
 
 import java.util.List;
@@ -34,97 +33,100 @@ import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 @Service
-public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCommunicationDecoratorService {
+public class UnansweredCommunicationDecoratorServiceImpl
+    implements UnansweredCommunicationDecoratorService {
 
-    private final WcRestIntegrationService wcRestIntegrationService;
-    private static final Logger LOG = LoggerFactory.getLogger(UnansweredCommunicationDecoratorServiceImpl.class);
+  private final WcRestIntegrationService wcRestIntegrationService;
+  private static final Logger LOG =
+      LoggerFactory.getLogger(UnansweredCommunicationDecoratorServiceImpl.class);
 
-    @Value("${wc.getadditions.max.age.days:90}")
-    private int maxDaysOfUnansweredCommunication;
+  @Value("${wc.getadditions.max.age.days:90}")
+  private int maxDaysOfUnansweredCommunication;
 
-    public UnansweredCommunicationDecoratorServiceImpl(WcRestIntegrationService wcRestIntegrationService) {
-        this.wcRestIntegrationService = wcRestIntegrationService;
-    }
+  public UnansweredCommunicationDecoratorServiceImpl(
+      WcRestIntegrationService wcRestIntegrationService) {
+    this.wcRestIntegrationService = wcRestIntegrationService;
+  }
 
-    @Override
-    public boolean decorateSickLeaves(List<SjukfallEnhet> sickLeaves) {
-        final var logFactory = new SickLeaveLogMessageFactory(System.currentTimeMillis());
-        logFactory.setStartTimer(System.currentTimeMillis());
-        final var patientIds = sickLeaves
-            .stream()
+  @Override
+  public boolean decorateSickLeaves(List<SjukfallEnhet> sickLeaves) {
+    final var logFactory = new SickLeaveLogMessageFactory(System.currentTimeMillis());
+    logFactory.setStartTimer(System.currentTimeMillis());
+    final var patientIds =
+        sickLeaves.stream()
             .map((sickLeave) -> sickLeave.getPatient().getId())
             .collect(Collectors.toList());
 
-        if (patientIds.isEmpty()) {
-            return true;
-        }
-        final var response = wcRestIntegrationService.getUnansweredCommunicationForPatients(
-            new UnansweredCommunicationRequest(maxDaysOfUnansweredCommunication, patientIds)
-        );
+    if (patientIds.isEmpty()) {
+      return true;
+    }
+    final var response =
+        wcRestIntegrationService.getUnansweredCommunicationForPatients(
+            new UnansweredCommunicationRequest(maxDaysOfUnansweredCommunication, patientIds));
 
-        if (response.isUnansweredCommunicationError()) {
-            return false;
-        }
-
-        sickLeaves.forEach((sickLeave) -> decorateSickLeave(sickLeave, response.getUnansweredQAsMap()));
-        LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_UNANSWERED_COMMUNICATION, sickLeaves.size()));
-        return true;
+    if (response.isUnansweredCommunicationError()) {
+      return false;
     }
 
-    @Override
-    public boolean decorateLuCertificates(List<LUCertificate> certificates) {
-        final var patientIds = certificates
-            .stream()
+    sickLeaves.forEach((sickLeave) -> decorateSickLeave(sickLeave, response.getUnansweredQAsMap()));
+    LOG.info(
+        logFactory.message(
+            SickLeaveLogMessageFactory.ADD_UNANSWERED_COMMUNICATION, sickLeaves.size()));
+    return true;
+  }
+
+  @Override
+  public boolean decorateLuCertificates(List<LUCertificate> certificates) {
+    final var patientIds =
+        certificates.stream()
             .map((luCertificate) -> luCertificate.getPatient().getId())
             .distinct()
             .collect(Collectors.toList());
 
-        if (patientIds.isEmpty()) {
-            return true;
-        }
+    if (patientIds.isEmpty()) {
+      return true;
+    }
 
-        final var response = wcRestIntegrationService.getUnansweredCommunicationForPatients(
-            new UnansweredCommunicationRequest(maxDaysOfUnansweredCommunication, patientIds)
-        );
+    final var response =
+        wcRestIntegrationService.getUnansweredCommunicationForPatients(
+            new UnansweredCommunicationRequest(maxDaysOfUnansweredCommunication, patientIds));
 
-        if (response.isUnansweredCommunicationError()) {
-            return false;
-        }
+    if (response.isUnansweredCommunicationError()) {
+      return false;
+    }
 
-        certificates.forEach(
-            (luCertificate) -> decorateLuCertificate(
+    certificates.forEach(
+        (luCertificate) ->
+            decorateLuCertificate(
                 luCertificate,
-                response.getUnansweredQAsMap().get(luCertificate.getCertificateId())
-            )
-        );
+                response.getUnansweredQAsMap().get(luCertificate.getCertificateId())));
 
-        return true;
+    return true;
+  }
+
+  private void decorateLuCertificate(LUCertificate luCertificate, UnansweredQAs unansweredQAs) {
+    if (unansweredQAs != null) {
+      luCertificate.setUnAnsweredComplement(unansweredQAs.getComplement());
+      luCertificate.setUnAnsweredOther(unansweredQAs.getOthers());
     }
+  }
 
-    private void decorateLuCertificate(LUCertificate luCertificate, UnansweredQAs unansweredQAs) {
-        if (unansweredQAs != null) {
-            luCertificate.setUnAnsweredComplement(unansweredQAs.getComplement());
-            luCertificate.setUnAnsweredOther(unansweredQAs.getOthers());
-        }
-    }
-
-    private void decorateSickLeave(SjukfallEnhet sickLeave, Map<String, UnansweredQAs> unansweredQAsMap) {
-        final var totalUnansweredQAs = sickLeave.getIntygLista()
-            .stream()
+  private void decorateSickLeave(
+      SjukfallEnhet sickLeave, Map<String, UnansweredQAs> unansweredQAsMap) {
+    final var totalUnansweredQAs =
+        sickLeave.getIntygLista().stream()
             .filter(unansweredQAsMap::containsKey)
             .map(unansweredQAsMap::get)
             .reduce(
-                (a, b) -> new UnansweredQAs(
-                    a.getComplement() + b.getComplement(),
-                    a.getOthers() + b.getOthers()
-                )
-            );
+                (a, b) ->
+                    new UnansweredQAs(
+                        a.getComplement() + b.getComplement(), a.getOthers() + b.getOthers()));
 
-        if (totalUnansweredQAs.isEmpty()) {
-            return;
-        }
-
-        sickLeave.setUnansweredOther(totalUnansweredQAs.get().getOthers());
-        sickLeave.setObesvaradeKompl(totalUnansweredQAs.get().getComplement());
+    if (totalUnansweredQAs.isEmpty()) {
+      return;
     }
+
+    sickLeave.setUnansweredOther(totalUnansweredQAs.get().getOthers());
+    sickLeave.setObesvaradeKompl(totalUnansweredQAs.get().getComplement());
+  }
 }

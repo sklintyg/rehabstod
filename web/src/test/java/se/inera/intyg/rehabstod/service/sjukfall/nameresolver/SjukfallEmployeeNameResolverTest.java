@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -36,185 +36,175 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-/**
- * Created by eriklupander on 2017-02-24.
- */
+/** Created by eriklupander on 2017-02-24. */
 @RunWith(MockitoJUnitRunner.class)
 public class SjukfallEmployeeNameResolverTest {
 
-    private final String lakareId1 = "IFV1239877878-1049";
-    private final String lakareNamn1 = "Jan Nilsson";
-    private final String lakareId2 = "IFV1239877878-104B";
-    private final String lakareNamn2 = "Åsa Andersson";
-    private final String lakareId3 = "IFV1239877878-1047";
-    private final String lakareNamn3 = "Jan Nilsson";
-    private final String lakareNamn3Alt = "Jan Namnbytarsson";
+  private final String lakareId1 = "IFV1239877878-1049";
+  private final String lakareNamn1 = "Jan Nilsson";
+  private final String lakareId2 = "IFV1239877878-104B";
+  private final String lakareNamn2 = "Åsa Andersson";
+  private final String lakareId3 = "IFV1239877878-1047";
+  private final String lakareNamn3 = "Jan Nilsson";
+  private final String lakareNamn3Alt = "Jan Namnbytarsson";
 
-    @Mock
-    private EmployeeNameService employeeNameService;
+  @Mock private EmployeeNameService employeeNameService;
 
-    @InjectMocks
-    private SjukfallEmployeeNameResolver testee = new SjukfallEmployeeNameResolverImpl();
+  @InjectMocks private SjukfallEmployeeNameResolver testee = new SjukfallEmployeeNameResolverImpl();
 
-    @Test
-    public void testUpdateDuplicateDoctorNamesWithHsaId() {
-        List<SjukfallEnhet> sjukfallList = createSjukfallList();
-        testee.updateDuplicateDoctorNamesWithHsaId(sjukfallList);
+  @Test
+  public void testUpdateDuplicateDoctorNamesWithHsaId() {
+    List<SjukfallEnhet> sjukfallList = createSjukfallList();
+    testee.updateDuplicateDoctorNamesWithHsaId(sjukfallList);
 
-        assertEquals(lakareNamn1 + " (" + lakareId1 + ")", sjukfallList.get(0).getLakare().getNamn());
-        assertEquals(lakareNamn2, sjukfallList.get(3).getLakare().getNamn());
-        assertEquals(lakareNamn3 + " (" + lakareId3 + ")", sjukfallList.get(5).getLakare().getNamn());
-    }
+    assertEquals(lakareNamn1 + " (" + lakareId1 + ")", sjukfallList.get(0).getLakare().getNamn());
+    assertEquals(lakareNamn2, sjukfallList.get(3).getLakare().getNamn());
+    assertEquals(lakareNamn3 + " (" + lakareId3 + ")", sjukfallList.get(5).getLakare().getNamn());
+  }
 
-    @Test
-    public void testUpdateNoDuplicateDoctorNames() {
-        List<SjukfallEnhet> sjukfallList = createSjukfallList()
-            .stream()
+  @Test
+  public void testUpdateNoDuplicateDoctorNames() {
+    List<SjukfallEnhet> sjukfallList =
+        createSjukfallList().stream()
             .filter(sf -> sf.getLakare().getNamn().equals(lakareNamn2))
             .collect(Collectors.toList());
 
-        testee.updateDuplicateDoctorNamesWithHsaId(sjukfallList);
-        assertEquals(lakareNamn2, sjukfallList.get(0).getLakare().getNamn());
-        assertEquals(lakareNamn2, sjukfallList.get(1).getLakare().getNamn());
-    }
+    testee.updateDuplicateDoctorNamesWithHsaId(sjukfallList);
+    assertEquals(lakareNamn2, sjukfallList.get(0).getLakare().getNamn());
+    assertEquals(lakareNamn2, sjukfallList.get(1).getLakare().getNamn());
+  }
 
-    @Test
-    public void testEmployeeNameLakare1HasNoRecordShowHsaIdAsName() {
-        List<SjukfallEnhet> sjukfallList = createSjukfallList();
-        when(employeeNameService.getEmployeeHsaName(lakareId1)).thenReturn(null);
-        testee.enrichWithHsaEmployeeNames(sjukfallList);
-        assertEquals(lakareId1, sjukfallList.get(0).getLakare().getNamn());
-    }
+  @Test
+  public void testEmployeeNameLakare1HasNoRecordShowHsaIdAsName() {
+    List<SjukfallEnhet> sjukfallList = createSjukfallList();
+    when(employeeNameService.getEmployeeHsaName(lakareId1)).thenReturn(null);
+    testee.enrichWithHsaEmployeeNames(sjukfallList);
+    assertEquals(lakareId1, sjukfallList.get(0).getLakare().getNamn());
+  }
 
-    @Test
-    public void testEmployeeNameLakare2HasRecordSameAsNameOnSjukfall() {
-        List<SjukfallEnhet> sjukfallList = createSjukfallList();
-        when(employeeNameService.getEmployeeHsaName(lakareId2)).thenReturn(lakareNamn2);
-        testee.enrichWithHsaEmployeeNames(sjukfallList);
-        assertEquals(lakareNamn2, sjukfallList.get(2).getLakare().getNamn());
-    }
+  @Test
+  public void testEmployeeNameLakare2HasRecordSameAsNameOnSjukfall() {
+    List<SjukfallEnhet> sjukfallList = createSjukfallList();
+    when(employeeNameService.getEmployeeHsaName(lakareId2)).thenReturn(lakareNamn2);
+    testee.enrichWithHsaEmployeeNames(sjukfallList);
+    assertEquals(lakareNamn2, sjukfallList.get(2).getLakare().getNamn());
+  }
 
-    @Test
-    public void testEmployeeNameLakare3HasRecordDifferentNameOnSjukfall() {
-        List<SjukfallEnhet> sjukfallList = createSjukfallList();
-        when(employeeNameService.getEmployeeHsaName(lakareId3)).thenReturn(lakareNamn3Alt);
-        testee.enrichWithHsaEmployeeNames(sjukfallList);
-        assertEquals(lakareNamn3Alt, sjukfallList.get(4).getLakare().getNamn());
-    }
+  @Test
+  public void testEmployeeNameLakare3HasRecordDifferentNameOnSjukfall() {
+    List<SjukfallEnhet> sjukfallList = createSjukfallList();
+    when(employeeNameService.getEmployeeHsaName(lakareId3)).thenReturn(lakareNamn3Alt);
+    testee.enrichWithHsaEmployeeNames(sjukfallList);
+    assertEquals(lakareNamn3Alt, sjukfallList.get(4).getLakare().getNamn());
+  }
 
-    @Test
-    public void testEnrichSjukfallPaientWithHsaEmployeeNamesNoRecord() {
-        List<SjukfallPatient> sjukfallList = createSjukfallPatientList();
-        when(employeeNameService.getEmployeeHsaName(lakareId1)).thenReturn(lakareNamn3Alt);
-        testee.enrichSjukfallPaientWithHsaEmployeeNames(sjukfallList);
-        assertEquals(lakareNamn3Alt, sjukfallList.get(0).getIntyg().get(0).getLakare().getNamn());
-    }
+  @Test
+  public void testEnrichSjukfallPaientWithHsaEmployeeNamesNoRecord() {
+    List<SjukfallPatient> sjukfallList = createSjukfallPatientList();
+    when(employeeNameService.getEmployeeHsaName(lakareId1)).thenReturn(lakareNamn3Alt);
+    testee.enrichSjukfallPaientWithHsaEmployeeNames(sjukfallList);
+    assertEquals(lakareNamn3Alt, sjukfallList.get(0).getIntyg().get(0).getLakare().getNamn());
+  }
 
-    @Test
-    public void testEnrichSjukfallPaientWithHsaEmployeeNames() {
-        List<SjukfallPatient> sjukfallList = createSjukfallPatientList();
-        when(employeeNameService.getEmployeeHsaName(lakareId1)).thenReturn(null);
-        testee.enrichSjukfallPaientWithHsaEmployeeNames(sjukfallList);
-        assertEquals(lakareId1, sjukfallList.get(0).getIntyg().get(0).getLakare().getNamn());
-    }
+  @Test
+  public void testEnrichSjukfallPaientWithHsaEmployeeNames() {
+    List<SjukfallPatient> sjukfallList = createSjukfallPatientList();
+    when(employeeNameService.getEmployeeHsaName(lakareId1)).thenReturn(null);
+    testee.enrichSjukfallPaientWithHsaEmployeeNames(sjukfallList);
+    assertEquals(lakareId1, sjukfallList.get(0).getIntyg().get(0).getLakare().getNamn());
+  }
 
-    @Test
-    public void shallReturnEmployeeNameWhenExists() {
-        final var employeeId = "employeeId";
-        final var expectedName = "Name Found";
-        doReturn(expectedName).when(employeeNameService).getEmployeeHsaName(employeeId);
-        final var actualName = testee.getEmployeeName(employeeId);
-        assertEquals(expectedName, actualName);
-    }
+  @Test
+  public void shallReturnEmployeeNameWhenExists() {
+    final var employeeId = "employeeId";
+    final var expectedName = "Name Found";
+    doReturn(expectedName).when(employeeNameService).getEmployeeHsaName(employeeId);
+    final var actualName = testee.getEmployeeName(employeeId);
+    assertEquals(expectedName, actualName);
+  }
 
-    @Test
-    public void shallReturnHsaIdAsEmployeeNameWhenNotExists() {
-        final var employeeId = "employeeId";
-        doReturn(null).when(employeeNameService).getEmployeeHsaName(employeeId);
-        final var actualName = testee.getEmployeeName(employeeId);
-        assertEquals(employeeId, actualName);
-    }
+  @Test
+  public void shallReturnHsaIdAsEmployeeNameWhenNotExists() {
+    final var employeeId = "employeeId";
+    doReturn(null).when(employeeNameService).getEmployeeHsaName(employeeId);
+    final var actualName = testee.getEmployeeName(employeeId);
+    assertEquals(employeeId, actualName);
+  }
 
-    @Test
-    public void shallAddHsaIdForDuplicateNames() {
-        final var lakareList = List.of(
-            new Lakare("HSA-ID1", "Duplicate Name"),
-            new Lakare("HSA-ID2", "Duplicate Name")
-        );
+  @Test
+  public void shallAddHsaIdForDuplicateNames() {
+    final var lakareList =
+        List.of(new Lakare("HSA-ID1", "Duplicate Name"), new Lakare("HSA-ID2", "Duplicate Name"));
 
-        final var expectedLakareList = List.of(
+    final var expectedLakareList =
+        List.of(
             new Lakare("HSA-ID1", "Duplicate Name (HSA-ID1)"),
-            new Lakare("HSA-ID2", "Duplicate Name (HSA-ID1)")
-        );
+            new Lakare("HSA-ID2", "Duplicate Name (HSA-ID1)"));
 
-        testee.decorateAnyDuplicateNamesWithHsaId(lakareList);
+    testee.decorateAnyDuplicateNamesWithHsaId(lakareList);
 
-        assertEquals(expectedLakareList, lakareList);
-    }
+    assertEquals(expectedLakareList, lakareList);
+  }
 
-    @Test
-    public void shallNotAddHsaIdForUniqueNames() {
-        final var lakareList = List.of(
-            new Lakare("HSA-ID1", "Unique Name 1"),
-            new Lakare("HSA-ID2", "Unique Name 2")
-        );
+  @Test
+  public void shallNotAddHsaIdForUniqueNames() {
+    final var lakareList =
+        List.of(new Lakare("HSA-ID1", "Unique Name 1"), new Lakare("HSA-ID2", "Unique Name 2"));
 
-        final var expectedLakareList = List.of(
-            new Lakare("HSA-ID1", "Unique Name 1"),
-            new Lakare("HSA-ID2", "Unique Name 2")
-        );
+    final var expectedLakareList =
+        List.of(new Lakare("HSA-ID1", "Unique Name 1"), new Lakare("HSA-ID2", "Unique Name 2"));
 
-        testee.decorateAnyDuplicateNamesWithHsaId(lakareList);
+    testee.decorateAnyDuplicateNamesWithHsaId(lakareList);
 
-        assertEquals(expectedLakareList, lakareList);
-    }
+    assertEquals(expectedLakareList, lakareList);
+  }
 
-    private List<SjukfallPatient> createSjukfallPatientList() {
-        List<SjukfallPatient> sjukfallList = new ArrayList<>();
+  private List<SjukfallPatient> createSjukfallPatientList() {
+    List<SjukfallPatient> sjukfallList = new ArrayList<>();
 
-        sjukfallList.add(createSjukfallPatient(lakareId1, lakareNamn1));
-        sjukfallList.add(createSjukfallPatient(lakareId1, lakareNamn1));
-        sjukfallList.add(createSjukfallPatient(lakareId2, lakareNamn2));
-        sjukfallList.add(createSjukfallPatient(lakareId2, lakareNamn2));
-        sjukfallList.add(createSjukfallPatient(lakareId3, lakareNamn3));
-        sjukfallList.add(createSjukfallPatient(lakareId3, lakareNamn3));
+    sjukfallList.add(createSjukfallPatient(lakareId1, lakareNamn1));
+    sjukfallList.add(createSjukfallPatient(lakareId1, lakareNamn1));
+    sjukfallList.add(createSjukfallPatient(lakareId2, lakareNamn2));
+    sjukfallList.add(createSjukfallPatient(lakareId2, lakareNamn2));
+    sjukfallList.add(createSjukfallPatient(lakareId3, lakareNamn3));
+    sjukfallList.add(createSjukfallPatient(lakareId3, lakareNamn3));
 
-        return sjukfallList;
-    }
+    return sjukfallList;
+  }
 
-    private List<SjukfallEnhet> createSjukfallList() {
-        List<SjukfallEnhet> sjukfallList = new ArrayList<>();
+  private List<SjukfallEnhet> createSjukfallList() {
+    List<SjukfallEnhet> sjukfallList = new ArrayList<>();
 
-        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1));
-        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1));
-        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2));
-        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2));
-        sjukfallList.add(createSjukfall(lakareId3, lakareNamn3));
-        sjukfallList.add(createSjukfall(lakareId3, lakareNamn3));
+    sjukfallList.add(createSjukfall(lakareId1, lakareNamn1));
+    sjukfallList.add(createSjukfall(lakareId1, lakareNamn1));
+    sjukfallList.add(createSjukfall(lakareId2, lakareNamn2));
+    sjukfallList.add(createSjukfall(lakareId2, lakareNamn2));
+    sjukfallList.add(createSjukfall(lakareId3, lakareNamn3));
+    sjukfallList.add(createSjukfall(lakareId3, lakareNamn3));
 
-        return sjukfallList;
-    }
+    return sjukfallList;
+  }
 
-    private SjukfallPatient createSjukfallPatient(String lakareId, String lakareNamn) {
-        SjukfallPatient sjukfall = new SjukfallPatient();
+  private SjukfallPatient createSjukfallPatient(String lakareId, String lakareNamn) {
+    SjukfallPatient sjukfall = new SjukfallPatient();
 
-        List<PatientData> intyg = new ArrayList<>();
-        sjukfall.setIntyg(intyg);
+    List<PatientData> intyg = new ArrayList<>();
+    sjukfall.setIntyg(intyg);
 
-        PatientData patientData = new PatientData();
-        intyg.add(patientData);
+    PatientData patientData = new PatientData();
+    intyg.add(patientData);
 
-        Lakare lakare = new Lakare(lakareId, lakareNamn);
-        patientData.setLakare(lakare);
+    Lakare lakare = new Lakare(lakareId, lakareNamn);
+    patientData.setLakare(lakare);
 
-        return sjukfall;
-    }
+    return sjukfall;
+  }
 
-    private SjukfallEnhet createSjukfall(String lakareId, String lakareNamn) {
-        SjukfallEnhet sjukfall = new SjukfallEnhet();
-        Lakare lakare = new Lakare(lakareId, lakareNamn);
-        sjukfall.setLakare(lakare);
+  private SjukfallEnhet createSjukfall(String lakareId, String lakareNamn) {
+    SjukfallEnhet sjukfall = new SjukfallEnhet();
+    Lakare lakare = new Lakare(lakareId, lakareNamn);
+    sjukfall.setLakare(lakare);
 
-        return sjukfall;
-    }
+    return sjukfall;
+  }
 }

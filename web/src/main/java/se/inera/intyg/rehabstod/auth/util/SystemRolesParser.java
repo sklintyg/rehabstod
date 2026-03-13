@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,32 +30,31 @@ import java.util.regex.Pattern;
  */
 public final class SystemRolesParser {
 
-    public static final String HSA_SYSTEMROLE_REHAB_UNIT_PREFIX = "INTYG;Rehab-";
+  public static final String HSA_SYSTEMROLE_REHAB_UNIT_PREFIX = "INTYG;Rehab-";
 
-    // The part after prefix is assumed to be a hsa-enhetsid, this will be extracted and compared.
-    private static final Pattern HSA_SYSTEMROLE_REHAB_UNIT_PATTERN = Pattern.compile("^" + HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "(.*)");
+  // The part after prefix is assumed to be a hsa-enhetsid, this will be extracted and compared.
+  private static final Pattern HSA_SYSTEMROLE_REHAB_UNIT_PATTERN =
+      Pattern.compile("^" + HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "(.*)");
 
-    private SystemRolesParser() {
+  private SystemRolesParser() {}
 
+  /**
+   * Parses supplied systemRoles into careUnitId's.
+   *
+   * @param systemRoles List of systemRoles, e.g. "Rehab-[careUnitId]"
+   * @return List of careUnitIds.
+   */
+  public static List<String> parseEnhetsIdsFromSystemRoles(List<String> systemRoles) {
+    List<String> idList = new ArrayList<>();
+    if (systemRoles == null) {
+      return idList;
     }
-
-    /**
-     * Parses supplied systemRoles into careUnitId's.
-     *
-     * @param systemRoles List of systemRoles, e.g. "Rehab-[careUnitId]"
-     * @return List of careUnitIds.
-     */
-    public static List<String> parseEnhetsIdsFromSystemRoles(List<String> systemRoles) {
-        List<String> idList = new ArrayList<>();
-        if (systemRoles == null) {
-            return idList;
-        }
-        for (String s : systemRoles) {
-            Matcher matcher = HSA_SYSTEMROLE_REHAB_UNIT_PATTERN.matcher(s);
-            if (matcher.find()) {
-                idList.add(matcher.group(1));
-            }
-        }
-        return idList;
+    for (String s : systemRoles) {
+      Matcher matcher = HSA_SYSTEMROLE_REHAB_UNIT_PATTERN.matcher(s);
+      if (matcher.find()) {
+        idList.add(matcher.group(1));
+      }
     }
+    return idList;
+  }
 }

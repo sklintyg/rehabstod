@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,16 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
-/**
- * Created by martin on 10/02/16.
- */
+/** Created by martin on 10/02/16. */
 @FunctionalInterface
 public interface DiagnosBeskrivningService {
 
-    /**
-     * Tries to get the description for the diagnosKod.
-     * Null is retrurned if no match is found.
-     */
-    String getDiagnosBeskrivning(String diagnosKod);
-
+  /** Tries to get the description for the diagnosKod. Null is retrurned if no match is found. */
+  String getDiagnosBeskrivning(String diagnosKod);
 }

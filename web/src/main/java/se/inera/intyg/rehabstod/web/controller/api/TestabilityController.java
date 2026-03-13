@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -47,60 +47,71 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.TestabilityResponseDTO;
 @RequiredArgsConstructor
 public class TestabilityController {
 
-    private final TestabilityService testabilityService;
-    private final FakeLoginService fakeLoginService;
+  private final TestabilityService testabilityService;
+  private final FakeLoginService fakeLoginService;
 
-    @PostMapping(value = "/createDefault")
-    @PerformanceLogging(eventAction = "testability-create-default-test-data", eventType = MdcLogConstants.EVENT_TYPE_CREATION)
-    public TestabilityResponseDTO createDefaultTestData() {
-        return new TestabilityResponseDTO(testabilityService.getDefaultTestData());
-    }
+  @PostMapping(value = "/createDefault")
+  @PerformanceLogging(
+      eventAction = "testability-create-default-test-data",
+      eventType = MdcLogConstants.EVENT_TYPE_CREATION)
+  public TestabilityResponseDTO createDefaultTestData() {
+    return new TestabilityResponseDTO(testabilityService.getDefaultTestData());
+  }
 
-    @PostMapping(value = "/createSickLeave", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "testability-create-sick-leave", eventType = MdcLogConstants.EVENT_TYPE_CREATION)
-    public TestabilityResponseDTO createSickLeave(@RequestBody CreateSickLeaveRequestDTO request) {
-        return new TestabilityResponseDTO(testabilityService.createSickleave(request));
-    }
+  @PostMapping(value = "/createSickLeave", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "testability-create-sick-leave",
+      eventType = MdcLogConstants.EVENT_TYPE_CREATION)
+  public TestabilityResponseDTO createSickLeave(@RequestBody CreateSickLeaveRequestDTO request) {
+    return new TestabilityResponseDTO(testabilityService.createSickleave(request));
+  }
 
-    @GetMapping(value = "/testDataOptions")
-    @PerformanceLogging(eventAction = "testability-get-test-data-options", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public TestDataOptionsDTO getTestDataOptions() {
-        return testabilityService.getTestDataOptions();
-    }
+  @GetMapping(value = "/testDataOptions")
+  @PerformanceLogging(
+      eventAction = "testability-get-test-data-options",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public TestDataOptionsDTO getTestDataOptions() {
+    return testabilityService.getTestDataOptions();
+  }
 
-    @PostMapping(value = "/fake")
-    @PerformanceLogging(eventAction = "testability-login", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public void login(@RequestBody FakeLoginDTO fakeLoginDTO, final HttpServletRequest request) {
-        fakeLoginService.login(fakeLoginDTO.getHsaId(), fakeLoginDTO.getEnhetId(), request);
-    }
+  @PostMapping(value = "/fake")
+  @PerformanceLogging(
+      eventAction = "testability-login",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public void login(@RequestBody FakeLoginDTO fakeLoginDTO, final HttpServletRequest request) {
+    fakeLoginService.login(fakeLoginDTO.getHsaId(), fakeLoginDTO.getEnhetId(), request);
+  }
 
-    @PostMapping("/logout")
-    @PerformanceLogging(eventAction = "testability-logout", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public void logout(HttpServletRequest request) {
-        fakeLoginService.logout(request.getSession(false));
-    }
+  @PostMapping("/logout")
+  @PerformanceLogging(
+      eventAction = "testability-logout",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public void logout(HttpServletRequest request) {
+    fakeLoginService.logout(request.getSession(false));
+  }
 
-    @RequestMapping(value = "/commissions", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "testability-get-commissions", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public String commissions() {
-        return readFile("testability/commissions.json");
-    }
+  @RequestMapping(value = "/commissions", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "testability-get-commissions",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public String commissions() {
+    return readFile("testability/commissions.json");
+  }
 
-    @RequestMapping(value = "/persons", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "testability-get-persons", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public String persons() {
-        return readFile("/testability/persons.json");
-    }
+  @RequestMapping(value = "/persons", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "testability-get-persons",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public String persons() {
+    return readFile("/testability/persons.json");
+  }
 
-    private static String readFile(String path) {
-        final var cpr = new ClassPathResource(path);
-        try (final var inputStream = cpr.getInputStream()) {
-            return new String(
-                FileCopyUtils.copyToByteArray(inputStream),
-                StandardCharsets.UTF_8
-            );
-        } catch (Exception exception) {
-            throw new IllegalStateException(exception);
-        }
+  private static String readFile(String path) {
+    final var cpr = new ClassPathResource(path);
+    try (final var inputStream = cpr.getInputStream()) {
+      return new String(FileCopyUtils.copyToByteArray(inputStream), StandardCharsets.UTF_8);
+    } catch (Exception exception) {
+      throw new IllegalStateException(exception);
     }
+  }
 }

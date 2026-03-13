@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.filter;
 
 import java.util.Arrays;
@@ -50,132 +49,143 @@ import se.inera.intyg.rehabstod.web.model.Lakare;
 @Service
 public class PopulateFiltersServiceImpl implements PopulateFiltersService {
 
-    private final UserService userService;
-    private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
-    private final DiagnosKapitelService diagnosKapitelService;
-    private final PuService puService;
-    private final FeatureService featureService;
-    private final CertificateService certificateService;
+  private final UserService userService;
+  private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+  private final DiagnosKapitelService diagnosKapitelService;
+  private final PuService puService;
+  private final FeatureService featureService;
+  private final CertificateService certificateService;
 
-    private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+  private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
-    public PopulateFiltersServiceImpl(
-        UserService userService,
-        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
-        DiagnosKapitelService diagnosKapitelService,
-        PuService puService, FeatureService featureService, CertificateService certificateService,
-        SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver) {
-        this.userService = userService;
-        this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
-        this.diagnosKapitelService = diagnosKapitelService;
-        this.puService = puService;
-        this.featureService = featureService;
-        this.certificateService = certificateService;
-        this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
+  public PopulateFiltersServiceImpl(
+      UserService userService,
+      IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+      DiagnosKapitelService diagnosKapitelService,
+      PuService puService,
+      FeatureService featureService,
+      CertificateService certificateService,
+      SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver) {
+    this.userService = userService;
+    this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
+    this.diagnosKapitelService = diagnosKapitelService;
+    this.puService = puService;
+    this.featureService = featureService;
+    this.certificateService = certificateService;
+    this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
+  }
+
+  @Override
+  public PopulateSickLeaveFilterResponseDTO populateSickLeaveFilters() {
+    final var user = userService.getUser();
+    final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
+    final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
+    final var request = getRequest(user, unitId, careUnitId);
+    final var responseFromIT =
+        intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(request);
+    return new PopulateSickLeaveFilterResponseDTO(
+        convertDoctors(responseFromIT.getActiveDoctors()),
+        diagnosKapitelService.getDiagnosKapitelList(),
+        convertDiagnosisChapters(responseFromIT.getDiagnosisChapters()),
+        responseFromIT.getNbrOfSickLeaves(),
+        responseFromIT.isHasOngoingSickLeaves(),
+        convertRekoStatuses(responseFromIT.getRekoStatusTypes()),
+        convertOccupationTypes(responseFromIT.getOccupationTypes()),
+        getUnansweredCommunicationTypes(),
+        featureService.isFeatureActive(AuthoritiesConstants.FEATURE_SRS));
+  }
+
+  @Override
+  public PopulateLUFilterResponseDTO populateLUFilters() {
+    return PopulateLUFilterResponseDTO.builder()
+        .allDiagnosisChapters(diagnosKapitelService.getDiagnosKapitelList())
+        .doctors(certificateService.getDoctorsForUnit().getDoctors())
+        .build();
+  }
+
+  private List<UnansweredCommunicationFilterTypeDTO> getUnansweredCommunicationTypes() {
+    return Arrays.stream(UnansweredCommunicationFilterType.values())
+        .map(type -> new UnansweredCommunicationFilterTypeDTO(type.toString(), type.getName()))
+        .collect(Collectors.toList());
+  }
+
+  private List<OccupationTypeDTO> convertOccupationTypes(
+      List<se.inera.intyg.infra.sjukfall.dto.OccupationTypeDTO> occupationTypeDTOList) {
+    if (occupationTypeDTOList == null) {
+      return Collections.emptyList();
+    }
+    return occupationTypeDTOList.stream()
+        .map(
+            occupationTypeDTO ->
+                new OccupationTypeDTO(occupationTypeDTO.getId(), occupationTypeDTO.getName()))
+        .collect(Collectors.toList());
+  }
+
+  private List<se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusTypeDTO> convertRekoStatuses(
+      List<RekoStatusTypeDTO> list) {
+    if (list == null) {
+      return Collections.emptyList();
+    }
+    return list.stream()
+        .map(
+            status ->
+                new se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusTypeDTO(
+                    status.getId(), status.getName()))
+        .collect(Collectors.toList());
+  }
+
+  private List<Lakare> convertDoctors(
+      List<se.inera.intyg.infra.sjukfall.dto.Lakare> listToConvert) {
+    if (listToConvert == null) {
+      return Collections.emptyList();
     }
 
-    @Override
-    public PopulateSickLeaveFilterResponseDTO populateSickLeaveFilters() {
-        final var user = userService.getUser();
-        final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
-        final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
-        final var request = getRequest(user, unitId, careUnitId);
-        final var responseFromIT = intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(request);
-        return new PopulateSickLeaveFilterResponseDTO(
-            convertDoctors(responseFromIT.getActiveDoctors()),
-            diagnosKapitelService.getDiagnosKapitelList(),
-            convertDiagnosisChapters(responseFromIT.getDiagnosisChapters()),
-            responseFromIT.getNbrOfSickLeaves(),
-            responseFromIT.isHasOngoingSickLeaves(),
-            convertRekoStatuses(responseFromIT.getRekoStatusTypes()),
-            convertOccupationTypes(responseFromIT.getOccupationTypes()),
-            getUnansweredCommunicationTypes(),
-            featureService.isFeatureActive(AuthoritiesConstants.FEATURE_SRS)
-        );
-    }
-
-    @Override
-    public PopulateLUFilterResponseDTO populateLUFilters() {
-        return PopulateLUFilterResponseDTO.builder()
-            .allDiagnosisChapters(diagnosKapitelService.getDiagnosKapitelList())
-            .doctors(certificateService.getDoctorsForUnit().getDoctors())
-            .build();
-    }
-
-    private List<UnansweredCommunicationFilterTypeDTO> getUnansweredCommunicationTypes() {
-        return Arrays
-            .stream(UnansweredCommunicationFilterType.values())
-            .map(type -> new UnansweredCommunicationFilterTypeDTO(type.toString(), type.getName()))
-            .collect(Collectors.toList());
-    }
-
-    private List<OccupationTypeDTO> convertOccupationTypes(
-        List<se.inera.intyg.infra.sjukfall.dto.OccupationTypeDTO> occupationTypeDTOList) {
-        if (occupationTypeDTOList == null) {
-            return Collections.emptyList();
-        }
-        return occupationTypeDTOList.stream()
-            .map(occupationTypeDTO -> new OccupationTypeDTO(occupationTypeDTO.getId(), occupationTypeDTO.getName()))
-            .collect(Collectors.toList());
-    }
-
-    private List<se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusTypeDTO> convertRekoStatuses(List<RekoStatusTypeDTO> list) {
-        if (list == null) {
-            return Collections.emptyList();
-        }
-        return list
-            .stream()
-            .map(status -> new se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusTypeDTO(status.getId(), status.getName()))
-            .collect(Collectors.toList());
-    }
-
-    private List<Lakare> convertDoctors(List<se.inera.intyg.infra.sjukfall.dto.Lakare> listToConvert) {
-        if (listToConvert == null) {
-            return Collections.emptyList();
-        }
-
-        final var lakareList = listToConvert.stream()
-            .map(doctor -> new Lakare(doctor.getId(), sjukfallEmployeeNameResolver.getEmployeeName(doctor.getId())))
-            .collect(Collectors.toList());
-
-        sjukfallEmployeeNameResolver.decorateAnyDuplicateNamesWithHsaId(lakareList);
-        lakareList.sort(Comparator.comparing(Lakare::getNamn));
-
-        return lakareList;
-    }
-
-    private List<DiagnosKapitel> convertDiagnosisChapters(List<se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel> diagnosisChapters) {
-        if (diagnosisChapters == null) {
-            return Collections.emptyList();
-        }
-        return diagnosisChapters
-            .stream()
+    final var lakareList =
+        listToConvert.stream()
             .map(
-                diagnosisChapter ->
-                    new DiagnosKapitel(
-                        convertDiagnosisCategory(diagnosisChapter.getFrom()),
-                        convertDiagnosisCategory(diagnosisChapter.getTo()),
-                        diagnosisChapter.getName()
-                    )
-            )
+                doctor ->
+                    new Lakare(
+                        doctor.getId(),
+                        sjukfallEmployeeNameResolver.getEmployeeName(doctor.getId())))
             .collect(Collectors.toList());
+
+    sjukfallEmployeeNameResolver.decorateAnyDuplicateNamesWithHsaId(lakareList);
+    lakareList.sort(Comparator.comparing(Lakare::getNamn));
+
+    return lakareList;
+  }
+
+  private List<DiagnosKapitel> convertDiagnosisChapters(
+      List<se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel> diagnosisChapters) {
+    if (diagnosisChapters == null) {
+      return Collections.emptyList();
     }
+    return diagnosisChapters.stream()
+        .map(
+            diagnosisChapter ->
+                new DiagnosKapitel(
+                    convertDiagnosisCategory(diagnosisChapter.getFrom()),
+                    convertDiagnosisCategory(diagnosisChapter.getTo()),
+                    diagnosisChapter.getName()))
+        .collect(Collectors.toList());
+  }
 
-    private DiagnosKategori convertDiagnosisCategory(se.inera.intyg.infra.sjukfall.dto.DiagnosKategori diagnosisCategory) {
-        return new DiagnosKategori(diagnosisCategory.getLetter(), diagnosisCategory.getNumber());
+  private DiagnosKategori convertDiagnosisCategory(
+      se.inera.intyg.infra.sjukfall.dto.DiagnosKategori diagnosisCategory) {
+    return new DiagnosKategori(diagnosisCategory.getLetter(), diagnosisCategory.getNumber());
+  }
+
+  private PopulateFiltersRequestDTO getRequest(
+      RehabstodUser user, String unitId, String careUnitId) {
+    final var request = new PopulateFiltersRequestDTO();
+    request.setMaxDaysSinceSickLeaveCompleted(ControllerUtil.getMaxDagarSedanSjukfallAvslut(user));
+    request.setUnitId(unitId);
+    request.setCareUnitId(careUnitId);
+    request.setProtectedPersonFilterId(
+        puService.shouldFilterSickLeavesOnProtectedPerson(user) ? null : user.getHsaId());
+    if (user.getUrval() == Urval.ISSUED_BY_ME) {
+      request.setDoctorId(user.getHsaId());
     }
-
-
-    private PopulateFiltersRequestDTO getRequest(RehabstodUser user, String unitId, String careUnitId) {
-        final var request = new PopulateFiltersRequestDTO();
-        request.setMaxDaysSinceSickLeaveCompleted(ControllerUtil.getMaxDagarSedanSjukfallAvslut(user));
-        request.setUnitId(unitId);
-        request.setCareUnitId(careUnitId);
-        request.setProtectedPersonFilterId(puService.shouldFilterSickLeavesOnProtectedPerson(user) ? null : user.getHsaId());
-        if (user.getUrval() == Urval.ISSUED_BY_ME) {
-            request.setDoctorId(user.getHsaId());
-        }
-        return request;
-
-    }
+    return request;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,10 +23,9 @@ import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 
 public interface UserPreferencesService {
 
-    RehabstodUserPreferences getAllPreferences();
+  RehabstodUserPreferences getAllPreferences();
 
-    void updatePreferences(RehabstodUserPreferences rehabstodUserPreferences);
+  void updatePreferences(RehabstodUserPreferences rehabstodUserPreferences);
 
-    String getPreferenceValue(Preference pref);
-
+  String getPreferenceValue(Preference pref);
 }

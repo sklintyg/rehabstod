@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -44,155 +44,171 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-11.
- */
+/** Created by Magnus Ekstrand on 2016-02-11. */
 public class IntygsDataLineMapper {
 
-    Set<String[]> fields;
+  Set<String[]> fields;
 
+  public IntygsDataLineMapper() {
+    fields = new HashSet<>();
+  }
 
-    public IntygsDataLineMapper() {
-        fields = new HashSet<>();
+  public static List<IntygsData> map(List<String> lines) {
+    IntygsDataLineMapper mapper = new IntygsDataLineMapper();
+
+    for (String line : lines) {
+      String[] splitData = mapper.toArray(line);
+      if (splitData != null) {
+        mapper.fields.add(splitData);
+      }
     }
 
-    public static List<IntygsData> map(List<String> lines) {
-        IntygsDataLineMapper mapper = new IntygsDataLineMapper();
+    return mapper.map(mapper.fields);
+  }
 
-        for (String line : lines) {
-            String[] splitData = mapper.toArray(line);
-            if (splitData != null) {
-                mapper.fields.add(splitData);
-            }
-        }
+  private List<IntygsData> map(Set<String[]> fields) {
 
-        return mapper.map(mapper.fields);
+    List<IntygsData> intygsData = new ArrayList<>();
+    FormagaFieldSetMapper ffsm = new FormagaFieldSetMapper();
+
+    // CHECKSTYLE:OFF MagicNumber
+    Iterator<String[]> iter = fields.iterator();
+    while (iter.hasNext()) {
+      String[] data = iter.next();
+
+      // Map data to objects
+      Patient patient = patient(data[1], data[2], data[3], data[4]);
+      Enhet enhet = enhet(data[6], data[7]);
+      HosPersonal skapadAv = personal(data[8], data[9], enhet);
+      Arbetsformaga arbetsformaga = arbetsformaga(ffsm.map(data[10]));
+      Boolean enkeltIntyg = Boolean.valueOf(data[11]);
+      LocalDateTime signeringsTidpunkt = LocalDateTime.parse(data[12]);
+
+      // Add to intygsData list
+      intygsData.add(
+          intygsData(
+              data[0], patient, skapadAv, data[5], arbetsformaga, enkeltIntyg, signeringsTidpunkt));
+    }
+    // CHECKSTYLE:ON MagicNumber
+
+    return intygsData;
+  }
+
+  private IntygsData intygsData(
+      String intygsId,
+      Patient patient,
+      HosPersonal skapadAv,
+      String diagnoskod,
+      Arbetsformaga arbetsformaga,
+      boolean enkeltIntyg,
+      LocalDateTime signeringsTidpunkt) {
+    return new IntygsDataT.IntygsDataBuilder()
+        .intygsId(intygsId)
+        .patient(patient)
+        .skapadAv(skapadAv)
+        .diagnoskod(diagnoskod)
+        .arbetsformaga(arbetsformaga)
+        .enkeltIntyg(enkeltIntyg)
+        .signeringsTidpunkt(signeringsTidpunkt)
+        .build();
+  }
+
+  private IIType id() {
+    return new IdT.IITypeBuilder().extension(UUID.randomUUID().toString()).build();
+  }
+
+  private IIType id(String id) {
+    return new IdT.IITypeBuilder().extension(id).build();
+  }
+
+  private IntygId intygId(IIType type) {
+    IntygId obj = new IntygId();
+    obj.setExtension(type.getExtension());
+    return obj;
+  }
+
+  private PersonId personId(IIType type) {
+    PersonId obj = new PersonId();
+    obj.setExtension(type.getExtension());
+    return obj;
+  }
+
+  private HsaId hsaId(IIType type) {
+    HsaId obj = new HsaId();
+    obj.setExtension(type.getExtension());
+    return obj;
+  }
+
+  private Patient patient(String pid, String fnamn, String mnamn, String enamn) {
+    String pnamn = "";
+
+    if (fnamn != null) {
+      pnamn = fnamn;
     }
 
-    private List<IntygsData> map(Set<String[]> fields) {
-
-        List<IntygsData> intygsData = new ArrayList<>();
-        FormagaFieldSetMapper ffsm = new FormagaFieldSetMapper();
-
-        // CHECKSTYLE:OFF MagicNumber
-        Iterator<String[]> iter = fields.iterator();
-        while (iter.hasNext()) {
-            String[] data = iter.next();
-
-            // Map data to objects
-            Patient patient = patient(data[1], data[2], data[3], data[4]);
-            Enhet enhet = enhet(data[6], data[7]);
-            HosPersonal skapadAv = personal(data[8], data[9], enhet);
-            Arbetsformaga arbetsformaga = arbetsformaga(ffsm.map(data[10]));
-            Boolean enkeltIntyg = Boolean.valueOf(data[11]);
-            LocalDateTime signeringsTidpunkt = LocalDateTime.parse(data[12]);
-
-            // Add to intygsData list
-            intygsData.add(intygsData(data[0], patient, skapadAv, data[5], arbetsformaga, enkeltIntyg, signeringsTidpunkt));
-        }
-        // CHECKSTYLE:ON MagicNumber
-
-        return intygsData;
+    if (mnamn != null) {
+      pnamn = pnamn.isEmpty() ? mnamn : pnamn + " " + mnamn;
     }
 
-    private IntygsData intygsData(String intygsId, Patient patient, HosPersonal skapadAv, String diagnoskod, Arbetsformaga arbetsformaga,
-        boolean enkeltIntyg, LocalDateTime signeringsTidpunkt) {
-        return new IntygsDataT.IntygsDataBuilder()
-            .intygsId(intygsId)
-            .patient(patient)
-            .skapadAv(skapadAv)
-            .diagnoskod(diagnoskod)
-            .arbetsformaga(arbetsformaga)
-            .enkeltIntyg(enkeltIntyg)
-            .signeringsTidpunkt(signeringsTidpunkt)
-            .build();
+    if (enamn != null) {
+      pnamn = pnamn.isEmpty() ? enamn : pnamn + " " + enamn;
     }
 
-    private IIType id() {
-        return new IdT.IITypeBuilder().extension(UUID.randomUUID().toString()).build();
+    return patient(pid, pnamn);
+  }
+
+  private Patient patient(String pid, String pnamn) {
+    return new PatientT.PatientBuilder().personId(personId(id(pid))).namn(pnamn).build();
+  }
+
+  private Enhet enhet(String eid, String namn) {
+    return new EnhetT.EnhetBuilder().enhetsId(hsaId(id(eid))).enhetsnamn(namn).build();
+  }
+
+  private HosPersonal personal(String hsaId, String namn, Enhet enhet) {
+    return new HosPersonalT.HosPersonalBuilder()
+        .personalId(hsaId(id(hsaId)))
+        .fullstandigtNamn(namn)
+        .enhet(enhet)
+        .build();
+  }
+
+  private Arbetsformaga arbetsformaga(List<Formaga> formagaList) {
+    return new ArbetsformagaT.ArbetsformagaBuilder().formaga(formagaList).build();
+  }
+
+  private String[] toArray(String csv) {
+    if (csv != null) {
+      return csv.split("\\s*,\\s*");
     }
 
-    private IIType id(String id) {
-        return new IdT.IITypeBuilder().extension(id).build();
+    return null;
+  }
+
+  class FormagaFieldSetMapper {
+
+    public List<Formaga> map(String arbetsformaga) {
+      List<Formaga> formagaList = new ArrayList<>();
+      String[] formagor = arbetsformaga.replace("[", "").replace("]", "").split("\\|");
+
+      for (String formaga : formagor) {
+        String[] fields = formaga.split(";");
+        formagaList.add(
+            formaga(
+                LocalDate.parse(fields[0]),
+                LocalDate.parse(fields[1]),
+                Integer.parseInt(fields[2])));
+      }
+
+      return formagaList;
     }
 
-    private IntygId intygId(IIType type) {
-        IntygId obj = new IntygId();
-        obj.setExtension(type.getExtension());
-        return obj;
+    private Formaga formaga(LocalDate start, LocalDate slut, int nedsatthet) {
+      return new FormagaT.FormagaBuilder()
+          .startdatum(start)
+          .slutdatum(slut)
+          .nedsattning(nedsatthet)
+          .build();
     }
-
-    private PersonId personId(IIType type) {
-        PersonId obj = new PersonId();
-        obj.setExtension(type.getExtension());
-        return obj;
-    }
-
-    private HsaId hsaId(IIType type) {
-        HsaId obj = new HsaId();
-        obj.setExtension(type.getExtension());
-        return obj;
-    }
-
-    private Patient patient(String pid, String fnamn, String mnamn, String enamn) {
-        String pnamn = "";
-
-        if (fnamn != null) {
-            pnamn = fnamn;
-        }
-
-        if (mnamn != null) {
-            pnamn = pnamn.isEmpty() ? mnamn : pnamn + " " + mnamn;
-        }
-
-        if (enamn != null) {
-            pnamn = pnamn.isEmpty() ? enamn : pnamn + " " + enamn;
-        }
-
-        return patient(pid, pnamn);
-    }
-
-    private Patient patient(String pid, String pnamn) {
-        return new PatientT.PatientBuilder().personId(personId(id(pid))).namn(pnamn).build();
-    }
-
-    private Enhet enhet(String eid, String namn) {
-        return new EnhetT.EnhetBuilder().enhetsId(hsaId(id(eid))).enhetsnamn(namn).build();
-    }
-
-    private HosPersonal personal(String hsaId, String namn, Enhet enhet) {
-        return new HosPersonalT.HosPersonalBuilder().personalId(hsaId(id(hsaId))).fullstandigtNamn(namn).enhet(enhet).build();
-    }
-
-    private Arbetsformaga arbetsformaga(List<Formaga> formagaList) {
-        return new ArbetsformagaT.ArbetsformagaBuilder().formaga(formagaList).build();
-    }
-
-    private String[] toArray(String csv) {
-        if (csv != null) {
-            return csv.split("\\s*,\\s*");
-        }
-
-        return null;
-    }
-
-    class FormagaFieldSetMapper {
-
-        public List<Formaga> map(String arbetsformaga) {
-            List<Formaga> formagaList = new ArrayList<>();
-            String[] formagor = arbetsformaga.replace("[", "").replace("]", "").split("\\|");
-
-            for (String formaga : formagor) {
-                String[] fields = formaga.split(";");
-                formagaList.add(formaga(LocalDate.parse(fields[0]), LocalDate.parse(fields[1]), Integer.parseInt(fields[2])));
-            }
-
-            return formagaList;
-        }
-
-        private Formaga formaga(LocalDate start, LocalDate slut, int nedsatthet) {
-            return new FormagaT.FormagaBuilder().startdatum(start).slutdatum(slut).nedsattning(nedsatthet).build();
-        }
-    }
-
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import com.sun.istack.NotNull;
@@ -36,20 +35,20 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.ErrorDataDTO;
 @RequestMapping("/api/log")
 public class LogErrorController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LogErrorController.class);
-    private final ErrorLogService errorLogService;
+  private static final Logger LOG = LoggerFactory.getLogger(LogErrorController.class);
+  private final ErrorLogService errorLogService;
 
-    public LogErrorController(ErrorLogService errorLogService) {
-        this.errorLogService = errorLogService;
-    }
+  public LogErrorController(ErrorLogService errorLogService) {
+    this.errorLogService = errorLogService;
+  }
 
-    @PostMapping("/error")
-    @PerformanceLogging(eventAction = "log-error", eventType = MdcLogConstants.EVENT_TYPE_CREATION)
-    public ResponseEntity<Void> logError(@RequestBody @NotNull ErrorDataDTO errorDataDTO) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Logging error with id: '{}'", errorDataDTO.getErrorData().getErrorId());
-        }
-        errorLogService.logError(errorDataDTO.getErrorData());
-        return ResponseEntity.ok().build();
+  @PostMapping("/error")
+  @PerformanceLogging(eventAction = "log-error", eventType = MdcLogConstants.EVENT_TYPE_CREATION)
+  public ResponseEntity<Void> logError(@RequestBody @NotNull ErrorDataDTO errorDataDTO) {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Logging error with id: '{}'", errorDataDTO.getErrorData().getErrorId());
     }
+    errorLogService.logError(errorDataDTO.getErrorData());
+    return ResponseEntity.ok().build();
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,21 +27,26 @@ import org.junit.Test;
 
 public class ExportFieldsTest {
 
-    @Test
-    public void fromJson() {
-        assertEquals(ExportField.fromJson(""), Arrays.asList(ExportField.values()));
-        assertEquals(ExportField.fromJson(null), Arrays.asList(ExportField.values()));
-        assertTrue(ExportField.fromJson("unknown:1").isEmpty());
-        assertTrue(ExportField.fromJson(ExportField.DAYS.getJsonId() + ":0").isEmpty());
-        assertEquals(ExportField.fromJson(ExportField.DAYS.getJsonId()), Arrays.asList(ExportField.DAYS));
+  @Test
+  public void fromJson() {
+    assertEquals(ExportField.fromJson(""), Arrays.asList(ExportField.values()));
+    assertEquals(ExportField.fromJson(null), Arrays.asList(ExportField.values()));
+    assertTrue(ExportField.fromJson("unknown:1").isEmpty());
+    assertTrue(ExportField.fromJson(ExportField.DAYS.getJsonId() + ":0").isEmpty());
+    assertEquals(
+        ExportField.fromJson(ExportField.DAYS.getJsonId()), Arrays.asList(ExportField.DAYS));
 
-        final List<ExportField> exportFields = ExportField.fromJson(
-            ExportField.ARENDEN.getJsonId() + ":1|" + ExportField.DAYS.getJsonId() + ":1|apa:1|" + ExportField.GRADER.getJsonId() + ":1");
-        assertEquals(3, exportFields.size());
-        assertEquals((ExportField.ARENDEN), exportFields.get(0));
-        assertEquals((ExportField.DAYS), exportFields.get(1));
-        assertEquals((ExportField.GRADER), exportFields.get(2));
-
-
-    }
+    final List<ExportField> exportFields =
+        ExportField.fromJson(
+            ExportField.ARENDEN.getJsonId()
+                + ":1|"
+                + ExportField.DAYS.getJsonId()
+                + ":1|apa:1|"
+                + ExportField.GRADER.getJsonId()
+                + ":1");
+    assertEquals(3, exportFields.size());
+    assertEquals((ExportField.ARENDEN), exportFields.get(0));
+    assertEquals((ExportField.DAYS), exportFields.get(1));
+    assertEquals((ExportField.GRADER), exportFields.get(2));
+  }
 }

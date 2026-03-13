@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,29 +23,26 @@ import java.util.ArrayList;
 import java.util.List;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-10.
- */
+/** Created by Magnus Ekstrand on 2016-02-10. */
 public class IntygsDataGenerator {
 
-    private final int linesToSkip = 1;
+  private final int linesToSkip = 1;
 
-    private IntygsDataReader reader;
-    private List<IntygsData> intygsData;
+  private IntygsDataReader reader;
+  private List<IntygsData> intygsData;
 
-    public IntygsDataGenerator(String location) {
-        this.reader = new IntygsDataReader(location, linesToSkip);
-        this.intygsData = new ArrayList<>();
-    }
+  public IntygsDataGenerator(String location) {
+    this.reader = new IntygsDataReader(location, linesToSkip);
+    this.intygsData = new ArrayList<>();
+  }
 
-    public IntygsDataGenerator generate() throws IOException {
-        List<String> csvlines = reader.read();
-        intygsData = IntygsDataLineMapper.map(csvlines);
-        return this;
-    }
+  public IntygsDataGenerator generate() throws IOException {
+    List<String> csvlines = reader.read();
+    intygsData = IntygsDataLineMapper.map(csvlines);
+    return this;
+  }
 
-    public List<IntygsData> get() {
-        return this.intygsData;
-    }
-
+  public List<IntygsData> get() {
+    return this.intygsData;
+  }
 }

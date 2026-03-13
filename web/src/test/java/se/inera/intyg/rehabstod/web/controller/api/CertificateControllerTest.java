@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -38,101 +38,98 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForPerso
 @ExtendWith(MockitoExtension.class)
 public class CertificateControllerTest {
 
-    private static final String ENCRYPTED_PATIENT_ID = "ENCRYPTED_PATIENT_ID";
-    private static final String PATIENT_ID = "PATIENT_ID";
+  private static final String ENCRYPTED_PATIENT_ID = "ENCRYPTED_PATIENT_ID";
+  private static final String PATIENT_ID = "PATIENT_ID";
 
-    @Mock
-    private PatientIdEncryption patientIdEncryption;
+  @Mock private PatientIdEncryption patientIdEncryption;
 
-    @Mock
-    private CertificateService certificateService;
+  @Mock private CertificateService certificateService;
 
-    @InjectMocks
-    private CertificateController certificateController;
+  @InjectMocks private CertificateController certificateController;
 
-    @Nested
-    class AGForPerson {
+  @Nested
+  class AGForPerson {
 
-        @Test
-        void shouldUsePatientIdEncryptionIfPersonIdIsNotSet() {
-            when(patientIdEncryption.decrypt(anyString())).thenReturn(ENCRYPTED_PATIENT_ID);
-            final var request = new GetAGCertificatesForPersonRequest();
-            request.setEncryptedPatientId(ENCRYPTED_PATIENT_ID);
-            final var captor = ArgumentCaptor.forClass(String.class);
+    @Test
+    void shouldUsePatientIdEncryptionIfPersonIdIsNotSet() {
+      when(patientIdEncryption.decrypt(anyString())).thenReturn(ENCRYPTED_PATIENT_ID);
+      final var request = new GetAGCertificatesForPersonRequest();
+      request.setEncryptedPatientId(ENCRYPTED_PATIENT_ID);
+      final var captor = ArgumentCaptor.forClass(String.class);
 
-            certificateController.getAGForPerson(request);
+      certificateController.getAGForPerson(request);
 
-            verify(certificateService).getAGCertificatesForPerson(captor.capture());
-            assertEquals(ENCRYPTED_PATIENT_ID, captor.getValue());
-        }
-
-        @Test
-        void shouldUsePersonIdIfEncryptedIsNotSet() {
-            final var request = new GetAGCertificatesForPersonRequest();
-            request.setPersonId(PATIENT_ID);
-            final var captor = ArgumentCaptor.forClass(String.class);
-
-            certificateController.getAGForPerson(request);
-
-            verify(certificateService).getAGCertificatesForPerson(captor.capture());
-            assertEquals(PATIENT_ID, captor.getValue());
-        }
-
-        @Test
-        void shouldUseEncryptionIdIfBothAreSet() {
-            when(patientIdEncryption.decrypt(anyString())).thenReturn(ENCRYPTED_PATIENT_ID);
-            final var request = new GetAGCertificatesForPersonRequest();
-            request.setPersonId(PATIENT_ID);
-            request.setEncryptedPatientId(ENCRYPTED_PATIENT_ID);
-            final var captor = ArgumentCaptor.forClass(String.class);
-
-            certificateController.getAGForPerson(request);
-
-            verify(certificateService).getAGCertificatesForPerson(captor.capture());
-            assertEquals(ENCRYPTED_PATIENT_ID, captor.getValue());
-        }
+      verify(certificateService).getAGCertificatesForPerson(captor.capture());
+      assertEquals(ENCRYPTED_PATIENT_ID, captor.getValue());
     }
 
-    @Nested
-    class LUForPerson {
+    @Test
+    void shouldUsePersonIdIfEncryptedIsNotSet() {
+      final var request = new GetAGCertificatesForPersonRequest();
+      request.setPersonId(PATIENT_ID);
+      final var captor = ArgumentCaptor.forClass(String.class);
 
-        @Test
-        void shouldUsePatientIdEncryptionIfPersonIdIsNotSet() {
-            when(patientIdEncryption.decrypt(anyString())).thenReturn(ENCRYPTED_PATIENT_ID);
-            final var request = new GetLUCertificatesForPersonRequest();
-            request.setEncryptedPatientId(ENCRYPTED_PATIENT_ID);
-            final var captor = ArgumentCaptor.forClass(String.class);
+      certificateController.getAGForPerson(request);
 
-            certificateController.getLUForPerson(request);
-
-            verify(certificateService).getLUCertificatesForPerson(captor.capture());
-            assertEquals(ENCRYPTED_PATIENT_ID, captor.getValue());
-        }
-
-        @Test
-        void shouldUsePersonIdIfEncryptedIsNotSet() {
-            final var request = new GetLUCertificatesForPersonRequest();
-            request.setPersonId(PATIENT_ID);
-            final var captor = ArgumentCaptor.forClass(String.class);
-
-            certificateController.getLUForPerson(request);
-
-            verify(certificateService).getLUCertificatesForPerson(captor.capture());
-            assertEquals(PATIENT_ID, captor.getValue());
-        }
-
-        @Test
-        void shouldUseEncryptionIdIfBothAreSet() {
-            when(patientIdEncryption.decrypt(anyString())).thenReturn(ENCRYPTED_PATIENT_ID);
-            final var request = new GetLUCertificatesForPersonRequest();
-            request.setPersonId(PATIENT_ID);
-            request.setEncryptedPatientId(ENCRYPTED_PATIENT_ID);
-            final var captor = ArgumentCaptor.forClass(String.class);
-
-            certificateController.getLUForPerson(request);
-
-            verify(certificateService).getLUCertificatesForPerson(captor.capture());
-            assertEquals(ENCRYPTED_PATIENT_ID, captor.getValue());
-        }
+      verify(certificateService).getAGCertificatesForPerson(captor.capture());
+      assertEquals(PATIENT_ID, captor.getValue());
     }
+
+    @Test
+    void shouldUseEncryptionIdIfBothAreSet() {
+      when(patientIdEncryption.decrypt(anyString())).thenReturn(ENCRYPTED_PATIENT_ID);
+      final var request = new GetAGCertificatesForPersonRequest();
+      request.setPersonId(PATIENT_ID);
+      request.setEncryptedPatientId(ENCRYPTED_PATIENT_ID);
+      final var captor = ArgumentCaptor.forClass(String.class);
+
+      certificateController.getAGForPerson(request);
+
+      verify(certificateService).getAGCertificatesForPerson(captor.capture());
+      assertEquals(ENCRYPTED_PATIENT_ID, captor.getValue());
+    }
+  }
+
+  @Nested
+  class LUForPerson {
+
+    @Test
+    void shouldUsePatientIdEncryptionIfPersonIdIsNotSet() {
+      when(patientIdEncryption.decrypt(anyString())).thenReturn(ENCRYPTED_PATIENT_ID);
+      final var request = new GetLUCertificatesForPersonRequest();
+      request.setEncryptedPatientId(ENCRYPTED_PATIENT_ID);
+      final var captor = ArgumentCaptor.forClass(String.class);
+
+      certificateController.getLUForPerson(request);
+
+      verify(certificateService).getLUCertificatesForPerson(captor.capture());
+      assertEquals(ENCRYPTED_PATIENT_ID, captor.getValue());
+    }
+
+    @Test
+    void shouldUsePersonIdIfEncryptedIsNotSet() {
+      final var request = new GetLUCertificatesForPersonRequest();
+      request.setPersonId(PATIENT_ID);
+      final var captor = ArgumentCaptor.forClass(String.class);
+
+      certificateController.getLUForPerson(request);
+
+      verify(certificateService).getLUCertificatesForPerson(captor.capture());
+      assertEquals(PATIENT_ID, captor.getValue());
+    }
+
+    @Test
+    void shouldUseEncryptionIdIfBothAreSet() {
+      when(patientIdEncryption.decrypt(anyString())).thenReturn(ENCRYPTED_PATIENT_ID);
+      final var request = new GetLUCertificatesForPersonRequest();
+      request.setPersonId(PATIENT_ID);
+      request.setEncryptedPatientId(ENCRYPTED_PATIENT_ID);
+      final var captor = ArgumentCaptor.forClass(String.class);
+
+      certificateController.getLUForPerson(request);
+
+      verify(certificateService).getLUCertificatesForPerson(captor.capture());
+      assertEquals(ENCRYPTED_PATIENT_ID, captor.getValue());
+    }
+  }
 }

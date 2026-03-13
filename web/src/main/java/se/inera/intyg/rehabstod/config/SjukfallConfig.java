@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,14 +21,11 @@ package se.inera.intyg.rehabstod.config;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Created by Magnus Ekstrand on 2017-02-21.
- */
+/** Created by Magnus Ekstrand on 2017-02-21. */
 @Configuration
 @ComponentScan("se.inera.intyg.infra.sjukfall.services")
 public class SjukfallConfig {
 
-    public SjukfallConfig() { //NOSONAR
-    }
-
+  public SjukfallConfig() { // NOSONAR
+  }
 }

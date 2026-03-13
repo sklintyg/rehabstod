@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,54 +23,53 @@ package se.inera.intyg.rehabstod.web.model;
  */
 public class Lakare {
 
-    private String hsaId;
-    private String namn;
+  private String hsaId;
+  private String namn;
 
-    public Lakare() {
-        // When we try to deserialize a JSON String to Lakare an Exception
-        // “JsonMappingException: No suitable constructor found” will be thrown
-        // in absence of a default constructor
+  public Lakare() {
+    // When we try to deserialize a JSON String to Lakare an Exception
+    // “JsonMappingException: No suitable constructor found” will be thrown
+    // in absence of a default constructor
+  }
+
+  public Lakare(String hsaId, String namn) {
+    this.hsaId = hsaId;
+    this.namn = namn;
+  }
+
+  // - - - getters - - -
+
+  public String getHsaId() {
+    return hsaId;
+  }
+
+  public String getNamn() {
+    return namn;
+  }
+
+  // name is mutable since we sometimes need to post-process the doctor name
+  public void setNamn(String namn) {
+    this.namn = namn;
+  }
+
+  // - - - api - - -
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Lakare)) {
+      return false;
     }
 
-    public Lakare(String hsaId, String namn) {
-        this.hsaId = hsaId;
-        this.namn = namn;
-    }
+    Lakare lakare = (Lakare) o;
 
-    // - - - getters - - -
+    return hsaId.equals(lakare.hsaId);
+  }
 
-    public String getHsaId() {
-        return hsaId;
-    }
-
-    public String getNamn() {
-        return namn;
-    }
-
-    // name is mutable since we sometimes need to post-process the doctor name
-    public void setNamn(String namn) {
-        this.namn = namn;
-    }
-
-    // - - - api - - -
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Lakare)) {
-            return false;
-        }
-
-        Lakare lakare = (Lakare) o;
-
-        return hsaId.equals(lakare.hsaId);
-    }
-
-    @Override
-    public int hashCode() {
-        return hsaId.hashCode();
-    }
-
+  @Override
+  public int hashCode() {
+    return hsaId.hashCode();
+  }
 }

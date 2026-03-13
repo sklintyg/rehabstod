@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -45,255 +45,268 @@ import se.inera.intyg.rehabstod.service.Urval;
  */
 public class RehabstodUser extends IntygUser implements Serializable, Saml2AuthenticatedPrincipal {
 
-    private static final long serialVersionUID = 8711015219408194075L;
+  private static final long serialVersionUID = 8711015219408194075L;
 
-    // Handles PDL logging state
-    private Map<String, List<PDLActivityEntry>> storedActivities;
+  // Handles PDL logging state
+  private Map<String, List<PDLActivityEntry>> storedActivities;
 
-    private boolean pdlConsentGiven = false;
-    private boolean isLakare = false;
+  private boolean pdlConsentGiven = false;
+  private boolean isLakare = false;
 
-    private RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
-    private Map<String, Set<String>> sjfPatientVardgivare = new HashMap<>();
-    private Map<String, Set<String>> sjfPatientVardenhet = new HashMap<>();
-    private Map<String, Role> originalRoles = new HashMap<>();
+  private RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+  private Map<String, Set<String>> sjfPatientVardgivare = new HashMap<>();
+  private Map<String, Set<String>> sjfPatientVardenhet = new HashMap<>();
+  private Map<String, Role> originalRoles = new HashMap<>();
 
-    /**
-     * Typically used by unit tests.
-     */
-    public RehabstodUser(String hsaId, String namn, boolean isLakare) {
-        super(hsaId);
-        this.storedActivities = new HashMap<>();
-        this.hsaId = hsaId;
-        this.namn = namn;
-        this.isLakare = isLakare;
+  /** Typically used by unit tests. */
+  public RehabstodUser(String hsaId, String namn, boolean isLakare) {
+    super(hsaId);
+    this.storedActivities = new HashMap<>();
+    this.hsaId = hsaId;
+    this.namn = namn;
+    this.isLakare = isLakare;
+  }
+
+  /**
+   * Copy-constructor that takes a populated {@link IntygUser} and booleans for whether the user has
+   * given PDL consent and whether the user has LAKARE privileges.
+   *
+   * <p>The "isLakare" backs the overridden "isLakare()" method, i.e. the RehabstodUser class
+   * doesn't derive LAKARE status from the underlying roles once the isLakare value has been set.
+   * This is due to the requirement that LAKARE having systemRoles for being Rehabkoordinator on one
+   * or more care units must be able to "switch" between roles when changing units without losing
+   * the original "isLakare" information. See INTYG-5068.
+   *
+   * @param intygUser User principal
+   * @param pdlConsentGiven Whether the user has given PDL logging consent.
+   * @param isLakare Wheter the user is LAKARE or not. Immutable once set.
+   */
+  public RehabstodUser(IntygUser intygUser, boolean pdlConsentGiven, boolean isLakare) {
+    super(intygUser.getHsaId());
+
+    this.userTermsApprovedOrSubscriptionInUse = intygUser.isUserTermsApprovedOrSubscriptionInUse();
+    this.personId = intygUser.getPersonId();
+
+    this.namn = intygUser.getNamn();
+    this.titel = intygUser.getTitel();
+    this.forskrivarkod = intygUser.getForskrivarkod();
+    this.authenticationScheme = intygUser.getAuthenticationScheme();
+    this.vardgivare = intygUser.getVardgivare();
+    this.befattningar = intygUser.getBefattningar();
+    this.specialiseringar = intygUser.getSpecialiseringar();
+    this.legitimeradeYrkesgrupper = intygUser.getLegitimeradeYrkesgrupper();
+    this.systemRoles = intygUser.getSystemRoles();
+
+    this.valdVardenhet = intygUser.getValdVardenhet();
+    this.valdVardgivare = intygUser.getValdVardgivare();
+    this.authenticationMethod = intygUser.getAuthenticationMethod();
+
+    this.features = intygUser.getFeatures();
+    this.roles = intygUser.getRoles();
+    this.originalRoles = new HashMap<>(this.roles);
+    this.authorities = intygUser.getAuthorities();
+    this.origin = intygUser.getOrigin();
+
+    this.storedActivities = new HashMap<>();
+
+    this.miuNamnPerEnhetsId = intygUser.getMiuNamnPerEnhetsId();
+    this.pdlConsentGiven = pdlConsentGiven;
+
+    this.isLakare = isLakare;
+    this.roleTypeName = intygUser.getRoleTypeName();
+  }
+
+  public Urval getUrval() {
+    // If we dont have a role, we can't decide which urval change is allowed, so..
+    if (roles == null) {
+      return null;
     }
 
-    /**
-     * Copy-constructor that takes a populated {@link IntygUser} and booleans for whether the user has given PDL consent
-     * and whether the user has LAKARE privileges.
-     *
-     * The "isLakare" backs the overridden "isLakare()" method, i.e. the RehabstodUser class doesn't derive LAKARE status
-     * from the underlying roles once the isLakare value has been set. This is due to the requirement that LAKARE having
-     * systemRoles for being Rehabkoordinator on one or more care units must be able to "switch" between roles when
-     * changing units without losing the original "isLakare" information. See INTYG-5068.
-     *
-     * @param intygUser User principal
-     * @param pdlConsentGiven Whether the user has given PDL logging consent.
-     * @param isLakare Wheter the user is LAKARE or not. Immutable once set.
-     */
-    public RehabstodUser(IntygUser intygUser, boolean pdlConsentGiven, boolean isLakare) {
-        super(intygUser.getHsaId());
-
-        this.userTermsApprovedOrSubscriptionInUse = intygUser.isUserTermsApprovedOrSubscriptionInUse();
-        this.personId = intygUser.getPersonId();
-
-        this.namn = intygUser.getNamn();
-        this.titel = intygUser.getTitel();
-        this.forskrivarkod = intygUser.getForskrivarkod();
-        this.authenticationScheme = intygUser.getAuthenticationScheme();
-        this.vardgivare = intygUser.getVardgivare();
-        this.befattningar = intygUser.getBefattningar();
-        this.specialiseringar = intygUser.getSpecialiseringar();
-        this.legitimeradeYrkesgrupper = intygUser.getLegitimeradeYrkesgrupper();
-        this.systemRoles = intygUser.getSystemRoles();
-
-        this.valdVardenhet = intygUser.getValdVardenhet();
-        this.valdVardgivare = intygUser.getValdVardgivare();
-        this.authenticationMethod = intygUser.getAuthenticationMethod();
-
-        this.features = intygUser.getFeatures();
-        this.roles = intygUser.getRoles();
-        this.originalRoles = new HashMap<>(this.roles);
-        this.authorities = intygUser.getAuthorities();
-        this.origin = intygUser.getOrigin();
-
-        this.storedActivities = new HashMap<>();
-
-        this.miuNamnPerEnhetsId = intygUser.getMiuNamnPerEnhetsId();
-        this.pdlConsentGiven = pdlConsentGiven;
-
-        this.isLakare = isLakare;
-        this.roleTypeName = intygUser.getRoleTypeName();
+    if (roles.containsKey(AuthoritiesConstants.ROLE_KOORDINATOR)) {
+      return Urval.ALL;
     }
 
-    public Urval getUrval() {
-        // If we dont have a role, we can't decide which urval change is allowed, so..
-        if (roles == null) {
-            return null;
+    return Urval.ISSUED_BY_ME;
+  }
+
+  public Map<String, List<PDLActivityEntry>> getStoredActivities() {
+    return storedActivities;
+  }
+
+  public Urval getDefaultUrval() {
+    return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE)
+            || roles.containsKey(AuthoritiesConstants.ROLE_TANDLAKARE)
+        ? Urval.ISSUED_BY_ME
+        : Urval.ALL;
+  }
+
+  @Override
+  public int getTotaltAntalVardenheter() {
+    // count all hasid's in the datastructure
+    return (int) getVardgivare().stream().flatMap(vg -> vg.getHsaIds().stream()).count();
+  }
+
+  public Map<String, Role> getOriginalRoles() {
+    return originalRoles;
+  }
+
+  /**
+   * If the currently selected vardenhet is not null and is an underenhet/mottagning, this method
+   * returns true.
+   *
+   * @return true if UE, false if not.
+   */
+  public boolean isValdVardenhetMottagning() {
+    if (valdVardenhet == null) {
+      return false;
+    }
+
+    for (Vardgivare vg : vardgivare) {
+      for (Vardenhet ve : vg.getVardenheter()) {
+        if (ve.getId().equals(valdVardenhet.getId())) {
+          return false;
         }
-
-        if (roles.containsKey(AuthoritiesConstants.ROLE_KOORDINATOR)) {
-            return Urval.ALL;
-        }
-
-        return Urval.ISSUED_BY_ME;
-    }
-
-    public Map<String, List<PDLActivityEntry>> getStoredActivities() {
-        return storedActivities;
-    }
-
-    public Urval getDefaultUrval() {
-        return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE) || roles.containsKey(AuthoritiesConstants.ROLE_TANDLAKARE)
-            ? Urval.ISSUED_BY_ME : Urval.ALL;
-    }
-
-    @Override
-    public int getTotaltAntalVardenheter() {
-        // count all hasid's in the datastructure
-        return (int) getVardgivare().stream().flatMap(vg -> vg.getHsaIds().stream()).count();
-    }
-
-    public Map<String, Role> getOriginalRoles() {
-        return originalRoles;
-    }
-
-    /**
-     * If the currently selected vardenhet is not null and is an underenhet/mottagning, this method returns true.
-     *
-     * @return true if UE, false if not.
-     */
-    public boolean isValdVardenhetMottagning() {
-        if (valdVardenhet == null) {
-            return false;
-        }
-
-        for (Vardgivare vg : vardgivare) {
-            for (Vardenhet ve : vg.getVardenheter()) {
-                if (ve.getId().equals(valdVardenhet.getId())) {
-                    return false;
-                }
-                for (Mottagning m : ve.getMottagningar()) {
-                    if (m.getId().equals(valdVardenhet.getId())) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean isPdlConsentGiven() {
-        return pdlConsentGiven;
-    }
-
-    public void setPdlConsentGiven(boolean pdlConsentGiven) {
-        this.pdlConsentGiven = pdlConsentGiven;
-    }
-
-    public RehabstodUserPreferences getPreferences() {
-        return preferences;
-    }
-
-    public void setPreferences(RehabstodUserPreferences preferences) {
-        this.preferences = preferences;
-    }
-
-    public Map<String, Set<String>> getSjfPatientVardgivare() {
-        return sjfPatientVardgivare;
-    }
-
-    public Collection<String> getSjfPatientVardgivare(String patientId) {
-        if (!sjfPatientVardgivare.containsKey(patientId)) {
-            sjfPatientVardgivare.put(patientId, new HashSet<>());
-        }
-        return sjfPatientVardgivare.get(patientId);
-    }
-
-    public void addSjfPatientVardgivare(String patientId, String vardgivarId) {
-        getSjfPatientVardgivare(patientId).add(vardgivarId);
-    }
-
-    public Map<String, Set<String>> getSjfPatientVardenhet() {
-        return sjfPatientVardenhet;
-    }
-
-    public Collection<String> getSjfPatientVardenhet(String patientId) {
-        if (!sjfPatientVardenhet.containsKey(patientId)) {
-            sjfPatientVardenhet.put(patientId, new HashSet<>());
-        }
-        return sjfPatientVardenhet.get(patientId);
-    }
-
-    public void addSjfPatientVardenhet(String patientId, String vardenhetId) {
-        getSjfPatientVardenhet(patientId).add(vardenhetId);
-    }
-
-    public void clearSjfData() {
-        sjfPatientVardenhet.clear();
-        sjfPatientVardgivare.clear();
-    }
-
-    /**
-     * In Rehabstöd, isLakare is an immutable field that must be set when logging in. This is due to us
-     * sometimes changing the ROLE of a doctor to be a Rehabkoordinator based on systemRoles.
-     *
-     * @return true if doctor, false if not.
-     */
-    @Override
-    public boolean isLakare() {
-        return isLakare;
-    }
-
-    /**
-     * Returns true if the user is a doctor and at least one vardenhet Id matches an Intyg;Rehab-[enhetId] systemRole.
-     */
-    public boolean isRoleSwitchPossible() {
-        if (!isLakare()) {
-            return false;
-        }
-
-        // Check if this doctor has a
-        return this.vardgivare.stream()
-            .flatMap(vg -> vg.getVardenheter().stream())
-            .map(AbstractVardenhet::getId)
-            .anyMatch(enhetId -> SystemRolesParser.parseEnhetsIdsFromSystemRoles(systemRoles).stream()
-                .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(enhetId)));
-    }
-
-    // CHECKSTYLE:OFF NeedBraces
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+        for (Mottagning m : ve.getMottagningar()) {
+          if (m.getId().equals(valdVardenhet.getId())) {
             return true;
+          }
         }
-        if (!(o instanceof RehabstodUser)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        RehabstodUser that = (RehabstodUser) o;
-        return pdlConsentGiven == that.pdlConsentGiven
-            && isLakare == that.isLakare
-            && Objects.equals(storedActivities, that.storedActivities)
-            && Objects.equals(preferences, that.preferences)
-            && Objects.equals(sjfPatientVardgivare, that.sjfPatientVardgivare);
+      }
+    }
+    return false;
+  }
+
+  public boolean isPdlConsentGiven() {
+    return pdlConsentGiven;
+  }
+
+  public void setPdlConsentGiven(boolean pdlConsentGiven) {
+    this.pdlConsentGiven = pdlConsentGiven;
+  }
+
+  public RehabstodUserPreferences getPreferences() {
+    return preferences;
+  }
+
+  public void setPreferences(RehabstodUserPreferences preferences) {
+    this.preferences = preferences;
+  }
+
+  public Map<String, Set<String>> getSjfPatientVardgivare() {
+    return sjfPatientVardgivare;
+  }
+
+  public Collection<String> getSjfPatientVardgivare(String patientId) {
+    if (!sjfPatientVardgivare.containsKey(patientId)) {
+      sjfPatientVardgivare.put(patientId, new HashSet<>());
+    }
+    return sjfPatientVardgivare.get(patientId);
+  }
+
+  public void addSjfPatientVardgivare(String patientId, String vardgivarId) {
+    getSjfPatientVardgivare(patientId).add(vardgivarId);
+  }
+
+  public Map<String, Set<String>> getSjfPatientVardenhet() {
+    return sjfPatientVardenhet;
+  }
+
+  public Collection<String> getSjfPatientVardenhet(String patientId) {
+    if (!sjfPatientVardenhet.containsKey(patientId)) {
+      sjfPatientVardenhet.put(patientId, new HashSet<>());
+    }
+    return sjfPatientVardenhet.get(patientId);
+  }
+
+  public void addSjfPatientVardenhet(String patientId, String vardenhetId) {
+    getSjfPatientVardenhet(patientId).add(vardenhetId);
+  }
+
+  public void clearSjfData() {
+    sjfPatientVardenhet.clear();
+    sjfPatientVardgivare.clear();
+  }
+
+  /**
+   * In Rehabstöd, isLakare is an immutable field that must be set when logging in. This is due to
+   * us sometimes changing the ROLE of a doctor to be a Rehabkoordinator based on systemRoles.
+   *
+   * @return true if doctor, false if not.
+   */
+  @Override
+  public boolean isLakare() {
+    return isLakare;
+  }
+
+  /**
+   * Returns true if the user is a doctor and at least one vardenhet Id matches an
+   * Intyg;Rehab-[enhetId] systemRole.
+   */
+  public boolean isRoleSwitchPossible() {
+    if (!isLakare()) {
+      return false;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), storedActivities, pdlConsentGiven, isLakare, preferences, sjfPatientVardgivare);
-    }
-    // CHECKSTYLE:ON NeedBraces
+    // Check if this doctor has a
+    return this.vardgivare.stream()
+        .flatMap(vg -> vg.getVardenheter().stream())
+        .map(AbstractVardenhet::getId)
+        .anyMatch(
+            enhetId ->
+                SystemRolesParser.parseEnhetsIdsFromSystemRoles(systemRoles).stream()
+                    .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(enhetId)));
+  }
 
-    // private scope
-    private void writeObject(java.io.ObjectOutputStream stream) throws java.io.IOException {
-        stream.defaultWriteObject();
+  // CHECKSTYLE:OFF NeedBraces
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (!(o instanceof RehabstodUser)) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    RehabstodUser that = (RehabstodUser) o;
+    return pdlConsentGiven == that.pdlConsentGiven
+        && isLakare == that.isLakare
+        && Objects.equals(storedActivities, that.storedActivities)
+        && Objects.equals(preferences, that.preferences)
+        && Objects.equals(sjfPatientVardgivare, that.sjfPatientVardgivare);
+  }
 
-    private void readObject(java.io.ObjectInputStream stream) throws java.io.IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        super.hashCode(),
+        storedActivities,
+        pdlConsentGiven,
+        isLakare,
+        preferences,
+        sjfPatientVardgivare);
+  }
 
-    @Override
-    public String getName() {
-        return "";
-    }
+  // CHECKSTYLE:ON NeedBraces
 
-    @Override
-    public String getRelyingPartyRegistrationId() {
-        return RELYING_PARTY_REGISTRATION_ID;
-    }
+  // private scope
+  private void writeObject(java.io.ObjectOutputStream stream) throws java.io.IOException {
+    stream.defaultWriteObject();
+  }
+
+  private void readObject(java.io.ObjectInputStream stream)
+      throws java.io.IOException, ClassNotFoundException {
+    stream.defaultReadObject();
+  }
+
+  @Override
+  public String getName() {
+    return "";
+  }
+
+  @Override
+  public String getRelyingPartyRegistrationId() {
+    return RELYING_PARTY_REGISTRATION_ID;
+  }
 }

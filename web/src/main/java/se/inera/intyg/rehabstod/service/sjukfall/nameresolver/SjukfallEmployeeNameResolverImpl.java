@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,79 +28,79 @@ import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-/**
- * Created by eriklupander on 2017-02-23.
- */
+/** Created by eriklupander on 2017-02-23. */
 @Service
 public class SjukfallEmployeeNameResolverImpl implements SjukfallEmployeeNameResolver {
 
-    @Autowired
-    private EmployeeNameService employeeNameService;
+  @Autowired private EmployeeNameService employeeNameService;
 
-    @Override
-    public void enrichWithHsaEmployeeNames(List<SjukfallEnhet> sjukfallList) {
-        sjukfallList.forEach(sf -> updateEmployeeName(sf.getLakare()));
-    }
+  @Override
+  public void enrichWithHsaEmployeeNames(List<SjukfallEnhet> sjukfallList) {
+    sjukfallList.forEach(sf -> updateEmployeeName(sf.getLakare()));
+  }
 
-    @Override
-    public void enrichSjukfallPaientWithHsaEmployeeNames(List<SjukfallPatient> sjukfallList) {
-        sjukfallList.forEach(sf -> {
-            if (sf.getIntyg() != null) {
-                sf.getIntyg().forEach(i -> updateEmployeeName(i.getLakare()));
-            }
+  @Override
+  public void enrichSjukfallPaientWithHsaEmployeeNames(List<SjukfallPatient> sjukfallList) {
+    sjukfallList.forEach(
+        sf -> {
+          if (sf.getIntyg() != null) {
+            sf.getIntyg().forEach(i -> updateEmployeeName(i.getLakare()));
+          }
         });
+  }
+
+  private void updateEmployeeName(Lakare lakare) {
+    if (lakare == null) {
+      return;
     }
+    lakare.setNamn(getEmployeeName(lakare.getHsaId()));
+  }
 
-    private void updateEmployeeName(Lakare lakare) {
-        if (lakare == null) {
-            return;
-        }
-        lakare.setNamn(
-            getEmployeeName(lakare.getHsaId())
-        );
+  @Override
+  public void updateDuplicateDoctorNamesWithHsaId(List<SjukfallEnhet> sjukfallList) {
+    final var lakareList =
+        sjukfallList.stream().map(SjukfallEnhet::getLakare).collect(Collectors.toList());
+    if (noDuplicateNames(lakareList)) {
+      return;
     }
+    decorateDuplicateNamesWithHsaId(lakareList);
+  }
 
-    @Override
-    public void updateDuplicateDoctorNamesWithHsaId(List<SjukfallEnhet> sjukfallList) {
-        final var lakareList = sjukfallList.stream().map(SjukfallEnhet::getLakare).collect(Collectors.toList());
-        if (noDuplicateNames(lakareList)) {
-            return;
-        }
-        decorateDuplicateNamesWithHsaId(lakareList);
+  @Override
+  public void decorateAnyDuplicateNamesWithHsaId(List<Lakare> lakareList) {
+    if (noDuplicateNames(lakareList)) {
+      return;
     }
+    decorateDuplicateNamesWithHsaId(lakareList);
+  }
 
-    @Override
-    public void decorateAnyDuplicateNamesWithHsaId(List<Lakare> lakareList) {
-        if (noDuplicateNames(lakareList)) {
-            return;
-        }
-        decorateDuplicateNamesWithHsaId(lakareList);
+  @Override
+  public String getEmployeeName(String employeeHsaId) {
+    final var employeeHsaName = employeeNameService.getEmployeeHsaName(employeeHsaId);
+    if (employeeHsaName == null) {
+      return employeeHsaId;
     }
+    return employeeHsaName;
+  }
 
-    @Override
-    public String getEmployeeName(String employeeHsaId) {
-        final var employeeHsaName = employeeNameService.getEmployeeHsaName(employeeHsaId);
-        if (employeeHsaName == null) {
-            return employeeHsaId;
-        }
-        return employeeHsaName;
-    }
+  private boolean noDuplicateNames(List<Lakare> lakareList) {
+    return lakareList.stream().map(Lakare::getHsaId).distinct().count()
+        == lakareList.stream().map(Lakare::getNamn).distinct().count();
+  }
 
-    private boolean noDuplicateNames(List<Lakare> lakareList) {
-        return lakareList.stream().map(Lakare::getHsaId).distinct().count() == lakareList.stream().map(Lakare::getNamn).distinct().count();
-    }
+  private void decorateDuplicateNamesWithHsaId(List<Lakare> lakareList) {
+    final var collect = lakareList.stream().collect(Collectors.groupingBy(Lakare::getNamn));
 
-    private void decorateDuplicateNamesWithHsaId(List<Lakare> lakareList) {
-        final var collect = lakareList.stream()
-            .collect(Collectors.groupingBy(Lakare::getNamn));
-
-        for (Map.Entry<String, List<Lakare>> entry : collect.entrySet()) {
-            final var numberOfUnique = entry.getValue().stream().map(Lakare::getHsaId).distinct().count();
-            if (numberOfUnique > 1) {
-                entry.getValue().forEach(lakare -> {
-                    lakare.setNamn(lakare.getNamn() + " (" + lakare.getHsaId() + ")");
+    for (Map.Entry<String, List<Lakare>> entry : collect.entrySet()) {
+      final var numberOfUnique = entry.getValue().stream().map(Lakare::getHsaId).distinct().count();
+      if (numberOfUnique > 1) {
+        entry
+            .getValue()
+            .forEach(
+                lakare -> {
+                  lakare.setNamn(lakare.getNamn() + " (" + lakare.getHsaId() + ")");
                 });
-            }
-        }
+      }
     }
+  }
 }

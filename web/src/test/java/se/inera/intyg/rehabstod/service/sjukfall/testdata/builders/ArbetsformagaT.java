@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,32 +22,28 @@ import java.util.List;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-10.
- */
+/** Created by Magnus Ekstrand on 2016-02-10. */
 public final class ArbetsformagaT {
 
-    public ArbetsformagaT() {
+  public ArbetsformagaT() {}
+
+  public static class ArbetsformagaBuilder implements Builder<Arbetsformaga> {
+
+    protected List<Formaga> formaga;
+
+    public ArbetsformagaBuilder() {}
+
+    public ArbetsformagaBuilder formaga(List<Formaga> formaga) {
+      this.formaga = formaga;
+      return this;
     }
 
-    public static class ArbetsformagaBuilder implements Builder<Arbetsformaga> {
+    @Override
+    public Arbetsformaga build() {
+      Arbetsformaga arbetsformaga = new Arbetsformaga();
+      arbetsformaga.getFormaga().addAll(formaga);
 
-        protected List<Formaga> formaga;
-
-        public ArbetsformagaBuilder() {
-        }
-
-        public ArbetsformagaBuilder formaga(List<Formaga> formaga) {
-            this.formaga = formaga;
-            return this;
-        }
-
-        @Override
-        public Arbetsformaga build() {
-            Arbetsformaga arbetsformaga = new Arbetsformaga();
-            arbetsformaga.getFormaga().addAll(formaga);
-
-            return arbetsformaga;
-        }
+      return arbetsformaga;
     }
+  }
 }

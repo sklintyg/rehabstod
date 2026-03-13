@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,91 +21,88 @@ package se.inera.intyg.rehabstod.service.sjukfall.dto;
 import java.util.Collection;
 import java.util.HashSet;
 
-/**
- * Created by marced on 2018-10-02.
- */
+/** Created by marced on 2018-10-02. */
 public class SjfMetaData {
 
-    private Collection<String> vardenheterInomVGMedSparr = new HashSet<>();
-    private Collection<String> andraVardgivareMedSparr = new HashSet<>();
-    private Collection<SjfMetaDataItem> kraverSamtycke = new HashSet<>();
-    private Collection<SjfMetaDataItem> kraverInteSamtycke = new HashSet<>();
+  private Collection<String> vardenheterInomVGMedSparr = new HashSet<>();
+  private Collection<String> andraVardgivareMedSparr = new HashSet<>();
+  private Collection<SjfMetaDataItem> kraverSamtycke = new HashSet<>();
+  private Collection<SjfMetaDataItem> kraverInteSamtycke = new HashSet<>();
 
-    private boolean samtyckeFinns;
-    private boolean blockingServiceError;
-    private boolean consentServiceError;
-    private boolean haveSekretess;
+  private boolean samtyckeFinns;
+  private boolean blockingServiceError;
+  private boolean consentServiceError;
+  private boolean haveSekretess;
 
-    public SjfMetaData() {
+  public SjfMetaData() {}
 
-    }
+  public SjfMetaData(
+      Collection<String> vardenheterInomVGMedSparr, Collection<String> andraVardgivareMedSparr) {
+    this.vardenheterInomVGMedSparr = vardenheterInomVGMedSparr;
+    this.andraVardgivareMedSparr = andraVardgivareMedSparr;
+  }
 
-    public SjfMetaData(Collection<String> vardenheterInomVGMedSparr, Collection<String> andraVardgivareMedSparr) {
-        this.vardenheterInomVGMedSparr = vardenheterInomVGMedSparr;
-        this.andraVardgivareMedSparr = andraVardgivareMedSparr;
-    }
+  public Collection<String> getVardenheterInomVGMedSparr() {
+    return vardenheterInomVGMedSparr;
+  }
 
-    public Collection<String> getVardenheterInomVGMedSparr() {
-        return vardenheterInomVGMedSparr;
-    }
+  public void setVardenheterInomVGMedSparr(Collection<String> vardenheterInomVGMedSparr) {
+    this.vardenheterInomVGMedSparr = vardenheterInomVGMedSparr;
+  }
 
-    public void setVardenheterInomVGMedSparr(Collection<String> vardenheterInomVGMedSparr) {
-        this.vardenheterInomVGMedSparr = vardenheterInomVGMedSparr;
-    }
+  public Collection<String> getAndraVardgivareMedSparr() {
+    return andraVardgivareMedSparr;
+  }
 
-    public Collection<String> getAndraVardgivareMedSparr() {
-        return andraVardgivareMedSparr;
-    }
+  public void setAndraVardgivareMedSparr(Collection<String> andraVardgivareMedSparr) {
+    this.andraVardgivareMedSparr = andraVardgivareMedSparr;
+  }
 
-    public void setAndraVardgivareMedSparr(Collection<String> andraVardgivareMedSparr) {
-        this.andraVardgivareMedSparr = andraVardgivareMedSparr;
-    }
+  public Collection<SjfMetaDataItem> getKraverSamtycke() {
+    return kraverSamtycke;
+  }
 
-    public Collection<SjfMetaDataItem> getKraverSamtycke() {
-        return kraverSamtycke;
-    }
+  public void setKraverSamtycke(Collection<SjfMetaDataItem> kraverSamtycke) {
+    this.kraverSamtycke = kraverSamtycke;
+  }
 
-    public void setKraverSamtycke(Collection<SjfMetaDataItem> kraverSamtycke) {
-        this.kraverSamtycke = kraverSamtycke;
-    }
+  public Collection<SjfMetaDataItem> getKraverInteSamtycke() {
+    return kraverInteSamtycke;
+  }
 
-    public Collection<SjfMetaDataItem> getKraverInteSamtycke() {
-        return kraverInteSamtycke;
-    }
+  public void setKraverInteSamtycke(Collection<SjfMetaDataItem> kraverInteSamtycke) {
+    this.kraverInteSamtycke = kraverInteSamtycke;
+  }
 
-    public void setKraverInteSamtycke(Collection<SjfMetaDataItem> kraverInteSamtycke) {
-        this.kraverInteSamtycke = kraverInteSamtycke;
-    }
+  public boolean isSamtyckeFinns() {
+    return samtyckeFinns;
+  }
 
-    public boolean isSamtyckeFinns() {
-        return samtyckeFinns;
-    }
+  public void setSamtyckeFinns(boolean samtyckeFinns) {
+    this.samtyckeFinns = samtyckeFinns;
+  }
 
-    public void setSamtyckeFinns(boolean samtyckeFinns) {
-        this.samtyckeFinns = samtyckeFinns;
-    }
+  public boolean isBlockingServiceError() {
+    return blockingServiceError;
+  }
 
-    public boolean isBlockingServiceError() {
-        return blockingServiceError;
-    }
+  public void setBlockingServiceError(boolean blockingServiceError) {
+    this.blockingServiceError = blockingServiceError;
+  }
 
-    public void setBlockingServiceError(boolean blockingServiceError) {
-        this.blockingServiceError = blockingServiceError;
-    }
+  public boolean isConsentServiceError() {
+    return consentServiceError;
+  }
 
-    public boolean isConsentServiceError() {
-        return consentServiceError;
-    }
+  public void setConsentServiceError(boolean consentServiceError) {
+    this.consentServiceError = consentServiceError;
+  }
 
-    public void setConsentServiceError(boolean consentServiceError) {
-        this.consentServiceError = consentServiceError;
-    }
+  public boolean isHaveSekretess() {
+    return haveSekretess;
+  }
 
-    public boolean isHaveSekretess() {
-        return haveSekretess;
-    }
-
-    public void setHaveSekretess(boolean haveSekretess) {
-        this.haveSekretess = haveSekretess;
-    }
+  public void setHaveSekretess(boolean haveSekretess) {
+    this.haveSekretess = haveSekretess;
+  }
 }

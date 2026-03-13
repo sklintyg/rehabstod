@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.time.LocalDate;
@@ -31,34 +30,32 @@ import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 @Service
 public class GetRekoStatusServiceImpl implements GetRekoStatusService {
 
-    private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
-    private final UserService userService;
+  private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+  private final UserService userService;
 
-    public GetRekoStatusServiceImpl(IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
-        UserService userService) {
-        this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
-        this.userService = userService;
+  public GetRekoStatusServiceImpl(
+      IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+      UserService userService) {
+    this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
+    this.userService = userService;
+  }
+
+  @Override
+  public RekoStatusDTO get(String patientId, LocalDate endDate, LocalDate startDate) {
+    final var user = userService.getUser();
+    final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
+    final var request = new GetRekoStatusRequestDTO(patientId, endDate, startDate, careUnitId);
+
+    return convertResponse(intygstjanstRestIntegrationService.getRekoStatus(request));
+  }
+
+  private RekoStatusDTO convertResponse(
+      se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO response) {
+    if (response == null) {
+      return new RekoStatusDTO();
     }
 
-    @Override
-    public RekoStatusDTO get(String patientId, LocalDate endDate, LocalDate startDate) {
-        final var user = userService.getUser();
-        final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
-        final var request = new GetRekoStatusRequestDTO(patientId, endDate, startDate, careUnitId);
-
-        return convertResponse(intygstjanstRestIntegrationService.getRekoStatus(request));
-    }
-
-    private RekoStatusDTO convertResponse(se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO response) {
-        if (response == null) {
-            return new RekoStatusDTO();
-        }
-
-        return new RekoStatusDTO(
-            new RekoStatusTypeDTO(
-                response.getStatus().getId(),
-                response.getStatus().getName()
-            )
-        );
-    }
+    return new RekoStatusDTO(
+        new RekoStatusTypeDTO(response.getStatus().getId(), response.getStatus().getName()));
+  }
 }

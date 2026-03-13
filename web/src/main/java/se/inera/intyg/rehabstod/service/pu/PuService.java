@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,43 +28,45 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 public interface PuService {
 
-    String SEKRETESS_SKYDDAD_NAME_PLACEHOLDER = "Skyddad personuppgift";
-    String SEKRETESS_SKYDDAD_NAME_UNKNOWN = "Namn okänt";
+  String SEKRETESS_SKYDDAD_NAME_PLACEHOLDER = "Skyddad personuppgift";
+  String SEKRETESS_SKYDDAD_NAME_UNKNOWN = "Namn okänt";
 
-    /**
-     * Removes sjukfall belonging to patients with sekretessmarkering. Ignores PU errors, will not exclude such
-     * sjukfall. Removes patient name rather than enriching with PU info since the purpose of this method is for
-     * enabling stats aggregation.
-     */
-    void filterSekretessForSummary(List<SjukfallEnhet> sjukfallList);
+  /**
+   * Removes sjukfall belonging to patients with sekretessmarkering. Ignores PU errors, will not
+   * exclude such sjukfall. Removes patient name rather than enriching with PU info since the
+   * purpose of this method is for enabling stats aggregation.
+   */
+  void filterSekretessForSummary(List<SjukfallEnhet> sjukfallList);
 
-    /**
-     * Removes intyg from other careUnits belonging to the patient with sekretessmarkering.
-     */
-    List<IntygData> filterSekretessForPatientHistory(List<IntygData> intygsData);
+  /** Removes intyg from other careUnits belonging to the patient with sekretessmarkering. */
+  List<IntygData> filterSekretessForPatientHistory(List<IntygData> intygsData);
 
-    boolean shouldFilterSickLeavesOnProtectedPerson(RehabstodUser user);
+  boolean shouldFilterSickLeavesOnProtectedPerson(RehabstodUser user);
 
-    /**
-     * Filters out sjukfall if the patient has sekretessmarkering and the user doesn't have the requisite privilege.
-     *
-     * If the PU-service cannot be reached, an Exception must be thrown.
-     */
-    void enrichSjukfallWithPatientNamesAndFilterSekretess(List<SjukfallEnhet> sjukfallList);
+  /**
+   * Filters out sjukfall if the patient has sekretessmarkering and the user doesn't have the
+   * requisite privilege.
+   *
+   * <p>If the PU-service cannot be reached, an Exception must be thrown.
+   */
+  void enrichSjukfallWithPatientNamesAndFilterSekretess(List<SjukfallEnhet> sjukfallList);
 
-    /**
-     * Filters out certificates if the patient has sekretessmarkering and the user doesn't have the requisite privilege.
-     *
-     * If the PU-service cannot be reached, an Exception must be thrown.
-     */
-    void enrichDiagnosedCertificateWithPatientNamesAndFilterSekretess(List<DiagnosedCertificate> diagnosedCertificateList);
+  /**
+   * Filters out certificates if the patient has sekretessmarkering and the user doesn't have the
+   * requisite privilege.
+   *
+   * <p>If the PU-service cannot be reached, an Exception must be thrown.
+   */
+  void enrichDiagnosedCertificateWithPatientNamesAndFilterSekretess(
+      List<DiagnosedCertificate> diagnosedCertificateList);
 
-    /**
-     * Filters out sjukfall if the patient has sekretessmarkering and the user doesn't have the requisite privilege.
-     *
-     * If the PU-service cannot be reached, an Exception must be thrown.
-     */
-    void enrichSjukfallWithPatientNameAndFilterSekretess(List<SjukfallPatient> patientSjukfall);
+  /**
+   * Filters out sjukfall if the patient has sekretessmarkering and the user doesn't have the
+   * requisite privilege.
+   *
+   * <p>If the PU-service cannot be reached, an Exception must be thrown.
+   */
+  void enrichSjukfallWithPatientNameAndFilterSekretess(List<SjukfallPatient> patientSjukfall);
 
-    PersonSvar getPersonSvar(String pnr);
+  PersonSvar getPersonSvar(String pnr);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,33 +30,37 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 @RequiredArgsConstructor
 public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorator {
 
-    @Value("${wc.getadditions.max.age.days:90}")
-    private int maxDaysOfUnansweredCommunication;
+  @Value("${wc.getadditions.max.age.days:90}")
+  private int maxDaysOfUnansweredCommunication;
 
-    private final WcRestIntegrationService wcRestIntegrationService;
+  private final WcRestIntegrationService wcRestIntegrationService;
 
-    @Override
-    public void updateSjukfallPatientWithQAs(List<SjukfallPatient> patientSjukfallList, String patientId) {
+  @Override
+  public void updateSjukfallPatientWithQAs(
+      List<SjukfallPatient> patientSjukfallList, String patientId) {
 
-      final var unansweredQAsResponse = wcRestIntegrationService.getUnansweredCommunicationForPatients(
-          UnansweredCommunicationRequest.builder()
-              .patientIds(List.of(patientId))
-              .maxDaysOfUnansweredCommunication(maxDaysOfUnansweredCommunication)
-              .build());
+    final var unansweredQAsResponse =
+        wcRestIntegrationService.getUnansweredCommunicationForPatients(
+            UnansweredCommunicationRequest.builder()
+                .patientIds(List.of(patientId))
+                .maxDaysOfUnansweredCommunication(maxDaysOfUnansweredCommunication)
+                .build());
 
-
-        patientSjukfallList.stream()
-            .flatMap(sjukfallPatient -> sjukfallPatient.getIntyg().stream())
-            .forEach(patientData -> {
-                    var unAnsweredQAs = unansweredQAsResponse.getUnansweredQAsMap().get(patientData.getIntygsId());
-                    if (!patientData.isOtherVardgivare() && !patientData.isOtherVardenhet() && unAnsweredQAs != null) {
-                        patientData.setObesvaradeKompl(unAnsweredQAs.getComplement());
-                        patientData.setUnansweredOther(unAnsweredQAs.getOthers());
-                    } else {
-                        patientData.setObesvaradeKompl(0);
-                        patientData.setUnansweredOther(0);
-                    }
-                });
-
-    }
+    patientSjukfallList.stream()
+        .flatMap(sjukfallPatient -> sjukfallPatient.getIntyg().stream())
+        .forEach(
+            patientData -> {
+              var unAnsweredQAs =
+                  unansweredQAsResponse.getUnansweredQAsMap().get(patientData.getIntygsId());
+              if (!patientData.isOtherVardgivare()
+                  && !patientData.isOtherVardenhet()
+                  && unAnsweredQAs != null) {
+                patientData.setObesvaradeKompl(unAnsweredQAs.getComplement());
+                patientData.setUnansweredOther(unAnsweredQAs.getOthers());
+              } else {
+                patientData.setObesvaradeKompl(0);
+                patientData.setUnansweredOther(0);
+              }
+            });
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -42,109 +42,106 @@ import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 
-/**
- * Created by marced on 01/02/16.
- */
+/** Created by marced on 01/02/16. */
 @RunWith(MockitoJUnitRunner.class)
 public class UserControllerTest {
 
-    private static final String HSA_ID = "abcdefghijkl";
+  private static final String HSA_ID = "abcdefghijkl";
 
-    @Mock
-    RehabstodUser rehabUserMock;
+  @Mock RehabstodUser rehabUserMock;
 
-    @Mock
-    UserService userService;
+  @Mock UserService userService;
 
-    @Mock
-    RehabstodUnitChangeService rehabstodUnitChangeService;
+  @Mock RehabstodUnitChangeService rehabstodUnitChangeService;
 
-    @Mock
-    private CommonAuthoritiesResolver commonAuthoritiesResolver;
+  @Mock private CommonAuthoritiesResolver commonAuthoritiesResolver;
 
-    @Mock
-    private AnvandarPreferenceRepository anvandarPreferenceRepository;
+  @Mock private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
-    @Mock
-    private UserPreferencesService userPreferencesService;
+  @Mock private UserPreferencesService userPreferencesService;
 
-    @Mock
-    private Environment environment;
+  @Mock private Environment environment;
 
-    @InjectMocks
-    private UserController userController = new UserController();
+  @InjectMocks private UserController userController = new UserController();
 
-    @Before
-    public void before() {
-        when(commonAuthoritiesResolver.getFeatures(any())).thenReturn(Collections.emptyMap());
-        when(rehabUserMock.getValdVardenhet()).thenReturn(new Vardenhet("123", "enhet"));
-        when(rehabUserMock.getValdVardgivare()).thenReturn(new Vardenhet("456", "vardgivare"));
-        when(rehabUserMock.getHsaId()).thenReturn(HSA_ID);
-        when(rehabUserMock.getPreferences()).thenReturn(RehabstodUserPreferences.empty());
-        when(userService.getUser()).thenReturn(rehabUserMock);
-    }
+  @Before
+  public void before() {
+    when(commonAuthoritiesResolver.getFeatures(any())).thenReturn(Collections.emptyMap());
+    when(rehabUserMock.getValdVardenhet()).thenReturn(new Vardenhet("123", "enhet"));
+    when(rehabUserMock.getValdVardgivare()).thenReturn(new Vardenhet("456", "vardgivare"));
+    when(rehabUserMock.getHsaId()).thenReturn(HSA_ID);
+    when(rehabUserMock.getPreferences()).thenReturn(RehabstodUserPreferences.empty());
+    when(userService.getUser()).thenReturn(rehabUserMock);
+  }
 
-    @Test
-    public void testCreateGet() {
-        userController.getUser();
+  @Test
+  public void testCreateGet() {
+    userController.getUser();
 
-        verify(userService).getUser();
-    }
+    verify(userService).getUser();
+  }
 
-    @Test
-    public void testChangeEnhetSuccess() {
-        ChangeSelectedUnitRequest req = new ChangeSelectedUnitRequest("123");
-        when(rehabstodUnitChangeService.changeValdVardenhet(eq(req.getId()), eq(rehabUserMock))).thenReturn(true);
+  @Test
+  public void testChangeEnhetSuccess() {
+    ChangeSelectedUnitRequest req = new ChangeSelectedUnitRequest("123");
+    when(rehabstodUnitChangeService.changeValdVardenhet(eq(req.getId()), eq(rehabUserMock)))
+        .thenReturn(true);
 
-        userController.changeSelectedUnitOnUser(req);
+    userController.changeSelectedUnitOnUser(req);
 
-        verify(userService).getUser();
-        verify(rehabstodUnitChangeService).changeValdVardenhet(eq(req.getId()), eq(rehabUserMock));
-    }
+    verify(userService).getUser();
+    verify(rehabstodUnitChangeService).changeValdVardenhet(eq(req.getId()), eq(rehabUserMock));
+  }
 
-    @Test(expected = AuthoritiesException.class)
-    public void testChangeEnhetFails() {
-        ChangeSelectedUnitRequest req = new ChangeSelectedUnitRequest("123");
-        when(rehabstodUnitChangeService.changeValdVardenhet(eq(req.getId()), eq(rehabUserMock))).thenReturn(false);
+  @Test(expected = AuthoritiesException.class)
+  public void testChangeEnhetFails() {
+    ChangeSelectedUnitRequest req = new ChangeSelectedUnitRequest("123");
+    when(rehabstodUnitChangeService.changeValdVardenhet(eq(req.getId()), eq(rehabUserMock)))
+        .thenReturn(false);
 
-        userController.changeSelectedUnitOnUser(req);
+    userController.changeSelectedUnitOnUser(req);
 
-        verify(userService).getUser();
-        verify(rehabstodUnitChangeService).changeValdVardenhet(eq(req.getId()), eq(rehabUserMock));
-    }
+    verify(userService).getUser();
+    verify(rehabstodUnitChangeService).changeValdVardenhet(eq(req.getId()), eq(rehabUserMock));
+  }
 
-    @Test
-    public void clearAddedVardgivareAndVardeneheterWhenPreferencesHasChanged() {
-        when(userPreferencesService.getAllPreferences()).thenReturn(defaultPreferences());
+  @Test
+  public void clearAddedVardgivareAndVardeneheterWhenPreferencesHasChanged() {
+    when(userPreferencesService.getAllPreferences()).thenReturn(defaultPreferences());
 
-        RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
-        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "6");
-        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "14");
+    RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+    preferences.updatePreference(
+        RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "6");
+    preferences.updatePreference(
+        RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "14");
 
-        userController.updatePref(preferences.toFrontendMap());
+    userController.updatePref(preferences.toFrontendMap());
 
-        verify(rehabUserMock).clearSjfData();
-    }
+    verify(rehabUserMock).clearSjfData();
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateInvalidMaxDagarMellanIntygPreference() {
-        RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
-        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "91");
-        preferences.validate();
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void validateInvalidMaxDagarMellanIntygPreference() {
+    RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+    preferences.updatePreference(
+        RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "91");
+    preferences.validate();
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateInvalidMaxDagarSedanSjukfallPreference() {
-        RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
-        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "-1");
-        preferences.validate();
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void validateInvalidMaxDagarSedanSjukfallPreference() {
+    RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+    preferences.updatePreference(
+        RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "-1");
+    preferences.validate();
+  }
 
-    private RehabstodUserPreferences defaultPreferences() {
-        RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
-        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
-        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "14");
-        return preferences;
-    }
-
+  private RehabstodUserPreferences defaultPreferences() {
+    RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+    preferences.updatePreference(
+        RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
+    preferences.updatePreference(
+        RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "14");
+    return preferences;
+  }
 }

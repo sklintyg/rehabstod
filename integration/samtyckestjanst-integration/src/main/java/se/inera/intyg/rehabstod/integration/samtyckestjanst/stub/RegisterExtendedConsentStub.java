@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,84 +30,82 @@ import se.riv.informationsecurity.authorization.consent.v2.IIType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultCodeType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultType;
 
-/**
- * Created by Magnus Ekstrand on 2018-10-10.
- */
+/** Created by Magnus Ekstrand on 2018-10-10. */
 public class RegisterExtendedConsentStub implements RegisterExtendedConsentResponderInterface {
 
-    @Autowired
-    private SamtyckestjanstStubStore store;
+  @Autowired private SamtyckestjanstStubStore store;
 
-    @Override
-    public RegisterExtendedConsentResponseType registerExtendedConsent(String logicalAddress,
-        RegisterExtendedConsentType registerExtendedConsentType) {
+  @Override
+  public RegisterExtendedConsentResponseType registerExtendedConsent(
+      String logicalAddress, RegisterExtendedConsentType registerExtendedConsentType) {
 
-        validate(logicalAddress, registerExtendedConsentType);
+    validate(logicalAddress, registerExtendedConsentType);
 
-        ConsentData consentData = new ConsentData.Builder(registerExtendedConsentType.getAssertionId(),
-            registerExtendedConsentType.getCareProviderId(),
-            registerExtendedConsentType.getCareUnitId(),
-            registerExtendedConsentType.getPatientId().getExtension(),
-            registerExtendedConsentType.getRegistrationAction())
+    ConsentData consentData =
+        new ConsentData.Builder(
+                registerExtendedConsentType.getAssertionId(),
+                registerExtendedConsentType.getCareProviderId(),
+                registerExtendedConsentType.getCareUnitId(),
+                registerExtendedConsentType.getPatientId().getExtension(),
+                registerExtendedConsentType.getRegistrationAction())
             .employeeId(registerExtendedConsentType.getEmployeeId())
             .consentFrom(registerExtendedConsentType.getStartDate())
             .consentTo(registerExtendedConsentType.getEndDate())
             .representedBy(getRegisteredBy(registerExtendedConsentType.getRepresentedBy()))
             .build();
 
-        RegisterExtendedConsentResponseType response = new RegisterExtendedConsentResponseType();
-        ResultType resultType = new ResultType();
+    RegisterExtendedConsentResponseType response = new RegisterExtendedConsentResponseType();
+    ResultType resultType = new ResultType();
 
-        try {
-            store.add(consentData);
-            resultType.setResultCode(ResultCodeType.OK);
-        } catch (Exception e) {
-            resultType.setResultCode(ResultCodeType.ERROR);
-            resultType.setResultText(e.getMessage());
-        }
-
-        response.setResult(resultType);
-        return response;
+    try {
+      store.add(consentData);
+      resultType.setResultCode(ResultCodeType.OK);
+    } catch (Exception e) {
+      resultType.setResultCode(ResultCodeType.ERROR);
+      resultType.setResultText(e.getMessage());
     }
 
-    private String getRegisteredBy(IIType representedBy) {
-        return representedBy == null ? null : representedBy.getExtension();
+    response.setResult(resultType);
+    return response;
+  }
+
+  private String getRegisteredBy(IIType representedBy) {
+    return representedBy == null ? null : representedBy.getExtension();
+  }
+
+  private void validate(String logicalAddress, RegisterExtendedConsentType parameters) {
+    List<String> messages = new ArrayList<>();
+    if (logicalAddress == null || logicalAddress.length() == 0) {
+      messages.add("logicalAddress can not be null or empty");
+    }
+    if (parameters == null) {
+      messages.add("CheckConsentType can not be null");
+    } else {
+      if (Strings.isNullOrEmpty(parameters.getAssertionId())) {
+        messages.add("Missing AssertionId");
+      }
+      if (parameters.getAssertionType() == null) {
+        messages.add("Missing AssertionType");
+      }
+      if (Strings.isNullOrEmpty(parameters.getCareProviderId())) {
+        messages.add("Missing CareProviderId");
+      }
+      if (Strings.isNullOrEmpty(parameters.getCareUnitId())) {
+        messages.add("Missing CareUnitId");
+      }
+      if (Strings.isNullOrEmpty(parameters.getPatientId().getExtension())) {
+        messages.add("Missing PatientId.Extension");
+      }
+      if (parameters.getRegistrationAction() == null) {
+        messages.add("Missing RegistrationAction");
+      }
+      if (parameters.getScope() == null) {
+        messages.add("Missing Scope");
+      }
     }
 
-    private void validate(String logicalAddress, RegisterExtendedConsentType parameters) {
-        List<String> messages = new ArrayList<>();
-        if (logicalAddress == null || logicalAddress.length() == 0) {
-            messages.add("logicalAddress can not be null or empty");
-        }
-        if (parameters == null) {
-            messages.add("CheckConsentType can not be null");
-        } else {
-            if (Strings.isNullOrEmpty(parameters.getAssertionId())) {
-                messages.add("Missing AssertionId");
-            }
-            if (parameters.getAssertionType() == null) {
-                messages.add("Missing AssertionType");
-            }
-            if (Strings.isNullOrEmpty(parameters.getCareProviderId())) {
-                messages.add("Missing CareProviderId");
-            }
-            if (Strings.isNullOrEmpty(parameters.getCareUnitId())) {
-                messages.add("Missing CareUnitId");
-            }
-            if (Strings.isNullOrEmpty(parameters.getPatientId().getExtension())) {
-                messages.add("Missing PatientId.Extension");
-            }
-            if (parameters.getRegistrationAction() == null) {
-                messages.add("Missing RegistrationAction");
-            }
-            if (parameters.getScope() == null) {
-                messages.add("Missing Scope");
-            }
-        }
-
-        if (messages.size() > 0) {
-            throw new IllegalArgumentException(Joiner.on(",").join(messages));
-        }
+    if (messages.size() > 0) {
+      throw new IllegalArgumentException(Joiner.on(",").join(messages));
     }
-
+  }
 }

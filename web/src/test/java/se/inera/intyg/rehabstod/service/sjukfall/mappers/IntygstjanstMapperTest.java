@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -42,139 +42,139 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
  */
 public class IntygstjanstMapperTest {
 
-    private static final String INTYGSID = "A1234-B1234-C1234-D1234-E1234";
-    private static final LocalDateTime SIGNERINGSTIDPUNKT = LocalDateTime.now();
-    private static final String PERSONNUMMER = "19121212-1212";
-    private static final String PERSONNAMN = "Tolvan Tolvansson";
-    private static final String LAKAREID = "TEST-1234509876";
-    private static final String LAKARENAMN = "Erik Olsson";
-    private static final String LAKAREBEFATTNING = "Läkare";
-    private static final String DIAGNOS = "M123   Palindrom reumatism";
-    private static final String BIDIAGNOS = "S666   Skada på multipla böjmuskler och deras senor på handleds- och handnivå";
-    private static final String VARDGIVAREID = "VG-1234567890";
-    private static final String VARDGIVARENAMN = "Vardgivare 1";
-    private static final String VARDENHETID = "VE-1234567890";
-    private static final String VARDENHETNAMN = "Vardenhet 1";
-    private static final Integer NEDSATTNING = 100;
-    private static final LocalDate NEDSATTNINGSTARTDATUM = LocalDate.now().plusDays(1L);
-    private static final LocalDate NEDSATTNINGSLUTDATUM = LocalDate.now().plusDays(7L);
-    private static final String SYSSELSATTNING = "NUVARANDE_ARBETE";
+  private static final String INTYGSID = "A1234-B1234-C1234-D1234-E1234";
+  private static final LocalDateTime SIGNERINGSTIDPUNKT = LocalDateTime.now();
+  private static final String PERSONNUMMER = "19121212-1212";
+  private static final String PERSONNAMN = "Tolvan Tolvansson";
+  private static final String LAKAREID = "TEST-1234509876";
+  private static final String LAKARENAMN = "Erik Olsson";
+  private static final String LAKAREBEFATTNING = "Läkare";
+  private static final String DIAGNOS = "M123   Palindrom reumatism";
+  private static final String BIDIAGNOS =
+      "S666   Skada på multipla böjmuskler och deras senor på handleds- och handnivå";
+  private static final String VARDGIVAREID = "VG-1234567890";
+  private static final String VARDGIVARENAMN = "Vardgivare 1";
+  private static final String VARDENHETID = "VE-1234567890";
+  private static final String VARDENHETNAMN = "Vardenhet 1";
+  private static final Integer NEDSATTNING = 100;
+  private static final LocalDate NEDSATTNINGSTARTDATUM = LocalDate.now().plusDays(1L);
+  private static final LocalDate NEDSATTNINGSLUTDATUM = LocalDate.now().plusDays(7L);
+  private static final String SYSSELSATTNING = "NUVARANDE_ARBETE";
 
-    private IntygstjanstMapper testee = new IntygstjanstMapper();
+  private IntygstjanstMapper testee = new IntygstjanstMapper();
 
-    @Test
-    public void testMapppingOfIntygsData() {
-        // given
-        IntygsData from = createIntygsData();
+  @Test
+  public void testMapppingOfIntygsData() {
+    // given
+    IntygsData from = createIntygsData();
 
-        // when
-        IntygData to = testee.map(from);
+    // when
+    IntygData to = testee.map(from);
 
-        // then
-        assertEquals(INTYGSID, to.getIntygId());
-        assertEquals(SIGNERINGSTIDPUNKT, to.getSigneringsTidpunkt());
-        assertEquals(VARDGIVAREID, to.getVardgivareId());
-        assertEquals(VARDGIVARENAMN, to.getVardgivareNamn());
-        assertEquals(VARDENHETID, to.getVardenhetId());
-        assertEquals(VARDENHETNAMN, to.getVardenhetNamn());
-        assertEquals(LAKAREID, to.getLakareId());
-        assertEquals(LAKARENAMN, to.getLakareNamn());
-        assertEquals(PERSONNUMMER, to.getPatientId());
-        assertEquals(PERSONNAMN, to.getPatientNamn());
-        assertEquals("M123", to.getDiagnosKod().getCleanedCode());
-        assertEquals("Palindrom reumatism", to.getDiagnosKod().getName());
-        assertEquals(DIAGNOS, to.getDiagnosKod().getOriginalCode());
-        assertEquals(1, to.getBiDiagnoser().size());
-        assertEquals("S666", to.getBiDiagnoser().get(0).getCleanedCode());
-        assertEquals("Skada på multipla böjmuskler och deras senor på handleds- och handnivå",
-            to.getBiDiagnoser().get(0).getName());
-        assertEquals(BIDIAGNOS, to.getBiDiagnoser().get(0).getOriginalCode());
-        assertEquals(1, to.getFormagor().size());
-        assertEquals(NEDSATTNING.intValue(), to.getFormagor().get(0).getNedsattning());
-        assertEquals(NEDSATTNINGSTARTDATUM, to.getFormagor().get(0).getStartdatum());
-        assertEquals(NEDSATTNINGSLUTDATUM, to.getFormagor().get(0).getSlutdatum());
-        assertEquals(1, to.getSysselsattning().size());
-        assertEquals(SYSSELSATTNING, to.getSysselsattning().get(0));
-        assertTrue(!to.isEnkeltIntyg());
-    }
+    // then
+    assertEquals(INTYGSID, to.getIntygId());
+    assertEquals(SIGNERINGSTIDPUNKT, to.getSigneringsTidpunkt());
+    assertEquals(VARDGIVAREID, to.getVardgivareId());
+    assertEquals(VARDGIVARENAMN, to.getVardgivareNamn());
+    assertEquals(VARDENHETID, to.getVardenhetId());
+    assertEquals(VARDENHETNAMN, to.getVardenhetNamn());
+    assertEquals(LAKAREID, to.getLakareId());
+    assertEquals(LAKARENAMN, to.getLakareNamn());
+    assertEquals(PERSONNUMMER, to.getPatientId());
+    assertEquals(PERSONNAMN, to.getPatientNamn());
+    assertEquals("M123", to.getDiagnosKod().getCleanedCode());
+    assertEquals("Palindrom reumatism", to.getDiagnosKod().getName());
+    assertEquals(DIAGNOS, to.getDiagnosKod().getOriginalCode());
+    assertEquals(1, to.getBiDiagnoser().size());
+    assertEquals("S666", to.getBiDiagnoser().get(0).getCleanedCode());
+    assertEquals(
+        "Skada på multipla böjmuskler och deras senor på handleds- och handnivå",
+        to.getBiDiagnoser().get(0).getName());
+    assertEquals(BIDIAGNOS, to.getBiDiagnoser().get(0).getOriginalCode());
+    assertEquals(1, to.getFormagor().size());
+    assertEquals(NEDSATTNING.intValue(), to.getFormagor().get(0).getNedsattning());
+    assertEquals(NEDSATTNINGSTARTDATUM, to.getFormagor().get(0).getStartdatum());
+    assertEquals(NEDSATTNINGSLUTDATUM, to.getFormagor().get(0).getSlutdatum());
+    assertEquals(1, to.getSysselsattning().size());
+    assertEquals(SYSSELSATTNING, to.getSysselsattning().get(0));
+    assertTrue(!to.isEnkeltIntyg());
+  }
+  ;
 
-    ;
+  private IntygsData createIntygsData() {
+    IntygsData intygsData = new IntygsData();
 
-    private IntygsData createIntygsData() {
-        IntygsData intygsData = new IntygsData();
+    intygsData.setIntygsId(INTYGSID);
+    intygsData.setSigneringsTidpunkt(SIGNERINGSTIDPUNKT);
+    intygsData.setPatient(createPatient());
+    intygsData.setSkapadAv(createSkapadAv());
+    intygsData.setDiagnoskod(DIAGNOS);
+    intygsData.getBidiagnoser().add(BIDIAGNOS);
+    intygsData.setArbetsformaga(createArbetsformaga());
+    intygsData.getSysselsattning().add(SYSSELSATTNING);
+    intygsData.setEnkeltIntyg(false);
 
-        intygsData.setIntygsId(INTYGSID);
-        intygsData.setSigneringsTidpunkt(SIGNERINGSTIDPUNKT);
-        intygsData.setPatient(createPatient());
-        intygsData.setSkapadAv(createSkapadAv());
-        intygsData.setDiagnoskod(DIAGNOS);
-        intygsData.getBidiagnoser().add(BIDIAGNOS);
-        intygsData.setArbetsformaga(createArbetsformaga());
-        intygsData.getSysselsattning().add(SYSSELSATTNING);
-        intygsData.setEnkeltIntyg(false);
+    return intygsData;
+  }
 
-        return intygsData;
-    }
+  private Patient createPatient() {
+    PersonId personId = new PersonId();
+    personId.setRoot("root");
+    personId.setExtension(PERSONNUMMER);
 
-    private Patient createPatient() {
-        PersonId personId = new PersonId();
-        personId.setRoot("root");
-        personId.setExtension(PERSONNUMMER);
+    Patient patient = new Patient();
+    patient.setPersonId(personId);
+    patient.setFullstandigtNamn(PERSONNAMN);
 
-        Patient patient = new Patient();
-        patient.setPersonId(personId);
-        patient.setFullstandigtNamn(PERSONNAMN);
+    return patient;
+  }
 
-        return patient;
-    }
+  private HosPersonal createSkapadAv() {
+    Vardgivare vardgivare = new Vardgivare();
+    vardgivare.setVardgivarId(createHsaId(VARDGIVAREID));
+    vardgivare.setVardgivarnamn(VARDGIVARENAMN);
 
-    private HosPersonal createSkapadAv() {
-        Vardgivare vardgivare = new Vardgivare();
-        vardgivare.setVardgivarId(createHsaId(VARDGIVAREID));
-        vardgivare.setVardgivarnamn(VARDGIVARENAMN);
+    Enhet enhet = new Enhet();
+    enhet.setEnhetsId(createHsaId(VARDENHETID));
+    enhet.setEnhetsnamn(VARDENHETNAMN);
+    enhet.setVardgivare(vardgivare);
 
-        Enhet enhet = new Enhet();
-        enhet.setEnhetsId(createHsaId(VARDENHETID));
-        enhet.setEnhetsnamn(VARDENHETNAMN);
-        enhet.setVardgivare(vardgivare);
+    Befattning befattning = new Befattning();
+    befattning.setCode("kod");
+    befattning.setCodeSystem("kodsystem");
+    befattning.setCodeSystemName("kodsystemnamn");
+    befattning.setDisplayName(LAKAREBEFATTNING);
+    befattning.setOriginalText(LAKAREBEFATTNING);
 
-        Befattning befattning = new Befattning();
-        befattning.setCode("kod");
-        befattning.setCodeSystem("kodsystem");
-        befattning.setCodeSystemName("kodsystemnamn");
-        befattning.setDisplayName(LAKAREBEFATTNING);
-        befattning.setOriginalText(LAKAREBEFATTNING);
+    Befattningar befattningar = new Befattningar();
+    befattningar.getBefattning().add(befattning);
 
-        Befattningar befattningar = new Befattningar();
-        befattningar.getBefattning().add(befattning);
+    HosPersonal hosPersonal = new HosPersonal();
+    hosPersonal.setPersonalId(createHsaId(LAKAREID));
+    hosPersonal.setFullstandigtNamn(LAKARENAMN);
+    hosPersonal.setEnhet(enhet);
+    hosPersonal.setBefattningar(befattningar);
 
-        HosPersonal hosPersonal = new HosPersonal();
-        hosPersonal.setPersonalId(createHsaId(LAKAREID));
-        hosPersonal.setFullstandigtNamn(LAKARENAMN);
-        hosPersonal.setEnhet(enhet);
-        hosPersonal.setBefattningar(befattningar);
+    return hosPersonal;
+  }
 
-        return hosPersonal;
-    }
+  private HsaId createHsaId(String id) {
+    HsaId hsaId = new HsaId();
+    hsaId.setRoot("root");
+    hsaId.setExtension(id);
 
-    private HsaId createHsaId(String id) {
-        HsaId hsaId = new HsaId();
-        hsaId.setRoot("root");
-        hsaId.setExtension(id);
+    return hsaId;
+  }
 
-        return hsaId;
-    }
+  private Arbetsformaga createArbetsformaga() {
+    Formaga formaga = new Formaga();
+    formaga.setNedsattning(NEDSATTNING);
+    formaga.setStartdatum(NEDSATTNINGSTARTDATUM);
+    formaga.setSlutdatum(NEDSATTNINGSLUTDATUM);
 
-    private Arbetsformaga createArbetsformaga() {
-        Formaga formaga = new Formaga();
-        formaga.setNedsattning(NEDSATTNING);
-        formaga.setStartdatum(NEDSATTNINGSTARTDATUM);
-        formaga.setSlutdatum(NEDSATTNINGSLUTDATUM);
+    Arbetsformaga arbetsformaga = new Arbetsformaga();
+    arbetsformaga.getFormaga().add(formaga);
 
-        Arbetsformaga arbetsformaga = new Arbetsformaga();
-        arbetsformaga.getFormaga().add(formaga);
-
-        return arbetsformaga;
-    }
-
+    return arbetsformaga;
+  }
 }

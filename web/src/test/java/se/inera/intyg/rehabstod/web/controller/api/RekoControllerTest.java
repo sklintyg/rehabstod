@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -39,85 +39,85 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetRekoStatusRequestDTO;
 @ExtendWith(MockitoExtension.class)
 public class RekoControllerTest {
 
-    @Mock
-    private CreateRekoStatusService createRekoStatusService;
+  @Mock private CreateRekoStatusService createRekoStatusService;
 
-    @Mock
-    private GetRekoStatusService getRekoStatusService;
+  @Mock private GetRekoStatusService getRekoStatusService;
 
-    @InjectMocks
-    private RekoController rekoController;
+  @InjectMocks private RekoController rekoController;
 
-    private static final String PATIENT_ID = "PATIENT_ID";
-    private static final String STATUS = "STATUS";
-    private static final LocalDate TIMESTAMP = LocalDate.now();
+  private static final String PATIENT_ID = "PATIENT_ID";
+  private static final String STATUS = "STATUS";
+  private static final LocalDate TIMESTAMP = LocalDate.now();
 
+  @Test
+  void shouldCallSetRekoStatusServiceWithCorrectPatientId() {
+    final var expectedRequest =
+        new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
+    final var captor = ArgumentCaptor.forClass(String.class);
 
-    @Test
-    void shouldCallSetRekoStatusServiceWithCorrectPatientId() {
-        final var expectedRequest = new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
-        final var captor = ArgumentCaptor.forClass(String.class);
+    rekoController.createRekoStatus(expectedRequest);
+    verify(createRekoStatusService).create(captor.capture(), anyString(), any(LocalDateTime.class));
 
-        rekoController.createRekoStatus(expectedRequest);
-        verify(createRekoStatusService).create(captor.capture(), anyString(), any(LocalDateTime.class));
+    assertEquals(PATIENT_ID, captor.getValue());
+  }
 
-        assertEquals(PATIENT_ID, captor.getValue());
-    }
+  @Test
+  void shouldCallSetRekoStatusServiceWithCorrectStatus() {
+    final var expectedRequest =
+        new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
+    final var captor = ArgumentCaptor.forClass(String.class);
 
-    @Test
-    void shouldCallSetRekoStatusServiceWithCorrectStatus() {
-        final var expectedRequest =
-            new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
-        final var captor = ArgumentCaptor.forClass(String.class);
+    rekoController.createRekoStatus(expectedRequest);
+    verify(createRekoStatusService).create(anyString(), captor.capture(), any(LocalDateTime.class));
 
-        rekoController.createRekoStatus(expectedRequest);
-        verify(createRekoStatusService).create(anyString(), captor.capture(), any(LocalDateTime.class));
+    assertEquals(STATUS, captor.getValue());
+  }
 
-        assertEquals(STATUS, captor.getValue());
-    }
+  @Test
+  void shouldCallSetRekoStatusServiceWithCorrectTimestamp() {
+    final var expectedRequest =
+        new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
+    final var captor = ArgumentCaptor.forClass(LocalDateTime.class);
 
-    @Test
-    void shouldCallSetRekoStatusServiceWithCorrectTimestamp() {
-        final var expectedRequest =
-            new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
-        final var captor = ArgumentCaptor.forClass(LocalDateTime.class);
+    rekoController.createRekoStatus(expectedRequest);
+    verify(createRekoStatusService).create(anyString(), anyString(), captor.capture());
 
-        rekoController.createRekoStatus(expectedRequest);
-        verify(createRekoStatusService).create(anyString(), anyString(), captor.capture());
+    assertEquals(TIMESTAMP.atStartOfDay(), captor.getValue());
+  }
 
-        assertEquals(TIMESTAMP.atStartOfDay(), captor.getValue());
-    }
+  @Test
+  void shouldCallGetRekoStatusServiceWithCorrectPatientId() {
+    final var expectedRequest =
+        new GetRekoStatusRequestDTO(PATIENT_ID, TIMESTAMP, TIMESTAMP.minusDays(2));
+    final var captor = ArgumentCaptor.forClass(String.class);
 
-    @Test
-    void shouldCallGetRekoStatusServiceWithCorrectPatientId() {
-        final var expectedRequest = new GetRekoStatusRequestDTO(PATIENT_ID, TIMESTAMP, TIMESTAMP.minusDays(2));
-        final var captor = ArgumentCaptor.forClass(String.class);
+    rekoController.getRekoStatus(expectedRequest);
+    verify(getRekoStatusService).get(captor.capture(), any(LocalDate.class), any(LocalDate.class));
 
-        rekoController.getRekoStatus(expectedRequest);
-        verify(getRekoStatusService).get(captor.capture(), any(LocalDate.class), any(LocalDate.class));
+    assertEquals(PATIENT_ID, captor.getValue());
+  }
 
-        assertEquals(PATIENT_ID, captor.getValue());
-    }
+  @Test
+  void shouldCallGetRekoStatusServiceWithCorrectEndDate() {
+    final var expectedRequest =
+        new GetRekoStatusRequestDTO(PATIENT_ID, TIMESTAMP, TIMESTAMP.minusDays(2));
+    final var captor = ArgumentCaptor.forClass(LocalDate.class);
 
-    @Test
-    void shouldCallGetRekoStatusServiceWithCorrectEndDate() {
-        final var expectedRequest = new GetRekoStatusRequestDTO(PATIENT_ID, TIMESTAMP, TIMESTAMP.minusDays(2));
-        final var captor = ArgumentCaptor.forClass(LocalDate.class);
+    rekoController.getRekoStatus(expectedRequest);
+    verify(getRekoStatusService).get(anyString(), captor.capture(), any(LocalDate.class));
 
-        rekoController.getRekoStatus(expectedRequest);
-        verify(getRekoStatusService).get(anyString(), captor.capture(), any(LocalDate.class));
+    assertEquals(TIMESTAMP, captor.getValue());
+  }
 
-        assertEquals(TIMESTAMP, captor.getValue());
-    }
+  @Test
+  void shouldCallGetRekoStatusServiceWithCorrectStartDate() {
+    final var expectedRequest =
+        new GetRekoStatusRequestDTO(PATIENT_ID, TIMESTAMP, TIMESTAMP.minusDays(2));
+    final var captor = ArgumentCaptor.forClass(LocalDate.class);
 
-    @Test
-    void shouldCallGetRekoStatusServiceWithCorrectStartDate() {
-        final var expectedRequest = new GetRekoStatusRequestDTO(PATIENT_ID, TIMESTAMP, TIMESTAMP.minusDays(2));
-        final var captor = ArgumentCaptor.forClass(LocalDate.class);
+    rekoController.getRekoStatus(expectedRequest);
+    verify(getRekoStatusService).get(anyString(), any(LocalDate.class), captor.capture());
 
-        rekoController.getRekoStatus(expectedRequest);
-        verify(getRekoStatusService).get(anyString(), any(LocalDate.class), captor.capture());
-
-        assertEquals(TIMESTAMP.minusDays(2), captor.getValue());
-    }
+    assertEquals(TIMESTAMP.minusDays(2), captor.getValue());
+  }
 }

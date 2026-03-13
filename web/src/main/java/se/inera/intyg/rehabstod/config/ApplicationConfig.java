@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -46,83 +46,87 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource(ignoreResourceNotFound = true, value = {"classpath:application.properties", "file:${dev.config.file}"})
+@PropertySource(
+    ignoreResourceNotFound = true,
+    value = {"classpath:application.properties", "file:${dev.config.file}"})
 @Import(MonitoringConfiguration.class)
 @ImportResource({"classpath:META-INF/cxf/cxf.xml"})
-@ComponentScan({"se.inera.intyg.infra.integration.intygproxyservice", "se.inera.intyg.rehabstod.logging",
-    "se.inera.intyg.infra.pu.integration.intygproxyservice", "se.inera.intyg.rehabstod.integration.it",
-    "se.inera.intyg.rehabstod.integration.wc"})
+@ComponentScan({
+  "se.inera.intyg.infra.integration.intygproxyservice",
+  "se.inera.intyg.rehabstod.logging",
+  "se.inera.intyg.infra.pu.integration.intygproxyservice",
+  "se.inera.intyg.rehabstod.integration.it",
+  "se.inera.intyg.rehabstod.integration.wc"
+})
 public class ApplicationConfig implements TransactionManagementConfigurer {
 
-    @Autowired
-    private Bus bus;
+  @Autowired private Bus bus;
 
-    @Autowired
-    private PlatformTransactionManager transactionManager;
+  @Autowired private PlatformTransactionManager transactionManager;
 
-    @Bean
-    public CookieSerializer cookieSerializer() {
-        /*
-        This is needed to make IdP functionality work.
-        This will not satisfy all browsers, but it works for IE, Chrome and Edge.
-        Reference: https://auth0.com/blog/browser-behavior-changes-what-developers-need-to-know/
-         */
-        return new IneraCookieSerializer();
-    }
+  @Bean
+  public CookieSerializer cookieSerializer() {
+    /*
+    This is needed to make IdP functionality work.
+    This will not satisfy all browsers, but it works for IE, Chrome and Edge.
+    Reference: https://auth0.com/blog/browser-behavior-changes-what-developers-need-to-know/
+     */
+    return new IneraCookieSerializer();
+  }
 
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
+  @Bean
+  public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+    return new PropertySourcesPlaceholderConfigurer();
+  }
 
-    @PostConstruct
-    public Bus init() {
-        bus.setFeatures(new ArrayList<>(Arrays.asList(loggingFeature())));
-        return bus;
-    }
+  @PostConstruct
+  public Bus init() {
+    bus.setFeatures(new ArrayList<>(Arrays.asList(loggingFeature())));
+    return bus;
+  }
 
-    @Bean
-    public ResourceBundleMessageSource messageSource() {
-        ResourceBundleMessageSource source = new ResourceBundleMessageSource();
-        source.setBasename("version");
-        source.setUseCodeAsDefaultMessage(true);
-        return source;
-    }
+  @Bean
+  public ResourceBundleMessageSource messageSource() {
+    ResourceBundleMessageSource source = new ResourceBundleMessageSource();
+    source.setBasename("version");
+    source.setUseCodeAsDefaultMessage(true);
+    return source;
+  }
 
-    @Bean
-    public UnitSelectedAssuranceFilter unitSelectedAssuranceFilter() {
-        return new UnitSelectedAssuranceFilter();
-    }
+  @Bean
+  public UnitSelectedAssuranceFilter unitSelectedAssuranceFilter() {
+    return new UnitSelectedAssuranceFilter();
+  }
 
-    @Bean
-    public PdlConsentGivenAssuranceFilter pdlConsentGivenAssuranceFilter() {
-        return new PdlConsentGivenAssuranceFilter();
-    }
+  @Bean
+  public PdlConsentGivenAssuranceFilter pdlConsentGivenAssuranceFilter() {
+    return new PdlConsentGivenAssuranceFilter();
+  }
 
-    @Bean
-    public PrincipalUpdatedFilter principalUpdatedFilter() {
-        return new PrincipalUpdatedFilter();
-    }
+  @Bean
+  public PrincipalUpdatedFilter principalUpdatedFilter() {
+    return new PrincipalUpdatedFilter();
+  }
 
-    @Bean(name = "jacksonJsonProvider")
-    public JacksonJsonProvider jacksonJsonProvider() {
-        return new JacksonJsonProvider();
-    }
+  @Bean(name = "jacksonJsonProvider")
+  public JacksonJsonProvider jacksonJsonProvider() {
+    return new JacksonJsonProvider();
+  }
 
-    @Bean
-    public DiagnosFactory diagnosFactory() {
-        return new DiagnosFactory();
-    }
+  @Bean
+  public DiagnosFactory diagnosFactory() {
+    return new DiagnosFactory();
+  }
 
-    @Bean
-    public LoggingFeature loggingFeature() {
-        LoggingFeature loggingFeature = new LoggingFeature();
-        loggingFeature.setPrettyLogging(true);
-        return loggingFeature;
-    }
+  @Bean
+  public LoggingFeature loggingFeature() {
+    LoggingFeature loggingFeature = new LoggingFeature();
+    loggingFeature.setPrettyLogging(true);
+    return loggingFeature;
+  }
 
-    @Override
-    public PlatformTransactionManager annotationDrivenTransactionManager() {
-        return transactionManager;
-    }
+  @Override
+  public PlatformTransactionManager annotationDrivenTransactionManager() {
+    return transactionManager;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,39 +20,35 @@ package se.inera.intyg.rehabstod.service.sjukfall.testdata.builders;
 
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.IIType;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-10.
- */
+/** Created by Magnus Ekstrand on 2016-02-10. */
 public final class IdT extends IIType {
 
-    public IdT() {
+  public IdT() {}
+
+  public static class IITypeBuilder implements Builder<IIType> {
+
+    private String root;
+    private String extension;
+
+    public IITypeBuilder() {}
+
+    public IITypeBuilder root(String root) {
+      this.root = root;
+      return this;
     }
 
-    public static class IITypeBuilder implements Builder<IIType> {
-
-        private String root;
-        private String extension;
-
-        public IITypeBuilder() {
-        }
-
-        public IITypeBuilder root(String root) {
-            this.root = root;
-            return this;
-        }
-
-        public IITypeBuilder extension(String extension) {
-            this.extension = extension;
-            return this;
-        }
-
-        @Override
-        public IIType build() {
-            IIType iiType = new IIType();
-            iiType.setRoot(root);
-            iiType.setExtension(extension);
-
-            return iiType;
-        }
+    public IITypeBuilder extension(String extension) {
+      this.extension = extension;
+      return this;
     }
+
+    @Override
+    public IIType build() {
+      IIType iiType = new IIType();
+      iiType.setRoot(root);
+      iiType.setExtension(extension);
+
+      return iiType;
+    }
+  }
 }

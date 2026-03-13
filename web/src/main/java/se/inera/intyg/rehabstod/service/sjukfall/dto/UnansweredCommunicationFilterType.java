@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,33 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
 public enum UnansweredCommunicationFilterType {
+  UNANSWERED_COMMUNICATION_FILTER_TYPE_1("Enbart sjukfall utan obesvarade ärenden"),
+  UNANSWERED_COMMUNICATION_FILTER_TYPE_2("Enbart sjukfall med obesvarade ärenden"),
+  UNANSWERED_COMMUNICATION_FILTER_TYPE_3("Sjukfall med obesvarade kompletteringar"),
+  UNANSWERED_COMMUNICATION_FILTER_TYPE_4("Sjukfall med obesvarade frågor och svar");
 
-    UNANSWERED_COMMUNICATION_FILTER_TYPE_1("Enbart sjukfall utan obesvarade ärenden"),
-    UNANSWERED_COMMUNICATION_FILTER_TYPE_2("Enbart sjukfall med obesvarade ärenden"),
-    UNANSWERED_COMMUNICATION_FILTER_TYPE_3("Sjukfall med obesvarade kompletteringar"),
-    UNANSWERED_COMMUNICATION_FILTER_TYPE_4("Sjukfall med obesvarade frågor och svar");
+  private final String name;
 
-    private final String name;
+  UnansweredCommunicationFilterType(String name) {
+    this.name = name;
+  }
 
-    UnansweredCommunicationFilterType(String name) {
-        this.name = name;
+  public String getName() {
+    return name;
+  }
+
+  public static UnansweredCommunicationFilterType fromId(String id) {
+    for (final var type : values()) {
+      if (type.toString().equals(id)) {
+        return type;
+      }
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public static UnansweredCommunicationFilterType fromId(String id) {
-        for (final var type : values()) {
-            if (type.toString().equals(id)) {
-                return type;
-            }
-        }
-
-        throw new IllegalArgumentException(String.format("Not allowed UnansweredCommunicationFilterType id: '%s'", id));
-    }
+    throw new IllegalArgumentException(
+        String.format("Not allowed UnansweredCommunicationFilterType id: '%s'", id));
+  }
 }

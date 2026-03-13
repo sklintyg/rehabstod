@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -50,153 +50,184 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GivePdlLoggingConsentRequ
 @RequestMapping("/api/user")
 public class UserController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
-    private static final int ACCESSTOKEN_EXPIRE_LIMIT_MINUTES = 10;
+  private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+  private static final int ACCESSTOKEN_EXPIRE_LIMIT_MINUTES = 10;
 
-    @Autowired
-    private UserService userService;
+  @Autowired private UserService userService;
 
-    @Autowired
-    private UserPreferencesService userPreferencesService;
+  @Autowired private UserPreferencesService userPreferencesService;
 
-    @Autowired
-    private AnvandarPreferenceRepository anvandarPreferenceRepository;
+  @Autowired private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
-    @Autowired
-    private RehabstodUnitChangeService rehabstodUnitChangeService;
+  @Autowired private RehabstodUnitChangeService rehabstodUnitChangeService;
 
-    @Autowired
-    private CommonAuthoritiesResolver commonAuthoritiesResolver;
+  @Autowired private CommonAuthoritiesResolver commonAuthoritiesResolver;
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public GetUserResponse getUser() {
-        RehabstodUser user = getRehabstodUser();
-        return new GetUserResponse(user);
+  @RequestMapping(value = "", method = RequestMethod.GET)
+  public GetUserResponse getUser() {
+    RehabstodUser user = getRehabstodUser();
+    return new GetUserResponse(user);
+  }
+
+  /** Changes the selected care unit in the security context for the logged in user. */
+  @RequestMapping(
+      value = "/andraenhet",
+      method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "change-selected-unit-on-user",
+      eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
+  public GetUserResponse changeSelectedUnitOnUser(
+      @RequestBody ChangeSelectedUnitRequest changeSelectedEnhetRequest) {
+
+    RehabstodUser user = getRehabstodUser();
+
+    LOG.debug(
+        "Attempting to change selected unit for user '{}', currently selected unit is '{}'",
+        user.getHsaId(),
+        user.getValdVardenhet() != null ? user.getValdVardenhet().getId() : "<null>");
+
+    // boolean changeSuccess = user.changeValdVardenhet(changeSelectedEnhetRequest.getId());
+    // INTYG-5068: Do systemRole check here for Lakare???
+    boolean changeSuccess =
+        rehabstodUnitChangeService.changeValdVardenhet(changeSelectedEnhetRequest.getId(), user);
+
+    if (!changeSuccess) {
+      throw new AuthoritiesException(
+          String.format(
+              "Could not change active unit: Unit '%s' is not present in the MIUs for user '%s'",
+              changeSelectedEnhetRequest.getId(), user.getHsaId()));
     }
 
-    /**
-     * Changes the selected care unit in the security context for the logged in user.
-     */
-    @RequestMapping(value = "/andraenhet", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "change-selected-unit-on-user", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
-    public GetUserResponse changeSelectedUnitOnUser(@RequestBody ChangeSelectedUnitRequest changeSelectedEnhetRequest) {
+    user.setFeatures(
+        commonAuthoritiesResolver.getFeatures(
+            Arrays.asList(user.getValdVardenhet().getId(), user.getValdVardgivare().getId())));
 
-        RehabstodUser user = getRehabstodUser();
+    LOG.debug("Selected vardenhet is now '{}'", user.getValdVardenhet().getId());
 
-        LOG.debug("Attempting to change selected unit for user '{}', currently selected unit is '{}'", user.getHsaId(),
-            user.getValdVardenhet() != null ? user.getValdVardenhet().getId() : "<null>");
+    return new GetUserResponse(user);
+  }
 
-        // boolean changeSuccess = user.changeValdVardenhet(changeSelectedEnhetRequest.getId());
-        // INTYG-5068: Do systemRole check here for Lakare???
-        boolean changeSuccess = rehabstodUnitChangeService.changeValdVardenhet(changeSelectedEnhetRequest.getId(), user);
+  @RequestMapping(
+      value = "/giveconsent",
+      method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "give-pdl-logging-consent",
+      eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
+  public GetUserResponse givePdlLoggingConsent(
+      @RequestBody GivePdlLoggingConsentRequest pdlLoggingConsentRequest) {
 
-        if (!changeSuccess) {
-            throw new AuthoritiesException(String.format("Could not change active unit: Unit '%s' is not present in the MIUs for user '%s'",
-                changeSelectedEnhetRequest.getId(), user.getHsaId()));
-        }
+    RehabstodUser user = getRehabstodUser();
+    // Update backend
+    AnvandarPreference pdlConsentGiven =
+        anvandarPreferenceRepository.findByHsaIdAndKey(user.getHsaId(), PDL_CONSENT_GIVEN);
+    if (pdlConsentGiven == null) {
+      pdlConsentGiven =
+          new AnvandarPreference(
+              user.getHsaId(),
+              PDL_CONSENT_GIVEN,
+              Boolean.toString(pdlLoggingConsentRequest.isConsentGiven()));
+    } else {
+      pdlConsentGiven.setValue(Boolean.toString(pdlLoggingConsentRequest.isConsentGiven()));
+    }
+    anvandarPreferenceRepository.save(pdlConsentGiven);
 
-        user.setFeatures(
-            commonAuthoritiesResolver.getFeatures(Arrays.asList(user.getValdVardenhet().getId(), user.getValdVardgivare().getId())));
+    // Update current user context.
+    user.setPdlConsentGiven(pdlLoggingConsentRequest.isConsentGiven());
 
-        LOG.debug("Selected vardenhet is now '{}'", user.getValdVardenhet().getId());
+    // also update the user preference store
+    user.setPreferences(userPreferencesService.getAllPreferences());
 
-        return new GetUserResponse(user);
+    LOG.debug(
+        String.format(
+            "User %s has now set PDL logging consent to '%s' ",
+            user.getHsaId(), user.isPdlConsentGiven()));
+
+    return new GetUserResponse(user);
+  }
+
+  @RequestMapping(
+      value = "/preferences",
+      method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "update-user-preferences",
+      eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
+  public Map<String, String> updatePref(@RequestBody Map<String, String> keyValueMap) {
+
+    RehabstodUserPreferences newPreferences = RehabstodUserPreferences.fromFrontend(keyValueMap);
+    newPreferences.validate();
+
+    RehabstodUserPreferences oldPreferences = userPreferencesService.getAllPreferences();
+
+    // Set current pdl consent value
+    newPreferences.updatePreference(
+        Preference.PDL_CONSENT_GIVEN, oldPreferences.get(Preference.PDL_CONSENT_GIVEN));
+
+    // Update preferences with new values
+    userPreferencesService.updatePreferences(newPreferences);
+    LOG.debug("Updating user pref with values {}", keyValueMap);
+
+    // Check if preferences has changed for sjukfallresult related settings
+    if (hasPreferencesChanged(
+        oldPreferences,
+        newPreferences,
+        RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG,
+        RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT)) {
+
+      // INTYG-8139: clear user values if above preferences has changed.
+      // This will force user to fetch some of the information yet again in order to
+      // recalculate the patient history view.
+      RehabstodUser user = getRehabstodUser();
+      user.clearSjfData();
     }
 
-    @RequestMapping(value = "/giveconsent", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "give-pdl-logging-consent", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
-    public GetUserResponse givePdlLoggingConsent(@RequestBody GivePdlLoggingConsentRequest pdlLoggingConsentRequest) {
+    return getAllPrefs();
+  }
 
-        RehabstodUser user = getRehabstodUser();
-        // Update backend
-        AnvandarPreference pdlConsentGiven = anvandarPreferenceRepository.findByHsaIdAndKey(user.getHsaId(), PDL_CONSENT_GIVEN);
-        if (pdlConsentGiven == null) {
-            pdlConsentGiven = new AnvandarPreference(user.getHsaId(), PDL_CONSENT_GIVEN,
-                Boolean.toString(pdlLoggingConsentRequest.isConsentGiven()));
-        } else {
-            pdlConsentGiven.setValue(Boolean.toString(pdlLoggingConsentRequest.isConsentGiven()));
-        }
-        anvandarPreferenceRepository.save(pdlConsentGiven);
+  @RequestMapping(
+      value = "/preferences",
+      method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "get-user-preferences",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public Map<String, String> getAllPrefs() {
+    return userPreferencesService.getAllPreferences().toFrontendMap();
+  }
 
-        // Update current user context.
-        user.setPdlConsentGiven(pdlLoggingConsentRequest.isConsentGiven());
+  private RehabstodUser getRehabstodUser() {
+    RehabstodUser user = userService.getUser();
 
-        //also update the user preference store
-        user.setPreferences(userPreferencesService.getAllPreferences());
+    if (user == null) {
+      throw new AuthoritiesException("No user in session");
+    }
+    return user;
+  }
 
-        LOG.debug(String.format("User %s has now set PDL logging consent to '%s' ", user.getHsaId(), user.isPdlConsentGiven()));
+  private boolean hasPreferencesChanged(
+      RehabstodUserPreferences oldPreferences,
+      RehabstodUserPreferences newPreferences,
+      RehabstodUserPreferences.Preference... preferences) {
 
-        return new GetUserResponse(user);
+    if (oldPreferences == null && newPreferences != null) {
+      return true;
+    }
+    if (oldPreferences != null && newPreferences == null) {
+      return false;
+    }
+    if (preferences == null || preferences.length == 0) {
+      return false;
     }
 
-    @RequestMapping(value = "/preferences", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "update-user-preferences", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
-    public Map<String, String> updatePref(@RequestBody Map<String, String> keyValueMap) {
-
-        RehabstodUserPreferences newPreferences = RehabstodUserPreferences.fromFrontend(keyValueMap);
-        newPreferences.validate();
-
-        RehabstodUserPreferences oldPreferences = userPreferencesService.getAllPreferences();
-
-        // Set current pdl consent value
-        newPreferences.updatePreference(Preference.PDL_CONSENT_GIVEN, oldPreferences.get(Preference.PDL_CONSENT_GIVEN));
-
-        // Update preferences with new values
-        userPreferencesService.updatePreferences(newPreferences);
-        LOG.debug("Updating user pref with values {}", keyValueMap);
-
-        // Check if preferences has changed for sjukfallresult related settings
-        if (hasPreferencesChanged(oldPreferences, newPreferences,
-            RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG,
-            RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT)) {
-
-            // INTYG-8139: clear user values if above preferences has changed.
-            // This will force user to fetch some of the information yet again in order to
-            // recalculate the patient history view.
-            RehabstodUser user = getRehabstodUser();
-            user.clearSjfData();
-        }
-
-        return getAllPrefs();
+    for (RehabstodUserPreferences.Preference preference : preferences) {
+      if (!oldPreferences.get(preference).equals(newPreferences.get(preference))) {
+        return true;
+      }
     }
 
-    @RequestMapping(value = "/preferences", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "get-user-preferences", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public Map<String, String> getAllPrefs() {
-        return userPreferencesService.getAllPreferences().toFrontendMap();
-    }
-
-    private RehabstodUser getRehabstodUser() {
-        RehabstodUser user = userService.getUser();
-
-        if (user == null) {
-            throw new AuthoritiesException("No user in session");
-        }
-        return user;
-    }
-
-    private boolean hasPreferencesChanged(RehabstodUserPreferences oldPreferences,
-        RehabstodUserPreferences newPreferences,
-        RehabstodUserPreferences.Preference... preferences) {
-
-        if (oldPreferences == null && newPreferences != null) {
-            return true;
-        }
-        if (oldPreferences != null && newPreferences == null) {
-            return false;
-        }
-        if (preferences == null || preferences.length == 0) {
-            return false;
-        }
-
-        for (RehabstodUserPreferences.Preference preference : preferences) {
-            if (!oldPreferences.get(preference).equals(newPreferences.get(preference))) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
+    return false;
+  }
 }

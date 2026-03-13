@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,8 +23,8 @@ import se.inera.intyg.infra.security.authorities.validation.AuthExpectationSpeci
 import se.inera.intyg.infra.security.common.model.IntygUser;
 
 /**
- * Utility class that makes it easy to express and enforce authority constraint rules in backend code.
- * Example usage could be:
+ * Utility class that makes it easy to express and enforce authority constraint rules in backend
+ * code. Example usage could be:
  *
  * <pre>
  * authoritiesValidator.given(user, &quot;fk7263&quot;).
@@ -33,16 +33,16 @@ import se.inera.intyg.infra.security.common.model.IntygUser;
  *         notOrigins(RehabstodUserOriginType.UTHOPP).
  *         privilege(&quot;SkrivIntyg&quot;);
  * </pre>
- * <p/>
- * Created by marced on 14/12/15.
+ *
+ * <p>Created by marced on 14/12/15.
  */
 public final class AuthoritiesValidator {
 
-    /**
-     * Create a expectation context with just a user and no intygstyp, i.e intygstyp doesnt' matter in validations.
-     */
-    public AuthExpectationSpecification given(IntygUser user) {
-        return new AuthExpectationSpecImpl(user, null);
-    }
-
+  /**
+   * Create a expectation context with just a user and no intygstyp, i.e intygstyp doesnt' matter in
+   * validations.
+   */
+  public AuthExpectationSpecification given(IntygUser user) {
+    return new AuthExpectationSpecImpl(user, null);
+  }
 }

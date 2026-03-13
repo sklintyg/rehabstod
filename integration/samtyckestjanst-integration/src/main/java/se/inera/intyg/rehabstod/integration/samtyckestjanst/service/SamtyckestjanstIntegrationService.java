@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,38 +23,35 @@ import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 
-/**
- * Created by Magnus Ekstrand on 2018-10-10.
- */
+/** Created by Magnus Ekstrand on 2018-10-10. */
 public interface SamtyckestjanstIntegrationService {
 
-    /**
-     * Updates the 'has consent' attribute for each {@link IntygAccessControlMetaData} in
-     * intygAccessMetaData map.
-     *
-     * @param patientId - The id of the current patient
-     * @param userHsaId - The hsaId of the current user
-     * @param currentVardgivarHsaId - The hsaId of the current vardgivare
-     * @param currentEnhetsId - The hsaId of the current enehet
-     */
-    boolean checkForConsent(String patientId,
-        String userHsaId,
-        String currentVardgivarHsaId,
-        String currentEnhetsId);
+  /**
+   * Updates the 'has consent' attribute for each {@link IntygAccessControlMetaData} in
+   * intygAccessMetaData map.
+   *
+   * @param patientId - The id of the current patient
+   * @param userHsaId - The hsaId of the current user
+   * @param currentVardgivarHsaId - The hsaId of the current vardgivare
+   * @param currentEnhetsId - The hsaId of the current enehet
+   */
+  boolean checkForConsent(
+      String patientId, String userHsaId, String currentVardgivarHsaId, String currentEnhetsId);
 
-    /**
-     * Service that registers an extended consent for a particular patient, and thus, providing direct
-     * access to the patient's information from other healthcare providers according to PDL.
-     */
-    // CHECKSTYLE:OFF ParameterNumber
-    void registerConsent(String vgHsaId,
-        String veHsaId,
-        Personnummer patientId,
-        String userHsaId,
-        String representedBy,
-        LocalDateTime consentFrom,
-        LocalDateTime consentTo,
-        ActionType registrationAction);
-    // CHECKSTYLE:ON ParameterNumber
+  /**
+   * Service that registers an extended consent for a particular patient, and thus, providing direct
+   * access to the patient's information from other healthcare providers according to PDL.
+   */
+  // CHECKSTYLE:OFF ParameterNumber
+  void registerConsent(
+      String vgHsaId,
+      String veHsaId,
+      Personnummer patientId,
+      String userHsaId,
+      String representedBy,
+      LocalDateTime consentFrom,
+      LocalDateTime consentTo,
+      ActionType registrationAction);
+  // CHECKSTYLE:ON ParameterNumber
 
 }

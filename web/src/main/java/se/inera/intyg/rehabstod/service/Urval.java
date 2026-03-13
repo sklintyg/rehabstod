@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,14 +19,14 @@
 package se.inera.intyg.rehabstod.service;
 
 public enum Urval {
-    ALL,
-    ISSUED_BY_ME;
+  ALL,
+  ISSUED_BY_ME;
 
-    public String value() {
-        return this.name();
-    }
+  public String value() {
+    return this.name();
+  }
 
-    public static Urval fromValue(String v) {
-        return valueOf(v);
-    }
+  public static Urval fromValue(String v) {
+    return valueOf(v);
+  }
 }

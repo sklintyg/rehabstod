@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -41,55 +41,60 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesResponseDTO;
 @RequestMapping("/api/sickleaves")
 public class SickLeaveController {
 
-    @Autowired
-    private GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
-    @Autowired
-    private GetSickLeaveSummaryService getSickLeaveSummaryService;
-    @Autowired
-    private PopulateFiltersService populateFiltersService;
-    @Autowired
-    private PdlLogSickLeavesService pdlLogSickLeavesService;
+  @Autowired private GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
+  @Autowired private GetSickLeaveSummaryService getSickLeaveSummaryService;
+  @Autowired private PopulateFiltersService populateFiltersService;
+  @Autowired private PdlLogSickLeavesService pdlLogSickLeavesService;
 
-    private static final boolean INCLUDE_PARAMETERS = true;
-    private static final boolean SHOULD_PDL_LOG = true;
+  private static final boolean INCLUDE_PARAMETERS = true;
+  private static final boolean SHOULD_PDL_LOG = true;
 
-    @RequestMapping(value = "/active", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "get-sick-leaves-for-unit", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public SickLeavesResponseDTO getSickLeavesForUnit(@RequestBody SickLeavesFilterRequestDTO request) {
-        final var response = getActiveSickLeavesResponseService.get(request, INCLUDE_PARAMETERS, SHOULD_PDL_LOG);
-        return new SickLeavesResponseDTO(
-            response.getContent(),
-            response.isSrsError(),
-            response.isUnansweredCommunicationError()
-        );
-    }
+  @RequestMapping(
+      value = "/active",
+      method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "get-sick-leaves-for-unit",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public SickLeavesResponseDTO getSickLeavesForUnit(
+      @RequestBody SickLeavesFilterRequestDTO request) {
+    final var response =
+        getActiveSickLeavesResponseService.get(request, INCLUDE_PARAMETERS, SHOULD_PDL_LOG);
+    return new SickLeavesResponseDTO(
+        response.getContent(), response.isSrsError(), response.isUnansweredCommunicationError());
+  }
 
-    @RequestMapping(value = "/filters", method = RequestMethod.GET)
-    @PerformanceLogging(eventAction = "populate-sick-leave-filters", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
-    public PopulateFiltersResponseDTO populateFilters() {
-        final var response = populateFiltersService.populateSickLeaveFilters();
-        return new PopulateFiltersResponseDTO(
-            response.getActiveDoctors(),
-            response.getAllDiagnosisChapters(),
-            response.getEnabledDiagnosisChapters(),
-            response.getNbrOfSickLeaves(),
-            response.isHasOngoingSickLeaves(),
-            response.getRekoStatusTypes(),
-            response.getOccupationTypes(),
-            response.getUnansweredCommunicationFilterTypes(),
-            response.isSrsActivated()
-        );
-    }
+  @RequestMapping(value = "/filters", method = RequestMethod.GET)
+  @PerformanceLogging(
+      eventAction = "populate-sick-leave-filters",
+      eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
+  public PopulateFiltersResponseDTO populateFilters() {
+    final var response = populateFiltersService.populateSickLeaveFilters();
+    return new PopulateFiltersResponseDTO(
+        response.getActiveDoctors(),
+        response.getAllDiagnosisChapters(),
+        response.getEnabledDiagnosisChapters(),
+        response.getNbrOfSickLeaves(),
+        response.isHasOngoingSickLeaves(),
+        response.getRekoStatusTypes(),
+        response.getOccupationTypes(),
+        response.getUnansweredCommunicationFilterTypes(),
+        response.isSrsActivated());
+  }
 
-    @RequestMapping(value = "/summary", method = RequestMethod.GET)
-    @PerformanceLogging(eventAction = "get-sick-leaves-summary", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public SickLeaveSummary getSummary() {
-        return getSickLeaveSummaryService.get();
-    }
+  @RequestMapping(value = "/summary", method = RequestMethod.GET)
+  @PerformanceLogging(
+      eventAction = "get-sick-leaves-summary",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public SickLeaveSummary getSummary() {
+    return getSickLeaveSummaryService.get();
+  }
 
-    @PostMapping(value = "/print", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "print-sick-leaves", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public void print(@RequestBody SickLeavePrintRequestDTO sickLeavesPrintRequest) {
-        pdlLogSickLeavesService.logPrint(sickLeavesPrintRequest.getSickLeaves());
-    }
+  @PostMapping(value = "/print", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "print-sick-leaves",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public void print(@RequestBody SickLeavePrintRequestDTO sickLeavesPrintRequest) {
+    pdlLogSickLeavesService.logPrint(sickLeavesPrintRequest.getSickLeaves());
+  }
 }

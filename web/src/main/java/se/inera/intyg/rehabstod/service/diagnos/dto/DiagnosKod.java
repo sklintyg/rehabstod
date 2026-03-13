@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,56 +20,53 @@ package se.inera.intyg.rehabstod.service.diagnos.dto;
 
 import com.google.common.base.CharMatcher;
 
-/**
- * Created by martin on 10/02/16.
- */
+/** Created by martin on 10/02/16. */
 public class DiagnosKod {
 
-    private static final String BOM = "\uFEFF";
-    private static final String ASTERISK_TAB_OR_DAGGER_TAB = "\\u002A\t|\u2020\t";
-    private static final Character SPACE = ' ';
+  private static final String BOM = "\uFEFF";
+  private static final String ASTERISK_TAB_OR_DAGGER_TAB = "\\u002A\t|\u2020\t";
+  private static final Character SPACE = ' ';
 
-    private String code;
-    private String name;
+  private String code;
+  private String name;
 
-    public DiagnosKod(String line, boolean firstLineInFile) {
-        initFromString(line, firstLineInFile);
+  public DiagnosKod(String line, boolean firstLineInFile) {
+    initFromString(line, firstLineInFile);
+  }
+
+  public DiagnosKod(String code, String name) {
+    this.code = code;
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getCode() {
+    return code;
+  }
+
+  private void initFromString(String line, boolean firstLineInFile) {
+    if (line != null && line.length() > 0) {
+      String cleanedLine = removeUnwantedCharacters(line, firstLineInFile);
+
+      int firstSpacePos = cleanedLine.indexOf(SPACE);
+      if (firstSpacePos == -1) {
+        return;
+      }
+
+      this.code = cleanedLine.substring(0, firstSpacePos);
+      this.name = cleanedLine.substring(firstSpacePos + 1);
     }
+  }
 
-    public DiagnosKod(String code, String name) {
-        this.code = code;
-        this.name = name;
+  private String removeUnwantedCharacters(String line, boolean firstLineInFile) {
+    String cleanedLine = line;
+    if (firstLineInFile) {
+      cleanedLine = cleanedLine.replaceFirst(BOM, "");
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    private void initFromString(String line, boolean firstLineInFile) {
-        if (line != null && line.length() > 0) {
-            String cleanedLine = removeUnwantedCharacters(line, firstLineInFile);
-
-            int firstSpacePos = cleanedLine.indexOf(SPACE);
-            if (firstSpacePos == -1) {
-                return;
-            }
-
-            this.code = cleanedLine.substring(0, firstSpacePos);
-            this.name = cleanedLine.substring(firstSpacePos + 1);
-        }
-    }
-
-    private String removeUnwantedCharacters(String line, boolean firstLineInFile) {
-        String cleanedLine = line;
-        if (firstLineInFile) {
-            cleanedLine = cleanedLine.replaceFirst(BOM, "");
-        }
-        cleanedLine = cleanedLine.replaceFirst(ASTERISK_TAB_OR_DAGGER_TAB, String.valueOf(SPACE));
-        return CharMatcher.whitespace().trimAndCollapseFrom(cleanedLine, SPACE);
-    }
-
+    cleanedLine = cleanedLine.replaceFirst(ASTERISK_TAB_OR_DAGGER_TAB, String.valueOf(SPACE));
+    return CharMatcher.whitespace().trimAndCollapseFrom(cleanedLine, SPACE);
+  }
 }

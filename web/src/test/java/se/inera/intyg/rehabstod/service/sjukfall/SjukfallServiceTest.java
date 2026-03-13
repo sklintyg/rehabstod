@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -90,728 +90,950 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-24.
- */
+/** Created by Magnus Ekstrand on 2016-02-24. */
 @RunWith(MockitoJUnitRunner.class)
 public class SjukfallServiceTest {
 
-    // CHECKSTYLE:OFF MagicNumber
-    private static final int MAX_DAGAR_SEDAN_AVSLUT = 0;
-    private static final String LAKARE_ID = "HSA-1223311";
-    private static final String LAKARE_NAMN = "Jan Itor";
-    private static final String VARDGIVARE_ID = "HSA-VG-123-77";
-    private static final String VARDENHETS_ID = "HSA-VG-123-77_VE1";
+  // CHECKSTYLE:OFF MagicNumber
+  private static final int MAX_DAGAR_SEDAN_AVSLUT = 0;
+  private static final String LAKARE_ID = "HSA-1223311";
+  private static final String LAKARE_NAMN = "Jan Itor";
+  private static final String VARDGIVARE_ID = "HSA-VG-123-77";
+  private static final String VARDENHETS_ID = "HSA-VG-123-77_VE1";
 
-    private final String vgId1 = "vg1";
-    private final String vgId2 = "vg2";
-    private final String vgId3 = "vg3";
-    private final String enhetsId11 = "IFV1239877878-1042";
-    private final String enhetsId12 = "IFV1239877878-1043";
-    private final String enhetsId13 = "IFV1239877878-1044";
-    private final String enhetsId2 = "enhet2";
-    private final String enhetsId3 = "enhet3";
-    private final String mottagningsId = "Mottagning-1";
-    private final String lakareId1 = "IFV1239877878-1049";
-    private final String lakareNamn1 = "Jan Nilsson";
-    private final String lakareId2 = "IFV1239877878-104B";
-    private final String lakareNamn2 = "Åsa Andersson";
-    private final String lakareId3 = "TSTNMT2321000156-103F";
-    private final String patientId1 = "19121212-1212";
+  private final String vgId1 = "vg1";
+  private final String vgId2 = "vg2";
+  private final String vgId3 = "vg3";
+  private final String enhetsId11 = "IFV1239877878-1042";
+  private final String enhetsId12 = "IFV1239877878-1043";
+  private final String enhetsId13 = "IFV1239877878-1044";
+  private final String enhetsId2 = "enhet2";
+  private final String enhetsId3 = "enhet3";
+  private final String mottagningsId = "Mottagning-1";
+  private final String lakareId1 = "IFV1239877878-1049";
+  private final String lakareNamn1 = "Jan Nilsson";
+  private final String lakareId2 = "IFV1239877878-104B";
+  private final String lakareNamn2 = "Åsa Andersson";
+  private final String lakareId3 = "TSTNMT2321000156-103F";
+  private final String patientId1 = "19121212-1212";
 
-    private int intygsIdCounter = 1;
+  private int intygsIdCounter = 1;
 
-    private final Integer intygsGlapp = 5;
-    private final LocalDate activeDate = LocalDate.parse("2016-02-16");
+  private final Integer intygsGlapp = 5;
+  private final LocalDate activeDate = LocalDate.parse("2016-02-16");
 
-    private List<String> intygWithSparr = new ArrayList<>();
+  private List<String> intygWithSparr = new ArrayList<>();
 
-    private final IntygParametrar parameters = new IntygParametrar(intygsGlapp, MAX_DAGAR_SEDAN_AVSLUT, activeDate);
+  private final IntygParametrar parameters =
+      new IntygParametrar(intygsGlapp, MAX_DAGAR_SEDAN_AVSLUT, activeDate);
 
-    @Mock
-    private IntygstjanstIntegrationServiceImpl integrationService;
+  @Mock private IntygstjanstIntegrationServiceImpl integrationService;
 
-    @Mock
-    private StatisticsCalculator statisticsCalculator;
+  @Mock private StatisticsCalculator statisticsCalculator;
 
-    @Mock
-    private MonitoringLogService monitoringLogService;
+  @Mock private MonitoringLogService monitoringLogService;
 
-    @Spy
-    private SjukfallEngineServiceImpl sjukfallEngine;
+  @Spy private SjukfallEngineServiceImpl sjukfallEngine;
 
-    @Spy
-    private SjukfallEngineMapperTest sjukfallEngineMapper;
+  @Spy private SjukfallEngineMapperTest sjukfallEngineMapper;
 
-    @Spy
-    private IntygstjanstMapper intygstjanstMapper;
+  @Spy private IntygstjanstMapper intygstjanstMapper;
 
-    @Mock
-    private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+  @Mock private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
-    @Mock
-    private EmployeeNameService employeeNameService;
+  @Mock private EmployeeNameService employeeNameService;
 
-    @Mock
-    private PuService puService;
+  @Mock private PuService puService;
 
-    @Mock
-    private RiskPredictionService riskPredictionService;
+  @Mock private RiskPredictionService riskPredictionService;
 
-    @Mock
-    private UserPreferencesService userPreferencesService;
+  @Mock private UserPreferencesService userPreferencesService;
 
-    @Spy
-    private SparrtjanstIntegrationServiceImplTest sparrtjanstIntegrationService;
+  @Spy private SparrtjanstIntegrationServiceImplTest sparrtjanstIntegrationService;
 
-    @Mock
-    private HsaOrganizationsService hsaOrganizationsService;
+  @Mock private HsaOrganizationsService hsaOrganizationsService;
 
-    @Mock
-    private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+  @Mock private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
-    @Mock
-    private UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
+  @Mock private UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
 
-    @Mock
-    private UserService userService;
+  @Mock private UserService userService;
 
-    @Mock
-    private LogService logService;
+  @Mock private LogService logService;
 
-    @Mock
-    private PatientIdEncryption patientIdEncryption;
+  @Mock private PatientIdEncryption patientIdEncryption;
 
-    @InjectMocks
-    private SjukfallServiceImpl testee;
+  @InjectMocks private SjukfallServiceImpl testee;
 
-    @Before
-    public void init() {
-        when(integrationService.getAllIntygsDataForPatient(anyString())).thenReturn(createIntygsData());
-        when(puService.filterSekretessForPatientHistory(anyList()))
-            .thenAnswer(returnsFirstArg());
+  @Before
+  public void init() {
+    when(integrationService.getAllIntygsDataForPatient(anyString())).thenReturn(createIntygsData());
+    when(puService.filterSekretessForPatientHistory(anyList())).thenAnswer(returnsFirstArg());
 
-        when(hsaOrganizationsService.getVardgivareInfo(anyString()))
-            .thenAnswer(i -> createVardgivare((String) i.getArguments()[0], i.getArguments()[0] + "-VGNAME"));
+    when(hsaOrganizationsService.getVardgivareInfo(anyString()))
+        .thenAnswer(
+            i -> createVardgivare((String) i.getArguments()[0], i.getArguments()[0] + "-VGNAME"));
 
-        when(hsaOrganizationsService.getVardenhet(anyString()))
-            .thenAnswer(i -> createVardenhet((String) i.getArguments()[0], i.getArguments()[0] + "-VENAME"));
+    when(hsaOrganizationsService.getVardenhet(anyString()))
+        .thenAnswer(
+            i -> createVardenhet((String) i.getArguments()[0], i.getArguments()[0] + "-VENAME"));
 
-        when(userService.getUser()).thenReturn(buildUser());
+    when(userService.getUser()).thenReturn(buildUser());
+  }
+
+  /*
+   * Testet ska visa att endast intyg inom samma vårdgivare och samma enhet
+   * ska resultera i ett sjukfall med två intyg i sig.
+   */
+  @Test
+  public void testGetByPatient_utanSamtycke() {
+    List<String> vgHsaId = new ArrayList<>();
+    List<String> veHsaId = new ArrayList<>();
+
+    SjukfallPatientResponse patientResponse =
+        testee.getByPatient(
+            vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId, veHsaId);
+
+    assertEquals(1, patientResponse.getSjukfallList().size());
+    assertEquals(2, patientResponse.getSjukfallList().get(0).getIntyg().size());
+
+    SjfMetaData metaData = patientResponse.getSjfMetaData();
+
+    assertSjfMetaData(false, metaData);
+
+    assertSjfMetaDataItem(vgId2, SjfMetaDataItemType.VARDGIVARE, false, metaData);
+    assertSjfMetaDataItem(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
+    assertSjfMetaDataItem(enhetsId12, SjfMetaDataItemType.VARDENHET, false, metaData);
+  }
+
+  /*
+   * Testet ska visa att intyg inom samma vårdgivare och samma enhet plus registrerad
+   * vårdgivare ska resultera i ett sjukfall med tre intyg i sig när samtycke finns.
+   */
+  @Test
+  public void testGetByPatient_medSamtyckeForVardgivare() {
+    when(samtyckestjanstIntegrationService.checkForConsent(
+            patientId1, lakareId1, vgId1, enhetsId11))
+        .thenReturn(true);
+
+    List<String> vgHsaId = new ArrayList<>();
+    List<String> veHsaId = new ArrayList<>();
+
+    // Registrera vardgivare vars intyg ska inkluderas i beräkning av aktivt sjukfall
+    vgHsaId.add(vgId2);
+
+    SjukfallPatientResponse patientResponse =
+        testee.getByPatient(
+            vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId, veHsaId);
+
+    assertEquals(1, patientResponse.getSjukfallList().size());
+    assertEquals(3, patientResponse.getSjukfallList().get(0).getIntyg().size());
+
+    SjfMetaData metaData = patientResponse.getSjfMetaData();
+
+    assertSjfMetaData(true, metaData);
+
+    assertSjfMetaDataItem(vgId2, SjfMetaDataItemType.VARDGIVARE, true, metaData);
+    assertSjfMetaDataItem(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
+    assertSjfMetaDataItem(enhetsId12, SjfMetaDataItemType.VARDENHET, false, metaData);
+
+    Personnummer expectedPersonnummer = Personnummer.createPersonnummer(patientId1).orElseThrow();
+
+    verify(logService)
+        .logConsentActivity(
+            eq(expectedPersonnummer),
+            eq(ActivityType.READ),
+            eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
+  }
+
+  /*
+   * Testet ska visa att samtyckesläsning INTE PDL loggas om inget samtycke fanns
+   */
+  @Test
+  public void testGetByPatientNoConsentPDLLoggingIfNoConsent() {
+    when(samtyckestjanstIntegrationService.checkForConsent(
+            patientId1, lakareId1, vgId1, enhetsId11))
+        .thenReturn(false);
+
+    testee.getByPatient(
+        vgId1,
+        enhetsId11,
+        lakareId1,
+        patientId1,
+        Urval.ALL,
+        parameters,
+        new ArrayList<>(),
+        new ArrayList<>());
+
+    verifyNoInteractions(logService);
+  }
+
+  /*
+   * Testet ska visa att samtyckesläsning PDL loggas om samtycke fanns
+   */
+  @Test
+  public void testGetByPatientConsentPDLLoggingIfConsentExists() {
+    when(samtyckestjanstIntegrationService.checkForConsent(
+            patientId1, lakareId1, vgId1, enhetsId11))
+        .thenReturn(true);
+
+    testee.getByPatient(
+        vgId1,
+        enhetsId11,
+        lakareId1,
+        patientId1,
+        Urval.ALL,
+        parameters,
+        new ArrayList<>(),
+        new ArrayList<>());
+
+    Personnummer expectedPersonnummer = Personnummer.createPersonnummer(patientId1).orElseThrow();
+    verify(logService)
+        .logConsentActivity(
+            eq(expectedPersonnummer),
+            eq(ActivityType.READ),
+            eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
+  }
+
+  /*
+   * Testet ska visa att samtyckesläsning PDL loggas endast en gång om anropad flera gånger per user
+   */
+  @Test
+  public void testGetByPatientConsentPDLLoggingOnlyOnceIfActivityAlreadyLogged() {
+    when(samtyckestjanstIntegrationService.checkForConsent(
+            patientId1, lakareId1, vgId1, enhetsId11))
+        .thenReturn(true);
+
+    testee.getByPatient(
+        vgId1,
+        enhetsId11,
+        lakareId1,
+        patientId1,
+        Urval.ALL,
+        parameters,
+        new ArrayList<>(),
+        new ArrayList<>());
+    testee.getByPatient(
+        vgId1,
+        enhetsId11,
+        lakareId1,
+        patientId1,
+        Urval.ALL,
+        parameters,
+        new ArrayList<>(),
+        new ArrayList<>());
+
+    Personnummer expectedPersonnummer = Personnummer.createPersonnummer(patientId1).orElseThrow();
+    verify(logService, times(1))
+        .logConsentActivity(
+            eq(expectedPersonnummer),
+            eq(ActivityType.READ),
+            eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
+  }
+
+  /*
+   * Testet ska visa att intyg inom samma vårdgivare och samma enhet inklusive
+   * registrerade andra vårdenheter inom vårdgivaren ska resultera i ett sjukfall
+   * med 4 intyg i sig.
+   *
+   * Testet visar också att intyg med spärr på annan vårdenhet VE inte kommer med medan
+   * intyg utan spärr på samma vårdenhet VE kommer med.
+   */
+  @Test
+  public void testGetByPatient_medSamtyckeForVardenhet() {
+
+    List<String> vgHsaId = new ArrayList<>();
+    List<String> veHsaId = new ArrayList<>();
+
+    // Registrera vardenheter vars intyg ska inkluderas i beräkning av aktivt sjukfall
+    veHsaId.add(enhetsId12);
+    veHsaId.add(enhetsId13);
+
+    SjukfallPatientResponse patientResponse =
+        testee.getByPatient(
+            vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId, veHsaId);
+
+    assertEquals(1, patientResponse.getSjukfallList().size());
+    assertEquals(4, patientResponse.getSjukfallList().get(0).getIntyg().size());
+
+    SjfMetaData metaData = patientResponse.getSjfMetaData();
+
+    assertSjfMetaData(false, metaData);
+
+    assertSjfMetaDataItem(vgId2, SjfMetaDataItemType.VARDGIVARE, false, metaData);
+    assertSjfMetaDataItem(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
+    assertSjfMetaDataItem(enhetsId12, SjfMetaDataItemType.VARDENHET, true, metaData);
+  }
+
+  /*
+   * Testet ska visa att intyg inom samma vårdgivare och samma enhet, fast utanför glappet,
+   * ska resultera i två sjukfall med ett intyg vardera i sig.
+   */
+  @Test
+  public void testGetByPatient_inomVardgivareOchInomEnhet() {
+    List<IntygsData> data =
+        new ArrayList<>() {
+          {
+            add(
+                createIntygsData(
+                    vgId1,
+                    enhetsId11,
+                    lakareId1,
+                    patientId1,
+                    false,
+                    activeDate.minusDays(1),
+                    activeDate.plusDays(9),
+                    activeDate.minusDays(1).atStartOfDay()));
+            add(
+                createIntygsData(
+                    vgId1,
+                    enhetsId11,
+                    lakareId1,
+                    patientId1,
+                    false,
+                    activeDate.minusDays(17),
+                    activeDate.minusDays(8),
+                    activeDate.minusDays(17).atStartOfDay()));
+          }
+        };
+
+    when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
+
+    List<String> vgHsaId = new ArrayList<>();
+    List<String> veHsaId = new ArrayList<>();
+
+    // vgHsaId.add(vgId1);
+
+    SjukfallPatientResponse patientResponse =
+        testee.getByPatient(
+            vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId, veHsaId);
+
+    assertEquals(2, patientResponse.getSjukfallList().size());
+    assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
+    assertEquals(1, patientResponse.getSjukfallList().get(1).getIntyg().size());
+  }
+
+  /*
+   * Testet ska visa att intyg inom samma vårdgivare och samma enhet fast där intyget är skrivet på
+   * en underenhet ska resultera i ett sjukfall med ett intyg vardera i sig.
+   */
+  @Test
+  public void testGetByPatient_whenInomVardgivareOchInomEnhet_andMottagning() {
+    List<IntygsData> data =
+        new ArrayList<>() {
+          {
+            add(
+                createIntygsData(
+                    vgId1,
+                    enhetsId11,
+                    lakareId1,
+                    patientId1,
+                    false,
+                    activeDate.minusDays(1),
+                    activeDate.plusDays(9),
+                    activeDate.minusDays(1).atStartOfDay()));
+            add(
+                createIntygsData(
+                    vgId1,
+                    mottagningsId,
+                    lakareId1,
+                    patientId1,
+                    false,
+                    activeDate.minusDays(20),
+                    activeDate.minusDays(15),
+                    activeDate.minusDays(20).atStartOfDay()));
+          }
+        };
+
+    when(hsaOrganizationsService.getVardenhet(anyString()))
+        .thenAnswer(
+            i ->
+                createVardenhet(
+                    (String) i.getArguments()[0],
+                    i.getArguments()[0] + "-VENAME",
+                    createMottagning(
+                        mottagningsId, mottagningsId + "-UENAME", (String) i.getArguments()[0])));
+
+    when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
+
+    List<String> vgHsaId = new ArrayList<>();
+    List<String> veHsaId = new ArrayList<>();
+
+    SjukfallPatientResponse patientResponse =
+        testee.getByPatient(
+            vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId, veHsaId);
+
+    assertEquals(2, patientResponse.getSjukfallList().size());
+    assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
+    assertEquals(1, patientResponse.getSjukfallList().get(1).getIntyg().size());
+  }
+
+  /*
+   * Testet ska visa att intyg inom samma vårdgivare och där användaren är inloggad på en mottagning,
+   * så ska intyg på enheten komma med.
+   */
+  @Test
+  public void testGetByPatient_whenInomVardgivareOchInomMottagning_andParent() {
+    List<IntygsData> data =
+        new ArrayList<>() {
+          {
+            add(
+                createIntygsData(
+                    vgId1,
+                    mottagningsId,
+                    lakareId1,
+                    patientId1,
+                    false,
+                    activeDate.minusDays(1),
+                    activeDate.plusDays(9),
+                    activeDate.minusDays(1).atStartOfDay()));
+            add(
+                createIntygsData(
+                    vgId1,
+                    enhetsId11,
+                    lakareId1,
+                    patientId1,
+                    false,
+                    activeDate.minusDays(20),
+                    activeDate.minusDays(15),
+                    activeDate.minusDays(20).atStartOfDay()));
+          }
+        };
+
+    // Koppla mottagningen till enheten
+    when(hsaOrganizationsService.getVardenhet(eq(mottagningsId)))
+        .thenReturn(
+            createVardenhet(
+                enhetsId11,
+                "parentunit",
+                createMottagning(mottagningsId, "mottagning", enhetsId11)));
+
+    when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
+
+    List<String> vgHsaId = new ArrayList<>();
+    List<String> veHsaId = new ArrayList<>();
+
+    SjukfallPatientResponse patientResponse =
+        testee.getByPatient(
+            vgId1, mottagningsId, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId, veHsaId);
+
+    assertEquals(2, patientResponse.getSjukfallList().size());
+    assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
+    assertEquals(1, patientResponse.getSjukfallList().get(1).getIntyg().size());
+  }
+
+  /*
+   * Testet ska visa att intyg inom samma vårdgivare fast på olika enheter och utanför glappet,
+   * ska resultera i ett sjukfall (det aktiva) med ett intyg i sig.
+   */
+  @Test
+  public void testGetByPatient_inomVardgivareOchAnnanEnhetOchUtanforGlappet() {
+    List<IntygsData> data =
+        new ArrayList<>() {
+          {
+            add(
+                createIntygsData(
+                    vgId1,
+                    enhetsId11,
+                    lakareId1,
+                    patientId1,
+                    false,
+                    activeDate.minusDays(1),
+                    activeDate.plusDays(9),
+                    activeDate.minusDays(1).atStartOfDay()));
+            add(
+                createIntygsData(
+                    vgId1,
+                    enhetsId12,
+                    lakareId1,
+                    patientId1,
+                    false,
+                    activeDate.minusDays(17),
+                    activeDate.minusDays(8),
+                    activeDate.minusDays(17).atStartOfDay()));
+          }
+        };
+
+    when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
+
+    List<String> vgHsaId = new ArrayList<>();
+    List<String> veHsaId = new ArrayList<>();
+
+    // Registrera annan vårdenhet
+    veHsaId.add(enhetsId12);
+
+    SjukfallPatientResponse patientResponse =
+        testee.getByPatient(
+            vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId, veHsaId);
+
+    assertEquals(1, patientResponse.getSjukfallList().size());
+    assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
+    assertEquals(1, patientResponse.getSjfMetaData().getKraverInteSamtycke().size());
+
+    SjfMetaData metaData = patientResponse.getSjfMetaData();
+
+    assertFalse(metaData.isSamtyckeFinns());
+    assertSjfMetaDataItem(enhetsId12, SjfMetaDataItemType.VARDENHET, true, metaData);
+  }
+
+  /*
+   * Testet ska visa att intyg inom samma vårdgivare fast på olika enheter men innanför glappet,
+   * ska resultera i ett sjukfall (det aktiva) med två intyg i sig.
+   */
+  @Test
+  public void testGetByPatient_inomVardgivareOchUtanforEnhetMenInomGlappet() {
+    List<IntygsData> data =
+        new ArrayList<>() {
+          {
+            add(
+                createIntygsData(
+                    vgId1,
+                    enhetsId11,
+                    lakareId1,
+                    patientId1,
+                    false,
+                    activeDate.minusDays(1),
+                    activeDate.plusDays(9),
+                    activeDate.minusDays(1).atStartOfDay()));
+            add(
+                createIntygsData(
+                    vgId1,
+                    enhetsId12,
+                    lakareId1,
+                    patientId1,
+                    false,
+                    activeDate.minusDays(10),
+                    activeDate.minusDays(2),
+                    activeDate.minusDays(10).atStartOfDay()));
+          }
+        };
+
+    when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
+    when(samtyckestjanstIntegrationService.checkForConsent(
+            patientId1, lakareId1, vgId1, enhetsId11))
+        .thenReturn(true);
+
+    List<String> vgHsaId = new ArrayList<>();
+    List<String> veHsaId = new ArrayList<>();
+
+    veHsaId.add(enhetsId12);
+
+    SjukfallPatientResponse patientResponse =
+        testee.getByPatient(
+            vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId, veHsaId);
+
+    assertEquals(1, patientResponse.getSjukfallList().size());
+    assertEquals(2, patientResponse.getSjukfallList().get(0).getIntyg().size());
+
+    SjfMetaData metaData = patientResponse.getSjfMetaData();
+
+    assertTrue(metaData.isSamtyckeFinns());
+    assertSjfMetaDataItem(enhetsId12, SjfMetaDataItemType.VARDENHET, true, metaData);
+  }
+
+  /*
+   * Testet ska visa att alla vårdgivare som en patient har något intyg på
+   * ska finnas med i SjfMetaData oavsett om intygen i sig ingår i det
+   * aktiva sjukfallet eller inte.
+   */
+  @Test
+  public void testGetByPatient_allaVardgivareSkaFinnasMedISjfMetaData() {
+    List<IntygsData> data =
+        new ArrayList<>() {
+          {
+            add(
+                createIntygsData(
+                    vgId1,
+                    enhetsId11,
+                    lakareId1,
+                    patientId1,
+                    false,
+                    activeDate.minusDays(1),
+                    activeDate.plusDays(9),
+                    activeDate.minusDays(1).atStartOfDay()));
+            add(
+                createIntygsData(
+                    vgId2,
+                    enhetsId2,
+                    lakareId1,
+                    patientId1,
+                    false,
+                    activeDate.minusDays(10),
+                    activeDate.minusDays(2),
+                    activeDate.minusDays(10).atStartOfDay()));
+            add(
+                createIntygsData(
+                    vgId3,
+                    enhetsId3,
+                    lakareId3,
+                    patientId1,
+                    false,
+                    activeDate.minusDays(30),
+                    activeDate.minusDays(22),
+                    activeDate.minusDays(30).atStartOfDay()));
+          }
+        };
+
+    when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
+    when(samtyckestjanstIntegrationService.checkForConsent(
+            patientId1, lakareId1, vgId1, enhetsId11))
+        .thenReturn(true);
+
+    List<String> vgHsaId = new ArrayList<>();
+    List<String> veHsaId = new ArrayList<>();
+
+    SjukfallPatientResponse patientResponse =
+        testee.getByPatient(
+            vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId, veHsaId);
+
+    assertEquals(1, patientResponse.getSjukfallList().size());
+    assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
+
+    // Except vgId1, we expect that both vgId2 and vgId3 are present.
+    // Every vårdgivare shall be present, not just the ones that contributes
+    // to the active sjukfall (INTYG-7912).
+    SjfMetaData metaData = patientResponse.getSjfMetaData();
+
+    assertTrue(metaData.isSamtyckeFinns());
+    assertEquals(2, metaData.getKraverSamtycke().size());
+    assertSjfMetaDataItem(vgId2, SjfMetaDataItemType.VARDGIVARE, false, metaData);
+    assertSjfMetaDataItem(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
+
+    assertTrue(
+        metaData.getKraverSamtycke().stream()
+                .filter(md -> md.getItemId().equals(vgId2) && md.isBidrarTillAktivtSjukfall())
+                .count()
+            > 0);
+    assertTrue(
+        metaData.getKraverSamtycke().stream()
+                .filter(md -> md.getItemId().equals(vgId3) && !md.isBidrarTillAktivtSjukfall())
+                .count()
+            > 0);
+  }
+
+  // - - - Private scope - - -
+
+  // This method asserts test data created in method createIntygsData
+  private static void assertSjfMetaData(boolean finnsSamtycke, SjfMetaData metaData) {
+    assertEquals(finnsSamtycke, metaData.isSamtyckeFinns());
+    assertEquals(1, metaData.getAndraVardgivareMedSparr().size());
+    assertEquals(1, metaData.getVardenheterInomVGMedSparr().size());
+    assertEquals(2, metaData.getKraverSamtycke().size());
+    assertEquals(2, metaData.getKraverInteSamtycke().size());
+  }
+
+  private static void assertSjfMetaDataItem(
+      String itemId,
+      SjfMetaDataItemType itemType,
+      boolean isIncludedInSjukfall,
+      SjfMetaData metaData) {
+    switch (itemType) {
+      case VARDGIVARE:
+        assertTrue(
+            metaData.getKraverSamtycke().stream()
+                .anyMatch(
+                    md ->
+                        md.getItemId().equals(itemId)
+                            && md.isIncludedInSjukfall() == isIncludedInSjukfall));
+        break;
+      case VARDENHET:
+        assertTrue(
+            metaData.getKraverInteSamtycke().stream()
+                .anyMatch(
+                    md ->
+                        md.getItemId().equals(itemId)
+                            && md.isIncludedInSjukfall() == isIncludedInSjukfall));
+        break;
+      default:
+        fail();
+    }
+  }
+
+  private RehabstodUser buildUser() {
+    RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+    preferences.updatePreference(
+        RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
+    preferences.updatePreference(
+        RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "0");
+
+    RehabstodUser user = new RehabstodUser(LAKARE_ID, LAKARE_NAMN, true);
+    user.setPreferences(preferences);
+    user.setValdVardgivare(
+        new se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare(
+            VARDGIVARE_ID, "vårdgivare"));
+    user.setValdVardenhet(new Vardenhet(VARDENHETS_ID, "enhet"));
+
+    return user;
+  }
+
+  private List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> createSjukfallEnhetList() {
+    List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> sjukfallList = new ArrayList<>();
+
+    sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
+    sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
+    sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId, patientId1));
+    sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId, patientId1));
+    sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
+    sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
+    sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
+    sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId, patientId1));
+    sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId, patientId1));
+    sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId, patientId1));
+    sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId, patientId1));
+    sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
+    sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
+    sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
+    sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId, patientId1));
+
+    return sjukfallList;
+  }
+
+  private List<IntygsData> createIntygsData() {
+    List<IntygsData> intygsData = new ArrayList<>();
+
+    intygWithSparr = new ArrayList<>();
+
+    intygsData.add(createIntygsData(vgId1, enhetsId11, lakareId1, patientId1));
+    intygsData.add(createIntygsData(vgId1, enhetsId11, lakareId1, patientId1));
+    intygsData.add(createIntygsData(vgId1, enhetsId12, lakareId1, patientId1));
+
+    // Lägg till intyg på annan vårdenhet. Ett utan spärr och ett med spärr.
+    intygsData.add(createIntygsData(vgId1, enhetsId13, lakareId1, patientId1));
+    intygsData.add(createIntygsData(vgId1, enhetsId13, lakareId1, patientId1, true));
+
+    intygsData.add(createIntygsData(vgId2, enhetsId2, lakareId1, patientId1));
+    intygsData.add(createIntygsData(vgId3, enhetsId3, lakareId1, patientId1));
+    intygsData.add(createIntygsData(vgId3, enhetsId3, lakareId1, patientId1, true));
+
+    return intygsData;
+  }
+
+  private se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet createSjukfallEnhet(
+      String lakareId, String lakareNamn, String enhetsId, String patiendId) {
+
+    Vardgivare vardgivare = Vardgivare.create(vgId1, "vg");
+
+    se.inera.intyg.infra.sjukfall.dto.Vardenhet vardenhet =
+        se.inera.intyg.infra.sjukfall.dto.Vardenhet.create(enhetsId, "ve-" + enhetsId);
+
+    se.inera.intyg.infra.sjukfall.dto.Lakare lakare =
+        se.inera.intyg.infra.sjukfall.dto.Lakare.create(lakareId, lakareNamn);
+
+    se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet sjukfall =
+        new se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet();
+
+    Patient patient = Patient.create(patiendId, "name");
+
+    sjukfall.setVardgivare(vardgivare);
+    sjukfall.setVardenhet(vardenhet);
+    sjukfall.setLakare(lakare);
+    sjukfall.setSlut(LocalDate.now().plusDays(5L));
+    sjukfall.setPatient(patient);
+    sjukfall.setStart(LocalDate.now().minusDays(1L));
+    return sjukfall;
+  }
+
+  private IntygsData createIntygsData(
+      String vgId, String enhetsId, String lakareId, String patiendId) {
+    return createIntygsData(vgId, enhetsId, lakareId, patiendId, false);
+  }
+
+  private IntygsData createIntygsData(
+      String vgId, String enhetsId, String lakareId, String patientId, boolean harSparr) {
+    LocalDate startdatum = activeDate.minusDays(15);
+    LocalDate slutdatum = activeDate.plusDays(15);
+
+    return createIntygsData(
+        vgId,
+        enhetsId,
+        lakareId,
+        patientId,
+        harSparr,
+        startdatum,
+        slutdatum,
+        activeDate.atStartOfDay());
+  }
+
+  private IntygsData createIntygsData(
+      String vgId,
+      String enhetsId,
+      String lakareId,
+      String patientId,
+      boolean harSparr,
+      LocalDate startDatum,
+      LocalDate slutDatum,
+      LocalDateTime signeringsDatum) {
+
+    se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient patient =
+        new se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient();
+    PersonId personId = new PersonId();
+    personId.setExtension(patientId);
+    patient.setFullstandigtNamn("name");
+    patient.setPersonId(personId);
+
+    HosPersonal hosPersonal = new HosPersonal();
+    HsaId hospId = new HsaId();
+    hospId.setExtension(lakareId);
+    hosPersonal.setPersonalId(hospId);
+    hosPersonal.setFullstandigtNamn("lakare");
+
+    se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare vardgivare =
+        new se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare();
+    HsaId vardgivarHsaId = new HsaId();
+    vardgivarHsaId.setExtension(vgId);
+    vardgivare.setVardgivarId(vardgivarHsaId);
+
+    Enhet enhet = new Enhet();
+    HsaId veId = new HsaId();
+    veId.setExtension(enhetsId);
+    enhet.setEnhetsId(veId);
+    enhet.setEnhetsnamn("ve-" + enhetsId);
+    enhet.setVardgivare(vardgivare);
+
+    hosPersonal.setEnhet(enhet);
+
+    Formaga formaga = new Formaga();
+    formaga.setSlutdatum(slutDatum);
+    formaga.setStartdatum(startDatum);
+
+    Arbetsformaga arbetsformaga = new Arbetsformaga();
+    arbetsformaga.getFormaga().add(formaga);
+
+    IntygsData intygsData = new IntygsData();
+
+    intygsData.setPatient(patient);
+    intygsData.setSkapadAv(hosPersonal);
+
+    intygsData.setSigneringsTidpunkt(signeringsDatum);
+    intygsData.setArbetsformaga(arbetsformaga);
+    intygsData.setDiagnoskod("J20");
+
+    String intygId = "intygsId" + intygsIdCounter++;
+
+    intygsData.setIntygsId(intygId);
+
+    if (harSparr) {
+      intygWithSparr.add(intygId);
     }
 
-    /*
-     * Testet ska visa att endast intyg inom samma vårdgivare och samma enhet
-     * ska resultera i ett sjukfall med två intyg i sig.
-     */
-    @Test
-    public void testGetByPatient_utanSamtycke() {
-        List<String> vgHsaId = new ArrayList<>();
-        List<String> veHsaId = new ArrayList<>();
+    return intygsData;
+  }
 
-        SjukfallPatientResponse patientResponse =
-            testee.getByPatient(vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId, veHsaId);
+  private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare createVardgivare(
+      String id, String namn) {
+    return new se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare(id, namn);
+  }
 
-        assertEquals(1, patientResponse.getSjukfallList().size());
-        assertEquals(2, patientResponse.getSjukfallList().get(0).getIntyg().size());
+  private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet createVardenhet(
+      String id, String namn) {
+    return createVardenhet(id, namn, new ArrayList<>());
+  }
 
-        SjfMetaData metaData = patientResponse.getSjfMetaData();
-
-        assertSjfMetaData(false, metaData);
-
-        assertSjfMetaDataItem(vgId2, SjfMetaDataItemType.VARDGIVARE, false, metaData);
-        assertSjfMetaDataItem(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
-        assertSjfMetaDataItem(enhetsId12, SjfMetaDataItemType.VARDENHET, false, metaData);
+  private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet createVardenhet(
+      String id, String namn, Mottagning mottagning) {
+    if (mottagning == null) {
+      return createVardenhet(id, namn, new ArrayList<>());
     }
 
-    /*
-     * Testet ska visa att intyg inom samma vårdgivare och samma enhet plus registrerad
-     * vårdgivare ska resultera i ett sjukfall med tre intyg i sig när samtycke finns.
-     */
-    @Test
-    public void testGetByPatient_medSamtyckeForVardgivare() {
-        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId1, enhetsId11)).thenReturn(true);
+    List<Mottagning> mottagningar = List.of(mottagning);
+    return createVardenhet(id, namn, mottagningar);
+  }
 
-        List<String> vgHsaId = new ArrayList<>();
-        List<String> veHsaId = new ArrayList<>();
+  private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet createVardenhet(
+      String id, String namn, List<Mottagning> mottagningar) {
+    se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet vardenhet =
+        new se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet(id, namn);
 
-        //Registrera vardgivare vars intyg ska inkluderas i beräkning av aktivt sjukfall
-        vgHsaId.add(vgId2);
-
-        SjukfallPatientResponse patientResponse =
-            testee.getByPatient(vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId, veHsaId);
-
-        assertEquals(1, patientResponse.getSjukfallList().size());
-        assertEquals(3, patientResponse.getSjukfallList().get(0).getIntyg().size());
-
-        SjfMetaData metaData = patientResponse.getSjfMetaData();
-
-        assertSjfMetaData(true, metaData);
-
-        assertSjfMetaDataItem(vgId2, SjfMetaDataItemType.VARDGIVARE, true, metaData);
-        assertSjfMetaDataItem(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
-        assertSjfMetaDataItem(enhetsId12, SjfMetaDataItemType.VARDENHET, false, metaData);
-
-        Personnummer expectedPersonnummer = Personnummer.createPersonnummer(patientId1).orElseThrow();
-
-        verify(logService).logConsentActivity(eq(expectedPersonnummer), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
+    if (mottagningar == null) {
+      mottagningar = new ArrayList<>();
     }
 
-    /*
-     * Testet ska visa att samtyckesläsning INTE PDL loggas om inget samtycke fanns
-     */
-    @Test
-    public void testGetByPatientNoConsentPDLLoggingIfNoConsent() {
-        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId1, enhetsId11)).thenReturn(false);
+    vardenhet.setMottagningar(mottagningar);
+    return vardenhet;
+  }
 
-        testee.getByPatient(vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, new ArrayList<>(), new ArrayList<>());
+  private se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning createMottagning(
+      String id, String namn, String parentId) {
+    Mottagning mottagning = new Mottagning();
+    mottagning.setId(id);
+    mottagning.setNamn(namn);
+    mottagning.setParentHsaId(parentId);
+    return mottagning;
+  }
 
-        verifyNoInteractions(logService);
+  class SjukfallEngineMapperTest extends SjukfallEngineMapper {
+
+    private final String vardgivareId = "IFV1239877878-0000";
+    private final String vardgivareNamn = "Vårdgivare-1";
+    private final String patientId = "19121212-1212";
+    private final String patinetNamn = "Tolvan Tolvansson";
+
+    public SjukfallEngineMapperTest() {
+      ReflectionTestUtils.setField(
+          this, "patientIdEncryption", new PatientIdEncryption("McQfTjWmZq4t7w!z%C*F-JaNdRgUkXp2"));
     }
 
-    /*
-     * Testet ska visa att samtyckesläsning PDL loggas om samtycke fanns
-     */
-    @Test
-    public void testGetByPatientConsentPDLLoggingIfConsentExists() {
-        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId1, enhetsId11)).thenReturn(true);
+    @Override
+    public SjukfallEnhet mapToSjukfallEnhetDto(
+        se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from,
+        int maxDagarSedanAvslut,
+        LocalDate today) {
+      se.inera.intyg.infra.sjukfall.dto.Vardgivare vardgivare =
+          se.inera.intyg.infra.sjukfall.dto.Vardgivare.create(vardgivareId, vardgivareNamn);
 
-        testee.getByPatient(vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, new ArrayList<>(), new ArrayList<>());
+      se.inera.intyg.infra.sjukfall.dto.Patient patient =
+          se.inera.intyg.infra.sjukfall.dto.Patient.create(patientId, patinetNamn);
 
-        Personnummer expectedPersonnummer = Personnummer.createPersonnummer(patientId1).orElseThrow();
-        verify(logService).logConsentActivity(eq(expectedPersonnummer), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
+      se.inera.intyg.infra.sjukfall.dto.DiagnosKod diagnosKod =
+          se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create("J22");
+
+      // Update Sjukfall with these objects to avoid failing test
+      from.setVardgivare(vardgivare);
+      from.setPatient(patient);
+      from.setDiagnosKod(diagnosKod);
+
+      return super.mapToSjukfallEnhetDto(from, maxDagarSedanAvslut, today);
     }
 
-    /*
-     * Testet ska visa att samtyckesläsning PDL loggas endast en gång om anropad flera gånger per user
-     */
-    @Test
-    public void testGetByPatientConsentPDLLoggingOnlyOnceIfActivityAlreadyLogged() {
-        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId1, enhetsId11)).thenReturn(true);
-
-        testee.getByPatient(vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, new ArrayList<>(), new ArrayList<>());
-        testee.getByPatient(vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, new ArrayList<>(), new ArrayList<>());
-
-        Personnummer expectedPersonnummer = Personnummer.createPersonnummer(patientId1).orElseThrow();
-        verify(logService, times(1))
-            .logConsentActivity(eq(expectedPersonnummer), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
+    @Override
+    public SjukfallPatient mapToSjukfallPatientDto(
+        se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from,
+        Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
+      return super.mapToSjukfallPatientDto(from, intygAccessMetaData);
     }
 
-
-    /*
-     * Testet ska visa att intyg inom samma vårdgivare och samma enhet inklusive
-     * registrerade andra vårdenheter inom vårdgivaren ska resultera i ett sjukfall
-     * med 4 intyg i sig.
-     *
-     * Testet visar också att intyg med spärr på annan vårdenhet VE inte kommer med medan
-     * intyg utan spärr på samma vårdenhet VE kommer med.
-     */
-    @Test
-    public void testGetByPatient_medSamtyckeForVardenhet() {
-
-        List<String> vgHsaId = new ArrayList<>();
-        List<String> veHsaId = new ArrayList<>();
-
-        //Registrera vardenheter vars intyg ska inkluderas i beräkning av aktivt sjukfall
-        veHsaId.add(enhetsId12);
-        veHsaId.add(enhetsId13);
-
-        SjukfallPatientResponse patientResponse =
-            testee.getByPatient(vgId1, enhetsId11, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId, veHsaId);
-
-        assertEquals(1, patientResponse.getSjukfallList().size());
-        assertEquals(4, patientResponse.getSjukfallList().get(0).getIntyg().size());
-
-        SjfMetaData metaData = patientResponse.getSjfMetaData();
-
-        assertSjfMetaData(false, metaData);
-
-        assertSjfMetaDataItem(vgId2, SjfMetaDataItemType.VARDGIVARE, false, metaData);
-        assertSjfMetaDataItem(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
-        assertSjfMetaDataItem(enhetsId12, SjfMetaDataItemType.VARDENHET, true, metaData);
+    @Override
+    public PatientData mapSjukfallIntygToPatientData(
+        se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg from, IntygAccessControlMetaData iacm) {
+      return super.mapSjukfallIntygToPatientData(from, iacm);
     }
 
-    /*
-     * Testet ska visa att intyg inom samma vårdgivare och samma enhet, fast utanför glappet,
-     * ska resultera i två sjukfall med ett intyg vardera i sig.
-     */
-    @Test
-    public void testGetByPatient_inomVardgivareOchInomEnhet() {
-        List<IntygsData> data = new ArrayList<>() {{
-            add(createIntygsData(vgId1, enhetsId11, lakareId1, patientId1, false,
-                activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
-            add(createIntygsData(vgId1, enhetsId11, lakareId1, patientId1, false,
-                activeDate.minusDays(17), activeDate.minusDays(8), activeDate.minusDays(17).atStartOfDay()));
-        }};
-
-        when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
-
-        List<String> vgHsaId = new ArrayList<>();
-        List<String> veHsaId = new ArrayList<>();
-
-        //vgHsaId.add(vgId1);
-
-        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId1, enhetsId11, lakareId1, patientId1,
-            Urval.ALL, parameters, vgHsaId, veHsaId);
-
-        assertEquals(2, patientResponse.getSjukfallList().size());
-        assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
-        assertEquals(1, patientResponse.getSjukfallList().get(1).getIntyg().size());
+    @Override
+    public Diagnos getDiagnos(se.inera.intyg.infra.sjukfall.dto.DiagnosKod from) {
+      Diagnos to = new Diagnos(from.getOriginalCode(), from.getCleanedCode(), from.getName());
+      to.setBeskrivning("En beskrivning");
+      to.setKapitel("Ett kapitel");
+      return to;
     }
+  }
 
-    /*
-     * Testet ska visa att intyg inom samma vårdgivare och samma enhet fast där intyget är skrivet på
-     * en underenhet ska resultera i ett sjukfall med ett intyg vardera i sig.
-     */
-    @Test
-    public void testGetByPatient_whenInomVardgivareOchInomEnhet_andMottagning() {
-        List<IntygsData> data = new ArrayList<>() {{
-            add(createIntygsData(vgId1, enhetsId11, lakareId1, patientId1, false,
-                activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
-            add(createIntygsData(vgId1, mottagningsId, lakareId1, patientId1, false,
-                activeDate.minusDays(20), activeDate.minusDays(15), activeDate.minusDays(20).atStartOfDay()));
-        }};
+  class SparrtjanstIntegrationServiceImplTest extends SparrtjanstIntegrationServiceImpl {
 
-        when(hsaOrganizationsService.getVardenhet(anyString()))
-            .thenAnswer(i -> createVardenhet((String) i.getArguments()[0], i.getArguments()[0] + "-VENAME",
-                createMottagning(mottagningsId, mottagningsId + "-UENAME", (String) i.getArguments()[0])));
+    @Override
+    public void decorateWithBlockStatus(
+        String currentVardgivarHsaId,
+        String currentVardenhetHsaId,
+        String userHsaId,
+        String patientId,
+        Map<String, IntygAccessControlMetaData> intygAccessMetaData,
+        List<IntygData> intygLista) {
 
-        when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
-
-        List<String> vgHsaId = new ArrayList<>();
-        List<String> veHsaId = new ArrayList<>();
-
-        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId1, enhetsId11, lakareId1, patientId1,
-            Urval.ALL, parameters, vgHsaId, veHsaId);
-
-        assertEquals(2, patientResponse.getSjukfallList().size());
-        assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
-        assertEquals(1, patientResponse.getSjukfallList().get(1).getIntyg().size());
+      intygWithSparr.forEach(
+          intygsId -> {
+            if (intygAccessMetaData.containsKey(intygsId)) {
+              intygAccessMetaData.get(intygsId).setSparr(true);
+            }
+          });
     }
-
-    /*
-     * Testet ska visa att intyg inom samma vårdgivare och där användaren är inloggad på en mottagning,
-     * så ska intyg på enheten komma med.
-     */
-    @Test
-    public void testGetByPatient_whenInomVardgivareOchInomMottagning_andParent() {
-        List<IntygsData> data = new ArrayList<>() {{
-            add(createIntygsData(vgId1, mottagningsId, lakareId1, patientId1, false,
-                activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
-            add(createIntygsData(vgId1, enhetsId11, lakareId1, patientId1, false,
-                activeDate.minusDays(20), activeDate.minusDays(15), activeDate.minusDays(20).atStartOfDay()));
-        }};
-
-        //Koppla mottagningen till enheten
-        when(hsaOrganizationsService.getVardenhet(eq(mottagningsId)))
-            .thenReturn(createVardenhet(enhetsId11, "parentunit", createMottagning(mottagningsId, "mottagning", enhetsId11)));
-
-        when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
-
-        List<String> vgHsaId = new ArrayList<>();
-        List<String> veHsaId = new ArrayList<>();
-
-        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId1, mottagningsId, lakareId1, patientId1,
-            Urval.ALL, parameters, vgHsaId, veHsaId);
-
-        assertEquals(2, patientResponse.getSjukfallList().size());
-        assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
-        assertEquals(1, patientResponse.getSjukfallList().get(1).getIntyg().size());
-    }
-
-    /*
-     * Testet ska visa att intyg inom samma vårdgivare fast på olika enheter och utanför glappet,
-     * ska resultera i ett sjukfall (det aktiva) med ett intyg i sig.
-     */
-    @Test
-    public void testGetByPatient_inomVardgivareOchAnnanEnhetOchUtanforGlappet() {
-        List<IntygsData> data = new ArrayList<>() {{
-            add(createIntygsData(vgId1, enhetsId11, lakareId1, patientId1, false,
-                activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
-            add(createIntygsData(vgId1, enhetsId12, lakareId1, patientId1, false,
-                activeDate.minusDays(17), activeDate.minusDays(8), activeDate.minusDays(17).atStartOfDay()));
-        }};
-
-        when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
-
-        List<String> vgHsaId = new ArrayList<>();
-        List<String> veHsaId = new ArrayList<>();
-
-        // Registrera annan vårdenhet
-        veHsaId.add(enhetsId12);
-
-        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId1, enhetsId11, lakareId1, patientId1,
-            Urval.ALL, parameters, vgHsaId, veHsaId);
-
-        assertEquals(1, patientResponse.getSjukfallList().size());
-        assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
-        assertEquals(1, patientResponse.getSjfMetaData().getKraverInteSamtycke().size());
-
-        SjfMetaData metaData = patientResponse.getSjfMetaData();
-
-        assertFalse(metaData.isSamtyckeFinns());
-        assertSjfMetaDataItem(enhetsId12, SjfMetaDataItemType.VARDENHET, true, metaData);
-
-    }
-
-    /*
-     * Testet ska visa att intyg inom samma vårdgivare fast på olika enheter men innanför glappet,
-     * ska resultera i ett sjukfall (det aktiva) med två intyg i sig.
-     */
-    @Test
-    public void testGetByPatient_inomVardgivareOchUtanforEnhetMenInomGlappet() {
-        List<IntygsData> data = new ArrayList<>() {{
-            add(createIntygsData(vgId1, enhetsId11, lakareId1, patientId1, false,
-                activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
-            add(createIntygsData(vgId1, enhetsId12, lakareId1, patientId1, false,
-                activeDate.minusDays(10), activeDate.minusDays(2), activeDate.minusDays(10).atStartOfDay()));
-        }};
-
-        when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
-        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId1, enhetsId11)).thenReturn(true);
-
-        List<String> vgHsaId = new ArrayList<>();
-        List<String> veHsaId = new ArrayList<>();
-
-        veHsaId.add(enhetsId12);
-
-        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId1, enhetsId11, lakareId1, patientId1,
-            Urval.ALL, parameters, vgHsaId, veHsaId);
-
-        assertEquals(1, patientResponse.getSjukfallList().size());
-        assertEquals(2, patientResponse.getSjukfallList().get(0).getIntyg().size());
-
-        SjfMetaData metaData = patientResponse.getSjfMetaData();
-
-        assertTrue(metaData.isSamtyckeFinns());
-        assertSjfMetaDataItem(enhetsId12, SjfMetaDataItemType.VARDENHET, true, metaData);
-
-    }
-
-    /*
-     * Testet ska visa att alla vårdgivare som en patient har något intyg på
-     * ska finnas med i SjfMetaData oavsett om intygen i sig ingår i det
-     * aktiva sjukfallet eller inte.
-     */
-    @Test
-    public void testGetByPatient_allaVardgivareSkaFinnasMedISjfMetaData() {
-        List<IntygsData> data = new ArrayList<>() {{
-            add(createIntygsData(vgId1, enhetsId11, lakareId1, patientId1, false,
-                activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
-            add(createIntygsData(vgId2, enhetsId2, lakareId1, patientId1, false,
-                activeDate.minusDays(10), activeDate.minusDays(2), activeDate.minusDays(10).atStartOfDay()));
-            add(createIntygsData(vgId3, enhetsId3, lakareId3, patientId1, false,
-                activeDate.minusDays(30), activeDate.minusDays(22), activeDate.minusDays(30).atStartOfDay()));
-        }};
-
-        when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
-        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId1, enhetsId11)).thenReturn(true);
-
-        List<String> vgHsaId = new ArrayList<>();
-        List<String> veHsaId = new ArrayList<>();
-
-        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId1, enhetsId11, lakareId1, patientId1,
-            Urval.ALL, parameters, vgHsaId, veHsaId);
-
-        assertEquals(1, patientResponse.getSjukfallList().size());
-        assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
-
-        // Except vgId1, we expect that both vgId2 and vgId3 are present.
-        // Every vårdgivare shall be present, not just the ones that contributes
-        // to the active sjukfall (INTYG-7912).
-        SjfMetaData metaData = patientResponse.getSjfMetaData();
-
-        assertTrue(metaData.isSamtyckeFinns());
-        assertEquals(2, metaData.getKraverSamtycke().size());
-        assertSjfMetaDataItem(vgId2, SjfMetaDataItemType.VARDGIVARE, false, metaData);
-        assertSjfMetaDataItem(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
-
-        assertTrue(metaData.getKraverSamtycke().stream()
-            .filter(md -> md.getItemId().equals(vgId2) && md.isBidrarTillAktivtSjukfall()).count() > 0);
-        assertTrue(metaData.getKraverSamtycke().stream()
-            .filter(md -> md.getItemId().equals(vgId3) && !md.isBidrarTillAktivtSjukfall()).count() > 0);
-    }
-
-    // - - - Private scope - - -
-
-    // This method asserts test data created in method createIntygsData
-    private static void assertSjfMetaData(boolean finnsSamtycke, SjfMetaData metaData) {
-        assertEquals(finnsSamtycke, metaData.isSamtyckeFinns());
-        assertEquals(1, metaData.getAndraVardgivareMedSparr().size());
-        assertEquals(1, metaData.getVardenheterInomVGMedSparr().size());
-        assertEquals(2, metaData.getKraverSamtycke().size());
-        assertEquals(2, metaData.getKraverInteSamtycke().size());
-    }
-
-    private static void assertSjfMetaDataItem(String itemId, SjfMetaDataItemType itemType, boolean isIncludedInSjukfall,
-        SjfMetaData metaData) {
-        switch (itemType) {
-            case VARDGIVARE:
-                assertTrue(metaData.getKraverSamtycke().stream()
-                    .anyMatch(md -> md.getItemId().equals(itemId) && md.isIncludedInSjukfall() == isIncludedInSjukfall));
-                break;
-            case VARDENHET:
-                assertTrue(metaData.getKraverInteSamtycke().stream()
-                    .anyMatch(md -> md.getItemId().equals(itemId) && md.isIncludedInSjukfall() == isIncludedInSjukfall));
-                break;
-            default:
-                fail();
-        }
-    }
-
-
-    private RehabstodUser buildUser() {
-        RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
-        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
-        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "0");
-
-        RehabstodUser user = new RehabstodUser(LAKARE_ID, LAKARE_NAMN, true);
-        user.setPreferences(preferences);
-        user.setValdVardgivare(new se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare(VARDGIVARE_ID, "vårdgivare"));
-        user.setValdVardenhet(new Vardenhet(VARDENHETS_ID, "enhet"));
-
-        return user;
-    }
-
-    private List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> createSjukfallEnhetList() {
-        List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> sjukfallList = new ArrayList<>();
-
-        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
-        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
-        sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId, patientId1));
-        sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId, patientId1));
-        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
-        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
-        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
-        sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId, patientId1));
-        sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId, patientId1));
-        sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId, patientId1));
-        sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId, patientId1));
-        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
-        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
-        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
-        sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId, patientId1));
-
-        return sjukfallList;
-    }
-
-    private List<IntygsData> createIntygsData() {
-        List<IntygsData> intygsData = new ArrayList<>();
-
-        intygWithSparr = new ArrayList<>();
-
-        intygsData.add(createIntygsData(vgId1, enhetsId11, lakareId1, patientId1));
-        intygsData.add(createIntygsData(vgId1, enhetsId11, lakareId1, patientId1));
-        intygsData.add(createIntygsData(vgId1, enhetsId12, lakareId1, patientId1));
-
-        // Lägg till intyg på annan vårdenhet. Ett utan spärr och ett med spärr.
-        intygsData.add(createIntygsData(vgId1, enhetsId13, lakareId1, patientId1));
-        intygsData.add(createIntygsData(vgId1, enhetsId13, lakareId1, patientId1, true));
-
-        intygsData.add(createIntygsData(vgId2, enhetsId2, lakareId1, patientId1));
-        intygsData.add(createIntygsData(vgId3, enhetsId3, lakareId1, patientId1));
-        intygsData.add(createIntygsData(vgId3, enhetsId3, lakareId1, patientId1, true));
-
-        return intygsData;
-    }
-
-    private se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet createSjukfallEnhet(String lakareId, String lakareNamn,
-        String enhetsId, String patiendId) {
-
-        Vardgivare vardgivare = Vardgivare.create(vgId1, "vg");
-
-        se.inera.intyg.infra.sjukfall.dto.Vardenhet vardenhet =
-            se.inera.intyg.infra.sjukfall.dto.Vardenhet.create(enhetsId, "ve-" + enhetsId);
-
-        se.inera.intyg.infra.sjukfall.dto.Lakare lakare =
-            se.inera.intyg.infra.sjukfall.dto.Lakare.create(lakareId, lakareNamn);
-
-        se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet sjukfall
-            = new se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet();
-
-        Patient patient = Patient.create(patiendId, "name");
-
-        sjukfall.setVardgivare(vardgivare);
-        sjukfall.setVardenhet(vardenhet);
-        sjukfall.setLakare(lakare);
-        sjukfall.setSlut(LocalDate.now().plusDays(5L));
-        sjukfall.setPatient(patient);
-        sjukfall.setStart(LocalDate.now().minusDays(1L));
-        return sjukfall;
-    }
-
-    private IntygsData createIntygsData(String vgId, String enhetsId, String lakareId, String patiendId) {
-        return createIntygsData(vgId, enhetsId, lakareId, patiendId, false);
-    }
-
-    private IntygsData createIntygsData(String vgId, String enhetsId, String lakareId, String patientId, boolean harSparr) {
-        LocalDate startdatum = activeDate.minusDays(15);
-        LocalDate slutdatum = activeDate.plusDays(15);
-
-        return createIntygsData(vgId, enhetsId, lakareId, patientId, harSparr, startdatum, slutdatum, activeDate.atStartOfDay());
-    }
-
-    private IntygsData createIntygsData(String vgId, String enhetsId, String lakareId, String patientId, boolean harSparr,
-        LocalDate startDatum, LocalDate slutDatum, LocalDateTime signeringsDatum) {
-
-        se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient patient =
-            new se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient();
-        PersonId personId = new PersonId();
-        personId.setExtension(patientId);
-        patient.setFullstandigtNamn("name");
-        patient.setPersonId(personId);
-
-        HosPersonal hosPersonal = new HosPersonal();
-        HsaId hospId = new HsaId();
-        hospId.setExtension(lakareId);
-        hosPersonal.setPersonalId(hospId);
-        hosPersonal.setFullstandigtNamn("lakare");
-
-        se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare vardgivare =
-            new se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare();
-        HsaId vardgivarHsaId = new HsaId();
-        vardgivarHsaId.setExtension(vgId);
-        vardgivare.setVardgivarId(vardgivarHsaId);
-
-        Enhet enhet = new Enhet();
-        HsaId veId = new HsaId();
-        veId.setExtension(enhetsId);
-        enhet.setEnhetsId(veId);
-        enhet.setEnhetsnamn("ve-" + enhetsId);
-        enhet.setVardgivare(vardgivare);
-
-        hosPersonal.setEnhet(enhet);
-
-        Formaga formaga = new Formaga();
-        formaga.setSlutdatum(slutDatum);
-        formaga.setStartdatum(startDatum);
-
-        Arbetsformaga arbetsformaga = new Arbetsformaga();
-        arbetsformaga.getFormaga().add(formaga);
-
-        IntygsData intygsData = new IntygsData();
-
-        intygsData.setPatient(patient);
-        intygsData.setSkapadAv(hosPersonal);
-
-        intygsData.setSigneringsTidpunkt(signeringsDatum);
-        intygsData.setArbetsformaga(arbetsformaga);
-        intygsData.setDiagnoskod("J20");
-
-        String intygId = "intygsId" + intygsIdCounter++;
-
-        intygsData.setIntygsId(intygId);
-
-        if (harSparr) {
-            intygWithSparr.add(intygId);
-        }
-
-        return intygsData;
-    }
-
-    private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare createVardgivare(String id, String namn) {
-        return new se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare(id, namn);
-    }
-
-    private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet createVardenhet(String id, String namn) {
-        return createVardenhet(id, namn, new ArrayList<>());
-    }
-
-    private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet createVardenhet(String id, String namn, Mottagning mottagning) {
-        if (mottagning == null) {
-            return createVardenhet(id, namn, new ArrayList<>());
-        }
-
-        List<Mottagning> mottagningar = List.of(mottagning);
-        return createVardenhet(id, namn, mottagningar);
-    }
-
-    private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet createVardenhet(String id, String namn,
-        List<Mottagning> mottagningar) {
-        se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet vardenhet =
-            new se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet(id, namn);
-
-        if (mottagningar == null) {
-            mottagningar = new ArrayList<>();
-        }
-
-        vardenhet.setMottagningar(mottagningar);
-        return vardenhet;
-    }
-
-    private se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning createMottagning(String id, String namn, String parentId) {
-        Mottagning mottagning = new Mottagning();
-        mottagning.setId(id);
-        mottagning.setNamn(namn);
-        mottagning.setParentHsaId(parentId);
-        return mottagning;
-    }
-
-    class SjukfallEngineMapperTest extends SjukfallEngineMapper {
-
-        private final String vardgivareId = "IFV1239877878-0000";
-        private final String vardgivareNamn = "Vårdgivare-1";
-        private final String patientId = "19121212-1212";
-        private final String patinetNamn = "Tolvan Tolvansson";
-
-        public SjukfallEngineMapperTest() {
-            ReflectionTestUtils.setField(this, "patientIdEncryption", new PatientIdEncryption("McQfTjWmZq4t7w!z%C*F-JaNdRgUkXp2"));
-        }
-
-        @Override
-        public SjukfallEnhet mapToSjukfallEnhetDto(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from, int maxDagarSedanAvslut,
-            LocalDate today) {
-            se.inera.intyg.infra.sjukfall.dto.Vardgivare vardgivare =
-                se.inera.intyg.infra.sjukfall.dto.Vardgivare.create(vardgivareId, vardgivareNamn);
-
-            se.inera.intyg.infra.sjukfall.dto.Patient patient =
-                se.inera.intyg.infra.sjukfall.dto.Patient.create(patientId, patinetNamn);
-
-            se.inera.intyg.infra.sjukfall.dto.DiagnosKod diagnosKod =
-                se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create("J22");
-
-            // Update Sjukfall with these objects to avoid failing test
-            from.setVardgivare(vardgivare);
-            from.setPatient(patient);
-            from.setDiagnosKod(diagnosKod);
-
-            return super.mapToSjukfallEnhetDto(from, maxDagarSedanAvslut, today);
-        }
-
-        @Override
-        public SjukfallPatient mapToSjukfallPatientDto(se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from,
-            Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
-            return super.mapToSjukfallPatientDto(from, intygAccessMetaData);
-        }
-
-        @Override
-        public PatientData mapSjukfallIntygToPatientData(se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg from,
-            IntygAccessControlMetaData iacm) {
-            return super.mapSjukfallIntygToPatientData(from, iacm);
-        }
-
-        @Override
-        public Diagnos getDiagnos(se.inera.intyg.infra.sjukfall.dto.DiagnosKod from) {
-            Diagnos to = new Diagnos(from.getOriginalCode(), from.getCleanedCode(), from.getName());
-            to.setBeskrivning("En beskrivning");
-            to.setKapitel("Ett kapitel");
-            return to;
-        }
-
-    }
-
-    class SparrtjanstIntegrationServiceImplTest extends SparrtjanstIntegrationServiceImpl {
-
-        @Override
-        public void decorateWithBlockStatus(String currentVardgivarHsaId, String currentVardenhetHsaId, String userHsaId,
-            String patientId, Map<String, IntygAccessControlMetaData> intygAccessMetaData,
-            List<IntygData> intygLista) {
-
-            intygWithSparr.forEach(intygsId -> {
-                if (intygAccessMetaData.containsKey(intygsId)) {
-                    intygAccessMetaData.get(intygsId).setSparr(true);
-                }
-            });
-        }
-    }
+  }
 }

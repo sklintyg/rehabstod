@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,17 +24,15 @@ import java.time.format.DateTimeFormatter;
 /**
  * Formats {@link java.time.LocalDateTime} into HH:mm format.
  *
- * Created by eriklupander on 2016-09-02.
+ * <p>Created by eriklupander on 2016-09-02.
  */
 public final class HourMinuteFormatter {
 
-    private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+  private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
-    private HourMinuteFormatter() {
+  private HourMinuteFormatter() {}
 
-    }
-
-    public static String print(LocalDateTime localDateTime) {
-        return localDateTime.format(dateTimeFormatter);
-    }
+  public static String print(LocalDateTime localDateTime) {
+    return localDateTime.format(dateTimeFormatter);
+  }
 }

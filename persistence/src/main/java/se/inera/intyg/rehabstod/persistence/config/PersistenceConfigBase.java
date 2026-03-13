@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,87 +32,96 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 public abstract class PersistenceConfigBase {
 
-    static final String BASE_PACKAGES = "se.inera.intyg.rehabstod.persistence";
-    static final long IDLE_TIMEOUT = 15000L;
-    static final long CONN_TIMEOUT = 3000L;
-    static final int MIN_IDLE = 3;
+  static final String BASE_PACKAGES = "se.inera.intyg.rehabstod.persistence";
+  static final long IDLE_TIMEOUT = 15000L;
+  static final long CONN_TIMEOUT = 3000L;
+  static final int MIN_IDLE = 3;
 
-    @Value("${db.driver}")
-    private String dbDriver;
-    @Value("${db.url}")
-    private String dbUrl;
-    @Value("${db.username}")
-    private String dbUsername;
-    @Value("${db.password}")
-    private String dbPassword;
-    @Value("${db.pool.maxSize}")
-    private int dbPoolMaxSize;
+  @Value("${db.driver}")
+  private String dbDriver;
 
-    @Value("${hibernate.dialect}")
-    private String hibernateDialect;
-    @Value("${hibernate.hbm2ddl.auto}")
-    private String hibernateHbm2ddl;
-    @Value("${hibernate.ejb.naming_strategy}")
-    private String hibernateNamingStrategy;
-    @Value("${hibernate.show_sql}")
-    private String hibernateShowSql;
-    @Value("${hibernate.format_sql}")
-    private String hibernateFormatSql;
-    @Value("${hibernate.id.new_generator_mappings}")
-    private String hibernateNewId;
+  @Value("${db.url}")
+  private String dbUrl;
 
-    @Bean
-    LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
-        final LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-        entityManagerFactoryBean.setDataSource(dataSource);
-        entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        entityManagerFactoryBean.setPackagesToScan(BASE_PACKAGES);
+  @Value("${db.username}")
+  private String dbUsername;
 
-        final Properties jpaProperties = new Properties();
+  @Value("${db.password}")
+  private String dbPassword;
 
-        jpaProperties.put("hibernate.dialect", hibernateDialect);
-        jpaProperties.put("hibernate.hbm2ddl.auto", hibernateHbm2ddl);
-        jpaProperties.put("hibernate.ejb.naming_strategy", hibernateNamingStrategy);
-        jpaProperties.put("hibernate.show_sql", hibernateShowSql);
-        jpaProperties.put("hibernate.format_sql", hibernateFormatSql);
-        jpaProperties.put("hibernate.id.new_generator_mappings", hibernateNewId);
-        jpaProperties.put("hibernate.enable_lazy_load_no_trans", false);
+  @Value("${db.pool.maxSize}")
+  private int dbPoolMaxSize;
 
-        entityManagerFactoryBean.setJpaProperties(jpaProperties);
+  @Value("${hibernate.dialect}")
+  private String hibernateDialect;
 
-        return entityManagerFactoryBean;
-    }
+  @Value("${hibernate.hbm2ddl.auto}")
+  private String hibernateHbm2ddl;
 
-    @Bean
-    JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-        final JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory);
-        return transactionManager;
-    }
+  @Value("${hibernate.ejb.naming_strategy}")
+  private String hibernateNamingStrategy;
 
-    @Bean(destroyMethod = "close")
-    DataSource standaloneDataSource() {
-        final HikariConfig config = new HikariConfig();
+  @Value("${hibernate.show_sql}")
+  private String hibernateShowSql;
 
-        config.setDriverClassName(dbDriver);
-        config.setJdbcUrl(dbUrl);
-        config.setUsername(dbUsername);
-        config.setPassword(dbPassword);
-        config.setAutoCommit(false);
-        config.setMinimumIdle(MIN_IDLE);
-        config.setMaximumPoolSize(dbPoolMaxSize);
-        config.setConnectionTimeout(CONN_TIMEOUT);
-        config.setIdleTimeout(IDLE_TIMEOUT);
+  @Value("${hibernate.format_sql}")
+  private String hibernateFormatSql;
 
-        return new HikariDataSource(config);
-    }
+  @Value("${hibernate.id.new_generator_mappings}")
+  private String hibernateNewId;
 
-    @Bean(name = "dbUpdate")
-    SpringLiquibase initDb(DataSource dataSource) {
-        final SpringLiquibase springLiquibase = new SpringLiquibase();
-        springLiquibase.setDataSource(dataSource);
-        springLiquibase.setChangeLog("classpath:changelog/changelog.xml");
-        return springLiquibase;
-    }
+  @Bean
+  LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+    final LocalContainerEntityManagerFactoryBean entityManagerFactoryBean =
+        new LocalContainerEntityManagerFactoryBean();
+    entityManagerFactoryBean.setDataSource(dataSource);
+    entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+    entityManagerFactoryBean.setPackagesToScan(BASE_PACKAGES);
 
+    final Properties jpaProperties = new Properties();
+
+    jpaProperties.put("hibernate.dialect", hibernateDialect);
+    jpaProperties.put("hibernate.hbm2ddl.auto", hibernateHbm2ddl);
+    jpaProperties.put("hibernate.ejb.naming_strategy", hibernateNamingStrategy);
+    jpaProperties.put("hibernate.show_sql", hibernateShowSql);
+    jpaProperties.put("hibernate.format_sql", hibernateFormatSql);
+    jpaProperties.put("hibernate.id.new_generator_mappings", hibernateNewId);
+    jpaProperties.put("hibernate.enable_lazy_load_no_trans", false);
+
+    entityManagerFactoryBean.setJpaProperties(jpaProperties);
+
+    return entityManagerFactoryBean;
+  }
+
+  @Bean
+  JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+    final JpaTransactionManager transactionManager = new JpaTransactionManager();
+    transactionManager.setEntityManagerFactory(entityManagerFactory);
+    return transactionManager;
+  }
+
+  @Bean(destroyMethod = "close")
+  DataSource standaloneDataSource() {
+    final HikariConfig config = new HikariConfig();
+
+    config.setDriverClassName(dbDriver);
+    config.setJdbcUrl(dbUrl);
+    config.setUsername(dbUsername);
+    config.setPassword(dbPassword);
+    config.setAutoCommit(false);
+    config.setMinimumIdle(MIN_IDLE);
+    config.setMaximumPoolSize(dbPoolMaxSize);
+    config.setConnectionTimeout(CONN_TIMEOUT);
+    config.setIdleTimeout(IDLE_TIMEOUT);
+
+    return new HikariDataSource(config);
+  }
+
+  @Bean(name = "dbUpdate")
+  SpringLiquibase initDb(DataSource dataSource) {
+    final SpringLiquibase springLiquibase = new SpringLiquibase();
+    springLiquibase.setDataSource(dataSource);
+    springLiquibase.setChangeLog("classpath:changelog/changelog.xml");
+    return springLiquibase;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,45 +20,45 @@ package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
 public class SjfMetaDataItem {
 
-    private SjfMetaDataItemType itemType;
+  private SjfMetaDataItemType itemType;
 
-    private String itemId;
-    private String itemName;
+  private String itemId;
+  private String itemName;
 
-    private boolean includedInSjukfall;
-    private boolean bidrarTillAktivtSjukfall;
+  private boolean includedInSjukfall;
+  private boolean bidrarTillAktivtSjukfall;
 
-    public SjfMetaDataItem(String itemId, String itemName, SjfMetaDataItemType itemType) {
-        this.itemId = itemId;
-        this.itemName = itemName;
-        this.itemType = itemType;
-    }
+  public SjfMetaDataItem(String itemId, String itemName, SjfMetaDataItemType itemType) {
+    this.itemId = itemId;
+    this.itemName = itemName;
+    this.itemType = itemType;
+  }
 
-    public String getItemId() {
-        return itemId;
-    }
+  public String getItemId() {
+    return itemId;
+  }
 
-    public String getItemName() {
-        return itemName;
-    }
+  public String getItemName() {
+    return itemName;
+  }
 
-    public SjfMetaDataItemType getItemType() {
-        return itemType;
-    }
+  public SjfMetaDataItemType getItemType() {
+    return itemType;
+  }
 
-    public boolean isIncludedInSjukfall() {
-        return includedInSjukfall;
-    }
+  public boolean isIncludedInSjukfall() {
+    return includedInSjukfall;
+  }
 
-    public void setIncludedInSjukfall(boolean includedInSjukfall) {
-        this.includedInSjukfall = includedInSjukfall;
-    }
+  public void setIncludedInSjukfall(boolean includedInSjukfall) {
+    this.includedInSjukfall = includedInSjukfall;
+  }
 
-    public boolean isBidrarTillAktivtSjukfall() {
-        return bidrarTillAktivtSjukfall;
-    }
+  public boolean isBidrarTillAktivtSjukfall() {
+    return bidrarTillAktivtSjukfall;
+  }
 
-    public void setBidrarTillAktivtSjukfall(boolean bidrarTillAktivtSjukfall) {
-        this.bidrarTillAktivtSjukfall = bidrarTillAktivtSjukfall;
-    }
+  public void setBidrarTillAktivtSjukfall(boolean bidrarTillAktivtSjukfall) {
+    this.bidrarTillAktivtSjukfall = bidrarTillAktivtSjukfall;
+  }
 }

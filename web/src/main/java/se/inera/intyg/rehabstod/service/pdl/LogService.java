@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -33,22 +33,20 @@ import se.inera.intyg.schemas.contract.Personnummer;
  */
 public interface LogService {
 
-    void logSjukfallData(List<SjukfallEnhet> sjukfall,
-        ActivityType activityType,
-        ResourceType resourceType);
+  void logSjukfallData(
+      List<SjukfallEnhet> sjukfall, ActivityType activityType, ResourceType resourceType);
 
-    void logSjukfallData(PatientData patientData,
-        ActivityType activityType,
-        ResourceType resourceType);
+  void logSjukfallData(
+      PatientData patientData, ActivityType activityType, ResourceType resourceType);
 
-    void logConsentActivity(Personnummer personnummer,
-        ActivityType activityType,
-        ResourceType resourceType);
+  void logConsentActivity(
+      Personnummer personnummer, ActivityType activityType, ResourceType resourceType);
 
-    void logCertificate(Personnummer personId,
-        ActivityType activityType,
-        ResourceType resourceType);
+  void logCertificate(Personnummer personId, ActivityType activityType, ResourceType resourceType);
 
-    void logCertificate(List<LUCertificate> luCertificateList, ActivityType readActivityType, ResourceType resourceTypeCertificate,
-        Map<String, List<PDLActivityEntry>> storedActivities);
+  void logCertificate(
+      List<LUCertificate> luCertificateList,
+      ActivityType readActivityType,
+      ResourceType resourceTypeCertificate,
+      Map<String, List<PDLActivityEntry>> storedActivities);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -34,32 +34,35 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 @RequiredArgsConstructor
 public class MdcUserServletFilter implements Filter {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-        throws IOException, ServletException {
-        final var user = userService.getUser();
-        if (user != null) {
-            final var selectedUnit = user.getValdVardenhet();
-            final var selectedCareProvider = user.getValdVardgivare();
-            try (final var mdcLogConstants =
-                MdcCloseableMap.builder()
-                    .put(MdcLogConstants.USER_ID, user.getHsaId())
-                    .put(MdcLogConstants.ORGANIZATION_ID, selectedUnit != null ? selectedUnit.getId() : "-")
-                    .put(MdcLogConstants.ORGANIZATION_CARE_PROVIDER_ID, selectedCareProvider != null ? selectedCareProvider.getId() : "-")
-                    .build()
-            ) {
-                chain.doFilter(request, response);
-            }
-        } else {
-            chain.doFilter(request, response);
-        }
+  @Override
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+      throws IOException, ServletException {
+    final var user = userService.getUser();
+    if (user != null) {
+      final var selectedUnit = user.getValdVardenhet();
+      final var selectedCareProvider = user.getValdVardgivare();
+      try (final var mdcLogConstants =
+          MdcCloseableMap.builder()
+              .put(MdcLogConstants.USER_ID, user.getHsaId())
+              .put(
+                  MdcLogConstants.ORGANIZATION_ID,
+                  selectedUnit != null ? selectedUnit.getId() : "-")
+              .put(
+                  MdcLogConstants.ORGANIZATION_CARE_PROVIDER_ID,
+                  selectedCareProvider != null ? selectedCareProvider.getId() : "-")
+              .build()) {
+        chain.doFilter(request, response);
+      }
+    } else {
+      chain.doFilter(request, response);
     }
+  }
 
-    @Override
-    public void init(FilterConfig filterConfig) {
-        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
-            filterConfig.getServletContext());
-    }
+  @Override
+  public void init(FilterConfig filterConfig) {
+    SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(
+        this, filterConfig.getServletContext());
+  }
 }

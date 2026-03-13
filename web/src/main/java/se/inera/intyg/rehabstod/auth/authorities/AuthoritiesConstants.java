@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,31 +18,28 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities;
 
-/**
- * Created by mango on 25/11/15.
- */
+/** Created by mango on 25/11/15. */
 public final class AuthoritiesConstants {
 
-    // Titles, a.k.a 'legitimerad yrkesgrupp', has a coding system governing these titles. See:
-    // HSA Innehåll Legitimerad yrkesgrupp
-    // http://www.inera.se/TJANSTER--PROJEKT/HSA/Dokument/HSA-kodverk/
-    public static final String TITLE_LAKARE = "Läkare";
+  // Titles, a.k.a 'legitimerad yrkesgrupp', has a coding system governing these titles. See:
+  // HSA Innehåll Legitimerad yrkesgrupp
+  // http://www.inera.se/TJANSTER--PROJEKT/HSA/Dokument/HSA-kodverk/
+  public static final String TITLE_LAKARE = "Läkare";
 
-    // Title codes, a.k.a 'befattningskod', has a coding system governing these codes. See:
-    // HSA Innehåll Befattning
-    // http://www.inera.se/TJANSTER--PROJEKT/HSA/Dokument/HSA-kodverk/
-    public static final String TITLECODE_AT_LAKARE = "204010";
+  // Title codes, a.k.a 'befattningskod', has a coding system governing these codes. See:
+  // HSA Innehåll Befattning
+  // http://www.inera.se/TJANSTER--PROJEKT/HSA/Dokument/HSA-kodverk/
+  public static final String TITLECODE_AT_LAKARE = "204010";
 
-    // Known roles (these roles are copied from authorities.yaml which is the master authorities configuration)
-    public static final String ROLE_LAKARE = "LAKARE";
-    public static final String ROLE_TANDLAKARE = "TANDLAKARE";
-    public static final String ROLE_KOORDINATOR = "REHABKOORDINATOR";
+  // Known roles (these roles are copied from authorities.yaml which is the master authorities
+  // configuration)
+  public static final String ROLE_LAKARE = "LAKARE";
+  public static final String ROLE_TANDLAKARE = "TANDLAKARE";
+  public static final String ROLE_KOORDINATOR = "REHABKOORDINATOR";
 
-    public static final String FEATURE_SRS = "SRS";
+  public static final String FEATURE_SRS = "SRS";
 
-    // constructors
+  // constructors
 
-    private AuthoritiesConstants() {
-    }
-
+  private AuthoritiesConstants() {}
 }

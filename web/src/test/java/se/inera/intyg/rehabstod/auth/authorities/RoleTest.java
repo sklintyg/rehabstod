@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,24 +27,22 @@ import org.junit.Test;
 import se.inera.intyg.infra.security.common.model.Privilege;
 import se.inera.intyg.infra.security.common.model.Role;
 
-/**
- * Created by marced on 14/04/16.
- */
+/** Created by marced on 14/04/16. */
 public class RoleTest {
 
-    @Test
-    public void testGetSetPrivileges() throws Exception {
-        // Arrange
-        Role role = new Role();
-        role.setPrivileges(null);
+  @Test
+  public void testGetSetPrivileges() throws Exception {
+    // Arrange
+    Role role = new Role();
+    role.setPrivileges(null);
 
-        // Act / Assert
-        assertNotNull(role.getPrivileges());
+    // Act / Assert
+    assertNotNull(role.getPrivileges());
 
-        List<Privilege> list = Arrays.asList(new Privilege());
-        role.setPrivileges(list);
+    List<Privilege> list = Arrays.asList(new Privilege());
+    role.setPrivileges(list);
 
-        // Act / Assert
-        assertEquals(list, role.getPrivileges());
-    }
+    // Act / Assert
+    assertEquals(list, role.getPrivileges());
+  }
 }

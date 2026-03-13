@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,23 +32,27 @@ import se.inera.intyg.rehabstod.common.exception.RehabstodServiceException;
 @ControllerAdvice
 public class RehabstodRestExceptionHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RehabstodRestExceptionHandler.class);
+  private static final Logger LOG = LoggerFactory.getLogger(RehabstodRestExceptionHandler.class);
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ResponseBody
-    public RehabstodRestExceptionResponse serviceExceptionHandler(HttpServletRequest request, RehabstodServiceException e) {
-        LOG.warn("Internal exception occured! Internal error code: {} Error message: {}", e.getErrorCode(),
-            e.getMessage());
-        return new RehabstodRestExceptionResponse(e.getErrorCode(), e.getMessage());
-    }
+  @ExceptionHandler
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  @ResponseBody
+  public RehabstodRestExceptionResponse serviceExceptionHandler(
+      HttpServletRequest request, RehabstodServiceException e) {
+    LOG.warn(
+        "Internal exception occured! Internal error code: {} Error message: {}",
+        e.getErrorCode(),
+        e.getMessage());
+    return new RehabstodRestExceptionResponse(e.getErrorCode(), e.getMessage());
+  }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ResponseBody
-    public RehabstodRestExceptionResponse serviceExceptionHandler(HttpServletRequest request, RuntimeException re) {
-        LOG.error("Unhandled RuntimeException occured!", re);
-        return new RehabstodRestExceptionResponse(
-            RehabstodErrorCodeEnum.UNKNOWN_INTERNAL_PROBLEM, "Unhandled runtime exception");
-    }
+  @ExceptionHandler
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  @ResponseBody
+  public RehabstodRestExceptionResponse serviceExceptionHandler(
+      HttpServletRequest request, RuntimeException re) {
+    LOG.error("Unhandled RuntimeException occured!", re);
+    return new RehabstodRestExceptionResponse(
+        RehabstodErrorCodeEnum.UNKNOWN_INTERNAL_PROBLEM, "Unhandled runtime exception");
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -42,87 +42,93 @@ import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.infra.security.common.model.Title;
 import se.inera.intyg.infra.security.common.model.TitleCode;
 
-//CHECKSTYLE:OFF MagicNumber
+// CHECKSTYLE:OFF MagicNumber
 @RunWith(MockitoJUnitRunner.class)
 public class SecurityConfigurationLoaderTest {
 
-    private static final String AUTHORITIES_CONFIGURATION_TEST_FILE = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
-    private static final String FEATURES_CONFIGURATION_TEST_FILE = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
-    private static final String AUTHORITIES_CONFIGURATION_OUTPUT_FILE = "classpath:AuthoritiesConfigurationLoaderTest/authorities-output.txt";
-    private static final Integer DEFAULT_MAX_ALIASES_FOR_COLLECTIONS = 300;
+  private static final String AUTHORITIES_CONFIGURATION_TEST_FILE =
+      "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+  private static final String FEATURES_CONFIGURATION_TEST_FILE =
+      "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
+  private static final String AUTHORITIES_CONFIGURATION_OUTPUT_FILE =
+      "classpath:AuthoritiesConfigurationLoaderTest/authorities-output.txt";
+  private static final Integer DEFAULT_MAX_ALIASES_FOR_COLLECTIONS = 300;
 
+  @InjectMocks
+  SecurityConfigurationLoader loader =
+      new SecurityConfigurationLoader(
+          AUTHORITIES_CONFIGURATION_TEST_FILE,
+          FEATURES_CONFIGURATION_TEST_FILE,
+          DEFAULT_MAX_ALIASES_FOR_COLLECTIONS);
 
-    @InjectMocks
-    SecurityConfigurationLoader loader = new SecurityConfigurationLoader(AUTHORITIES_CONFIGURATION_TEST_FILE,
-        FEATURES_CONFIGURATION_TEST_FILE, DEFAULT_MAX_ALIASES_FOR_COLLECTIONS);
+  @Before
+  public void setupAuthoritiesConfiguration() {
+    // When
+    try {
+      loader.afterPropertiesSet();
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+  }
 
-    @Before
-    public void setupAuthoritiesConfiguration() {
-        // When
-        try {
-            loader.afterPropertiesSet();
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+  @Test
+  public void loadConfigurationAndAssertTypeOfObjects() {
+    AuthoritiesConfiguration configuration = loader.getAuthoritiesConfiguration();
+
+    assertEquals(1, configuration.getRequestOrigins().size());
+    assertEquals(1, configuration.getPrivileges().size());
+    assertEquals(2, configuration.getRoles().size());
+    assertEquals(2, configuration.getTitles().size());
+    assertEquals(4, configuration.getTitleCodes().size());
+
+    // Assert that lists are of specific types
+    try {
+      List<RequestOrigin> requestOrigins = (List<RequestOrigin>) configuration.getRequestOrigins();
+      List<Privilege> privileges = (List<Privilege>) configuration.getPrivileges();
+      List<Role> roles = (List<Role>) configuration.getRoles();
+      List<Title> titles = (List<Title>) configuration.getTitles();
+      List<TitleCode> titleCodes = (List<TitleCode>) configuration.getTitleCodes();
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+  }
+
+  // @Test
+  @Ignore
+  public void loadConfigurationAndAssertString() {
+    AuthoritiesConfiguration configuration = loader.getAuthoritiesConfiguration();
+
+    String actual = configuration.toString().replaceAll("\\s", "").trim();
+    String expected = "";
+
+    try {
+      Resource resource = getResource(AUTHORITIES_CONFIGURATION_OUTPUT_FILE);
+      expected =
+          new String(Files.readAllBytes(Paths.get(resource.getURI()))).replaceAll("\\s", "").trim();
+    } catch (IOException e) {
+      fail(e.getMessage());
     }
 
-    @Test
-    public void loadConfigurationAndAssertTypeOfObjects() {
-        AuthoritiesConfiguration configuration = loader.getAuthoritiesConfiguration();
+    assertEquals(expected, actual);
+  }
 
-        assertEquals(1, configuration.getRequestOrigins().size());
-        assertEquals(1, configuration.getPrivileges().size());
-        assertEquals(2, configuration.getRoles().size());
-        assertEquals(2, configuration.getTitles().size());
-        assertEquals(4, configuration.getTitleCodes().size());
+  @Test(expected = IllegalArgumentException.class)
+  public void loadConfigurationWithBadLocation() {
+    new SecurityConfigurationLoader(null, null, null);
+  }
 
-        // Assert that lists are of specific types
-        try {
-            List<RequestOrigin> requestOrigins = (List<RequestOrigin>) configuration.getRequestOrigins();
-            List<Privilege> privileges = (List<Privilege>) configuration.getPrivileges();
-            List<Role> roles = (List<Role>) configuration.getRoles();
-            List<Title> titles = (List<Title>) configuration.getTitles();
-            List<TitleCode> titleCodes = (List<TitleCode>) configuration.getTitleCodes();
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
+  @Test(expected = AuthoritiesException.class)
+  public void loadConfigurationWithNonExistingLocation() {
+    SecurityConfigurationLoader loader =
+        new SecurityConfigurationLoader("non-existing-file", "even-more-non-existing-file", 1);
+    loader.afterPropertiesSet();
+  }
 
-    //@Test
-    @Ignore
-    public void loadConfigurationAndAssertString() {
-        AuthoritiesConfiguration configuration = loader.getAuthoritiesConfiguration();
+  // ~ Private scope
+  // ======================================================================================================
 
-        String actual = configuration.toString().replaceAll("\\s", "").trim();
-        String expected = "";
-
-        try {
-            Resource resource = getResource(AUTHORITIES_CONFIGURATION_OUTPUT_FILE);
-            expected = new String(Files.readAllBytes(Paths.get(resource.getURI()))).replaceAll("\\s", "").trim();
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
-
-        assertEquals(expected, actual);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void loadConfigurationWithBadLocation() {
-        new SecurityConfigurationLoader(null, null, null);
-    }
-
-    @Test(expected = AuthoritiesException.class)
-    public void loadConfigurationWithNonExistingLocation() {
-        SecurityConfigurationLoader loader = new SecurityConfigurationLoader("non-existing-file", "even-more-non-existing-file", 1);
-        loader.afterPropertiesSet();
-    }
-
-    // ~ Private scope
-    // ======================================================================================================
-
-    private Resource getResource(String location) {
-        PathMatchingResourcePatternResolver r = new PathMatchingResourcePatternResolver();
-        return r.getResource(location);
-    }
-
+  private Resource getResource(String location) {
+    PathMatchingResourcePatternResolver r = new PathMatchingResourcePatternResolver();
+    return r.getResource(location);
+  }
 }

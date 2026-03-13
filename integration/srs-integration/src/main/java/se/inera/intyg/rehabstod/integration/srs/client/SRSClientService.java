@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,12 +22,10 @@ import java.util.List;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.Diagnos;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.RiskPrediktion;
 
-/**
- * Created by eriklupander on 2017-10-31.
- */
+/** Created by eriklupander on 2017-10-31. */
 public interface SRSClientService {
 
-    List<RiskPrediktion> getRiskPrediktionForCertificate(List<String> intygsId);
+  List<RiskPrediktion> getRiskPrediktionForCertificate(List<String> intygsId);
 
-    List<Diagnos> getDiagnosisList();
+  List<Diagnos> getDiagnosisList();
 }

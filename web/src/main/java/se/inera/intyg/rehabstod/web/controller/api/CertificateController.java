@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -44,60 +44,84 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForPerso
 @RequestMapping("/api/certificate")
 public class CertificateController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CertificateController.class);
+  private static final Logger LOG = LoggerFactory.getLogger(CertificateController.class);
 
-    private final PatientIdEncryption patientIdEncryption;
+  private final PatientIdEncryption patientIdEncryption;
 
-    private final CertificateService certificateService;
+  private final CertificateService certificateService;
 
-    @Autowired
-    public CertificateController(PatientIdEncryption patientIdEncryption, CertificateService certificateService) {
-        this.patientIdEncryption = patientIdEncryption;
-        this.certificateService = certificateService;
-    }
+  @Autowired
+  public CertificateController(
+      PatientIdEncryption patientIdEncryption, CertificateService certificateService) {
+    this.patientIdEncryption = patientIdEncryption;
+    this.certificateService = certificateService;
+  }
 
-    @RequestMapping(value = "/lu/unit", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "get-lu-for-care-unit", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public ResponseEntity<GetLUCertificatesForCareUnitResponse> getLUForCareUnit(@RequestBody GetLUCertificatesForCareUnitRequest request) {
-        LOG.info("Getting LU certificates for care unit");
+  @RequestMapping(
+      value = "/lu/unit",
+      method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "get-lu-for-care-unit",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public ResponseEntity<GetLUCertificatesForCareUnitResponse> getLUForCareUnit(
+      @RequestBody GetLUCertificatesForCareUnitRequest request) {
+    LOG.info("Getting LU certificates for care unit");
 
-        final var response = certificateService.getLUCertificatesForCareUnit(request);
+    final var response = certificateService.getLUCertificatesForCareUnit(request);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
 
-    @RequestMapping(value = "/lu/person", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "get-lu-for-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public ResponseEntity<GetLUCertificatesForPersonResponse> getLUForPerson(@RequestBody GetLUCertificatesForPersonRequest request) {
-        LOG.info("Getting LU certificates for person");
+  @RequestMapping(
+      value = "/lu/person",
+      method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "get-lu-for-person",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public ResponseEntity<GetLUCertificatesForPersonResponse> getLUForPerson(
+      @RequestBody GetLUCertificatesForPersonRequest request) {
+    LOG.info("Getting LU certificates for person");
 
-        var response = certificateService.getLUCertificatesForPerson(
+    var response =
+        certificateService.getLUCertificatesForPerson(
             request.getEncryptedPatientId() != null
-                ? patientIdEncryption.decrypt(request.getEncryptedPatientId()) : request.getPersonId()
-        );
+                ? patientIdEncryption.decrypt(request.getEncryptedPatientId())
+                : request.getPersonId());
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
 
-    @RequestMapping(value = "/lu/doctors", method = RequestMethod.GET)
-    @PerformanceLogging(eventAction = "get-doctors-for-unit", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public ResponseEntity<GetDoctorsForUnitResponse> getDoctorsForUnit() {
-        LOG.info("Getting LU signing doctors for unit");
+  @RequestMapping(value = "/lu/doctors", method = RequestMethod.GET)
+  @PerformanceLogging(
+      eventAction = "get-doctors-for-unit",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public ResponseEntity<GetDoctorsForUnitResponse> getDoctorsForUnit() {
+    LOG.info("Getting LU signing doctors for unit");
 
-        var response = certificateService.getDoctorsForUnit();
+    var response = certificateService.getDoctorsForUnit();
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
 
-    @RequestMapping(value = "/ag/person", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "get-ag-for-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public ResponseEntity<GetAGCertificatesForPersonResponse> getAGForPerson(@RequestBody GetAGCertificatesForPersonRequest request) {
-        LOG.info("Getting AG certificates for person");
+  @RequestMapping(
+      value = "/ag/person",
+      method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "get-ag-for-person",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public ResponseEntity<GetAGCertificatesForPersonResponse> getAGForPerson(
+      @RequestBody GetAGCertificatesForPersonRequest request) {
+    LOG.info("Getting AG certificates for person");
 
-        var response = certificateService.getAGCertificatesForPerson(request.getEncryptedPatientId() != null
-            ? patientIdEncryption.decrypt(request.getEncryptedPatientId()) : request.getPersonId()
-        );
+    var response =
+        certificateService.getAGCertificatesForPerson(
+            request.getEncryptedPatientId() != null
+                ? patientIdEncryption.decrypt(request.getEncryptedPatientId())
+                : request.getPersonId());
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
 }

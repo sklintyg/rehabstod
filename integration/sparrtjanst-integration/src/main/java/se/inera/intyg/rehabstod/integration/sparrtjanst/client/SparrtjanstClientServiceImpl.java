@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -37,59 +37,71 @@ import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksType;
 import se.riv.informationsecurity.authorization.blocking.v4.InformationEntityType;
 
-/**
- * Created by marced 2018-09-28.
- */
+/** Created by marced 2018-09-28. */
 @Service
 public class SparrtjanstClientServiceImpl implements SparrtjanstClientService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+  private static final Logger LOG =
+      LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
-    @Autowired
-    private CheckBlocksResponderInterface service;
+  @Autowired private CheckBlocksResponderInterface service;
 
-    @Value("${sparrtjanst.service.logicalAddress}")
-    private String logicalAddress;
+  @Value("${sparrtjanst.service.logicalAddress}")
+  private String logicalAddress;
 
-    @Override
-    @PerformanceLogging(eventAction = "get-check-blocks", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public CheckBlocksResponseType getCheckBlocks(String vgHsaId, String veHsaId, String userHsaId, String patientId,
-        List<IntygData> intygLista) {
+  @Override
+  @PerformanceLogging(
+      eventAction = "get-check-blocks",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public CheckBlocksResponseType getCheckBlocks(
+      String vgHsaId,
+      String veHsaId,
+      String userHsaId,
+      String patientId,
+      List<IntygData> intygLista) {
 
-        final Personnummer personnummer = Personnummer.createPersonnummer(patientId)
-            .orElseThrow(() -> new IllegalArgumentException("PatientId must be a valid personnummer or samordningsnummer"));
+    final Personnummer personnummer =
+        Personnummer.createPersonnummer(patientId)
+            .orElseThrow(
+                () ->
+                    new IllegalArgumentException(
+                        "PatientId must be a valid personnummer or samordningsnummer"));
 
-        CheckBlocksType checkBlockRequest = new CheckBlocksType();
+    CheckBlocksType checkBlockRequest = new CheckBlocksType();
 
-        checkBlockRequest.setPatientId(SparrtjanstUtil.buildIITypeForPersonOrSamordningsnummer(personnummer));
-        checkBlockRequest.setAccessingActor(SparrtjanstUtil.buildAccessingActorType(vgHsaId, veHsaId, userHsaId));
-        checkBlockRequest.getInformationEntities().addAll(createInformationEntitiesFromIntygList(intygLista));
+    checkBlockRequest.setPatientId(
+        SparrtjanstUtil.buildIITypeForPersonOrSamordningsnummer(personnummer));
+    checkBlockRequest.setAccessingActor(
+        SparrtjanstUtil.buildAccessingActorType(vgHsaId, veHsaId, userHsaId));
+    checkBlockRequest
+        .getInformationEntities()
+        .addAll(createInformationEntitiesFromIntygList(intygLista));
 
-        try {
-            return service.checkBlocks(logicalAddress, checkBlockRequest);
-        } catch (Exception e) {
-            LOG.error("BLOCKING_SERVICE: Failure when calling Spärrtjänsten and the checkBlocks service.");
-            throw new SparrtjanstIntegrationException(e.getMessage());
-        }
+    try {
+      return service.checkBlocks(logicalAddress, checkBlockRequest);
+    } catch (Exception e) {
+      LOG.error(
+          "BLOCKING_SERVICE: Failure when calling Spärrtjänsten and the checkBlocks service.");
+      throw new SparrtjanstIntegrationException(e.getMessage());
     }
+  }
 
-    private List<InformationEntityType> createInformationEntitiesFromIntygList(List<IntygData> intygLista) {
-        List<InformationEntityType> entityList = new ArrayList<>();
-        for (int i = 0; i < intygLista.size(); i++) {
-            entityList.add(toEntity(intygLista.get(i), i));
-        }
-        return entityList;
-
+  private List<InformationEntityType> createInformationEntitiesFromIntygList(
+      List<IntygData> intygLista) {
+    List<InformationEntityType> entityList = new ArrayList<>();
+    for (int i = 0; i < intygLista.size(); i++) {
+      entityList.add(toEntity(intygLista.get(i), i));
     }
+    return entityList;
+  }
 
-    private InformationEntityType toEntity(IntygData intygData, int index) {
-        InformationEntityType entityType = new InformationEntityType();
-        entityType.setInformationCareProviderId(intygData.getVardgivareId());
-        entityType.setInformationCareUnitId(intygData.getVardenhetId());
-        entityType.setInformationStartDate(intygData.getSigneringsTidpunkt());
-        entityType.setInformationEndDate(intygData.getSigneringsTidpunkt());
-        entityType.setRowNumber(index);
-        return entityType;
-    }
-
+  private InformationEntityType toEntity(IntygData intygData, int index) {
+    InformationEntityType entityType = new InformationEntityType();
+    entityType.setInformationCareProviderId(intygData.getVardgivareId());
+    entityType.setInformationCareUnitId(intygData.getVardenhetId());
+    entityType.setInformationStartDate(intygData.getSigneringsTidpunkt());
+    entityType.setInformationEndDate(intygData.getSigneringsTidpunkt());
+    entityType.setRowNumber(index);
+    return entityType;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -33,32 +33,35 @@ import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleEx
 
 @Component
 @Slf4j
-public class CustomAuthenticationFailureHandler extends ExceptionMappingAuthenticationFailureHandler {
+public class CustomAuthenticationFailureHandler
+    extends ExceptionMappingAuthenticationFailureHandler {
 
-    private static final String DEFAULT_FAILURE_URL = "/error/login-failed";
+  private static final String DEFAULT_FAILURE_URL = "/error/login-failed";
 
-    private final Map<String, String> failureUrls = Map.of(
-        BadCredentialsException.class.getName(), DEFAULT_FAILURE_URL,
-        MissingMedarbetaruppdragException.class.getName(), "/error/login-medarbetaruppdrag",
-        MissingUnitWithRehabSystemRoleException.class.getName(), "/error/login-saknar-hsa-rehabroll",
-        HsaServiceException.class.getName(), "/error/login-hsaerror"
-    );
+  private final Map<String, String> failureUrls =
+      Map.of(
+          BadCredentialsException.class.getName(), DEFAULT_FAILURE_URL,
+          MissingMedarbetaruppdragException.class.getName(), "/error/login-medarbetaruppdrag",
+          MissingUnitWithRehabSystemRoleException.class.getName(),
+              "/error/login-saknar-hsa-rehabroll",
+          HsaServiceException.class.getName(), "/error/login-hsaerror");
 
-    @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
-        throws IOException {
-        final var exceptionName = exception.getClass().getName();
+  @Override
+  public void onAuthenticationFailure(
+      HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+      throws IOException {
+    final var exceptionName = exception.getClass().getName();
 
-        String url;
-        if (failureUrls.containsKey(exceptionName)) {
-            url = failureUrls.get(exceptionName);
-        } else {
-            saveException(request, exception);
-            url = DEFAULT_FAILURE_URL;
-        }
-
-        log.error("Authentication failed!", exception);
-
-        getRedirectStrategy().sendRedirect(request, response, url);
+    String url;
+    if (failureUrls.containsKey(exceptionName)) {
+      url = failureUrls.get(exceptionName);
+    } else {
+      saveException(request, exception);
+      url = DEFAULT_FAILURE_URL;
     }
+
+    log.error("Authentication failed!", exception);
+
+    getRedirectStrategy().sendRedirect(request, response, url);
+  }
 }

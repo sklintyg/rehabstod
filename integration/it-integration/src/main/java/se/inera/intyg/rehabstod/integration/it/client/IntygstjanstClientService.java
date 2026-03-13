@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,16 +20,14 @@ package se.inera.intyg.rehabstod.integration.it.client;
 
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
 
-
-/**
- * Created by eriklupander on 2016-01-29.
- */
+/** Created by eriklupander on 2016-01-29. */
 public interface IntygstjanstClientService {
 
-    /**
-     * Method returns all sick leaves for a patient for all health care givers and its health care units.
-     *
-     * @param patientId patient identifier
-     */
-    ListSickLeavesForPersonResponseType getAllSjukfallForPatient(String patientId);
+  /**
+   * Method returns all sick leaves for a patient for all health care givers and its health care
+   * units.
+   *
+   * @param patientId patient identifier
+   */
+  ListSickLeavesForPersonResponseType getAllSjukfallForPatient(String patientId);
 }

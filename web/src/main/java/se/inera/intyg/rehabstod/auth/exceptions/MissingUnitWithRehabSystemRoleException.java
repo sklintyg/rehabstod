@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,9 +25,12 @@ import org.springframework.security.core.AuthenticationException;
  */
 public class MissingUnitWithRehabSystemRoleException extends AuthenticationException {
 
-    private static final long serialVersionUID = 8343532271116838815L;
+  private static final long serialVersionUID = 8343532271116838815L;
 
-    public MissingUnitWithRehabSystemRoleException(String hsaId) {
-        super("User with HSA-ID " + hsaId + " does not have rehab-systemRole for ANY of the supplied units");
-    }
+  public MissingUnitWithRehabSystemRoleException(String hsaId) {
+    super(
+        "User with HSA-ID "
+            + hsaId
+            + " does not have rehab-systemRole for ANY of the supplied units");
+  }
 }

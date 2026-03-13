@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -44,91 +44,98 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 @ExtendWith(MockitoExtension.class)
 public class GetSickLeaveSummaryServiceTest {
 
-    @Mock
-    PuService puService;
-    @Mock
-    StatisticsCalculator statisticsCalculator;
-    @Mock
-    GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
-    @InjectMocks
-    GetSickLeaveSummaryServiceImpl getSickLeaveSummaryService;
+  @Mock PuService puService;
+  @Mock StatisticsCalculator statisticsCalculator;
+  @Mock GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
+  @InjectMocks GetSickLeaveSummaryServiceImpl getSickLeaveSummaryService;
 
-    List<SjukfallEnhet> sickLeaves = new ArrayList<>();
-    SickLeaveSummary summary =
-        new SickLeaveSummary(
-            5,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList()
-        );
+  List<SjukfallEnhet> sickLeaves = new ArrayList<>();
+  SickLeaveSummary summary =
+      new SickLeaveSummary(
+          5,
+          Collections.emptyList(),
+          Collections.emptyList(),
+          Collections.emptyList(),
+          Collections.emptyList(),
+          Collections.emptyList(),
+          Collections.emptyList(),
+          Collections.emptyList(),
+          Collections.emptyList(),
+          Collections.emptyList(),
+          Collections.emptyList(),
+          Collections.emptyList(),
+          Collections.emptyList(),
+          Collections.emptyList());
 
+  @BeforeEach
+  void setup() {
+    doReturn(new GetActiveSickLeavesResponseDTO(sickLeaves, false, false))
+        .when(getActiveSickLeavesResponseService)
+        .get(any(SickLeavesFilterRequestDTO.class), any(boolean.class), any(boolean.class));
+    doReturn(summary).when(statisticsCalculator).getSickLeaveSummary(sickLeaves);
+  }
 
-    @BeforeEach
-    void setup() {
-        doReturn(new GetActiveSickLeavesResponseDTO(sickLeaves, false, false))
-            .when(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class), any(boolean.class));
-        doReturn(summary).when(statisticsCalculator).getSickLeaveSummary(sickLeaves);
-    }
+  @Test
+  void shouldGetActiveSickLeaves() {
+    getSickLeaveSummaryService.get();
+    verify(getActiveSickLeavesResponseService)
+        .get(any(SickLeavesFilterRequestDTO.class), any(boolean.class), any(boolean.class));
+  }
 
-    @Test
-    void shouldGetActiveSickLeaves() {
-        getSickLeaveSummaryService.get();
-        verify(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class), any(boolean.class));
+  @Test
+  void shouldFilterForSekretess() {
+    getSickLeaveSummaryService.get();
+    verify(puService).filterSekretessForSummary(sickLeaves);
+  }
 
-    }
+  @Test
+  void shouldCalculateSickLeaveSummary() {
+    getSickLeaveSummaryService.get();
+    verify(statisticsCalculator).getSickLeaveSummary(sickLeaves);
+  }
 
-    @Test
-    void shouldFilterForSekretess() {
-        getSickLeaveSummaryService.get();
-        verify(puService).filterSekretessForSummary(sickLeaves);
-    }
+  @Test
+  void shouldReturnResultFromStatisticsCalculator() {
+    final var response = getSickLeaveSummaryService.get();
+    assertEquals(response, summary);
+  }
 
-    @Test
-    void shouldCalculateSickLeaveSummary() {
-        getSickLeaveSummaryService.get();
-        verify(statisticsCalculator).getSickLeaveSummary(sickLeaves);
-    }
-
-    @Test
-    void shouldReturnResultFromStatisticsCalculator() {
-        final var response = getSickLeaveSummaryService.get();
-        assertEquals(response, summary);
-    }
-
-    @Test
-    void shouldNotIncludeSickLeaveLengthWhenFetchingSickLeaves() {
-        final var sickLeavesFilterRequestDTOArgumentCaptor = ArgumentCaptor.forClass(SickLeavesFilterRequestDTO.class);
-        getSickLeaveSummaryService.get();
-        verify(getActiveSickLeavesResponseService).get(sickLeavesFilterRequestDTOArgumentCaptor.capture(), any(boolean.class),
+  @Test
+  void shouldNotIncludeSickLeaveLengthWhenFetchingSickLeaves() {
+    final var sickLeavesFilterRequestDTOArgumentCaptor =
+        ArgumentCaptor.forClass(SickLeavesFilterRequestDTO.class);
+    getSickLeaveSummaryService.get();
+    verify(getActiveSickLeavesResponseService)
+        .get(
+            sickLeavesFilterRequestDTOArgumentCaptor.capture(),
+            any(boolean.class),
             any(boolean.class));
-        assertEquals(0, sickLeavesFilterRequestDTOArgumentCaptor.getValue().getSickLeaveLengthIntervals().size());
-    }
+    assertEquals(
+        0,
+        sickLeavesFilterRequestDTOArgumentCaptor.getValue().getSickLeaveLengthIntervals().size());
+  }
 
-    @Test
-    void shouldSetIncludeParametersToFalse() {
-        final var includeParametersCaptur = ArgumentCaptor.forClass(boolean.class);
-        getSickLeaveSummaryService.get();
-        verify(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), includeParametersCaptur.capture(),
+  @Test
+  void shouldSetIncludeParametersToFalse() {
+    final var includeParametersCaptur = ArgumentCaptor.forClass(boolean.class);
+    getSickLeaveSummaryService.get();
+    verify(getActiveSickLeavesResponseService)
+        .get(
+            any(SickLeavesFilterRequestDTO.class),
+            includeParametersCaptur.capture(),
             any(boolean.class));
-        assertFalse(includeParametersCaptur.getValue());
-    }
+    assertFalse(includeParametersCaptur.getValue());
+  }
 
-    @Test
-    void shouldSetShouldPdlLogToFalse() {
-        final var pdlLogArgumentCaptor = ArgumentCaptor.forClass(boolean.class);
-        getSickLeaveSummaryService.get();
-        verify(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class),
+  @Test
+  void shouldSetShouldPdlLogToFalse() {
+    final var pdlLogArgumentCaptor = ArgumentCaptor.forClass(boolean.class);
+    getSickLeaveSummaryService.get();
+    verify(getActiveSickLeavesResponseService)
+        .get(
+            any(SickLeavesFilterRequestDTO.class),
+            any(boolean.class),
             pdlLogArgumentCaptor.capture());
-        assertFalse(pdlLogArgumentCaptor.getValue());
-    }
+    assertFalse(pdlLogArgumentCaptor.getValue());
+  }
 }

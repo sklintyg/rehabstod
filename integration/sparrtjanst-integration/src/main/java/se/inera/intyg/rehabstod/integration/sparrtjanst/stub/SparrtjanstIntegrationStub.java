@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -36,74 +36,78 @@ import se.riv.informationsecurity.authorization.blocking.v4.ResultType;
 
 // CHECKSTYLE:ON LineLength
 
-/**
- * Created by eriklupander on 2016-01-29.
- */
+/** Created by eriklupander on 2016-01-29. */
 public class SparrtjanstIntegrationStub implements CheckBlocksResponderInterface {
 
-    @Autowired
-    private SparrtjanstStubStore store;
+  @Autowired private SparrtjanstStubStore store;
 
-    @Override
-    public CheckBlocksResponseType checkBlocks(String logicalAddress, CheckBlocksType parameters) {
-        validate(logicalAddress, parameters);
+  @Override
+  public CheckBlocksResponseType checkBlocks(String logicalAddress, CheckBlocksType parameters) {
+    validate(logicalAddress, parameters);
 
-        CheckBlocksResponseType response = new CheckBlocksResponseType();
-        CheckBlocksResultType result = new CheckBlocksResultType();
-        List<CheckResultType> resultList = new ArrayList<>();
+    CheckBlocksResponseType response = new CheckBlocksResponseType();
+    CheckBlocksResultType result = new CheckBlocksResultType();
+    List<CheckResultType> resultList = new ArrayList<>();
 
-        for (int i = 0; i < parameters.getInformationEntities().size(); i++) {
-            CheckResultType singleResult = new CheckResultType();
-            singleResult.setRowNumber(i);
-            LocalDate queryDateFrom = parameters.getInformationEntities().get(i).getInformationStartDate().toLocalDate();
-            LocalDate queryDateTo = parameters.getInformationEntities().get(i).getInformationEndDate().toLocalDate();
-            String vardGivareId = parameters.getInformationEntities().get(i).getInformationCareProviderId();
-            String vardEnhetId = parameters.getInformationEntities().get(i).getInformationCareUnitId();
-            singleResult
-                .setStatus(store.isBlockedAtDate(parameters.getPatientId().getExtension(), queryDateFrom, queryDateTo,
-                    vardGivareId, vardEnhetId)
-                    ? CheckStatusType.BLOCKED
-                    : CheckStatusType.OK);
+    for (int i = 0; i < parameters.getInformationEntities().size(); i++) {
+      CheckResultType singleResult = new CheckResultType();
+      singleResult.setRowNumber(i);
+      LocalDate queryDateFrom =
+          parameters.getInformationEntities().get(i).getInformationStartDate().toLocalDate();
+      LocalDate queryDateTo =
+          parameters.getInformationEntities().get(i).getInformationEndDate().toLocalDate();
+      String vardGivareId =
+          parameters.getInformationEntities().get(i).getInformationCareProviderId();
+      String vardEnhetId = parameters.getInformationEntities().get(i).getInformationCareUnitId();
+      singleResult.setStatus(
+          store.isBlockedAtDate(
+                  parameters.getPatientId().getExtension(),
+                  queryDateFrom,
+                  queryDateTo,
+                  vardGivareId,
+                  vardEnhetId)
+              ? CheckStatusType.BLOCKED
+              : CheckStatusType.OK);
 
-            resultList.add(singleResult);
-        }
-        result.getCheckResults().addAll(resultList);
+      resultList.add(singleResult);
+    }
+    result.getCheckResults().addAll(resultList);
 
-        ResultType resultType = new ResultType();
-        resultType.setResultCode(ResultCodeType.OK);
+    ResultType resultType = new ResultType();
+    resultType.setResultCode(ResultCodeType.OK);
 
-        result.setResult(resultType);
-        response.setCheckBlocksResult(result);
-        return response;
+    result.setResult(resultType);
+    response.setCheckBlocksResult(result);
+    return response;
+  }
+
+  private void validate(String logicalAddress, CheckBlocksType parameters) {
+    List<String> messages = new ArrayList<>();
+    if (logicalAddress == null || logicalAddress.length() == 0) {
+      messages.add("logicalAddress can not be null or empty");
+    }
+    if (parameters == null) {
+      messages.add("CheckBlocksType can not be null");
+    } else {
+      if (parameters.getAccessingActor().getCareProviderId().isEmpty()) {
+        messages.add("Missing AccessingActor.CareProviderId");
+      }
+      if (parameters.getAccessingActor().getCareUnitId().isEmpty()) {
+        messages.add("Missing AccessingActor.CareUnitId");
+      }
+      if (parameters.getAccessingActor().getEmployeeId().isEmpty()) {
+        messages.add("Missing AccessingActor.EmployeeId");
+      }
+      if (parameters.getPatientId().getExtension().isEmpty()) {
+        messages.add("Missing PatientId.Extension");
+      }
+      if (parameters.getInformationEntities().size() < 1) {
+        messages.add("Missing InformationEntities");
+      }
     }
 
-    private void validate(String logicalAddress, CheckBlocksType parameters) {
-        List<String> messages = new ArrayList<>();
-        if (logicalAddress == null || logicalAddress.length() == 0) {
-            messages.add("logicalAddress can not be null or empty");
-        }
-        if (parameters == null) {
-            messages.add("CheckBlocksType can not be null");
-        } else {
-            if (parameters.getAccessingActor().getCareProviderId().isEmpty()) {
-                messages.add("Missing AccessingActor.CareProviderId");
-            }
-            if (parameters.getAccessingActor().getCareUnitId().isEmpty()) {
-                messages.add("Missing AccessingActor.CareUnitId");
-            }
-            if (parameters.getAccessingActor().getEmployeeId().isEmpty()) {
-                messages.add("Missing AccessingActor.EmployeeId");
-            }
-            if (parameters.getPatientId().getExtension().isEmpty()) {
-                messages.add("Missing PatientId.Extension");
-            }
-            if (parameters.getInformationEntities().size() < 1) {
-                messages.add("Missing InformationEntities");
-            }
-        }
-
-        if (messages.size() > 0) {
-            throw new IllegalArgumentException(Joiner.on(",").join(messages));
-        }
+    if (messages.size() > 0) {
+      throw new IllegalArgumentException(Joiner.on(",").join(messages));
     }
+  }
 }

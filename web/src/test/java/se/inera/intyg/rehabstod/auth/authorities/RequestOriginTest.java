@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,25 +26,23 @@ import java.util.List;
 import org.junit.Test;
 import se.inera.intyg.infra.security.common.model.RequestOrigin;
 
-/**
- * Created by marced on 14/04/16.
- */
+/** Created by marced on 14/04/16. */
 public class RequestOriginTest {
 
-    @Test
-    public void testGetSetIntygstyper() throws Exception {
+  @Test
+  public void testGetSetIntygstyper() throws Exception {
 
-        // Arrange
-        RequestOrigin requestOrigin = new RequestOrigin();
-        requestOrigin.setIntygstyper(null);
+    // Arrange
+    RequestOrigin requestOrigin = new RequestOrigin();
+    requestOrigin.setIntygstyper(null);
 
-        // Act / Assert
-        assertNotNull(requestOrigin.getIntygstyper());
+    // Act / Assert
+    assertNotNull(requestOrigin.getIntygstyper());
 
-        List<String> list = Arrays.asList("typ1", "typ2");
-        requestOrigin.setIntygstyper(list);
+    List<String> list = Arrays.asList("typ1", "typ2");
+    requestOrigin.setIntygstyper(list);
 
-        // Act / Assert
-        assertEquals(list, requestOrigin.getIntygstyper());
-    }
+    // Act / Assert
+    assertEquals(list, requestOrigin.getIntygstyper());
+  }
 }

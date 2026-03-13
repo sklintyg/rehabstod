@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,60 +32,56 @@ import se.riv.informationsecurity.authorization.consent.v2.CheckResultType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultCodeType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultType;
 
-/**
- * Created by Magnus Ekstrand on 2018-10-10.
- */
+/** Created by Magnus Ekstrand on 2018-10-10. */
 public class CheckConsentStub implements CheckConsentResponderInterface {
 
-    @Autowired
-    private SamtyckestjanstStubStore store;
+  @Autowired private SamtyckestjanstStubStore store;
 
-    @Override
-    public CheckConsentResponseType checkConsent(String logicalAddress,
-        CheckConsentType parameters) {
+  @Override
+  public CheckConsentResponseType checkConsent(String logicalAddress, CheckConsentType parameters) {
 
-        validate(logicalAddress, parameters);
+    validate(logicalAddress, parameters);
 
-        CheckResultType result = new CheckResultType();
-        result.setAssertionType(AssertionTypeType.CONSENT); // fast värde enl. krav
-        result.setHasConsent(store.hasConsent(
+    CheckResultType result = new CheckResultType();
+    result.setAssertionType(AssertionTypeType.CONSENT); // fast värde enl. krav
+    result.setHasConsent(
+        store.hasConsent(
             parameters.getAccessingActor().getCareProviderId(),
             parameters.getAccessingActor().getCareUnitId(),
             parameters.getPatientId().getExtension(),
             LocalDate.now()));
 
-        ResultType resultType = new ResultType();
-        resultType.setResultCode(ResultCodeType.OK);
-        result.setResult(resultType);
+    ResultType resultType = new ResultType();
+    resultType.setResultCode(ResultCodeType.OK);
+    result.setResult(resultType);
 
-        // Create a response
-        CheckConsentResponseType response = new CheckConsentResponseType();
-        response.setCheckResult(result);
-        return response;
+    // Create a response
+    CheckConsentResponseType response = new CheckConsentResponseType();
+    response.setCheckResult(result);
+    return response;
+  }
+
+  private void validate(String logicalAddress, CheckConsentType parameters) {
+    List<String> messages = new ArrayList<>();
+    if (logicalAddress == null || logicalAddress.length() == 0) {
+      messages.add("logicalAddress can not be null or empty");
+    }
+    if (parameters == null) {
+      messages.add("CheckConsentType can not be null");
+    } else {
+      if (Strings.isNullOrEmpty(parameters.getAccessingActor().getCareProviderId())) {
+        messages.add("Missing AccessingActor.CareProviderId");
+      }
+      if (Strings.isNullOrEmpty(parameters.getAccessingActor().getCareUnitId())) {
+        messages.add("Missing AccessingActor.CareUnitId");
+      }
+      if (Strings.isNullOrEmpty(parameters.getPatientId().getExtension())) {
+        messages.add("Missing PatientId.Extension");
+      }
     }
 
-    private void validate(String logicalAddress, CheckConsentType parameters) {
-        List<String> messages = new ArrayList<>();
-        if (logicalAddress == null || logicalAddress.length() == 0) {
-            messages.add("logicalAddress can not be null or empty");
-        }
-        if (parameters == null) {
-            messages.add("CheckConsentType can not be null");
-        } else {
-            if (Strings.isNullOrEmpty(parameters.getAccessingActor().getCareProviderId())) {
-                messages.add("Missing AccessingActor.CareProviderId");
-            }
-            if (Strings.isNullOrEmpty(parameters.getAccessingActor().getCareUnitId())) {
-                messages.add("Missing AccessingActor.CareUnitId");
-            }
-            if (Strings.isNullOrEmpty(parameters.getPatientId().getExtension())) {
-                messages.add("Missing PatientId.Extension");
-            }
-        }
-
-        if (messages.size() > 0) {
-            throw new IllegalArgumentException(Joiner.on(",").join(messages));
-        }
+    if (messages.size() > 0) {
+      throw new IllegalArgumentException(Joiner.on(",").join(messages));
     }
-
+  }
 }

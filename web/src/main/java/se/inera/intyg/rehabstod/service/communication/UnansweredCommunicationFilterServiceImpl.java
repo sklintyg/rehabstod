@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.communication;
 
 import java.util.List;
@@ -26,34 +25,34 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilt
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 @Service
-public class UnansweredCommunicationFilterServiceImpl implements UnansweredCommunicationFilterService {
+public class UnansweredCommunicationFilterServiceImpl
+    implements UnansweredCommunicationFilterService {
 
-    @Override
-    public List<SjukfallEnhet> filter(List<SjukfallEnhet> sickLeaves, String filterTypeId) {
-        return sickLeaves
-            .stream()
-            .filter((sickLeave) -> filterSickLeave(sickLeave, filterTypeId))
-            .collect(Collectors.toList());
+  @Override
+  public List<SjukfallEnhet> filter(List<SjukfallEnhet> sickLeaves, String filterTypeId) {
+    return sickLeaves.stream()
+        .filter((sickLeave) -> filterSickLeave(sickLeave, filterTypeId))
+        .collect(Collectors.toList());
+  }
+
+  private boolean filterSickLeave(SjukfallEnhet sickLeave, String filterTypeId) {
+    if (filterTypeId == null || filterTypeId.isBlank()) {
+      return true;
     }
 
-    private boolean filterSickLeave(SjukfallEnhet sickLeave, String filterTypeId) {
-        if (filterTypeId == null || filterTypeId.isBlank()) {
-            return true;
-        }
+    final var convertedFilterTypeId = UnansweredCommunicationFilterType.fromId(filterTypeId);
 
-        final var convertedFilterTypeId = UnansweredCommunicationFilterType.fromId(filterTypeId);
-
-        switch (convertedFilterTypeId) {
-            case UNANSWERED_COMMUNICATION_FILTER_TYPE_1:
-                return sickLeave.getUnansweredOther() + sickLeave.getObesvaradeKompl() == 0;
-            case UNANSWERED_COMMUNICATION_FILTER_TYPE_2:
-                return sickLeave.getUnansweredOther() + sickLeave.getObesvaradeKompl() > 0;
-            case UNANSWERED_COMMUNICATION_FILTER_TYPE_3:
-                return sickLeave.getObesvaradeKompl() > 0;
-            case UNANSWERED_COMMUNICATION_FILTER_TYPE_4:
-                return sickLeave.getUnansweredOther() > 0;
-            default:
-                return true;
-        }
+    switch (convertedFilterTypeId) {
+      case UNANSWERED_COMMUNICATION_FILTER_TYPE_1:
+        return sickLeave.getUnansweredOther() + sickLeave.getObesvaradeKompl() == 0;
+      case UNANSWERED_COMMUNICATION_FILTER_TYPE_2:
+        return sickLeave.getUnansweredOther() + sickLeave.getObesvaradeKompl() > 0;
+      case UNANSWERED_COMMUNICATION_FILTER_TYPE_3:
+        return sickLeave.getObesvaradeKompl() > 0;
+      case UNANSWERED_COMMUNICATION_FILTER_TYPE_4:
+        return sickLeave.getUnansweredOther() > 0;
+      default:
+        return true;
     }
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,12 +20,12 @@ package se.inera.intyg.rehabstod.service.pdl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
-import java.util.Map;
 import jakarta.annotation.PostConstruct;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.Session;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,133 +56,160 @@ import se.inera.intyg.schemas.contract.Personnummer;
 @Service
 public class LogServiceImpl implements LogService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LogServiceImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(LogServiceImpl.class);
 
-    @Autowired(required = false)
-    @Qualifier("jmsPDLLogTemplate")
-    private JmsTemplate jmsTemplate;
+  @Autowired(required = false)
+  @Qualifier("jmsPDLLogTemplate") private JmsTemplate jmsTemplate;
 
-    @Autowired
-    PdlLogMessageFactory pdlLogMessageFactory;
+  @Autowired PdlLogMessageFactory pdlLogMessageFactory;
 
-    @Autowired
-    private UserService userService;
+  @Autowired private UserService userService;
 
-    @PostConstruct
-    public void checkJmsTemplate() {
-        if (jmsTemplate == null) {
-            LOG.error("PDL logging is disabled!");
-        }
+  @PostConstruct
+  public void checkJmsTemplate() {
+    if (jmsTemplate == null) {
+      LOG.error("PDL logging is disabled!");
+    }
+  }
+
+  @Override
+  public void logSjukfallData(
+      List<SjukfallEnhet> sjukfallList, ActivityType activityType, ResourceType resourceType) {
+    if (sjukfallList == null || sjukfallList.isEmpty()) {
+      LOG.debug("No sjukfall in resource list for PDL logging, not logging.");
+      return;
+    }
+    PdlLogMessage pdlLogMessage =
+        pdlLogMessageFactory.buildLogMessage(
+            sjukfallList, LogUtil.getLogUser(userService.getUser()), activityType, resourceType);
+    send(pdlLogMessage);
+  }
+
+  @Override
+  public void logSjukfallData(
+      PatientData patientData, ActivityType activityType, ResourceType resourceType) {
+    if (patientData == null) {
+      LOG.debug("No patientData for PDL logging, not logging.");
+      return;
+    }
+    PdlLogMessage pdlLogMessage =
+        pdlLogMessageFactory.buildLogMessage(
+            LogUtil.getLogPatient(patientData),
+            LogUtil.getLogUser(userService.getUser()),
+            activityType,
+            resourceType);
+    send(pdlLogMessage);
+  }
+
+  @Override
+  public void logConsentActivity(
+      Personnummer personnummer, ActivityType activityType, ResourceType resourceType) {
+    if (personnummer == null) {
+      LOG.info("No personnummer for PDL logging, not logging logConsentActivity.");
+      return;
     }
 
-    @Override
-    public void logSjukfallData(List<SjukfallEnhet> sjukfallList, ActivityType activityType, ResourceType resourceType) {
-        if (sjukfallList == null || sjukfallList.isEmpty()) {
-            LOG.debug("No sjukfall in resource list for PDL logging, not logging.");
-            return;
-        }
-        PdlLogMessage pdlLogMessage =
-            pdlLogMessageFactory.buildLogMessage(sjukfallList, LogUtil.getLogUser(userService.getUser()), activityType, resourceType);
-        send(pdlLogMessage);
-    }
-
-    @Override
-    public void logSjukfallData(PatientData patientData, ActivityType activityType, ResourceType resourceType) {
-        if (patientData == null) {
-            LOG.debug("No patientData for PDL logging, not logging.");
-            return;
-        }
-        PdlLogMessage pdlLogMessage =
-            pdlLogMessageFactory.buildLogMessage(LogUtil.getLogPatient(patientData),
-                LogUtil.getLogUser(userService.getUser()), activityType, resourceType);
-        send(pdlLogMessage);
-    }
-
-    @Override
-    public void logConsentActivity(Personnummer personnummer, ActivityType activityType, ResourceType resourceType) {
-        if (personnummer == null) {
-            LOG.info("No personnummer for PDL logging, not logging logConsentActivity.");
-            return;
-        }
-
-        RehabstodUser user = userService.getUser();
-        LogPatient logPatient = new LogPatient.Builder(
-            personnummer.getPersonnummer(), user.getValdVardenhet().getId(), user.getValdVardgivare().getId())
+    RehabstodUser user = userService.getUser();
+    LogPatient logPatient =
+        new LogPatient.Builder(
+                personnummer.getPersonnummer(),
+                user.getValdVardenhet().getId(),
+                user.getValdVardgivare().getId())
             .enhetsNamn(user.getValdVardenhet().getNamn())
             .vardgivareNamn(user.getValdVardgivare().getNamn())
             .build();
 
-        PdlLogMessage pdlLogMessage =
-            pdlLogMessageFactory.buildLogMessage(logPatient,
-                LogUtil.getLogUser(user), activityType, resourceType);
-        LOG.debug("Logging {} consent for {}", activityType.getType(), resourceType.getResourceTypeName());
-        send(pdlLogMessage);
+    PdlLogMessage pdlLogMessage =
+        pdlLogMessageFactory.buildLogMessage(
+            logPatient, LogUtil.getLogUser(user), activityType, resourceType);
+    LOG.debug(
+        "Logging {} consent for {}", activityType.getType(), resourceType.getResourceTypeName());
+    send(pdlLogMessage);
+  }
+
+  @Override
+  public void logCertificate(
+      Personnummer personId, ActivityType activityType, ResourceType resourceType) {
+    if (personId == null) {
+      LOG.debug("No personId for PDL logging, not logging.");
+      return;
     }
 
-    @Override
-    public void logCertificate(Personnummer personId, ActivityType activityType, ResourceType resourceType) {
-        if (personId == null) {
-            LOG.debug("No personId for PDL logging, not logging.");
-            return;
-        }
-
-        var rehabstodUser = userService.getUser();
-        var logPatient = new LogPatient.Builder(personId.getPersonnummer(), rehabstodUser.getValdVardenhet().getId(),
-            rehabstodUser.getValdVardgivare().getId())
+    var rehabstodUser = userService.getUser();
+    var logPatient =
+        new LogPatient.Builder(
+                personId.getPersonnummer(),
+                rehabstodUser.getValdVardenhet().getId(),
+                rehabstodUser.getValdVardgivare().getId())
             .enhetsNamn(rehabstodUser.getValdVardenhet().getNamn())
             .vardgivareNamn(rehabstodUser.getValdVardgivare().getNamn())
             .build();
 
-        var pdlLogMessage = pdlLogMessageFactory.buildLogMessage(logPatient, LogUtil.getLogUser(rehabstodUser), activityType, resourceType);
-        send(pdlLogMessage);
+    var pdlLogMessage =
+        pdlLogMessageFactory.buildLogMessage(
+            logPatient, LogUtil.getLogUser(rehabstodUser), activityType, resourceType);
+    send(pdlLogMessage);
+  }
+
+  @Override
+  public void logCertificate(
+      List<LUCertificate> luCertificateList,
+      ActivityType activityType,
+      ResourceType resourceType,
+      Map<String, List<PDLActivityEntry>> storedActivities) {
+    if (luCertificateList == null || luCertificateList.isEmpty()) {
+      LOG.debug("No LU Certificates in resource list for PDL logging, not logging.");
+      return;
+    }
+    PdlLogMessage pdlLogMessage =
+        pdlLogMessageFactory.buildLogMessage(
+            luCertificateList,
+            LogUtil.getLogUser(userService.getUser()),
+            activityType,
+            resourceType,
+            storedActivities);
+    send(pdlLogMessage);
+  }
+
+  private void send(PdlLogMessage pdlLogMessage) {
+
+    if (jmsTemplate == null) {
+      LOG.error("Could not log PDLMessage - PLDLogging is disabled / JMS sender template is null.");
+      return;
+    }
+    LOG.debug(
+        "PDLLogging activityType {} for {} resources",
+        pdlLogMessage.getActivityType().name(),
+        pdlLogMessage.getPdlResourceList().size());
+    try {
+      jmsTemplate.send(new MC(pdlLogMessage));
+    } catch (JmsException e) {
+      LOG.error("Could not log PDLMessage", e);
+      throw e;
+    }
+  }
+
+  private static final class MC implements MessageCreator {
+
+    private final PdlLogMessage logMsg;
+    private final ObjectMapper objectMapper = new CustomObjectMapper();
+
+    private MC(PdlLogMessage logMsg) {
+      this.logMsg = logMsg;
     }
 
     @Override
-    public void logCertificate(List<LUCertificate> luCertificateList, ActivityType activityType, ResourceType resourceType,
-        Map<String, List<PDLActivityEntry>> storedActivities) {
-        if (luCertificateList == null || luCertificateList.isEmpty()) {
-            LOG.debug("No LU Certificates in resource list for PDL logging, not logging.");
-            return;
-        }
-        PdlLogMessage pdlLogMessage =
-            pdlLogMessageFactory.buildLogMessage(luCertificateList, LogUtil.getLogUser(userService.getUser()), activityType, resourceType,
-                storedActivities);
-        send(pdlLogMessage);
+    public Message createMessage(Session session) throws JMSException {
+      try {
+        return session.createTextMessage(objectMapper.writeValueAsString(this.logMsg));
+      } catch (JsonProcessingException e) {
+        throw new IllegalArgumentException(
+            "Could not serialize log message of type '"
+                + logMsg.getClass().getName()
+                + "' into JSON, message: "
+                + e.getMessage(),
+            e);
+      }
     }
-
-    private void send(PdlLogMessage pdlLogMessage) {
-
-        if (jmsTemplate == null) {
-            LOG.error("Could not log PDLMessage - PLDLogging is disabled / JMS sender template is null.");
-            return;
-        }
-        LOG.debug("PDLLogging activityType {} for {} resources", pdlLogMessage.getActivityType().name(),
-            pdlLogMessage.getPdlResourceList().size());
-        try {
-            jmsTemplate.send(new MC(pdlLogMessage));
-        } catch (JmsException e) {
-            LOG.error("Could not log PDLMessage", e);
-            throw e;
-        }
-    }
-
-    private static final class MC implements MessageCreator {
-
-        private final PdlLogMessage logMsg;
-        private final ObjectMapper objectMapper = new CustomObjectMapper();
-
-        private MC(PdlLogMessage logMsg) {
-            this.logMsg = logMsg;
-        }
-
-        @Override
-        public Message createMessage(Session session) throws JMSException {
-            try {
-                return session.createTextMessage(objectMapper.writeValueAsString(this.logMsg));
-            } catch (JsonProcessingException e) {
-                throw new IllegalArgumentException("Could not serialize log message of type '" + logMsg.getClass().getName()
-                    + "' into JSON, message: " + e.getMessage(), e);
-            }
-        }
-    }
+  }
 }

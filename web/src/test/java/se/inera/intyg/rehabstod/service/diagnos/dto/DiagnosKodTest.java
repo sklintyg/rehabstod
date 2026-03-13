@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,56 +27,57 @@ import org.junit.Test;
  */
 public class DiagnosKodTest {
 
-    @Test
-    public void testCleanDignosKod() {
-        DiagnosKod diagnosKod = new DiagnosKod("M80-   Diagnos", false);
-        assertEquals("M80-", diagnosKod.getCode());
-        assertEquals("Diagnos", diagnosKod.getName());
+  @Test
+  public void testCleanDignosKod() {
+    DiagnosKod diagnosKod = new DiagnosKod("M80-   Diagnos", false);
+    assertEquals("M80-", diagnosKod.getCode());
+    assertEquals("Diagnos", diagnosKod.getName());
 
-        diagnosKod = new DiagnosKod("M80-P  Diagnos", false);
-        assertEquals("M80-P", diagnosKod.getCode());
-        assertEquals("Diagnos", diagnosKod.getName());
+    diagnosKod = new DiagnosKod("M80-P  Diagnos", false);
+    assertEquals("M80-P", diagnosKod.getCode());
+    assertEquals("Diagnos", diagnosKod.getName());
 
-        diagnosKod = new DiagnosKod("M80*\t Diagnos", false);
-        assertEquals("M80", diagnosKod.getCode());
-        assertEquals("Diagnos", diagnosKod.getName());
+    diagnosKod = new DiagnosKod("M80*\t Diagnos", false);
+    assertEquals("M80", diagnosKod.getCode());
+    assertEquals("Diagnos", diagnosKod.getName());
 
-        diagnosKod = new DiagnosKod("M80†\t Diagnos", false);
-        assertEquals("M80", diagnosKod.getCode());
-        assertEquals("Diagnos", diagnosKod.getName());
+    diagnosKod = new DiagnosKod("M80†\t Diagnos", false);
+    assertEquals("M80", diagnosKod.getCode());
+    assertEquals("Diagnos", diagnosKod.getName());
 
-        diagnosKod = new DiagnosKod("\uFEFFM80*\tDiagnos", false);
-        assertEquals("\uFEFFM80", diagnosKod.getCode());
-        assertEquals("Diagnos", diagnosKod.getName());
+    diagnosKod = new DiagnosKod("\uFEFFM80*\tDiagnos", false);
+    assertEquals("\uFEFFM80", diagnosKod.getCode());
+    assertEquals("Diagnos", diagnosKod.getName());
 
-        diagnosKod = new DiagnosKod("\uFEFFM80*\t Diagnos", true);
-        assertEquals("M80", diagnosKod.getCode());
-        assertEquals("Diagnos", diagnosKod.getName());
+    diagnosKod = new DiagnosKod("\uFEFFM80*\t Diagnos", true);
+    assertEquals("M80", diagnosKod.getCode());
+    assertEquals("Diagnos", diagnosKod.getName());
 
-        diagnosKod = new DiagnosKod("\uFEFFM80\t†\t Diagnos", true);
-        assertEquals("M80", diagnosKod.getCode());
-        assertEquals("Diagnos", diagnosKod.getName());
+    diagnosKod = new DiagnosKod("\uFEFFM80\t†\t Diagnos", true);
+    assertEquals("M80", diagnosKod.getCode());
+    assertEquals("Diagnos", diagnosKod.getName());
 
-        diagnosKod = new DiagnosKod("M80-   Diagnos", true);
-        assertEquals("M80-", diagnosKod.getCode());
-        assertEquals("Diagnos", diagnosKod.getName());
-    }
+    diagnosKod = new DiagnosKod("M80-   Diagnos", true);
+    assertEquals("M80-", diagnosKod.getCode());
+    assertEquals("Diagnos", diagnosKod.getName());
+  }
 
-    @Test
-    public void testSplitNormalDignosKod() {
-        DiagnosKod kod = new DiagnosKod("M123   Palindrom reumatism", false);
-        assertEquals("M123", kod.getCode());
-        assertEquals("Palindrom reumatism", kod.getName());
-    }
+  @Test
+  public void testSplitNormalDignosKod() {
+    DiagnosKod kod = new DiagnosKod("M123   Palindrom reumatism", false);
+    assertEquals("M123", kod.getCode());
+    assertEquals("Palindrom reumatism", kod.getName());
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testEmptyDiagnosKod() {
-        se.inera.intyg.infra.sjukfall.dto.DiagnosKod kod = se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create("");
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void testEmptyDiagnosKod() {
+    se.inera.intyg.infra.sjukfall.dto.DiagnosKod kod =
+        se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create("");
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullDiagnosKod() {
-        se.inera.intyg.infra.sjukfall.dto.DiagnosKod kod = se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create(null);
-    }
-
+  @Test(expected = IllegalArgumentException.class)
+  public void testNullDiagnosKod() {
+    se.inera.intyg.infra.sjukfall.dto.DiagnosKod kod =
+        se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create(null);
+  }
 }

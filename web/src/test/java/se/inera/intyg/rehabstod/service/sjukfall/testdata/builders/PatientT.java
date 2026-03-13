@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,39 +21,35 @@ package se.inera.intyg.rehabstod.service.sjukfall.testdata.builders;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-10.
- */
+/** Created by Magnus Ekstrand on 2016-02-10. */
 public final class PatientT {
 
-    private PatientT() {
+  private PatientT() {}
+
+  public static class PatientBuilder implements Builder<Patient> {
+
+    private PersonId personId;
+    private String fullstandigtNamn;
+
+    public PatientBuilder() {}
+
+    public PatientBuilder personId(PersonId personId) {
+      this.personId = personId;
+      return this;
     }
 
-    public static class PatientBuilder implements Builder<Patient> {
-
-        private PersonId personId;
-        private String fullstandigtNamn;
-
-        public PatientBuilder() {
-        }
-
-        public PatientBuilder personId(PersonId personId) {
-            this.personId = personId;
-            return this;
-        }
-
-        public PatientBuilder namn(String namn) {
-            this.fullstandigtNamn = namn;
-            return this;
-        }
-
-        @Override
-        public Patient build() {
-            Patient patient = new Patient();
-            patient.setPersonId(personId);
-            patient.setFullstandigtNamn(fullstandigtNamn);
-
-            return patient;
-        }
+    public PatientBuilder namn(String namn) {
+      this.fullstandigtNamn = namn;
+      return this;
     }
+
+    @Override
+    public Patient build() {
+      Patient patient = new Patient();
+      patient.setPersonId(personId);
+      patient.setFullstandigtNamn(fullstandigtNamn);
+
+      return patient;
+    }
+  }
 }

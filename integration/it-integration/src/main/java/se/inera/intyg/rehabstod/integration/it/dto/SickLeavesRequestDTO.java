@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.integration.it.dto;
 
 import java.time.LocalDate;
@@ -33,19 +32,19 @@ import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 @AllArgsConstructor
 public class SickLeavesRequestDTO {
 
-    private String unitId;
-    private String careUnitId;
-    private List<String> doctorIds;
-    private List<DiagnosKapitel> diagnosisChapters;
-    private Integer maxCertificateGap;
-    private Integer maxDaysSinceSickLeaveCompleted;
-    private List<SickLeaveLengthInterval> sickLeaveLengthIntervals;
-    private Integer fromPatientAge;
-    private Integer toPatientAge;
-    private String protectedPersonFilterId;
-    private LocalDate fromSickLeaveEndDate;
-    private LocalDate toSickLeaveEndDate;
-    private List<String> rekoStatusTypeIds;
-    private List<String> occupationTypeIds;
-    private String textSearch;
+  private String unitId;
+  private String careUnitId;
+  private List<String> doctorIds;
+  private List<DiagnosKapitel> diagnosisChapters;
+  private Integer maxCertificateGap;
+  private Integer maxDaysSinceSickLeaveCompleted;
+  private List<SickLeaveLengthInterval> sickLeaveLengthIntervals;
+  private Integer fromPatientAge;
+  private Integer toPatientAge;
+  private String protectedPersonFilterId;
+  private LocalDate fromSickLeaveEndDate;
+  private LocalDate toSickLeaveEndDate;
+  private List<String> rekoStatusTypeIds;
+  private List<String> occupationTypeIds;
+  private String textSearch;
 }

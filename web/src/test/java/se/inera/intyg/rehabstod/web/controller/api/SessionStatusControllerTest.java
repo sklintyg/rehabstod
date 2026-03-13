@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -35,53 +35,46 @@ import org.springframework.security.core.context.SecurityContext;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSessionStatusResponse;
 
-/**
- * Created by marced on 09/03/16.
- */
+/** Created by marced on 09/03/16. */
 @RunWith(MockitoJUnitRunner.class)
 public class SessionStatusControllerTest {
 
-    @Mock
-    HttpServletRequest request;
+  @Mock HttpServletRequest request;
 
-    @Mock
-    SecurityContext context;
+  @Mock SecurityContext context;
 
-    @Mock
-    Authentication authentication;
+  @Mock Authentication authentication;
 
-    @Mock
-    HttpSession session;
+  @Mock HttpSession session;
 
-    @InjectMocks
-    private SessionStatusController controller = new SessionStatusController();
+  @InjectMocks private SessionStatusController controller = new SessionStatusController();
 
-    @Test
-    public void testGetSessionStatusOk() {
-        // Arrange
-        when(request.getSession((false))).thenReturn(session);
-        when(session.getAttribute(anyString())).thenReturn(context);
-        when(context.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(new RehabstodUser("test", "test", true));
+  @Test
+  public void testGetSessionStatusOk() {
+    // Arrange
+    when(request.getSession((false))).thenReturn(session);
+    when(session.getAttribute(anyString())).thenReturn(context);
+    when(context.getAuthentication()).thenReturn(authentication);
+    when(authentication.getPrincipal()).thenReturn(new RehabstodUser("test", "test", true));
 
-        // Act
-        final GetSessionStatusResponse sessionStatus = controller.getSessionStatus(request);
+    // Act
+    final GetSessionStatusResponse sessionStatus = controller.getSessionStatus(request);
 
-        // Assert
-        assertTrue(sessionStatus.isHasSession());
-        assertTrue(sessionStatus.isAuthenticated());
-    }
+    // Assert
+    assertTrue(sessionStatus.isHasSession());
+    assertTrue(sessionStatus.isAuthenticated());
+  }
 
-    @Test
-    public void testGetSessionStatusNoSession() {
-        // Arrange
-        when(request.getSession((false))).thenReturn(null);
+  @Test
+  public void testGetSessionStatusNoSession() {
+    // Arrange
+    when(request.getSession((false))).thenReturn(null);
 
-        // Act
-        final GetSessionStatusResponse sessionStatus = controller.getSessionStatus(request);
+    // Act
+    final GetSessionStatusResponse sessionStatus = controller.getSessionStatus(request);
 
-        // Assert
-        assertFalse(sessionStatus.isHasSession());
-        assertFalse(sessionStatus.isAuthenticated());
-    }
+    // Assert
+    assertFalse(sessionStatus.isHasSession());
+    assertFalse(sessionStatus.isAuthenticated());
+  }
 }

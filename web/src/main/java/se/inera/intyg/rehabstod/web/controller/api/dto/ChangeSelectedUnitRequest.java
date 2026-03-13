@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,31 +18,29 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-/**
- * Created by marced on 01/02/16.
- */
+/** Created by marced on 01/02/16. */
 public class ChangeSelectedUnitRequest {
 
-    private String id;
+  private String id;
 
-    // - - - Constructor - - -
+  // - - - Constructor - - -
 
-    public ChangeSelectedUnitRequest() {
-        // Empty constructor is provided to be able to construct
-        // an object without being forced to set an id.
-    }
+  public ChangeSelectedUnitRequest() {
+    // Empty constructor is provided to be able to construct
+    // an object without being forced to set an id.
+  }
 
-    public ChangeSelectedUnitRequest(String id) {
-        this.id = id;
-    }
+  public ChangeSelectedUnitRequest(String id) {
+    this.id = id;
+  }
 
-    // - - - Getter and setter - - -
+  // - - - Getter and setter - - -
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,18 +28,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SickLeaveSummary {
 
-    private int total;
-    private List<GenderStat> genders;
-    private List<DiagnosGruppStat> groups;
-    private List<DiagnosGruppStat> maleDiagnosisGroups;
-    private List<DiagnosGruppStat> femaleDiagnosisGroups;
-    private List<SickLeaveDegreeStat> sickLeaveDegrees;
-    private List<SickLeaveDegreeStat> maleSickLeaveDegrees;
-    private List<SickLeaveDegreeStat> femaleSickLeaveDegrees;
-    private List<SickLeaveDegreeStat> countSickLeaveDegrees;
-    private List<SickLeaveDegreeStat> countMaleSickLeaveDegrees;
-    private List<SickLeaveDegreeStat> countFemaleSickLeaveDegrees;
-    private List<SickLeaveLengthStat> sickLeaveLengths;
-    private List<SickLeaveLengthStat> maleSickLeaveLengths;
-    private List<SickLeaveLengthStat> femaleSickLeaveLengths;
+  private int total;
+  private List<GenderStat> genders;
+  private List<DiagnosGruppStat> groups;
+  private List<DiagnosGruppStat> maleDiagnosisGroups;
+  private List<DiagnosGruppStat> femaleDiagnosisGroups;
+  private List<SickLeaveDegreeStat> sickLeaveDegrees;
+  private List<SickLeaveDegreeStat> maleSickLeaveDegrees;
+  private List<SickLeaveDegreeStat> femaleSickLeaveDegrees;
+  private List<SickLeaveDegreeStat> countSickLeaveDegrees;
+  private List<SickLeaveDegreeStat> countMaleSickLeaveDegrees;
+  private List<SickLeaveDegreeStat> countFemaleSickLeaveDegrees;
+  private List<SickLeaveLengthStat> sickLeaveLengths;
+  private List<SickLeaveLengthStat> maleSickLeaveLengths;
+  private List<SickLeaveLengthStat> femaleSickLeaveLengths;
 }

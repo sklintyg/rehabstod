@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -33,33 +33,30 @@ import org.springframework.context.annotation.Profile;
 @Profile({"rhs-srs-stub"})
 public class SRSIntegrationStubConfiguration {
 
-    @Autowired
-    private ApplicationContext applicationContext;
+  @Autowired private ApplicationContext applicationContext;
 
-    @Autowired
-    private SRSStub srsStub;
+  @Autowired private SRSStub srsStub;
 
-    @Autowired
-    private Bus bus;
+  @Autowired private Bus bus;
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
+  @Bean
+  public ObjectMapper objectMapper() {
+    return new ObjectMapper();
+  }
 
-    @Bean
-    public EndpointImpl srsResponder() {
-        Object implementor = srsStub;
-        EndpointImpl endpoint = new EndpointImpl(bus, implementor);
-        endpoint.publish("/stubs/get-risk-prediction-for-certificate/v1.0");
-        return endpoint;
-    }
+  @Bean
+  public EndpointImpl srsResponder() {
+    Object implementor = srsStub;
+    EndpointImpl endpoint = new EndpointImpl(bus, implementor);
+    endpoint.publish("/stubs/get-risk-prediction-for-certificate/v1.0");
+    return endpoint;
+  }
 
-    @Bean
-    public EndpointImpl srsGetDiagnosisCodesResponder() {
-        Object implementor = srsStub;
-        EndpointImpl endpoint = new EndpointImpl(bus, implementor);
-        endpoint.publish("/stubs/diagnosiscodes/v1.0");
-        return endpoint;
-    }
+  @Bean
+  public EndpointImpl srsGetDiagnosisCodesResponder() {
+    Object implementor = srsStub;
+    EndpointImpl endpoint = new EndpointImpl(bus, implementor);
+    endpoint.publish("/stubs/diagnosiscodes/v1.0");
+    return endpoint;
+  }
 }

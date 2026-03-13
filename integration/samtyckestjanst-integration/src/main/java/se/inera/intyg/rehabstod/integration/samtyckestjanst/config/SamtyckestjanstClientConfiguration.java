@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -34,73 +34,75 @@ import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsent.
 // CHECKSTYLE:ON LineLength
 
 /**
- * Declares and bootstraps the Samtyckestjänst client for {@link CheckConsentResponderInterface}
- * and {@link RegisterExtendedConsentResponderInterface}
+ * Declares and bootstraps the Samtyckestjänst client for {@link CheckConsentResponderInterface} and
+ * {@link RegisterExtendedConsentResponderInterface}
  *
- * Created by magnusekstrand on 2019-04-12.
+ * <p>Created by magnusekstrand on 2019-04-12.
  */
 @Configuration
 public class SamtyckestjanstClientConfiguration {
 
-    private static final String DEFAULT_RECEIVE_TIMEOUT = "30000";
-    private static final String DEFAULT_CONNECTION_TIMEOUT = "10000";
+  private static final String DEFAULT_RECEIVE_TIMEOUT = "30000";
+  private static final String DEFAULT_CONNECTION_TIMEOUT = "10000";
 
-    @Value("${samtyckestjanst.service.receive.timeout}")
-    private String receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
+  @Value("${samtyckestjanst.service.receive.timeout}")
+  private String receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
 
-    @Value("${samtyckestjanst.service.connection.timeout}")
-    private String connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
+  @Value("${samtyckestjanst.service.connection.timeout}")
+  private String connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
 
-    @Value("${samtyckestjanst.checkconsent.endpoint.url}")
-    private String checkConsentUrl;
+  @Value("${samtyckestjanst.checkconsent.endpoint.url}")
+  private String checkConsentUrl;
 
-    @Value("${samtyckestjanst.registerextendedconsent.endpoint.url}")
-    private String registerConsentUrl;
+  @Value("${samtyckestjanst.registerextendedconsent.endpoint.url}")
+  private String registerConsentUrl;
 
+  @Bean
+  public CheckConsentResponderInterface checkConsentWebServiceClient() {
+    JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
+    proxyFactoryBean.setAddress(checkConsentUrl);
+    proxyFactoryBean.setServiceClass(CheckConsentResponderInterface.class);
+    CheckConsentResponderInterface checkConsentResponderInterface =
+        (CheckConsentResponderInterface) proxyFactoryBean.create();
+    Client client = ClientProxy.getClient(checkConsentResponderInterface);
+    applyTimeouts(client);
+    return checkConsentResponderInterface;
+  }
 
-    @Bean
-    public CheckConsentResponderInterface checkConsentWebServiceClient() {
-        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setAddress(checkConsentUrl);
-        proxyFactoryBean.setServiceClass(CheckConsentResponderInterface.class);
-        CheckConsentResponderInterface checkConsentResponderInterface = (CheckConsentResponderInterface) proxyFactoryBean.create();
-        Client client = ClientProxy.getClient(checkConsentResponderInterface);
-        applyTimeouts(client);
-        return checkConsentResponderInterface;
+  @Bean
+  public RegisterExtendedConsentResponderInterface registerExtendedConsentWebServiceClient() {
+    JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
+    proxyFactoryBean.setAddress(registerConsentUrl);
+    proxyFactoryBean.setServiceClass(RegisterExtendedConsentResponderInterface.class);
+    RegisterExtendedConsentResponderInterface registerExtendedConsentResponderInterface =
+        (RegisterExtendedConsentResponderInterface) proxyFactoryBean.create();
+    Client client = ClientProxy.getClient(registerExtendedConsentResponderInterface);
+    applyTimeouts(client);
+    return registerExtendedConsentResponderInterface;
+  }
+
+  private void applyTimeouts(Client client) {
+    Long connTimeout = parseTimeout(connectionTimeout);
+    Long recTimeout = parseTimeout(receiveTimeout);
+
+    if (client != null) {
+      HTTPConduit conduit = (HTTPConduit) client.getConduit();
+      HTTPClientPolicy policy = new HTTPClientPolicy();
+      policy.setConnectionTimeout(connTimeout);
+      policy.setReceiveTimeout(recTimeout);
+      conduit.setClient(policy);
     }
+  }
 
-    @Bean
-    public RegisterExtendedConsentResponderInterface registerExtendedConsentWebServiceClient() {
-        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setAddress(registerConsentUrl);
-        proxyFactoryBean.setServiceClass(RegisterExtendedConsentResponderInterface.class);
-        RegisterExtendedConsentResponderInterface registerExtendedConsentResponderInterface =
-            (RegisterExtendedConsentResponderInterface) proxyFactoryBean.create();
-        Client client = ClientProxy.getClient(registerExtendedConsentResponderInterface);
-        applyTimeouts(client);
-        return registerExtendedConsentResponderInterface;
+  private Long parseTimeout(String timeout) {
+    try {
+      return Long.parseLong(timeout);
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException(
+          "Cannot apply timeouts for SamtyckestjanstClientConfiguration, unparsable String value: "
+              + timeout
+              + ". Message: "
+              + e.getMessage());
     }
-
-    private void applyTimeouts(Client client) {
-        Long connTimeout = parseTimeout(connectionTimeout);
-        Long recTimeout = parseTimeout(receiveTimeout);
-
-        if (client != null) {
-            HTTPConduit conduit = (HTTPConduit) client.getConduit();
-            HTTPClientPolicy policy = new HTTPClientPolicy();
-            policy.setConnectionTimeout(connTimeout);
-            policy.setReceiveTimeout(recTimeout);
-            conduit.setClient(policy);
-        }
-    }
-
-    private Long parseTimeout(String timeout) {
-        try {
-            return Long.parseLong(timeout);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(
-                "Cannot apply timeouts for SamtyckestjanstClientConfiguration, unparsable String value: " + timeout
-                    + ". Message: " + e.getMessage());
-        }
-    }
+  }
 }

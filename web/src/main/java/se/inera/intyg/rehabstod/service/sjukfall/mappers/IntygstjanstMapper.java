@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -35,54 +35,54 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 @Component
 public class IntygstjanstMapper {
 
-    // api
+  // api
 
-    /**
-     * Mapping from Intygstjänsten's format to SjukfallEngine format.
-     */
-    public IntygData map(IntygsData from) {
-        IntygData to = new IntygData();
+  /** Mapping from Intygstjänsten's format to SjukfallEngine format. */
+  public IntygData map(IntygsData from) {
+    IntygData to = new IntygData();
 
-        try {
-            to.setIntygId(from.getIntygsId());
-            to.setPatientId(from.getPatient().getPersonId().getExtension());
-            to.setPatientNamn(from.getPatient().getFullstandigtNamn());
-            to.setLakareId(from.getSkapadAv().getPersonalId().getExtension());
-            to.setLakareNamn(from.getSkapadAv().getFullstandigtNamn());
-            to.setVardenhetId(from.getSkapadAv().getEnhet().getEnhetsId().getExtension());
-            to.setVardenhetNamn(from.getSkapadAv().getEnhet().getEnhetsnamn());
-            to.setVardgivareId(from.getSkapadAv().getEnhet().getVardgivare().getVardgivarId().getExtension());
-            to.setVardgivareNamn(from.getSkapadAv().getEnhet().getVardgivare().getVardgivarnamn());
-            to.setDiagnosKod(DiagnosKod.create(from.getDiagnoskod()));
-            to.setFormagor(mapFormagor(from.getArbetsformaga().getFormaga()));
-            to.setSigneringsTidpunkt(from.getSigneringsTidpunkt());
-            to.setEnkeltIntyg(from.isEnkeltIntyg());
-            to.setBiDiagnoser(mapDiagnoser(from.getBidiagnoser()));
-            to.setSysselsattning(from.getSysselsattning());
+    try {
+      to.setIntygId(from.getIntygsId());
+      to.setPatientId(from.getPatient().getPersonId().getExtension());
+      to.setPatientNamn(from.getPatient().getFullstandigtNamn());
+      to.setLakareId(from.getSkapadAv().getPersonalId().getExtension());
+      to.setLakareNamn(from.getSkapadAv().getFullstandigtNamn());
+      to.setVardenhetId(from.getSkapadAv().getEnhet().getEnhetsId().getExtension());
+      to.setVardenhetNamn(from.getSkapadAv().getEnhet().getEnhetsnamn());
+      to.setVardgivareId(
+          from.getSkapadAv().getEnhet().getVardgivare().getVardgivarId().getExtension());
+      to.setVardgivareNamn(from.getSkapadAv().getEnhet().getVardgivare().getVardgivarnamn());
+      to.setDiagnosKod(DiagnosKod.create(from.getDiagnoskod()));
+      to.setFormagor(mapFormagor(from.getArbetsformaga().getFormaga()));
+      to.setSigneringsTidpunkt(from.getSigneringsTidpunkt());
+      to.setEnkeltIntyg(from.isEnkeltIntyg());
+      to.setBiDiagnoser(mapDiagnoser(from.getBidiagnoser()));
+      to.setSysselsattning(from.getSysselsattning());
 
-        } catch (Exception e) {
-            throw new SjukfallServiceException("Error mapping Intygstjänsten's format to SjukfallEngine format", e);
-        }
-
-        return to;
+    } catch (Exception e) {
+      throw new SjukfallServiceException(
+          "Error mapping Intygstjänsten's format to SjukfallEngine format", e);
     }
 
-    // private
+    return to;
+  }
 
-    private List<DiagnosKod> mapDiagnoser(List<String> from) {
-        return Optional.ofNullable(from).orElse(Collections.emptyList()).stream()
-            .map(DiagnosKod::create)
-            .collect(Collectors.toList());
-    }
+  // private
 
-    private List<Formaga> mapFormagor(List<se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga> from) {
-        return Optional.ofNullable(from).orElse(Collections.emptyList()).stream()
-            .map(this::createFormaga)
-            .collect(Collectors.toList());
-    }
+  private List<DiagnosKod> mapDiagnoser(List<String> from) {
+    return Optional.ofNullable(from).orElse(Collections.emptyList()).stream()
+        .map(DiagnosKod::create)
+        .collect(Collectors.toList());
+  }
 
-    private Formaga createFormaga(se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga from) {
-        return new Formaga(from.getStartdatum(), from.getSlutdatum(), from.getNedsattning());
-    }
+  private List<Formaga> mapFormagor(
+      List<se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga> from) {
+    return Optional.ofNullable(from).orElse(Collections.emptyList()).stream()
+        .map(this::createFormaga)
+        .collect(Collectors.toList());
+  }
 
+  private Formaga createFormaga(se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga from) {
+    return new Formaga(from.getStartdatum(), from.getSlutdatum(), from.getNedsattning());
+  }
 }

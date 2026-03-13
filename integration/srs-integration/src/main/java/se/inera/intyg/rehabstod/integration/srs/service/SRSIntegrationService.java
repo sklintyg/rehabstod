@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,26 +21,25 @@ package se.inera.intyg.rehabstod.integration.srs.service;
 import java.util.List;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 
-/**
- * Created by eriklupander on 2016-02-01.
- */
+/** Created by eriklupander on 2016-02-01. */
 public interface SRSIntegrationService {
 
-    /**
-     * Basically acts as proxy for {@link se.inera.intyg.rehabstod.integration.srs.client.SRSClientService} where
-     * the native response type {@link se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.RiskPrediktion}
-     * is converted into the more user-friendly {@link RiskSignal} type.
-     *
-     * @param intygsIdn 1..n intygIds to query SRS for risks.
-     * @return 0..n RiskSignals.
-     */
-    List<RiskSignal> getRiskPrediktionerForIntygsId(List<String> intygsIdn);
+  /**
+   * Basically acts as proxy for {@link
+   * se.inera.intyg.rehabstod.integration.srs.client.SRSClientService} where the native response
+   * type {@link
+   * se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.RiskPrediktion}
+   * is converted into the more user-friendly {@link RiskSignal} type.
+   *
+   * @param intygsIdn 1..n intygIds to query SRS for risks.
+   * @return 0..n RiskSignals.
+   */
+  List<RiskSignal> getRiskPrediktionerForIntygsId(List<String> intygsIdn);
 
-    /**
-     * Fetch the list of diagnosis codes that has SRS support
-     *
-     * @return a list of ICD-10 diagnosis codes
-     */
-    List<String> getDiagnosisList();
-
+  /**
+   * Fetch the list of diagnosis codes that has SRS support
+   *
+   * @return a list of ICD-10 diagnosis codes
+   */
+  List<String> getDiagnosisList();
 }

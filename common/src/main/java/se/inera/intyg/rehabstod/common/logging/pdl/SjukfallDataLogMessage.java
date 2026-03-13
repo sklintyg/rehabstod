@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,35 +22,30 @@ import se.inera.intyg.infra.logmessages.ActivityPurpose;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.PdlLogMessage;
 
-/**
- * Created by eriklupander on 2016-02-19.
- */
+/** Created by eriklupander on 2016-02-19. */
 public abstract class SjukfallDataLogMessage {
 
-    private static final long serialVersionUID = -4683928451142580674L;
+  private static final long serialVersionUID = -4683928451142580674L;
 
-    private SjukfallDataLogMessage() {
+  private SjukfallDataLogMessage() {}
 
-    }
+  /**
+   * Creates a PdlLogMessage object injected with ActivityType.READ and
+   * ActivityPurpose.CARE_TREATMENT.
+   *
+   * @return a PdlLogMessage object
+   */
+  public static PdlLogMessage build() {
+    return build(ActivityType.READ);
+  }
 
-    /**
-     * Creates a PdlLogMessage object injected with
-     * ActivityType.READ and ActivityPurpose.CARE_TREATMENT.
-     *
-     * @return a PdlLogMessage object
-     */
-    public static PdlLogMessage build() {
-        return build(ActivityType.READ);
-    }
-
-    /**
-     * Creates a PdlLogMessage object injected with the provided
-     * activityType and ActivityPurpose.CARE_TREATMENT.
-     *
-     * @return a PdlLogMessage object
-     */
-    public static PdlLogMessage build(ActivityType activityType) {
-        return new PdlLogMessage(activityType, ActivityPurpose.CARE_TREATMENT);
-    }
-
+  /**
+   * Creates a PdlLogMessage object injected with the provided activityType and
+   * ActivityPurpose.CARE_TREATMENT.
+   *
+   * @return a PdlLogMessage object
+   */
+  public static PdlLogMessage build(ActivityType activityType) {
+    return new PdlLogMessage(activityType, ActivityPurpose.CARE_TREATMENT);
+  }
 }

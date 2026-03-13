@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,86 +31,81 @@ import se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil;
 import se.inera.intyg.infra.security.common.model.Privilege;
 import se.inera.intyg.infra.security.common.model.Role;
 
-/**
- * Created by marced on 13/04/16.
- */
+/** Created by marced on 13/04/16. */
 public class AuthoritiesResolverUtilTest {
 
-    private static final String KEY = "1";
-    private static final String VALUE = "2";
-    Role role = new Role();
+  private static final String KEY = "1";
+  private static final String VALUE = "2";
+  Role role = new Role();
 
-    @Before
-    public void before() {
+  @Before
+  public void before() {
 
-        role.setName("ROLENAME");
-        List<Privilege> privileges = new ArrayList<>();
-        Privilege p = new Privilege();
-        p.setName("PRIVILEGE");
-        privileges.add(p);
-        role.setPrivileges(privileges);
-    }
+    role.setName("ROLENAME");
+    List<Privilege> privileges = new ArrayList<>();
+    Privilege p = new Privilege();
+    p.setName("PRIVILEGE");
+    privileges.add(p);
+    role.setPrivileges(privileges);
+  }
 
-    @Test
-    public void testRoleToMap() {
-        // Act
-        final Map<String, Role> stringRoleMap = AuthoritiesResolverUtil.toMap(role);
+  @Test
+  public void testRoleToMap() {
+    // Act
+    final Map<String, Role> stringRoleMap = AuthoritiesResolverUtil.toMap(role);
 
-        // Assert
-        assertEquals(1, stringRoleMap.size());
-        assertEquals(stringRoleMap.get(role.getName()), role);
+    // Assert
+    assertEquals(1, stringRoleMap.size());
+    assertEquals(stringRoleMap.get(role.getName()), role);
+  }
 
-    }
+  @Test
+  public void testPrivilegesToMapWithNullElementInList() {
+    // Act
+    final Map<String, Privilege> stringPrivilegeMap =
+        AuthoritiesResolverUtil.toMap(Arrays.asList(new Privilege(), null), Privilege::getName);
 
-    @Test
-    public void testPrivilegesToMapWithNullElementInList() {
-        // Act
-        final Map<String, Privilege> stringPrivilegeMap = AuthoritiesResolverUtil
-            .toMap(Arrays.asList(new Privilege(), null), Privilege::getName);
+    // Assert
+    assertEquals(1, stringPrivilegeMap.size());
+  }
 
-        // Assert
-        assertEquals(1, stringPrivilegeMap.size());
+  @Test
+  public void testPrivilegesToMap() {
+    // Act
+    final Map<String, Privilege> stringPrivilegeMap =
+        AuthoritiesResolverUtil.toMap(role.getPrivileges(), Privilege::getName);
 
-    }
+    // Assert
+    assertEquals(1, stringPrivilegeMap.size());
+    assertEquals(
+        stringPrivilegeMap.get(role.getPrivileges().get(0).getName()), role.getPrivileges().get(0));
+  }
 
-    @Test
-    public void testPrivilegesToMap() {
-        // Act
-        final Map<String, Privilege> stringPrivilegeMap = AuthoritiesResolverUtil.toMap(role.getPrivileges(), Privilege::getName);
+  @Test
+  public void testToList() {
+    // Arrange
+    Map<String, Object> map = new HashMap<>();
+    map.put(KEY, VALUE);
 
-        // Assert
-        assertEquals(1, stringPrivilegeMap.size());
-        assertEquals(stringPrivilegeMap.get(role.getPrivileges().get(0).getName()), role.getPrivileges().get(0));
+    // Act
+    final List<Object> objects = AuthoritiesResolverUtil.toList(map);
 
-    }
+    // Assert
+    assertEquals(1, objects.size());
+    assertEquals(VALUE, objects.get(0));
+  }
 
-    @Test
-    public void testToList() {
-        // Arrange
-        Map<String, Object> map = new HashMap<>();
-        map.put(KEY, VALUE);
+  @Test
+  public void testToArray() {
+    // Arrange
+    Map<String, Object> map = new HashMap<>();
+    map.put(KEY, VALUE);
 
-        // Act
-        final List<Object> objects = AuthoritiesResolverUtil.toList(map);
+    // Act
+    final String[] strings = AuthoritiesResolverUtil.toArray(map);
 
-        // Assert
-        assertEquals(1, objects.size());
-        assertEquals(VALUE, objects.get(0));
-
-    }
-
-    @Test
-    public void testToArray() {
-        // Arrange
-        Map<String, Object> map = new HashMap<>();
-        map.put(KEY, VALUE);
-
-        // Act
-        final String[] strings = AuthoritiesResolverUtil.toArray(map);
-
-        // Assert
-        assertEquals(1, strings.length);
-        assertEquals(KEY, strings[0]);
-
-    }
+    // Assert
+    assertEquals(1, strings.length);
+    assertEquals(KEY, strings[0]);
+  }
 }

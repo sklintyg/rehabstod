@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -35,39 +35,41 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * Created by eriklupander on 2016-05-18.
- */
+/** Created by eriklupander on 2016-05-18. */
 @Configuration
 @ComponentScan("se.inera.intyg.infra.security.authorities")
 public class SecurityConfig {
 
-    private static final int RESTTEMPLATE_TIMEOUT_MS = 10000;
+  private static final int RESTTEMPLATE_TIMEOUT_MS = 10000;
 
-    /**
-     * Creates a RestTemplate whose underlying HTTP client accepts self-signed certificates.
-     */
-    @Bean
-    RestTemplate restTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
-        TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+  /** Creates a RestTemplate whose underlying HTTP client accepts self-signed certificates. */
+  @Bean
+  RestTemplate restTemplate()
+      throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+    TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
 
-        SSLContext sslContext = org.apache.hc.core5.ssl.SSLContexts.custom()
+    SSLContext sslContext =
+        org.apache.hc.core5.ssl.SSLContexts.custom()
             .loadTrustMaterial(null, acceptingTrustStrategy)
             .build();
 
-        CloseableHttpClient httpClient = HttpClients.custom()
-            .setConnectionManager(PoolingHttpClientConnectionManagerBuilder.create()
-                .setSSLSocketFactory(SSLConnectionSocketFactoryBuilder.create()
-                    .setSslContext(sslContext)
-                    .setHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+    CloseableHttpClient httpClient =
+        HttpClients.custom()
+            .setConnectionManager(
+                PoolingHttpClientConnectionManagerBuilder.create()
+                    .setSSLSocketFactory(
+                        SSLConnectionSocketFactoryBuilder.create()
+                            .setSslContext(sslContext)
+                            .setHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+                            .build())
                     .build())
-                .build())
             .build();
 
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectionRequestTimeout(RESTTEMPLATE_TIMEOUT_MS);
-        requestFactory.setConnectTimeout(RESTTEMPLATE_TIMEOUT_MS);
-        requestFactory.setHttpClient(httpClient);
-        return new RestTemplate(requestFactory);
-    }
+    HttpComponentsClientHttpRequestFactory requestFactory =
+        new HttpComponentsClientHttpRequestFactory();
+    requestFactory.setConnectionRequestTimeout(RESTTEMPLATE_TIMEOUT_MS);
+    requestFactory.setConnectTimeout(RESTTEMPLATE_TIMEOUT_MS);
+    requestFactory.setHttpClient(httpClient);
+    return new RestTemplate(requestFactory);
+  }
 }

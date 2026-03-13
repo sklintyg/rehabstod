@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.error;
 
 import static org.mockito.Mockito.verify;
@@ -33,38 +32,36 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.ErrorLogRequestDTO;
 @ExtendWith(MockitoExtension.class)
 class ErrorLogServiceImplTest {
 
-    @Mock
-    private MonitoringLogService monitoringLogService;
-    @InjectMocks
-    private ErrorLogServiceImpl errorLogService;
+  @Mock private MonitoringLogService monitoringLogService;
+  @InjectMocks private ErrorLogServiceImpl errorLogService;
 
-    private static final String ERROR_MESSAGE = "errorMessage";
-    private static final String ERROR_ID = "errorId";
-    private static final String ERROR_CODE = "errorCode";
-    private static final String STACK_TRACE = "stackTrace";
-    private static final String NO_STACK_TRACE = "NO_STACK_TRACE";
+  private static final String ERROR_MESSAGE = "errorMessage";
+  private static final String ERROR_ID = "errorId";
+  private static final String ERROR_CODE = "errorCode";
+  private static final String STACK_TRACE = "stackTrace";
+  private static final String NO_STACK_TRACE = "NO_STACK_TRACE";
 
+  @Test
+  void shallLogError() {
+    var request = new ErrorLogRequestDTO();
+    request.setMessage(ERROR_MESSAGE);
+    request.setErrorId(ERROR_ID);
+    request.setErrorCode(ERROR_CODE);
+    request.setStackTrace(STACK_TRACE);
 
-    @Test
-    void shallLogError() {
-        var request = new ErrorLogRequestDTO();
-        request.setMessage(ERROR_MESSAGE);
-        request.setErrorId(ERROR_ID);
-        request.setErrorCode(ERROR_CODE);
-        request.setStackTrace(STACK_TRACE);
+    errorLogService.logError(request);
+    verify(monitoringLogService).logClientError(ERROR_ID, ERROR_CODE, ERROR_MESSAGE, STACK_TRACE);
+  }
 
-        errorLogService.logError(request);
-        verify(monitoringLogService).logClientError(ERROR_ID, ERROR_CODE, ERROR_MESSAGE, STACK_TRACE);
-    }
+  @Test
+  void shallLogErrorWithoutStackTrace() {
+    var request = new ErrorLogRequestDTO();
+    request.setMessage(ERROR_MESSAGE);
+    request.setErrorId(ERROR_ID);
+    request.setErrorCode(ERROR_CODE);
 
-    @Test
-    void shallLogErrorWithoutStackTrace() {
-        var request = new ErrorLogRequestDTO();
-        request.setMessage(ERROR_MESSAGE);
-        request.setErrorId(ERROR_ID);
-        request.setErrorCode(ERROR_CODE);
-
-        errorLogService.logError(request);
-        verify(monitoringLogService).logClientError(ERROR_ID, ERROR_CODE, ERROR_MESSAGE, NO_STACK_TRACE);
-    }
+    errorLogService.logError(request);
+    verify(monitoringLogService)
+        .logClientError(ERROR_ID, ERROR_CODE, ERROR_MESSAGE, NO_STACK_TRACE);
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.pdl.dto;
 
-
 /**
  * Immutable representation of a Rehabstöd user for PDL logging purposes.
  *
@@ -26,94 +25,94 @@ package se.inera.intyg.rehabstod.service.pdl.dto;
  */
 public final class LogPatient {
 
-    private final String patientId;
-    private final String patientNamn;
-    private final String enhetsId;
-    private final String enhetsNamn;
-    private final String vardgivareId;
-    private final String vardgivareNamn;
+  private final String patientId;
+  private final String patientNamn;
+  private final String enhetsId;
+  private final String enhetsNamn;
+  private final String vardgivareId;
+  private final String vardgivareNamn;
 
-    private LogPatient(Builder builder) {
-        this.patientId = builder.patientId;
-        this.patientNamn = builder.patientNamn;
-        this.enhetsId = builder.enhetsId;
-        this.enhetsNamn = builder.enhetsNamn;
-        this.vardgivareId = builder.vardgivareId;
-        this.vardgivareNamn = builder.vardgivareNamn;
+  private LogPatient(Builder builder) {
+    this.patientId = builder.patientId;
+    this.patientNamn = builder.patientNamn;
+    this.enhetsId = builder.enhetsId;
+    this.enhetsNamn = builder.enhetsNamn;
+    this.vardgivareId = builder.vardgivareId;
+    this.vardgivareNamn = builder.vardgivareNamn;
+  }
+
+  public String getPatientId() {
+    return patientId;
+  }
+
+  public String getPatientNamn() {
+    return patientNamn;
+  }
+
+  public String getEnhetsId() {
+    return enhetsId;
+  }
+
+  public String getEnhetsNamn() {
+    return enhetsNamn;
+  }
+
+  public String getVardgivareId() {
+    return vardgivareId;
+  }
+
+  public String getVardgivareNamn() {
+    return vardgivareNamn;
+  }
+
+  public static class Builder {
+
+    private String patientId;
+    private String patientNamn;
+    private String enhetsId;
+    private String enhetsNamn;
+    private String vardgivareId;
+    private String vardgivareNamn;
+
+    /**
+     * Enligt tjänstekontraktsbeskrivningen ska det i anrop till tjänsten "StoreLog" komma
+     * information om användaren som är upphov till loggposten. De fält som är obligatoriska är
+     * användarens id, vårdenhetens id och vårdgivarens id.
+     *
+     * <p>Se https://bitbucket.org/rivta-domains/riv.ehr.log/raw/master/docs/TKB_ehr_log.docx
+     *
+     * @param patientId Id of the patient.
+     * @param enhetsId HsaId of the unit owning the information.
+     * @param vardgivareId HsaId of the caregiver owning the information.
+     */
+    public Builder(String patientId, String enhetsId, String vardgivareId) {
+      if (patientId == null || enhetsId == null || vardgivareId == null) {
+        throw new IllegalArgumentException(
+            "LogPatient builder requires all constructor arguments to be non-null");
+      }
+
+      this.patientId = patientId;
+      this.enhetsId = enhetsId;
+      this.vardgivareId = vardgivareId;
     }
 
-    public String getPatientId() {
-        return patientId;
+    public Builder patientNamn(String patientNamn) {
+      this.patientNamn = patientNamn;
+      return this;
     }
 
-    public String getPatientNamn() {
-        return patientNamn;
+    public Builder enhetsNamn(String enhetsNamn) {
+      this.enhetsNamn = enhetsNamn;
+      return this;
     }
 
-    public String getEnhetsId() {
-        return enhetsId;
+    public Builder vardgivareNamn(String vardgivareNamn) {
+      this.vardgivareNamn = vardgivareNamn;
+      return this;
     }
 
-    public String getEnhetsNamn() {
-        return enhetsNamn;
+    public LogPatient build() {
+      return new LogPatient(this);
     }
-
-    public String getVardgivareId() {
-        return vardgivareId;
-    }
-
-    public String getVardgivareNamn() {
-        return vardgivareNamn;
-    }
-
-
-    public static class Builder {
-
-        private String patientId;
-        private String patientNamn;
-        private String enhetsId;
-        private String enhetsNamn;
-        private String vardgivareId;
-        private String vardgivareNamn;
-
-        /**
-         * Enligt tjänstekontraktsbeskrivningen ska det i anrop till tjänsten "StoreLog"
-         * komma information om användaren som är upphov till loggposten. De fält som är
-         * obligatoriska är användarens id, vårdenhetens id och vårdgivarens id.
-         * <p>
-         * Se https://bitbucket.org/rivta-domains/riv.ehr.log/raw/master/docs/TKB_ehr_log.docx
-         *
-         * @param patientId Id of the patient.
-         * @param enhetsId HsaId of the unit owning the information.
-         * @param vardgivareId HsaId of the caregiver owning the information.
-         */
-        public Builder(String patientId, String enhetsId, String vardgivareId) {
-            if (patientId == null || enhetsId == null || vardgivareId == null) {
-                throw new IllegalArgumentException("LogPatient builder requires all constructor arguments to be non-null");
-            }
-
-            this.patientId = patientId;
-            this.enhetsId = enhetsId;
-            this.vardgivareId = vardgivareId;
-        }
-
-        public Builder patientNamn(String patientNamn) {
-            this.patientNamn = patientNamn;
-            return this;
-        }
-
-        public Builder enhetsNamn(String enhetsNamn) {
-            this.enhetsNamn = enhetsNamn;
-            return this;
-        }
-
-        public Builder vardgivareNamn(String vardgivareNamn) {
-            this.vardgivareNamn = vardgivareNamn;
-            return this;
-        }
-
-        public LogPatient build() {
-            return new LogPatient(this);
-        }
-    }
+  }
 }

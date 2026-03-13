@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,36 +31,37 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
-/**
- * Created by eriklupander on 2016-04-14.
- */
+/** Created by eriklupander on 2016-04-14. */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = DiagnosKapitelLoaderImpl.class)
 public class DiagnosKapitelLoaderImplTest {
 
-    @Autowired
-    private DiagnosKapitelLoaderImpl testee;
+  @Autowired private DiagnosKapitelLoaderImpl testee;
 
-    @Test
-    public void testLoadDiagnosKapitel() throws IOException {
-        ReflectionTestUtils.setField(testee, "diagnosKapitelFile", "classpath:DiagnosKapitelLoaderTest/diagnoskapitel.txt");
-        List<DiagnosKapitel> diagnosKapitel = testee.loadDiagnosKapitel();
-        assertNotNull(diagnosKapitel);
-        assertEquals(22, diagnosKapitel.size());
-    }
+  @Test
+  public void testLoadDiagnosKapitel() throws IOException {
+    ReflectionTestUtils.setField(
+        testee, "diagnosKapitelFile", "classpath:DiagnosKapitelLoaderTest/diagnoskapitel.txt");
+    List<DiagnosKapitel> diagnosKapitel = testee.loadDiagnosKapitel();
+    assertNotNull(diagnosKapitel);
+    assertEquals(22, diagnosKapitel.size());
+  }
 
-    @Test
-    public void testLoadDiagnosKapitelEmptyFile() throws IOException {
-        ReflectionTestUtils.setField(testee, "diagnosKapitelFile", "classpath:DiagnosKapitelLoaderTest/diagnoskapitel_tom.txt");
-        List<DiagnosKapitel> diagnosKapitel = testee.loadDiagnosKapitel();
-        assertNotNull(diagnosKapitel);
-        assertEquals(0, diagnosKapitel.size());
-    }
+  @Test
+  public void testLoadDiagnosKapitelEmptyFile() throws IOException {
+    ReflectionTestUtils.setField(
+        testee, "diagnosKapitelFile", "classpath:DiagnosKapitelLoaderTest/diagnoskapitel_tom.txt");
+    List<DiagnosKapitel> diagnosKapitel = testee.loadDiagnosKapitel();
+    assertNotNull(diagnosKapitel);
+    assertEquals(0, diagnosKapitel.size());
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testLoadDiagnosKapitelInvaludFileThrowsException() throws IOException {
-        ReflectionTestUtils.setField(testee, "diagnosKapitelFile", "classpath:DiagnosKapitelLoaderTest/diagnoskapitel_invalid.txt");
-        testee.loadDiagnosKapitel();
-    }
-
+  @Test(expected = IllegalArgumentException.class)
+  public void testLoadDiagnosKapitelInvaludFileThrowsException() throws IOException {
+    ReflectionTestUtils.setField(
+        testee,
+        "diagnosKapitelFile",
+        "classpath:DiagnosKapitelLoaderTest/diagnoskapitel_invalid.txt");
+    testee.loadDiagnosKapitel();
+  }
 }

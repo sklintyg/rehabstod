@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,19 +25,20 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
  */
 public interface UserService {
 
-    RehabstodUser getUser();
+  RehabstodUser getUser();
 
-    /**
-     * Method determine if the supplied enhetsId is a Vardenhet or Mottagning identifier.
-     *
-     * <ul>
-     *     <li>If the selectedVardenhet is a Vardenhet: The supplied enhetsId is for the Vardenhet or one of its Mottagningar.</li>
-     *     <li>If the selcetedVardenhet is a Mottagning: The supplied enhetsId is the Mottagning,
-     *     its parent Vardenhet or one of the sibling Mottagningar.</li>
-     * </ul>
-     *
-     * @param enhetsId HSA-id of a vardenhet or mottagning.
-     * @return true if match is found.
-     */
-    boolean isUserLoggedInOnEnhetOrUnderenhet(String enhetsId);
+  /**
+   * Method determine if the supplied enhetsId is a Vardenhet or Mottagning identifier.
+   *
+   * <ul>
+   *   <li>If the selectedVardenhet is a Vardenhet: The supplied enhetsId is for the Vardenhet or
+   *       one of its Mottagningar.
+   *   <li>If the selcetedVardenhet is a Mottagning: The supplied enhetsId is the Mottagning, its
+   *       parent Vardenhet or one of the sibling Mottagningar.
+   * </ul>
+   *
+   * @param enhetsId HSA-id of a vardenhet or mottagning.
+   * @return true if match is found.
+   */
+  boolean isUserLoggedInOnEnhetOrUnderenhet(String enhetsId);
 }

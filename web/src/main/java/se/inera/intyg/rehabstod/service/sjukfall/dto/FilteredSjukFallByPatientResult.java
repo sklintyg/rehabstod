@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,25 +21,24 @@ package se.inera.intyg.rehabstod.service.sjukfall.dto;
 import java.util.List;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-/**
- * Created by marced on 2018-10-02.
- */
+/** Created by marced on 2018-10-02. */
 public class FilteredSjukFallByPatientResult {
 
-    private final List<SjukfallPatient> rehabstodSjukfall;
-    private final SjfMetaData sjfMetaData;
+  private final List<SjukfallPatient> rehabstodSjukfall;
+  private final SjfMetaData sjfMetaData;
 
-    public FilteredSjukFallByPatientResult(List<SjukfallPatient> rehabstodSjukfall, SjfMetaData sjfMetaData) {
+  public FilteredSjukFallByPatientResult(
+      List<SjukfallPatient> rehabstodSjukfall, SjfMetaData sjfMetaData) {
 
-        this.rehabstodSjukfall = rehabstodSjukfall;
-        this.sjfMetaData = sjfMetaData;
-    }
+    this.rehabstodSjukfall = rehabstodSjukfall;
+    this.sjfMetaData = sjfMetaData;
+  }
 
-    public List<SjukfallPatient> getRehabstodSjukfall() {
-        return rehabstodSjukfall;
-    }
+  public List<SjukfallPatient> getRehabstodSjukfall() {
+    return rehabstodSjukfall;
+  }
 
-    public SjfMetaData getSjfMetaData() {
-        return sjfMetaData;
-    }
+  public SjfMetaData getSjfMetaData() {
+    return sjfMetaData;
+  }
 }

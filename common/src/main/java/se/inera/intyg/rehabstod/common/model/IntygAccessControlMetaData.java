@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,77 +20,74 @@ package se.inera.intyg.rehabstod.common.model;
 
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 
-/**
- * Created by marced on 2018-09-27.
- */
+/** Created by marced on 2018-09-27. */
 public class IntygAccessControlMetaData {
 
-    private IntygData intygData;
+  private IntygData intygData;
 
-    private boolean inomVardgivare;
-    private boolean inomVardenhet;
-    private boolean inkluderadVidBerakningAvSjukfall;
-    private boolean sparr;
-    private boolean kraverSamtycke;
-    private boolean bidrarTillAktivtSjukfall;
+  private boolean inomVardgivare;
+  private boolean inomVardenhet;
+  private boolean inkluderadVidBerakningAvSjukfall;
+  private boolean sparr;
+  private boolean kraverSamtycke;
+  private boolean bidrarTillAktivtSjukfall;
 
-    private IntygAccessControlMetaData() {
-    }
+  private IntygAccessControlMetaData() {}
 
-    public IntygAccessControlMetaData(IntygData intygData,
-        boolean inomVardgivare,
-        boolean inomVardenhet,
-        boolean inkluderadVidBerakningAvSjukfall) {
-        this.intygData = intygData;
-        this.inomVardgivare = inomVardgivare;
-        this.inomVardenhet = inomVardenhet;
-        this.inkluderadVidBerakningAvSjukfall = inkluderadVidBerakningAvSjukfall;
-        this.kraverSamtycke = !inomVardgivare;
-    }
+  public IntygAccessControlMetaData(
+      IntygData intygData,
+      boolean inomVardgivare,
+      boolean inomVardenhet,
+      boolean inkluderadVidBerakningAvSjukfall) {
+    this.intygData = intygData;
+    this.inomVardgivare = inomVardgivare;
+    this.inomVardenhet = inomVardenhet;
+    this.inkluderadVidBerakningAvSjukfall = inkluderadVidBerakningAvSjukfall;
+    this.kraverSamtycke = !inomVardgivare;
+  }
 
-    public IntygData getIntygData() {
-        return intygData;
-    }
+  public IntygData getIntygData() {
+    return intygData;
+  }
 
-    public boolean isInomVardgivare() {
-        return inomVardgivare;
-    }
+  public boolean isInomVardgivare() {
+    return inomVardgivare;
+  }
 
-    public boolean isInomVardenhet() {
-        return inomVardenhet;
-    }
+  public boolean isInomVardenhet() {
+    return inomVardenhet;
+  }
 
-    public boolean isSparr() {
-        return sparr;
-    }
+  public boolean isSparr() {
+    return sparr;
+  }
 
-    public boolean isBidrarTillAktivtSjukfall() {
-        return bidrarTillAktivtSjukfall;
-    }
+  public boolean isBidrarTillAktivtSjukfall() {
+    return bidrarTillAktivtSjukfall;
+  }
 
-    public boolean isInkluderadVidBerakningAvSjukfall() {
-        return inkluderadVidBerakningAvSjukfall;
-    }
+  public boolean isInkluderadVidBerakningAvSjukfall() {
+    return inkluderadVidBerakningAvSjukfall;
+  }
 
-    public boolean isKraverSamtycke() {
-        return kraverSamtycke;
-    }
+  public boolean isKraverSamtycke() {
+    return kraverSamtycke;
+  }
 
-    public void setSparr(boolean sparr) {
-        this.sparr = sparr;
-    }
+  public void setSparr(boolean sparr) {
+    this.sparr = sparr;
+  }
 
-    public void setBidrarTillAktivtSjukfall(boolean bidrarTillAktivtSjukfall) {
-        this.bidrarTillAktivtSjukfall = bidrarTillAktivtSjukfall;
-    }
+  public void setBidrarTillAktivtSjukfall(boolean bidrarTillAktivtSjukfall) {
+    this.bidrarTillAktivtSjukfall = bidrarTillAktivtSjukfall;
+  }
 
-    // Convenience methods
-    public boolean inreSparr() {
-        return this.sparr && this.inomVardgivare;
-    }
+  // Convenience methods
+  public boolean inreSparr() {
+    return this.sparr && this.inomVardgivare;
+  }
 
-    public boolean yttreSparr() {
-        return this.sparr && !this.inomVardgivare;
-    }
-
+  public boolean yttreSparr() {
+    return this.sparr && !this.inomVardgivare;
+  }
 }

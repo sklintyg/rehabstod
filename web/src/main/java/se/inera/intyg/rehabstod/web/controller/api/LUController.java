@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,15 +30,17 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateLUFilterResponseDTO
 @RequestMapping("/api/lu")
 public class LUController {
 
-    private final PopulateFiltersService populateFiltersService;
+  private final PopulateFiltersService populateFiltersService;
 
-    public LUController(PopulateFiltersService populateFiltersService) {
-        this.populateFiltersService = populateFiltersService;
-    }
+  public LUController(PopulateFiltersService populateFiltersService) {
+    this.populateFiltersService = populateFiltersService;
+  }
 
-    @RequestMapping(value = "/filters", method = RequestMethod.GET)
-    @PerformanceLogging(eventAction = "populate-LU-filters", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
-    public PopulateLUFilterResponseDTO populateFilters() {
-        return populateFiltersService.populateLUFilters();
-    }
+  @RequestMapping(value = "/filters", method = RequestMethod.GET)
+  @PerformanceLogging(
+      eventAction = "populate-LU-filters",
+      eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
+  public PopulateLUFilterResponseDTO populateFilters() {
+    return populateFiltersService.populateLUFilters();
+  }
 }

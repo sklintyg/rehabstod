@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.time.LocalDate;
@@ -34,15 +33,15 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthInterval;
 @AllArgsConstructor
 public class SickLeavesFilterRequestDTO {
 
-    private List<String> doctorIds;
-    private List<SickLeaveLengthInterval> sickLeaveLengthIntervals;
-    private List<DiagnosKapitel> diagnosisChapters;
-    private Integer fromPatientAge;
-    private Integer toPatientAge;
-    private LocalDate fromSickLeaveEndDate;
-    private LocalDate toSickLeaveEndDate;
-    private List<String> rekoStatusTypeIds;
-    private List<String> occupationTypeIds;
-    private String textSearch;
-    private String unansweredCommunicationFilterTypeId;
+  private List<String> doctorIds;
+  private List<SickLeaveLengthInterval> sickLeaveLengthIntervals;
+  private List<DiagnosKapitel> diagnosisChapters;
+  private Integer fromPatientAge;
+  private Integer toPatientAge;
+  private LocalDate fromSickLeaveEndDate;
+  private LocalDate toSickLeaveEndDate;
+  private List<String> rekoStatusTypeIds;
+  private List<String> occupationTypeIds;
+  private String textSearch;
+  private String unansweredCommunicationFilterTypeId;
 }

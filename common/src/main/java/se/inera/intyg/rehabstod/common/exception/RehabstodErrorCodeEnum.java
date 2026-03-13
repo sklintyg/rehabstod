@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,9 +19,9 @@
 package se.inera.intyg.rehabstod.common.exception;
 
 public enum RehabstodErrorCodeEnum {
-    BAD_REQUEST,
-    ALREADY_EXISTS,
-    NOT_FOUND,
-    UNKNOWN_INTERNAL_PROBLEM,
-    EXTERNAL_ERROR
+  BAD_REQUEST,
+  ALREADY_EXISTS,
+  NOT_FOUND,
+  UNKNOWN_INTERNAL_PROBLEM,
+  EXTERNAL_ERROR
 }

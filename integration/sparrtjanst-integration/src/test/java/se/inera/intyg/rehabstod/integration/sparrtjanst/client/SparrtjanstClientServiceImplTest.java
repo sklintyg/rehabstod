@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -37,75 +37,67 @@ import se.inera.intyg.rehabstod.integration.sparrtjanst.util.SparrtjanstUtil;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksType;
 
-/**
- * Created by marced on 2018-10-16.
- */
+/** Created by marced on 2018-10-16. */
 @RunWith(MockitoJUnitRunner.class)
 public class SparrtjanstClientServiceImplTest {
 
-    private static final String VG_HSA_ID = "vg1";
-    private static final String VE_HSA_ID = "ve1.1";
-    private static final String USER_HSA_ID = "hsa123";
-    private static final String PATIENT_ID = "191212121212";
-    private static final String LOGICAL_ADDRESS = "123";
-    private LocalDateTime date1 = LocalDateTime.now().minusMonths(2);
-    private LocalDateTime date2 = LocalDateTime.now().minusDays(1);
+  private static final String VG_HSA_ID = "vg1";
+  private static final String VE_HSA_ID = "ve1.1";
+  private static final String USER_HSA_ID = "hsa123";
+  private static final String PATIENT_ID = "191212121212";
+  private static final String LOGICAL_ADDRESS = "123";
+  private LocalDateTime date1 = LocalDateTime.now().minusMonths(2);
+  private LocalDateTime date2 = LocalDateTime.now().minusDays(1);
 
-    @Mock
-    private CheckBlocksResponderInterface service;
+  @Mock private CheckBlocksResponderInterface service;
 
-    @InjectMocks
-    private SparrtjanstClientServiceImpl testee;
+  @InjectMocks private SparrtjanstClientServiceImpl testee;
 
-    @Test
-    public void getCheckBlocks() throws Exception {
-        ReflectionTestUtils.setField(testee, "logicalAddress", LOGICAL_ADDRESS);
-        ArgumentCaptor<CheckBlocksType> requestCapture = ArgumentCaptor.forClass(CheckBlocksType.class);
+  @Test
+  public void getCheckBlocks() throws Exception {
+    ReflectionTestUtils.setField(testee, "logicalAddress", LOGICAL_ADDRESS);
+    ArgumentCaptor<CheckBlocksType> requestCapture = ArgumentCaptor.forClass(CheckBlocksType.class);
 
-        List<IntygData> intygLista = new ArrayList<>();
-        intygLista.add(createIntygData("vg1", "ve1", date1));
-        intygLista.add(createIntygData("vg2", "ve2", date2));
-        testee.getCheckBlocks(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID,
-            intygLista);
-        verify(service).checkBlocks(eq(LOGICAL_ADDRESS), requestCapture.capture());
+    List<IntygData> intygLista = new ArrayList<>();
+    intygLista.add(createIntygData("vg1", "ve1", date1));
+    intygLista.add(createIntygData("vg2", "ve2", date2));
+    testee.getCheckBlocks(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, intygLista);
+    verify(service).checkBlocks(eq(LOGICAL_ADDRESS), requestCapture.capture());
 
-        final CheckBlocksType args = requestCapture.getValue();
-        assertEquals(SparrtjanstUtil.KODVERK_PERSONNUMMER, args.getPatientId().getRoot());
-        assertEquals(PATIENT_ID, args.getPatientId().getExtension());
-        assertEquals(VG_HSA_ID, args.getAccessingActor().getCareProviderId());
-        assertEquals(VE_HSA_ID, args.getAccessingActor().getCareUnitId());
-        assertEquals(USER_HSA_ID, args.getAccessingActor().getEmployeeId());
-        assertEquals(2, args.getInformationEntities().size());
+    final CheckBlocksType args = requestCapture.getValue();
+    assertEquals(SparrtjanstUtil.KODVERK_PERSONNUMMER, args.getPatientId().getRoot());
+    assertEquals(PATIENT_ID, args.getPatientId().getExtension());
+    assertEquals(VG_HSA_ID, args.getAccessingActor().getCareProviderId());
+    assertEquals(VE_HSA_ID, args.getAccessingActor().getCareUnitId());
+    assertEquals(USER_HSA_ID, args.getAccessingActor().getEmployeeId());
+    assertEquals(2, args.getInformationEntities().size());
 
-        assertEquals(0, args.getInformationEntities().get(0).getRowNumber());
-        assertEquals("vg1", args.getInformationEntities().get(0).getInformationCareProviderId());
-        assertEquals("ve1", args.getInformationEntities().get(0).getInformationCareUnitId());
-        assertEquals(date1, args.getInformationEntities().get(0).getInformationStartDate());
-        assertEquals(date1, args.getInformationEntities().get(0).getInformationEndDate());
+    assertEquals(0, args.getInformationEntities().get(0).getRowNumber());
+    assertEquals("vg1", args.getInformationEntities().get(0).getInformationCareProviderId());
+    assertEquals("ve1", args.getInformationEntities().get(0).getInformationCareUnitId());
+    assertEquals(date1, args.getInformationEntities().get(0).getInformationStartDate());
+    assertEquals(date1, args.getInformationEntities().get(0).getInformationEndDate());
 
-        assertEquals(1, args.getInformationEntities().get(1).getRowNumber());
-        assertEquals("vg2", args.getInformationEntities().get(1).getInformationCareProviderId());
-        assertEquals("ve2", args.getInformationEntities().get(1).getInformationCareUnitId());
-        assertEquals(date2, args.getInformationEntities().get(1).getInformationStartDate());
-        assertEquals(date2, args.getInformationEntities().get(1).getInformationEndDate());
-    }
+    assertEquals(1, args.getInformationEntities().get(1).getRowNumber());
+    assertEquals("vg2", args.getInformationEntities().get(1).getInformationCareProviderId());
+    assertEquals("ve2", args.getInformationEntities().get(1).getInformationCareUnitId());
+    assertEquals(date2, args.getInformationEntities().get(1).getInformationStartDate());
+    assertEquals(date2, args.getInformationEntities().get(1).getInformationEndDate());
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getCheckBlocksThrowsExceptionForInvalidPatientId() throws Exception {
-        ReflectionTestUtils.setField(testee, "logicalAddress", LOGICAL_ADDRESS);
+  @Test(expected = IllegalArgumentException.class)
+  public void getCheckBlocksThrowsExceptionForInvalidPatientId() throws Exception {
+    ReflectionTestUtils.setField(testee, "logicalAddress", LOGICAL_ADDRESS);
 
-        List<IntygData> intygLista = new ArrayList<>();
-        testee.getCheckBlocks(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, "123211122",
-            intygLista);
+    List<IntygData> intygLista = new ArrayList<>();
+    testee.getCheckBlocks(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, "123211122", intygLista);
+  }
 
-    }
-
-    private IntygData createIntygData(String vg, String ve, LocalDateTime signDate) {
-        IntygData intyg = new IntygData();
-        intyg.setVardgivareId(vg);
-        intyg.setVardenhetId(ve);
-        intyg.setSigneringsTidpunkt(signDate);
-        return intyg;
-    }
-
+  private IntygData createIntygData(String vg, String ve, LocalDateTime signDate) {
+    IntygData intyg = new IntygData();
+    intyg.setVardgivareId(vg);
+    intyg.setVardenhetId(ve);
+    intyg.setSigneringsTidpunkt(signDate);
+    return intyg;
+  }
 }

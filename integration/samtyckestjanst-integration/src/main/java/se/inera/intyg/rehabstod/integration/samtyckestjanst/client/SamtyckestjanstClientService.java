@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,53 +24,52 @@ import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsentResponder.v2.RegisterExtendedConsentResponseType;
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 
-/**
- * Created by Magnus Ekstrand 2018-10-10.
- */
+/** Created by Magnus Ekstrand 2018-10-10. */
 public interface SamtyckestjanstClientService {
 
-    /**
-     * Tjänst som kontrollerar om det finns ett giltigt samtycke, alternativt intyg om nödsituation,
-     * gällande åtkomst för viss aktör (vårdenhet eller medarbetare). Med giltigt samtycke avses ett
-     * samtycke som fortfarande är giltigt (giltigt t o m har ej passerats), ej makulerat eller återkallat.
-     *
-     * Om ett giltigt intyg gällande åtkomst för angiven aktör hittas, kommer tjänsten att svara OK.
-     *
-     * @param vgHsaId Id på medarbetarens vårdgivare enligt aktuellt medarbetaruppdrag.
-     * @param veHsaId Id på medarbetarens vårdenhet enligt aktuellt medarbetaruppdrag.
-     * @param userHsaId Id för medarbetaren/personen.
-     * @param patientId Personidentitet på patienten vars samtycke skall kontrolleras.
-     * @return Status för om ett giltigt intyg gällande åtkomst för angiven aktör hittades.
-     */
-    CheckConsentResponseType checkConsent(String vgHsaId,
-        String veHsaId,
-        String userHsaId,
-        String patientId);
+  /**
+   * Tjänst som kontrollerar om det finns ett giltigt samtycke, alternativt intyg om nödsituation,
+   * gällande åtkomst för viss aktör (vårdenhet eller medarbetare). Med giltigt samtycke avses ett
+   * samtycke som fortfarande är giltigt (giltigt t o m har ej passerats), ej makulerat eller
+   * återkallat.
+   *
+   * <p>Om ett giltigt intyg gällande åtkomst för angiven aktör hittas, kommer tjänsten att svara
+   * OK.
+   *
+   * @param vgHsaId Id på medarbetarens vårdgivare enligt aktuellt medarbetaruppdrag.
+   * @param veHsaId Id på medarbetarens vårdenhet enligt aktuellt medarbetaruppdrag.
+   * @param userHsaId Id för medarbetaren/personen.
+   * @param patientId Personidentitet på patienten vars samtycke skall kontrolleras.
+   * @return Status för om ett giltigt intyg gällande åtkomst för angiven aktör hittades.
+   */
+  CheckConsentResponseType checkConsent(
+      String vgHsaId, String veHsaId, String userHsaId, String patientId);
 
-    /**
-     * Tjänst som registrerar ett intyg gällande viss patient som ger direktåtkomst till patientens information
-     * från andra vårdgivare enligt PDL. Intyget avser patientens aktiva medgivande (samtycke), alternativt
-     * nödsituation då HoS personal bedömer att behov av uppgifterna finns för nödvändig vård av patient som
-     * inte kan ge aktivt medgivande.
-     *
-     * @param vgHsaId Id på medarbetarens vårdgivare enligt aktuellt medarbetaruppdrag.
-     * @param veHsaId Id på medarbetarens vårdenhet enligt aktuellt medarbetaruppdrag.
-     * @param userHsaId Användarens Hsa-id. Anges om användaren har uppgett att samtycket
-     * endast ska gälla för denne och inte alla behöriga användare på vårdenheten.
-     * @param patientId Personidentitet på patienten vars samtycke skall kontrolleras.
-     * @param representedBy Personidentitet på företrädare/vårdnadshavare som företräder patienten
-     * @param consentFrom Samtycket gäller fr.o.m. denna tidpunkt.
-     * @param consentTo Samtycket gäller t.o.m. denna tidpunkt.
-     * @param registrationAction Identifierar den användare som angivit samtycket.
-     */
-    // CHECKSTYLE:OFF ParameterNumber
-    RegisterExtendedConsentResponseType registerExtendedConsent(String vgHsaId,
-        String veHsaId,
-        String userHsaId,
-        Personnummer patientId,
-        String representedBy,
-        LocalDateTime consentFrom,
-        LocalDateTime consentTo,
-        ActionType registrationAction);
-    // CHECKSTYLE:ON ParameterNumber
+  /**
+   * Tjänst som registrerar ett intyg gällande viss patient som ger direktåtkomst till patientens
+   * information från andra vårdgivare enligt PDL. Intyget avser patientens aktiva medgivande
+   * (samtycke), alternativt nödsituation då HoS personal bedömer att behov av uppgifterna finns för
+   * nödvändig vård av patient som inte kan ge aktivt medgivande.
+   *
+   * @param vgHsaId Id på medarbetarens vårdgivare enligt aktuellt medarbetaruppdrag.
+   * @param veHsaId Id på medarbetarens vårdenhet enligt aktuellt medarbetaruppdrag.
+   * @param userHsaId Användarens Hsa-id. Anges om användaren har uppgett att samtycket endast ska
+   *     gälla för denne och inte alla behöriga användare på vårdenheten.
+   * @param patientId Personidentitet på patienten vars samtycke skall kontrolleras.
+   * @param representedBy Personidentitet på företrädare/vårdnadshavare som företräder patienten
+   * @param consentFrom Samtycket gäller fr.o.m. denna tidpunkt.
+   * @param consentTo Samtycket gäller t.o.m. denna tidpunkt.
+   * @param registrationAction Identifierar den användare som angivit samtycket.
+   */
+  // CHECKSTYLE:OFF ParameterNumber
+  RegisterExtendedConsentResponseType registerExtendedConsent(
+      String vgHsaId,
+      String veHsaId,
+      String userHsaId,
+      Personnummer patientId,
+      String representedBy,
+      LocalDateTime consentFrom,
+      LocalDateTime consentTo,
+      ActionType registrationAction);
+  // CHECKSTYLE:ON ParameterNumber
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -48,187 +48,183 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 @Component
 public class SjukfallEngineMapper {
 
-    @Autowired
-    private DiagnosFactory diagnosFactory;
-    @Autowired
-    private PatientIdEncryption patientIdEncryption;
+  @Autowired private DiagnosFactory diagnosFactory;
+  @Autowired private PatientIdEncryption patientIdEncryption;
 
-    // api
+  // api
 
-    /**
-     * Mapping from SjukfallEngine's format to Rehabstod internal format.
-     */
-    public SjukfallEnhet
-    mapToSjukfallEnhetDto(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from,
-        int maxDagarSedanAvslut, LocalDate today) {
-        SjukfallEnhet to = new SjukfallEnhet();
+  /** Mapping from SjukfallEngine's format to Rehabstod internal format. */
+  public SjukfallEnhet mapToSjukfallEnhetDto(
+      se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from,
+      int maxDagarSedanAvslut,
+      LocalDate today) {
+    SjukfallEnhet to = new SjukfallEnhet();
 
-        try {
-            to.setVardGivareId(from.getVardgivare().getId());
-            to.setVardGivareNamn(from.getVardgivare().getNamn());
-            to.setVardEnhetId(from.getVardenhet().getId());
-            to.setVardEnhetNamn(from.getVardenhet().getNamn());
-            to.setLakare(map(from.getLakare()));
-            to.setPatient(map(from.getPatient()));
-            to.setDiagnos(mapDiagnos(from.getDiagnosKod()));
-            to.setBiDiagnoser(mapDiagnos(from.getBiDiagnoser()));
-            to.setStart(from.getStart());
-            to.setSlut(from.getSlut());
-            to.setSlutOmDagar(ChronoUnit.DAYS.between(today, from.getSlut()));
-            to.setDagar(from.getDagar());
-            to.setIntyg(from.getIntyg());
-            to.setIntygLista(from.getIntygLista());
-            to.setAktivGrad(from.getAktivGrad());
-            to.setGrader(from.getGrader());
-            to.setAktivIntygsId(from.getAktivIntygsId());
-            to.setSysselsattning(from.getSysselsattning());
-            to.setNyligenAvslutat(to.getSlutOmDagar() < 0 && to.getSlutOmDagar() + maxDagarSedanAvslut >= 0);
-            if (from.getRekoStatus() != null) {
-                to.setRekoStatus(getRekoStatus(from));
-            }
-            to.setEncryptedPatientId(patientIdEncryption.encrypt(from.getPatient().getId()));
-        } catch (Exception e) {
-            throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
-        }
-
-        return to;
+    try {
+      to.setVardGivareId(from.getVardgivare().getId());
+      to.setVardGivareNamn(from.getVardgivare().getNamn());
+      to.setVardEnhetId(from.getVardenhet().getId());
+      to.setVardEnhetNamn(from.getVardenhet().getNamn());
+      to.setLakare(map(from.getLakare()));
+      to.setPatient(map(from.getPatient()));
+      to.setDiagnos(mapDiagnos(from.getDiagnosKod()));
+      to.setBiDiagnoser(mapDiagnos(from.getBiDiagnoser()));
+      to.setStart(from.getStart());
+      to.setSlut(from.getSlut());
+      to.setSlutOmDagar(ChronoUnit.DAYS.between(today, from.getSlut()));
+      to.setDagar(from.getDagar());
+      to.setIntyg(from.getIntyg());
+      to.setIntygLista(from.getIntygLista());
+      to.setAktivGrad(from.getAktivGrad());
+      to.setGrader(from.getGrader());
+      to.setAktivIntygsId(from.getAktivIntygsId());
+      to.setSysselsattning(from.getSysselsattning());
+      to.setNyligenAvslutat(
+          to.getSlutOmDagar() < 0 && to.getSlutOmDagar() + maxDagarSedanAvslut >= 0);
+      if (from.getRekoStatus() != null) {
+        to.setRekoStatus(getRekoStatus(from));
+      }
+      to.setEncryptedPatientId(patientIdEncryption.encrypt(from.getPatient().getId()));
+    } catch (Exception e) {
+      throw new SjukfallServiceException(
+          "Error mapping SjukfallEngine format to internal format", e);
     }
 
-    private static RekoStatusDTO getRekoStatus(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from) {
-        return new RekoStatusDTO(
-            new RekoStatusTypeDTO(
-                from.getRekoStatus().getStatus().getId(),
-                from.getRekoStatus().getStatus().getName())
-        );
+    return to;
+  }
+
+  private static RekoStatusDTO getRekoStatus(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from) {
+    return new RekoStatusDTO(
+        new RekoStatusTypeDTO(
+            from.getRekoStatus().getStatus().getId(), from.getRekoStatus().getStatus().getName()));
+  }
+
+  /** Mapping from SjukfallEngine's format to Rehabstod internal format. */
+  public SjukfallPatient mapToSjukfallPatientDto(
+      se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from,
+      Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
+    SjukfallPatient to = new SjukfallPatient();
+
+    try {
+      to.setDiagnos(mapDiagnos(from.getDiagnosKod()));
+      to.setStart(from.getStart());
+      to.setSlut(from.getSlut());
+      to.setDagar(from.getDagar());
+
+      List<PatientData> patientData =
+          from.getSjukfallIntygList().stream()
+              .map(
+                  sfi ->
+                      mapSjukfallIntygToPatientData(sfi, intygAccessMetaData.get(sfi.getIntygId())))
+              .collect(Collectors.toList());
+
+      // Sort patientData by start date with descending order
+      Comparator<PatientData> dateComparator =
+          Comparator.comparing(PatientData::getStart, Comparator.reverseOrder());
+
+      patientData = patientData.stream().sorted(dateComparator).collect(Collectors.toList());
+      to.setIntyg(patientData);
+
+      clearDataOnIntygIfOtherUnit(to);
+
+    } catch (Exception e) {
+      throw new SjukfallServiceException(
+          "Error mapping SjukfallEngine format to internal format", e);
     }
 
-    /**
-     * Mapping from SjukfallEngine's format to Rehabstod internal format.
-     */
-    public SjukfallPatient mapToSjukfallPatientDto(se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from,
-        Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
-        SjukfallPatient to = new SjukfallPatient();
+    return to;
+  }
 
-        try {
-            to.setDiagnos(mapDiagnos(from.getDiagnosKod()));
-            to.setStart(from.getStart());
-            to.setSlut(from.getSlut());
-            to.setDagar(from.getDagar());
+  /** Mapping from SjukfallEngine's format to Rehabstod internal format. */
+  public PatientData mapSjukfallIntygToPatientData(
+      se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg from, IntygAccessControlMetaData iacm) {
+    PatientData to = new PatientData();
 
-            List<PatientData> patientData = from.getSjukfallIntygList()
-                .stream()
-                .map(sfi -> mapSjukfallIntygToPatientData(sfi, intygAccessMetaData.get(sfi.getIntygId())))
-                .collect(Collectors.toList());
+    try {
+      to.setIntygsId(from.getIntygId());
+      to.setVardgivareId(from.getVardgivareId());
+      to.setVardgivareNamn(from.getVardgivareNamn());
+      to.setVardenhetId(from.getVardenhetId());
+      to.setVardenhetNamn(from.getVardenhetNamn());
 
-            // Sort patientData by start date with descending order
-            Comparator<PatientData> dateComparator
-                = Comparator.comparing(PatientData::getStart, Comparator.reverseOrder());
+      Patient patient = new Patient(from.getPatientId(), from.getPatientNamn());
+      to.setPatient(patient);
 
-            patientData = patientData.stream().sorted(dateComparator).collect(Collectors.toList());
-            to.setIntyg(patientData);
+      to.setDiagnos(mapDiagnos(from.getDiagnosKod()));
+      to.setBidiagnoser(mapDiagnos(from.getBiDiagnoser()));
+      to.setStart(from.getStartDatum());
+      to.setSlut(from.getSlutDatum());
+      to.setSigneringsTidpunkt(from.getSigneringsTidpunkt());
+      to.setDagar(from.getDagar());
+      to.setGrader(from.getGrader());
+      to.setLakare(buildLakare(from.getLakareId(), from.getLakareNamn()));
+      to.setSysselsattning(from.getSysselsattning());
+      to.setAktivtIntyg(from.isAktivtIntyg());
 
-            clearDataOnIntygIfOtherUnit(to);
+      if (iacm != null) {
+        to.setOtherVardgivare(!iacm.isInomVardgivare());
+        to.setOtherVardenhet(!iacm.isInomVardenhet());
+      }
 
-        } catch (Exception e) {
-            throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
-        }
-
-        return to;
+    } catch (Exception e) {
+      throw new SjukfallServiceException(
+          "Error mapping SjukfallEngine format to internal format", e);
     }
 
-    /**
-     * Mapping from SjukfallEngine's format to Rehabstod internal format.
-     */
-    public PatientData mapSjukfallIntygToPatientData(se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg from,
-        IntygAccessControlMetaData iacm) {
-        PatientData to = new PatientData();
+    return to;
+  }
 
-        try {
-            to.setIntygsId(from.getIntygId());
-            to.setVardgivareId(from.getVardgivareId());
-            to.setVardgivareNamn(from.getVardgivareNamn());
-            to.setVardenhetId(from.getVardenhetId());
-            to.setVardenhetNamn(from.getVardenhetNamn());
+  private Lakare buildLakare(String lakareId, String lakareNamn) {
+    return new Lakare(lakareId, lakareNamn);
+  }
 
-            Patient patient = new Patient(from.getPatientId(), from.getPatientNamn());
-            to.setPatient(patient);
+  public Diagnos getDiagnos(se.inera.intyg.infra.sjukfall.dto.DiagnosKod from) {
+    return diagnosFactory.getDiagnos(from.getOriginalCode(), from.getCleanedCode(), from.getName());
+  }
 
-            to.setDiagnos(mapDiagnos(from.getDiagnosKod()));
-            to.setBidiagnoser(mapDiagnos(from.getBiDiagnoser()));
-            to.setStart(from.getStartDatum());
-            to.setSlut(from.getSlutDatum());
-            to.setSigneringsTidpunkt(from.getSigneringsTidpunkt());
-            to.setDagar(from.getDagar());
-            to.setGrader(from.getGrader());
-            to.setLakare(buildLakare(from.getLakareId(), from.getLakareNamn()));
-            to.setSysselsattning(from.getSysselsattning());
-            to.setAktivtIntyg(from.isAktivtIntyg());
+  // private scope
 
-            if (iacm != null) {
-                to.setOtherVardgivare(!iacm.isInomVardgivare());
-                to.setOtherVardenhet(!iacm.isInomVardenhet());
-            }
+  private Lakare map(se.inera.intyg.infra.sjukfall.dto.Lakare from) {
+    return new Lakare(from.getId(), from.getNamn());
+  }
 
-        } catch (Exception e) {
-            throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
-        }
+  private Patient map(se.inera.intyg.infra.sjukfall.dto.Patient from) {
+    return new Patient(from.getId(), from.getNamn());
+  }
 
-        return to;
-    }
+  private Diagnos mapDiagnos(se.inera.intyg.infra.sjukfall.dto.DiagnosKod from) {
+    return getDiagnos(from);
+  }
 
-    private Lakare buildLakare(String lakareId, String lakareNamn) {
-        return new Lakare(lakareId, lakareNamn);
-    }
+  private List<Diagnos> mapDiagnos(List<se.inera.intyg.infra.sjukfall.dto.DiagnosKod> from) {
+    return Optional.ofNullable(from).orElse(Collections.emptyList()).stream()
+        .map(this::mapDiagnos)
+        .collect(Collectors.toList());
+  }
 
-    public Diagnos getDiagnos(se.inera.intyg.infra.sjukfall.dto.DiagnosKod from) {
-        return diagnosFactory.getDiagnos(from.getOriginalCode(), from.getCleanedCode(), from.getName());
-    }
+  private void clearDataOnIntygIfOtherUnit(SjukfallPatient sjukfallPatient) {
 
-    // private scope
+    sjukfallPatient.getIntyg().stream()
+        .filter(patientData -> patientData.isOtherVardgivare() || patientData.isOtherVardenhet())
+        .forEach(this::clearPatientData);
 
-    private Lakare map(se.inera.intyg.infra.sjukfall.dto.Lakare from) {
-        return new Lakare(from.getId(), from.getNamn());
-    }
-
-    private Patient map(se.inera.intyg.infra.sjukfall.dto.Patient from) {
-        return new Patient(from.getId(), from.getNamn());
-    }
-
-    private Diagnos mapDiagnos(se.inera.intyg.infra.sjukfall.dto.DiagnosKod from) {
-        return getDiagnos(from);
-    }
-
-    private List<Diagnos> mapDiagnos(List<se.inera.intyg.infra.sjukfall.dto.DiagnosKod> from) {
-        return Optional.ofNullable(from).orElse(Collections.emptyList()).stream()
-            .map(this::mapDiagnos)
-            .collect(Collectors.toList());
-    }
-
-
-    private void clearDataOnIntygIfOtherUnit(SjukfallPatient sjukfallPatient) {
-
-        sjukfallPatient.getIntyg()
-            .stream()
-            .filter(patientData -> patientData.isOtherVardgivare() || patientData.isOtherVardenhet())
-            .forEach(this::clearPatientData);
-
-        Optional<PatientData> firstWithDiagnos = sjukfallPatient.getIntyg().stream()
+    Optional<PatientData> firstWithDiagnos =
+        sjukfallPatient.getIntyg().stream()
             .filter(patientData -> patientData.getDiagnos() != null)
             .findFirst();
 
-        if (firstWithDiagnos.isPresent()) {
-            sjukfallPatient.setDiagnos(firstWithDiagnos.get().getDiagnos());
-        } else {
-            sjukfallPatient.setDiagnos(null);
-        }
+    if (firstWithDiagnos.isPresent()) {
+      sjukfallPatient.setDiagnos(firstWithDiagnos.get().getDiagnos());
+    } else {
+      sjukfallPatient.setDiagnos(null);
     }
+  }
 
-    private void clearPatientData(PatientData patientData) {
-        patientData.setBidiagnoser(new ArrayList<>());
-        patientData.setDiagnos(null);
-        patientData.setGrader(new ArrayList<>());
-        patientData.setLakare(null);
-        patientData.setSysselsattning(new ArrayList<>());
-    }
-
+  private void clearPatientData(PatientData patientData) {
+    patientData.setBidiagnoser(new ArrayList<>());
+    patientData.setDiagnos(null);
+    patientData.setGrader(new ArrayList<>());
+    patientData.setLakare(null);
+    patientData.setSysselsattning(new ArrayList<>());
+  }
 }

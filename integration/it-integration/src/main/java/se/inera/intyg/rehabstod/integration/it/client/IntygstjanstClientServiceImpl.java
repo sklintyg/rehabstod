@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -33,28 +33,27 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 
 // CHECKSTYLE:ON LineLength
 
-/**
- * Created by eriklupander on 2016-01-29.
- */
+/** Created by eriklupander on 2016-01-29. */
 @Service
 public class IntygstjanstClientServiceImpl implements IntygstjanstClientService {
 
-    @Autowired
-    private ListSickLeavesForPersonResponderInterface personService;
+  @Autowired private ListSickLeavesForPersonResponderInterface personService;
 
-    @Value("${it.service.logicalAddress}")
-    private String logicalAddress;
+  @Value("${it.service.logicalAddress}")
+  private String logicalAddress;
 
-    @Override
-    @PrometheusTimeMethod
-    @PerformanceLogging(eventAction = "get-sick-leave-for-patient", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public ListSickLeavesForPersonResponseType getAllSjukfallForPatient(String patientId) {
-        PersonId pId = new PersonId();
-        pId.setExtension(patientId);
+  @Override
+  @PrometheusTimeMethod
+  @PerformanceLogging(
+      eventAction = "get-sick-leave-for-patient",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public ListSickLeavesForPersonResponseType getAllSjukfallForPatient(String patientId) {
+    PersonId pId = new PersonId();
+    pId.setExtension(patientId);
 
-        ListSickLeavesForPersonType params = new ListSickLeavesForPersonType();
-        params.setPersonId(pId);
+    ListSickLeavesForPersonType params = new ListSickLeavesForPersonType();
+    params.setPersonId(pId);
 
-        return personService.listSickLeavesForPerson(logicalAddress, params);
-    }
+    return personService.listSickLeavesForPerson(logicalAddress, params);
+  }
 }

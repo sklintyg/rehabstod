@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,61 +29,71 @@ import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 
 /**
- * This is a helper class that manages user vardenhet changes, basically implementing the requirement
- * that LAKARE having systemRoles "Rehab-[unit id]" shall have REHABKOORDINATOR privileges on those care units,
- * and their normal LAKARE privileges on any other care units they have MIU on.
+ * This is a helper class that manages user vardenhet changes, basically implementing the
+ * requirement that LAKARE having systemRoles "Rehab-[unit id]" shall have REHABKOORDINATOR
+ * privileges on those care units, and their normal LAKARE privileges on any other care units they
+ * have MIU on.
  *
  * @author erikl
  */
 @Service
 public class RehabstodUnitChangeService {
 
-    @Autowired
-    private CommonAuthoritiesResolver commonAuthoritiesResolver;
+  @Autowired private CommonAuthoritiesResolver commonAuthoritiesResolver;
 
-    public boolean changeValdVardenhet(String enhetId, RehabstodUser user) {
-        boolean ok = user.changeValdVardenhet(enhetId);
+  public boolean changeValdVardenhet(String enhetId, RehabstodUser user) {
+    boolean ok = user.changeValdVardenhet(enhetId);
 
-        if (ok) {
-            // INTYG-5068: We need to check systemRoles for Lakare. If they have systemRole for the selected enhet,
-            // we change their role to REHABKOORDINATOR instead. Note use of overridden "isLakare" that does NOT
-            // derive lakare status from roles.
-            if (user.isLakare() && hasSystemRoles(user)) {
-                List<String> enhetIdList = SystemRolesParser.parseEnhetsIdsFromSystemRoles(user.getSystemRoles());
+    if (ok) {
+      // INTYG-5068: We need to check systemRoles for Lakare. If they have systemRole for the
+      // selected enhet,
+      // we change their role to REHABKOORDINATOR instead. Note use of overridden "isLakare" that
+      // does NOT
+      // derive lakare status from roles.
+      if (user.isLakare() && hasSystemRoles(user)) {
+        List<String> enhetIdList =
+            SystemRolesParser.parseEnhetsIdsFromSystemRoles(user.getSystemRoles());
 
-                boolean hasSystemRoleForSelectedUnit = enhetIdList.stream().anyMatch(s -> s.equals(enhetId));
-                if (hasSystemRoleForSelectedUnit || hasImplicitAccessToSubUnit(user, enhetIdList)) {
-                    updateUsersRoleTo(user, AuthoritiesConstants.ROLE_KOORDINATOR);
-                } else {
-                    updateUsersRoleTo(user, user.getOriginalRoles().keySet().stream().findFirst().orElse(AuthoritiesConstants.ROLE_LAKARE));
-                }
-            }
+        boolean hasSystemRoleForSelectedUnit =
+            enhetIdList.stream().anyMatch(s -> s.equals(enhetId));
+        if (hasSystemRoleForSelectedUnit || hasImplicitAccessToSubUnit(user, enhetIdList)) {
+          updateUsersRoleTo(user, AuthoritiesConstants.ROLE_KOORDINATOR);
+        } else {
+          updateUsersRoleTo(
+              user,
+              user.getOriginalRoles().keySet().stream()
+                  .findFirst()
+                  .orElse(AuthoritiesConstants.ROLE_LAKARE));
         }
-
-        return ok;
+      }
     }
 
-    // Checks if any we have a Mottagning selected. If so, we check if the parent care unit is in the
-    // list of enhetIds designated by systemRoles.
-    private boolean hasImplicitAccessToSubUnit(RehabstodUser user, List<String> systemRoleEnhetIdList) {
-        if (user.getValdVardenhet() instanceof Mottagning) {
-            Mottagning m = (Mottagning) user.getValdVardenhet();
-            return systemRoleEnhetIdList.stream()
-                .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(m.getParentHsaId()));
-        }
-        return false;
-    }
+    return ok;
+  }
 
-    // Clears roles, sets new ones and updates active features.
-    private void updateUsersRoleTo(RehabstodUser user, String roleKey) {
-        user.getRoles().clear();
-        Role role = commonAuthoritiesResolver.getRole(roleKey);
-        user.getRoles().put(roleKey, role);
-        user.setFeatures(
-            commonAuthoritiesResolver.getFeatures(Arrays.asList(user.getValdVardenhet().getId(), user.getValdVardgivare().getId())));
+  // Checks if any we have a Mottagning selected. If so, we check if the parent care unit is in the
+  // list of enhetIds designated by systemRoles.
+  private boolean hasImplicitAccessToSubUnit(
+      RehabstodUser user, List<String> systemRoleEnhetIdList) {
+    if (user.getValdVardenhet() instanceof Mottagning) {
+      Mottagning m = (Mottagning) user.getValdVardenhet();
+      return systemRoleEnhetIdList.stream()
+          .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(m.getParentHsaId()));
     }
+    return false;
+  }
 
-    private boolean hasSystemRoles(RehabstodUser user) {
-        return user.getSystemRoles() != null && user.getSystemRoles().size() > 0;
-    }
+  // Clears roles, sets new ones and updates active features.
+  private void updateUsersRoleTo(RehabstodUser user, String roleKey) {
+    user.getRoles().clear();
+    Role role = commonAuthoritiesResolver.getRole(roleKey);
+    user.getRoles().put(roleKey, role);
+    user.setFeatures(
+        commonAuthoritiesResolver.getFeatures(
+            Arrays.asList(user.getValdVardenhet().getId(), user.getValdVardgivare().getId())));
+  }
+
+  private boolean hasSystemRoles(RehabstodUser user) {
+    return user.getSystemRoles() != null && user.getSystemRoles().size() > 0;
+  }
 }

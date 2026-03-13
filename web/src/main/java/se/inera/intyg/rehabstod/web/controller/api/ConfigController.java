@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,50 +31,50 @@ import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetConfigResponse;
 
-/**
- * Created by marced on 2016-02-09.
- */
+/** Created by marced on 2016-02-09. */
 @RestController
 @RequestMapping("/api/config")
 public class ConfigController {
 
-    protected static final String WEBCERT_LAUNCH_URL_TEMPLATE = "webcert.launch.url.template";
-    protected static final String PROJECT_VERSION_PROPERTY = "project.version";
-    protected static final String SITHS_IDP_URL = "siths.idp.url";
+  protected static final String WEBCERT_LAUNCH_URL_TEMPLATE = "webcert.launch.url.template";
+  protected static final String PROJECT_VERSION_PROPERTY = "project.version";
+  protected static final String SITHS_IDP_URL = "siths.idp.url";
 
-    @Autowired
-    private DiagnosKapitelService diagnosKapitelService;
+  @Autowired private DiagnosKapitelService diagnosKapitelService;
 
-    @Autowired
-    private DynamicLinkService dynamicLinkService;
+  @Autowired private DynamicLinkService dynamicLinkService;
 
-    @Autowired
-    private IABannerService iaBannerService;
+  @Autowired private IABannerService iaBannerService;
 
-    /**
-     * Note - using Environment injection instead of @Value since the latter has some issues when injected into the
-     * context of this @RestController.
-     */
-    @Autowired
-    private Environment env;
+  /**
+   * Note - using Environment injection instead of @Value since the latter has some issues when
+   * injected into the context of this @RestController.
+   */
+  @Autowired private Environment env;
 
-    @RequestMapping(value = "")
-    @PerformanceLogging(eventAction = "get-configuration", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED, isActive = false)
-    public GetConfigResponse getConfig() {
+  @RequestMapping(value = "")
+  @PerformanceLogging(
+      eventAction = "get-configuration",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED,
+      isActive = false)
+  public GetConfigResponse getConfig() {
 
-        GetConfigResponse configResponse = new GetConfigResponse();
-        configResponse.setDiagnosKapitelList(diagnosKapitelService.getDiagnosKapitelList());
-        configResponse.setWebcertLaunchUrlTemplate(env.getProperty(WEBCERT_LAUNCH_URL_TEMPLATE));
-        configResponse.setSithsIdpUrl(env.getProperty(SITHS_IDP_URL));
-        configResponse.setVersion(env.getProperty(PROJECT_VERSION_PROPERTY));
-        configResponse.setBanners(iaBannerService.getCurrentBanners());
+    GetConfigResponse configResponse = new GetConfigResponse();
+    configResponse.setDiagnosKapitelList(diagnosKapitelService.getDiagnosKapitelList());
+    configResponse.setWebcertLaunchUrlTemplate(env.getProperty(WEBCERT_LAUNCH_URL_TEMPLATE));
+    configResponse.setSithsIdpUrl(env.getProperty(SITHS_IDP_URL));
+    configResponse.setVersion(env.getProperty(PROJECT_VERSION_PROPERTY));
+    configResponse.setBanners(iaBannerService.getCurrentBanners());
 
-        return configResponse;
-    }
+    return configResponse;
+  }
 
-    @RequestMapping(value = "/links", produces = "application/json")
-    @PerformanceLogging(eventAction = "get-dynamic-links", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED, isActive = false)
-    public Map<String, DynamicLink> getDynamicLinks() {
-        return dynamicLinkService.getAllAsMap();
-    }
+  @RequestMapping(value = "/links", produces = "application/json")
+  @PerformanceLogging(
+      eventAction = "get-dynamic-links",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED,
+      isActive = false)
+  public Map<String, DynamicLink> getDynamicLinks() {
+    return dynamicLinkService.getAllAsMap();
+  }
 }

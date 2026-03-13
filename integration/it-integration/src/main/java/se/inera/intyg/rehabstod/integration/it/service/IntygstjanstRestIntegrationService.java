@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,103 +30,115 @@ import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
 
-
-/**
- * Connects to Intygstjanstens REST-api to get specialized certificate data
- */
+/** Connects to Intygstjanstens REST-api to get specialized certificate data */
 public interface IntygstjanstRestIntegrationService {
 
-    /**
-     * List certificates on unit(s) with diagnosis information
-     * If no from date is provided it is assumed to be 3 years back in time
-     *
-     * @param units List of units the certificates are bound to
-     * @param certificateTypes The specific type of certificates to get
-     * @param fromDate First signing date of selection
-     * @param toDate Last signing date of selection
-     * @return List of certificates with diagnosis information
-     */
-    List<DiagnosedCertificate> getDiagnosedCertificatesForCareUnit(List<String> units, List<String> certificateTypes, LocalDate fromDate,
-        LocalDate toDate, List<String> doctorIds);
+  /**
+   * List certificates on unit(s) with diagnosis information If no from date is provided it is
+   * assumed to be 3 years back in time
+   *
+   * @param units List of units the certificates are bound to
+   * @param certificateTypes The specific type of certificates to get
+   * @param fromDate First signing date of selection
+   * @param toDate Last signing date of selection
+   * @return List of certificates with diagnosis information
+   */
+  List<DiagnosedCertificate> getDiagnosedCertificatesForCareUnit(
+      List<String> units,
+      List<String> certificateTypes,
+      LocalDate fromDate,
+      LocalDate toDate,
+      List<String> doctorIds);
 
-    /**
-     * List certificates for person with diagnosis information
-     * Date range is assumed to be 3 years back in time from today
-     *
-     * @param personId Id of the person to get certificates for
-     * @param certificateTypes The specific type of certificates to get
-     * @param units List of units the certificates are bound to
-     * @return List of certificates with diagnosis information
-     */
-    List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(String personId, List<String> certificateTypes, List<String> units);
+  /**
+   * List certificates for person with diagnosis information Date range is assumed to be 3 years
+   * back in time from today
+   *
+   * @param personId Id of the person to get certificates for
+   * @param certificateTypes The specific type of certificates to get
+   * @param units List of units the certificates are bound to
+   * @return List of certificates with diagnosis information
+   */
+  List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(
+      String personId, List<String> certificateTypes, List<String> units);
 
-    /**
-     * List certificates for person with diagnosis information
-     * If no from date is provided it is assumed to be 3 years back in time
-     *
-     * @param personId Id of the person to get certificates for
-     * @param certificateTypes The specific type of certificates to get
-     * @param fromDate First signing date of selection
-     * @param toDate Last signing date of selection
-     * @param units List of units the certificates are bound to
-     * @return List of certificates with diagnosis information
-     */
-    List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
-        LocalDate toDate, List<String> units);
+  /**
+   * List certificates for person with diagnosis information If no from date is provided it is
+   * assumed to be 3 years back in time
+   *
+   * @param personId Id of the person to get certificates for
+   * @param certificateTypes The specific type of certificates to get
+   * @param fromDate First signing date of selection
+   * @param toDate Last signing date of selection
+   * @param units List of units the certificates are bound to
+   * @return List of certificates with diagnosis information
+   */
+  List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(
+      String personId,
+      List<String> certificateTypes,
+      LocalDate fromDate,
+      LocalDate toDate,
+      List<String> units);
 
-    /**
-     * List certificates for person with sickleave information
-     * Date range is assumed to be 3 years back in time from today
-     *
-     * @param personId Id of the person to get certificates for
-     * @param certificateTypes The specific type of certificates to get
-     * @param units List of units the certificates are bound to
-     * @param doctorIds List of doctor ids to filter on
-     * @return List of certificates with sickleave information
-     */
-    List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, List<String> units,
-        List<String> doctorIds);
+  /**
+   * List certificates for person with sickleave information Date range is assumed to be 3 years
+   * back in time from today
+   *
+   * @param personId Id of the person to get certificates for
+   * @param certificateTypes The specific type of certificates to get
+   * @param units List of units the certificates are bound to
+   * @param doctorIds List of doctor ids to filter on
+   * @return List of certificates with sickleave information
+   */
+  List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(
+      String personId, List<String> certificateTypes, List<String> units, List<String> doctorIds);
 
-    /**
-     * List certificates for person with sickleave information
-     * If no from date is provided it is assumed to be 3 years back in time
-     *
-     * @param personId Id of the person to get certificates for
-     * @param certificateTypes The specific type of certificates to get
-     * @param fromDate First signing date of selection
-     * @param toDate Last signing date of selection
-     * @param units List of units the certificates are bound to
-     * @param doctorIds List of doctor ids to filter on
-     * @return List of certificates with sickleave information
-     */
-    List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
-        LocalDate toDate, List<String> units, List<String> doctorIds);
+  /**
+   * List certificates for person with sickleave information If no from date is provided it is
+   * assumed to be 3 years back in time
+   *
+   * @param personId Id of the person to get certificates for
+   * @param certificateTypes The specific type of certificates to get
+   * @param fromDate First signing date of selection
+   * @param toDate Last signing date of selection
+   * @param units List of units the certificates are bound to
+   * @param doctorIds List of doctor ids to filter on
+   * @return List of certificates with sickleave information
+   */
+  List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(
+      String personId,
+      List<String> certificateTypes,
+      LocalDate fromDate,
+      LocalDate toDate,
+      List<String> units,
+      List<String> doctorIds);
 
-    /**
-     * List doctors that have signed certificates on unit(s)
-     * Date range is assumed to be 3 years back in time from today
-     *
-     * @param units List of units the certificates are bound to
-     * @param certificateTypes The specific type of certificates to get
-     * @return List of certificates with diagnosis information
-     */
-    List<String> getSigningDoctorsForUnit(List<String> units, List<String> certificateTypes);
+  /**
+   * List doctors that have signed certificates on unit(s) Date range is assumed to be 3 years back
+   * in time from today
+   *
+   * @param units List of units the certificates are bound to
+   * @param certificateTypes The specific type of certificates to get
+   * @return List of certificates with diagnosis information
+   */
+  List<String> getSigningDoctorsForUnit(List<String> units, List<String> certificateTypes);
 
-    /**
-     * List active sick leaves for unit.
-     *
-     * @param request Request including parameters to perform search
-     */
-    SickLeavesResponseDTO getActiveSickLeaves(SickLeavesRequestDTO request);
+  /**
+   * List active sick leaves for unit.
+   *
+   * @param request Request including parameters to perform search
+   */
+  SickLeavesResponseDTO getActiveSickLeaves(SickLeavesRequestDTO request);
 
-    /**
-     * List doctors which have signed at least one active sick leaves for unit.
-     *
-     * @param request Request including parameters to perform search
-     */
-    PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request);
+  /**
+   * List doctors which have signed at least one active sick leaves for unit.
+   *
+   * @param request Request including parameters to perform search
+   */
+  PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(
+      PopulateFiltersRequestDTO request);
 
-    RekoStatusDTO createRekoStatus(CreateRekoStatusRequestDTO request);
+  RekoStatusDTO createRekoStatus(CreateRekoStatusRequestDTO request);
 
-    RekoStatusDTO getRekoStatus(GetRekoStatusRequestDTO request);
+  RekoStatusDTO getRekoStatus(GetRekoStatusRequestDTO request);
 }

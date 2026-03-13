@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -56,119 +56,137 @@ import se.inera.intyg.rehabstod.persistence.config.PersistenceConfig;
 
 public class ApplicationInitializer implements WebApplicationInitializer {
 
-    @Override
-    public void onStartup(jakarta.servlet.ServletContext servletContext) {
-        servletContext.setInitParameter("logbackConfigParameter", "logback.file");
-        servletContext.addListener(new LogbackConfiguratorContextListener());
+  @Override
+  public void onStartup(jakarta.servlet.ServletContext servletContext) {
+    servletContext.setInitParameter("logbackConfigParameter", "logback.file");
+    servletContext.addListener(new LogbackConfiguratorContextListener());
 
-        AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
+    AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
 
-        appContext.register(WebSecurityConfig.class, ApplicationConfig.class, CacheConfigurationFromInfra.class,
-            ServiceConfig.class,
-            IaConfiguration.class, JobConfig.class,
-            IntygstjanstIntegrationConfiguration.class,
-            IntygstjanstRestIntegrationConfiguration.class,
-            IntygstjanstIntegrationClientConfiguration.class,
-            SamtyckestjanstConfiguration.class,
-            SamtyckestjanstClientConfiguration.class,
-            SamtyckestjanstStubConfiguration.class,
-            SparrtjanstConfiguration.class,
-            SparrtjanstClientConfiguration.class,
-            SparrtjanstStubConfiguration.class,
-            SRSIntegrationConfiguration.class,
-            SRSIntegrationClientConfiguration.class,
-            SRSIntegrationStubConfiguration.class,
-            JmsConfig.class, SecurityConfig.class,
-            SjukfallConfig.class, EmployeeNameCacheConfig.class, InfraConfig.class, PersistenceConfig.class,
-            MonitoringConfiguration.class);
+    appContext.register(
+        WebSecurityConfig.class,
+        ApplicationConfig.class,
+        CacheConfigurationFromInfra.class,
+        ServiceConfig.class,
+        IaConfiguration.class,
+        JobConfig.class,
+        IntygstjanstIntegrationConfiguration.class,
+        IntygstjanstRestIntegrationConfiguration.class,
+        IntygstjanstIntegrationClientConfiguration.class,
+        SamtyckestjanstConfiguration.class,
+        SamtyckestjanstClientConfiguration.class,
+        SamtyckestjanstStubConfiguration.class,
+        SparrtjanstConfiguration.class,
+        SparrtjanstClientConfiguration.class,
+        SparrtjanstStubConfiguration.class,
+        SRSIntegrationConfiguration.class,
+        SRSIntegrationClientConfiguration.class,
+        SRSIntegrationStubConfiguration.class,
+        JmsConfig.class,
+        SecurityConfig.class,
+        SjukfallConfig.class,
+        EmployeeNameCacheConfig.class,
+        InfraConfig.class,
+        PersistenceConfig.class,
+        MonitoringConfiguration.class);
 
-        servletContext.addListener(new ContextLoaderListener(appContext));
+    servletContext.addListener(new ContextLoaderListener(appContext));
 
-        AnnotationConfigWebApplicationContext webConfig = new AnnotationConfigWebApplicationContext();
-        webConfig.register(WebConfig.class);
-        ServletRegistration.Dynamic servlet = servletContext.addServlet("dispatcher", new DispatcherServlet(webConfig));
-        servlet.setLoadOnStartup(1);
-        servlet.addMapping("/");
+    AnnotationConfigWebApplicationContext webConfig = new AnnotationConfigWebApplicationContext();
+    webConfig.register(WebConfig.class);
+    ServletRegistration.Dynamic servlet =
+        servletContext.addServlet("dispatcher", new DispatcherServlet(webConfig));
+    servlet.setLoadOnStartup(1);
+    servlet.addMapping("/");
 
-        // NOTE: The characterEncoding filter must run before any invocation to request.getParameter()
-        FilterRegistration.Dynamic characterEncodingFilter = servletContext.addFilter("characterEncodingFilter",
-            CharacterEncodingFilter.class);
-        characterEncodingFilter.addMappingForUrlPatterns(null, false, "/*");
-        characterEncodingFilter.setInitParameter("encoding", "UTF-8");
-        characterEncodingFilter.setInitParameter("forceEncoding", "true");
+    // NOTE: The characterEncoding filter must run before any invocation to request.getParameter()
+    FilterRegistration.Dynamic characterEncodingFilter =
+        servletContext.addFilter("characterEncodingFilter", CharacterEncodingFilter.class);
+    characterEncodingFilter.addMappingForUrlPatterns(null, false, "/*");
+    characterEncodingFilter.setInitParameter("encoding", "UTF-8");
+    characterEncodingFilter.setInitParameter("forceEncoding", "true");
 
-        // Spring session filter
-        FilterRegistration.Dynamic springSessionRepositoryFilter = servletContext.addFilter("springSessionRepositoryFilter",
-            DelegatingFilterProxy.class);
-        springSessionRepositoryFilter.addMappingForUrlPatterns(null, false, "/*");
+    // Spring session filter
+    FilterRegistration.Dynamic springSessionRepositoryFilter =
+        servletContext.addFilter("springSessionRepositoryFilter", DelegatingFilterProxy.class);
+    springSessionRepositoryFilter.addMappingForUrlPatterns(null, false, "/*");
 
-        // Update RequestContext with spring session
-        FilterRegistration.Dynamic requestContextHolderUpdateFilter = servletContext.addFilter("requestContextHolderUpdateFilter",
-            RequestContextHolderUpdateFilter.class);
-        requestContextHolderUpdateFilter.addMappingForUrlPatterns(null, false, "/*");
+    // Update RequestContext with spring session
+    FilterRegistration.Dynamic requestContextHolderUpdateFilter =
+        servletContext.addFilter(
+            "requestContextHolderUpdateFilter", RequestContextHolderUpdateFilter.class);
+    requestContextHolderUpdateFilter.addMappingForUrlPatterns(null, false, "/*");
 
-        // LogMDCServletFilter
-        FilterRegistration.Dynamic logMdcFilter = servletContext.addFilter("mdcServletFilter",
-            DelegatingFilterProxy.class);
-        logMdcFilter.addMappingForUrlPatterns(null, false, "/*");
+    // LogMDCServletFilter
+    FilterRegistration.Dynamic logMdcFilter =
+        servletContext.addFilter("mdcServletFilter", DelegatingFilterProxy.class);
+    logMdcFilter.addMappingForUrlPatterns(null, false, "/*");
 
-        // Session Timeout filter
-        FilterRegistration.Dynamic sessionTimeoutFilter = servletContext.addFilter("sessionTimeoutFilter", SessionTimeoutFilter.class);
-        sessionTimeoutFilter.addMappingForUrlPatterns(null, false, "/*");
-        sessionTimeoutFilter.setInitParameter("skipRenewSessionUrls", SESSION_STATUS_CHECK_URI);
+    // Session Timeout filter
+    FilterRegistration.Dynamic sessionTimeoutFilter =
+        servletContext.addFilter("sessionTimeoutFilter", SessionTimeoutFilter.class);
+    sessionTimeoutFilter.addMappingForUrlPatterns(null, false, "/*");
+    sessionTimeoutFilter.setInitParameter("skipRenewSessionUrls", SESSION_STATUS_CHECK_URI);
 
-        // Spring security filter
-        FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain",
-            DelegatingFilterProxy.class);
-        springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
+    // Spring security filter
+    FilterRegistration.Dynamic springSecurityFilterChain =
+        servletContext.addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
+    springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
 
-        // LogMDCUserServletFilter
-        FilterRegistration.Dynamic logMdcUserFilter = servletContext.addFilter("mdcUserServletFilter",
-            DelegatingFilterProxy.class);
-        logMdcUserFilter.addMappingForUrlPatterns(null, false, "/*");
+    // LogMDCUserServletFilter
+    FilterRegistration.Dynamic logMdcUserFilter =
+        servletContext.addFilter("mdcUserServletFilter", DelegatingFilterProxy.class);
+    logMdcUserFilter.addMappingForUrlPatterns(null, false, "/*");
 
-        // principalUpdatedFilter filter
-        FilterRegistration.Dynamic principalUpdatedFilter = servletContext.addFilter("principalUpdatedFilter",
-            DelegatingFilterProxy.class);
-        principalUpdatedFilter.setInitParameter("targetFilterLifecycle", "true");
-        principalUpdatedFilter.addMappingForUrlPatterns(null, false, "/*");
+    // principalUpdatedFilter filter
+    FilterRegistration.Dynamic principalUpdatedFilter =
+        servletContext.addFilter("principalUpdatedFilter", DelegatingFilterProxy.class);
+    principalUpdatedFilter.setInitParameter("targetFilterLifecycle", "true");
+    principalUpdatedFilter.addMappingForUrlPatterns(null, false, "/*");
 
-        // unitSelectedAssurance filter
-        FilterRegistration.Dynamic unitSelectedAssuranceFilter = servletContext.addFilter("unitSelectedAssuranceFilter",
-            DelegatingFilterProxy.class);
-        unitSelectedAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
-        unitSelectedAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
-        unitSelectedAssuranceFilter.setInitParameter("ignoredUrls",
-            SESSION_STATUS_CHECK_URI + ",/api/config,/api/user,/api/user/andraenhet");
+    // unitSelectedAssurance filter
+    FilterRegistration.Dynamic unitSelectedAssuranceFilter =
+        servletContext.addFilter("unitSelectedAssuranceFilter", DelegatingFilterProxy.class);
+    unitSelectedAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
+    unitSelectedAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
+    unitSelectedAssuranceFilter.setInitParameter(
+        "ignoredUrls", SESSION_STATUS_CHECK_URI + ",/api/config,/api/user,/api/user/andraenhet");
 
-        // pdlConsentGiven filter
-        FilterRegistration.Dynamic pdlConsentGivenAssuranceFilter = servletContext.addFilter("pdlConsentGivenAssuranceFilter",
-            DelegatingFilterProxy.class);
-        pdlConsentGivenAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
-        pdlConsentGivenAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
-        pdlConsentGivenAssuranceFilter.setInitParameter("ignoredUrls",
-            SESSION_STATUS_CHECK_URI + "," + SESSION_STATUS_REQUEST_MAPPING + SESSION_STATUS_EXTEND
-                + ",/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary,/api/stub,/api/sickleaves,/api/lu,/api/testability,"
-                + "/api/log/error");
+    // pdlConsentGiven filter
+    FilterRegistration.Dynamic pdlConsentGivenAssuranceFilter =
+        servletContext.addFilter("pdlConsentGivenAssuranceFilter", DelegatingFilterProxy.class);
+    pdlConsentGivenAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
+    pdlConsentGivenAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
+    pdlConsentGivenAssuranceFilter.setInitParameter(
+        "ignoredUrls",
+        SESSION_STATUS_CHECK_URI
+            + ","
+            + SESSION_STATUS_REQUEST_MAPPING
+            + SESSION_STATUS_EXTEND
+            + ",/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary,/api/stub,/api/sickleaves,/api/lu,/api/testability,"
+            + "/api/log/error");
 
-        FilterRegistration.Dynamic hiddenHttpMethodFilter = servletContext.addFilter("hiddenHttpMethodFilter",
-            HiddenHttpMethodFilter.class);
-        hiddenHttpMethodFilter.addMappingForUrlPatterns(null, false, "/*");
+    FilterRegistration.Dynamic hiddenHttpMethodFilter =
+        servletContext.addFilter("hiddenHttpMethodFilter", HiddenHttpMethodFilter.class);
+    hiddenHttpMethodFilter.addMappingForUrlPatterns(null, false, "/*");
 
-        registerSecurityHeadersFilter(servletContext);
+    registerSecurityHeadersFilter(servletContext);
 
-        // CXF services filter
-        ServletRegistration.Dynamic cxfServlet = servletContext.addServlet("services", new CXFServlet());
-        cxfServlet.setLoadOnStartup(1);
-        cxfServlet.addMapping("/services/*");
+    // CXF services filter
+    ServletRegistration.Dynamic cxfServlet =
+        servletContext.addServlet("services", new CXFServlet());
+    cxfServlet.setLoadOnStartup(1);
+    cxfServlet.addMapping("/services/*");
 
-        // Listeners for session audit logging
-        servletContext.addListener(new HttpSessionEventPublisher());
-        servletContext.addListener(new RequestContextListener());
-    }
+    // Listeners for session audit logging
+    servletContext.addListener(new HttpSessionEventPublisher());
+    servletContext.addListener(new RequestContextListener());
+  }
 
-    private void registerSecurityHeadersFilter(ServletContext servletContext) {
-        RSSecurityHeadersFilter filter = new RSSecurityHeadersFilter();
-        servletContext.addFilter("securityHeadersFilter", filter).addMappingForUrlPatterns(null, true, "/*");
-    }
+  private void registerSecurityHeadersFilter(ServletContext servletContext) {
+    RSSecurityHeadersFilter filter = new RSSecurityHeadersFilter();
+    servletContext
+        .addFilter("securityHeadersFilter", filter)
+        .addMappingForUrlPatterns(null, true, "/*");
+  }
 }

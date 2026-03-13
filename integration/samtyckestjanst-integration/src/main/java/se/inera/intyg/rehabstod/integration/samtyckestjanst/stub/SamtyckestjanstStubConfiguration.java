@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -34,21 +34,19 @@ import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
 @Profile("rhs-samtyckestjanst-stub")
 public class SamtyckestjanstStubConfiguration {
 
-    public static final String CACHE_NAME = "samtyckestjanstStubCache";
+  public static final String CACHE_NAME = "samtyckestjanstStubCache";
 
-    private String cacheExpirySeconds = "3600";
+  private String cacheExpirySeconds = "3600";
 
-    @Autowired
-    private RedisCacheOptionsSetter redisCacheOptionsSetter;
+  @Autowired private RedisCacheOptionsSetter redisCacheOptionsSetter;
 
-    @PostConstruct
-    public void init() {
-        redisCacheOptionsSetter.createCache(CACHE_NAME, cacheExpirySeconds);
-    }
+  @PostConstruct
+  public void init() {
+    redisCacheOptionsSetter.createCache(CACHE_NAME, cacheExpirySeconds);
+  }
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
-
+  @Bean
+  public ObjectMapper objectMapper() {
+    return new ObjectMapper();
+  }
 }

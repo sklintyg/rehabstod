@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.time.LocalDateTime;
@@ -31,22 +30,24 @@ import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 @Service
 public class CreateRekoStatusServiceImpl implements CreateRekoStatusService {
 
-    private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
-    private final UserService userService;
+  private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+  private final UserService userService;
 
-    public CreateRekoStatusServiceImpl(IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
-        UserService userService) {
-        this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
-        this.userService = userService;
-    }
+  public CreateRekoStatusServiceImpl(
+      IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+      UserService userService) {
+    this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
+    this.userService = userService;
+  }
 
-    @Override
-    public RekoStatusDTO create(String patientId, String status, LocalDateTime sickLeaveTimestamp) {
-        final var user = userService.getUser();
-        final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
-        final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
+  @Override
+  public RekoStatusDTO create(String patientId, String status, LocalDateTime sickLeaveTimestamp) {
+    final var user = userService.getUser();
+    final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
+    final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
 
-        final var request = new CreateRekoStatusRequestDTO(
+    final var request =
+        new CreateRekoStatusRequestDTO(
             patientId,
             status,
             user.getValdVardgivare().getId(),
@@ -54,18 +55,14 @@ public class CreateRekoStatusServiceImpl implements CreateRekoStatusService {
             unitId,
             user.getHsaId(),
             user.getNamn(),
-            sickLeaveTimestamp
-        );
+            sickLeaveTimestamp);
 
-        return convertResponse(intygstjanstRestIntegrationService.createRekoStatus(request));
-    }
+    return convertResponse(intygstjanstRestIntegrationService.createRekoStatus(request));
+  }
 
-    private RekoStatusDTO convertResponse(se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO response) {
-        return new RekoStatusDTO(
-            new RekoStatusTypeDTO(
-                response.getStatus().getId(),
-                response.getStatus().getName()
-            )
-        );
-    }
+  private RekoStatusDTO convertResponse(
+      se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO response) {
+    return new RekoStatusDTO(
+        new RekoStatusTypeDTO(response.getStatus().getId(), response.getStatus().getName()));
+  }
 }

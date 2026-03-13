@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -38,33 +38,30 @@ import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceReposit
 @RunWith(MockitoJUnitRunner.class)
 public class UserPreferencesServiceTest {
 
-    private static final String KEY = "maxAntalDagarMellanIntyg";
-    private static final String HSA_ID = "abcdefghijkl";
+  private static final String KEY = "maxAntalDagarMellanIntyg";
+  private static final String HSA_ID = "abcdefghijkl";
 
-    @InjectMocks
-    private UserPreferencesService userPreferencesService = new UserPreferencesServiceImpl();
+  @InjectMocks
+  private UserPreferencesService userPreferencesService = new UserPreferencesServiceImpl();
 
-    @Mock
-    private AnvandarPreferenceRepository anvandarPreferenceRepository;
+  @Mock private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
-    @Mock
-    private UserService userService;
+  @Mock private UserService userService;
 
-    @Before
-    public void setup() {
-        when(userService.getUser()).thenReturn(new RehabstodUser(HSA_ID, "rehabstod-username", true));
-    }
+  @Before
+  public void setup() {
+    when(userService.getUser()).thenReturn(new RehabstodUser(HSA_ID, "rehabstod-username", true));
+  }
 
-    @Test
-    public void testUpdatingExistingPreference() throws Exception {
-        AnvandarPreference anvPref = new AnvandarPreference(HSA_ID, KEY, "old value");
-        when(anvandarPreferenceRepository.findByHsaIdAndKey(eq(HSA_ID), eq(KEY))).thenReturn(anvPref);
+  @Test
+  public void testUpdatingExistingPreference() throws Exception {
+    AnvandarPreference anvPref = new AnvandarPreference(HSA_ID, KEY, "old value");
+    when(anvandarPreferenceRepository.findByHsaIdAndKey(eq(HSA_ID), eq(KEY))).thenReturn(anvPref);
 
-        Map<String, String> req = new HashMap<>();
-        req.put(KEY, "new value");
-        userPreferencesService.updatePreferences(RehabstodUserPreferences.fromFrontend(req));
+    Map<String, String> req = new HashMap<>();
+    req.put(KEY, "new value");
+    userPreferencesService.updatePreferences(RehabstodUserPreferences.fromFrontend(req));
 
-        assertEquals("new value", anvPref.getValue());
-    }
-
+    assertEquals("new value", anvPref.getValue());
+  }
 }

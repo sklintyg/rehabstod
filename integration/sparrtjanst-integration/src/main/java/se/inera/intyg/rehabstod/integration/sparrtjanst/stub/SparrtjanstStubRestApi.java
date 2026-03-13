@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.stub;
 
-import java.time.LocalDate;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PUT;
@@ -28,51 +27,48 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * Created by marced on 2018-10-01.
- */
+/** Created by marced on 2018-10-01. */
 public class SparrtjanstStubRestApi {
 
-    @Autowired
-    private SparrtjanstStubStore store;
+  @Autowired private SparrtjanstStubStore store;
 
-    @PUT
-    @Path("/person/{personId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addBlocksForPerson(
-        @PathParam("personId") String personId,
-        @QueryParam("from") String from,
-        @QueryParam("to") String to,
-        @QueryParam("vardgivare") String vardgivare,
-        @QueryParam("vardenhet") String vardenhet) {
-        store.add(new BlockData(personId, LocalDate.parse(from), LocalDate.parse(to), vardgivare, vardenhet));
-        return Response.ok().build();
-    }
+  @PUT
+  @Path("/person/{personId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response addBlocksForPerson(
+      @PathParam("personId") String personId,
+      @QueryParam("from") String from,
+      @QueryParam("to") String to,
+      @QueryParam("vardgivare") String vardgivare,
+      @QueryParam("vardenhet") String vardenhet) {
+    store.add(
+        new BlockData(personId, LocalDate.parse(from), LocalDate.parse(to), vardgivare, vardenhet));
+    return Response.ok().build();
+  }
 
-    @DELETE
-    @Path("/person/{personId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response removeBlocksForPerson(@PathParam("personId") String personId) {
-        store.remove(personId);
-        return Response.ok().build();
-    }
+  @DELETE
+  @Path("/person/{personId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response removeBlocksForPerson(@PathParam("personId") String personId) {
+    store.remove(personId);
+    return Response.ok().build();
+  }
 
-    @DELETE
-    @Path("/person")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response removeAllBlocks() {
-        store.removeAll();
-        return Response.ok().build();
-    }
+  @DELETE
+  @Path("/person")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response removeAllBlocks() {
+    store.removeAll();
+    return Response.ok().build();
+  }
 
-    @GET
-    @Path("/")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllBlocks() {
-        return Response.ok(store.getAll()).build();
-
-    }
-
+  @GET
+  @Path("/")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getAllBlocks() {
+    return Response.ok(store.getAll()).build();
+  }
 }

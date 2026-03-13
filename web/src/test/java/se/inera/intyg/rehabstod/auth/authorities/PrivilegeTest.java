@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,46 +28,43 @@ import org.junit.Test;
 import se.inera.intyg.infra.security.common.model.Privilege;
 import se.inera.intyg.infra.security.common.model.RequestOrigin;
 
-/**
- * Created by marced on 13/04/16.
- */
+/** Created by marced on 13/04/16. */
 public class PrivilegeTest {
 
-    Privilege privilege;
+  Privilege privilege;
 
-    @Before
-    public void before() {
-        privilege = new Privilege();
-    }
+  @Before
+  public void before() {
+    privilege = new Privilege();
+  }
 
-    @Test
-    public void testGetSetIntygstyper() throws Exception {
-        // Arrange
-        privilege.setIntygstyper(null);
+  @Test
+  public void testGetSetIntygstyper() throws Exception {
+    // Arrange
+    privilege.setIntygstyper(null);
 
-        // Act / Assert
-        assertNotNull(privilege.getIntygstyper());
+    // Act / Assert
+    assertNotNull(privilege.getIntygstyper());
 
-        List<String> list = Arrays.asList("1", "2");
-        privilege.setIntygstyper(list);
+    List<String> list = Arrays.asList("1", "2");
+    privilege.setIntygstyper(list);
 
-        // Act / Assert
-        assertEquals(list, privilege.getIntygstyper());
-    }
+    // Act / Assert
+    assertEquals(list, privilege.getIntygstyper());
+  }
 
-    @Test
-    public void testGetSetRequestOrigins() throws Exception {
-        // Arrange
-        privilege.setRequestOrigins(null);
+  @Test
+  public void testGetSetRequestOrigins() throws Exception {
+    // Arrange
+    privilege.setRequestOrigins(null);
 
-        // Act / Assert
-        assertNotNull(privilege.getRequestOrigins());
+    // Act / Assert
+    assertNotNull(privilege.getRequestOrigins());
 
-        List<RequestOrigin> list = Arrays.asList(new RequestOrigin());
-        privilege.setRequestOrigins(list);
+    List<RequestOrigin> list = Arrays.asList(new RequestOrigin());
+    privilege.setRequestOrigins(list);
 
-        // Act / Assert
-        assertEquals(list, privilege.getRequestOrigins());
-    }
-
+    // Act / Assert
+    assertEquals(list, privilege.getRequestOrigins());
+  }
 }

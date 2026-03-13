@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -33,24 +33,23 @@ import java.time.LocalDateTime;
 
 public class CustomObjectMapper extends ObjectMapper {
 
-    public CustomObjectMapper() {
-        setSerializationInclusion(JsonInclude.Include.ALWAYS);
-        configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        registerModule(new Module());
+  public CustomObjectMapper() {
+    setSerializationInclusion(JsonInclude.Include.ALWAYS);
+    configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    registerModule(new Module());
 
-        setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+    setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+  }
+
+  private static final class Module extends SimpleModule {
+
+    private Module() {
+      addSerializer(LocalDateTime.class, LocalDateTimeSerializer.INSTANCE);
+      addDeserializer(LocalDateTime.class, LocalDateTimeDeserializer.INSTANCE);
+
+      addSerializer(LocalDate.class, LocalDateSerializer.INSTANCE);
+      addDeserializer(LocalDate.class, LocalDateDeserializer.INSTANCE);
     }
-
-    private static final class Module extends SimpleModule {
-
-        private Module() {
-            addSerializer(LocalDateTime.class, LocalDateTimeSerializer.INSTANCE);
-            addDeserializer(LocalDateTime.class, LocalDateTimeDeserializer.INSTANCE);
-
-            addSerializer(LocalDate.class, LocalDateSerializer.INSTANCE);
-            addDeserializer(LocalDate.class, LocalDateDeserializer.INSTANCE);
-        }
-
-    }
+  }
 }

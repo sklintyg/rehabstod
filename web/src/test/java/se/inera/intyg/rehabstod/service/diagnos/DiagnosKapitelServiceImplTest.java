@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -33,59 +33,56 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
-/**
- * Created by marced on 10/02/16.
- */
-//CHECKSTYLE:OFF MagicNumber
+/** Created by marced on 10/02/16. */
+// CHECKSTYLE:OFF MagicNumber
 @RunWith(MockitoJUnitRunner.class)
 public class DiagnosKapitelServiceImplTest {
 
-    private static final DiagnosKapitel DEFAULT_KAPITEL = new DiagnosKapitel("A00-C00En ganska bred diagnos");
-    private static final DiagnosKapitel SLIM_KAPITEL = new DiagnosKapitel("S00-S01En smal diagnos");
-    @Mock
-    private DiagnosKapitelLoader diagnosKapitelLoader;
+  private static final DiagnosKapitel DEFAULT_KAPITEL =
+      new DiagnosKapitel("A00-C00En ganska bred diagnos");
+  private static final DiagnosKapitel SLIM_KAPITEL = new DiagnosKapitel("S00-S01En smal diagnos");
+  @Mock private DiagnosKapitelLoader diagnosKapitelLoader;
 
-    @InjectMocks
-    private DiagnosKapitelServiceImpl testee;
+  @InjectMocks private DiagnosKapitelServiceImpl testee;
 
-    @Before
-    public void init() throws IOException {
-        when(diagnosKapitelLoader.loadDiagnosKapitel()).thenReturn(buildDiagnosKapitelList());
-        testee.init();
-    }
+  @Before
+  public void init() throws IOException {
+    when(diagnosKapitelLoader.loadDiagnosKapitel()).thenReturn(buildDiagnosKapitelList());
+    testee.init();
+  }
 
-    @Test
-    public void testGetDiagnosKapitelList() throws Exception {
+  @Test
+  public void testGetDiagnosKapitelList() throws Exception {
 
-        final List<DiagnosKapitel> diagnosKapitelList = testee.getDiagnosKapitelList();
-        assertEquals(4, diagnosKapitelList.size());
-        assertTrue(diagnosKapitelList.contains(DiagnosKapitelServiceImpl.OGILTIGA_DIAGNOSKODER_KAPITEL));
+    final List<DiagnosKapitel> diagnosKapitelList = testee.getDiagnosKapitelList();
+    assertEquals(4, diagnosKapitelList.size());
+    assertTrue(
+        diagnosKapitelList.contains(DiagnosKapitelServiceImpl.OGILTIGA_DIAGNOSKODER_KAPITEL));
+  }
 
-    }
+  @Test
+  public void testGetDiagnosKapitel() throws Exception {
+    assertEquals(DEFAULT_KAPITEL, testee.getDiagnosKapitel("A00"));
+    assertEquals(DEFAULT_KAPITEL, testee.getDiagnosKapitel("B01"));
+    assertEquals(DEFAULT_KAPITEL, testee.getDiagnosKapitel("C00"));
 
-    @Test
-    public void testGetDiagnosKapitel() throws Exception {
-        assertEquals(DEFAULT_KAPITEL, testee.getDiagnosKapitel("A00"));
-        assertEquals(DEFAULT_KAPITEL, testee.getDiagnosKapitel("B01"));
-        assertEquals(DEFAULT_KAPITEL, testee.getDiagnosKapitel("C00"));
+    assertEquals(
+        DiagnosKapitelServiceImpl.OGILTIGA_DIAGNOSKODER_KAPITEL, testee.getDiagnosKapitel("R99"));
+    assertEquals(SLIM_KAPITEL, testee.getDiagnosKapitel("S00201"));
+    assertEquals(SLIM_KAPITEL, testee.getDiagnosKapitel("S01201"));
+    assertEquals(
+        DiagnosKapitelServiceImpl.OGILTIGA_DIAGNOSKODER_KAPITEL, testee.getDiagnosKapitel("S02"));
 
-        assertEquals(DiagnosKapitelServiceImpl.OGILTIGA_DIAGNOSKODER_KAPITEL, testee.getDiagnosKapitel("R99"));
-        assertEquals(SLIM_KAPITEL, testee.getDiagnosKapitel("S00201"));
-        assertEquals(SLIM_KAPITEL, testee.getDiagnosKapitel("S01201"));
-        assertEquals(DiagnosKapitelServiceImpl.OGILTIGA_DIAGNOSKODER_KAPITEL, testee.getDiagnosKapitel("S02"));
+    assertEquals(
+        DiagnosKapitelServiceImpl.OGILTIGA_DIAGNOSKODER_KAPITEL, testee.getDiagnosKapitel("X0102"));
+  }
 
-        assertEquals(DiagnosKapitelServiceImpl.OGILTIGA_DIAGNOSKODER_KAPITEL, testee.getDiagnosKapitel("X0102"));
+  private List<DiagnosKapitel> buildDiagnosKapitelList() {
+    List<DiagnosKapitel> list = new ArrayList<>();
+    list.add(DEFAULT_KAPITEL);
+    list.add(SLIM_KAPITEL);
 
-    }
-
-    private List<DiagnosKapitel> buildDiagnosKapitelList() {
-        List<DiagnosKapitel> list = new ArrayList<>();
-        list.add(DEFAULT_KAPITEL);
-        list.add(SLIM_KAPITEL);
-
-        list.add(new DiagnosKapitel("D00-D00Dummy"));
-        return list;
-
-    }
-
+    list.add(new DiagnosKapitel("D00-D00Dummy"));
+    return list;
+  }
 }

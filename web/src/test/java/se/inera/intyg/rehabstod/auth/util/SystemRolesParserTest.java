@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,32 +28,36 @@ import org.junit.Test;
 
 public class SystemRolesParserTest {
 
-    @Test
-    public void testParseNullList() {
-        List<String> enhetIds = SystemRolesParser.parseEnhetsIdsFromSystemRoles(null);
-        assertEquals(0, enhetIds.size());
-    }
+  @Test
+  public void testParseNullList() {
+    List<String> enhetIds = SystemRolesParser.parseEnhetsIdsFromSystemRoles(null);
+    assertEquals(0, enhetIds.size());
+  }
 
-    @Test
-    public void testParseEmptyList() {
-        List<String> enhetIds = SystemRolesParser.parseEnhetsIdsFromSystemRoles(new ArrayList<>());
-        assertEquals(0, enhetIds.size());
-    }
+  @Test
+  public void testParseEmptyList() {
+    List<String> enhetIds = SystemRolesParser.parseEnhetsIdsFromSystemRoles(new ArrayList<>());
+    assertEquals(0, enhetIds.size());
+  }
 
-    @Test
-    public void testParseSingleValidRole() {
-        List<String> enhetIds = SystemRolesParser
-            .parseEnhetsIdsFromSystemRoles(Arrays.asList(HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "TSTNMT-ABC-123"));
-        assertEquals(1, enhetIds.size());
-        assertEquals("TSTNMT-ABC-123", enhetIds.get(0));
-    }
+  @Test
+  public void testParseSingleValidRole() {
+    List<String> enhetIds =
+        SystemRolesParser.parseEnhetsIdsFromSystemRoles(
+            Arrays.asList(HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "TSTNMT-ABC-123"));
+    assertEquals(1, enhetIds.size());
+    assertEquals("TSTNMT-ABC-123", enhetIds.get(0));
+  }
 
-    @Test
-    public void testParseTwoValidRoles() {
-        List<String> enhetIds = SystemRolesParser.parseEnhetsIdsFromSystemRoles(
-            Arrays.asList(HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "TSTNMT-ABC-123", HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "TSTNMT-ABC-124"));
-        assertEquals(2, enhetIds.size());
-        assertEquals("TSTNMT-ABC-123", enhetIds.get(0));
-        assertEquals("TSTNMT-ABC-124", enhetIds.get(1));
-    }
+  @Test
+  public void testParseTwoValidRoles() {
+    List<String> enhetIds =
+        SystemRolesParser.parseEnhetsIdsFromSystemRoles(
+            Arrays.asList(
+                HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "TSTNMT-ABC-123",
+                HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "TSTNMT-ABC-124"));
+    assertEquals(2, enhetIds.size());
+    assertEquals("TSTNMT-ABC-123", enhetIds.get(0));
+    assertEquals("TSTNMT-ABC-124", enhetIds.get(1));
+  }
 }

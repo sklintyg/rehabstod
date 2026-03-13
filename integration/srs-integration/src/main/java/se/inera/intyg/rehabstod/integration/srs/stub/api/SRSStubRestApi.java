@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,28 +30,28 @@ import se.inera.intyg.rehabstod.integration.srs.stub.SRSStub;
 /**
  * Provides a simple "REST" API for activating or inactivating the SRS stub.
  *
- * If inactive, a RuntimeException will be thrown to fake problems.
+ * <p>If inactive, a RuntimeException will be thrown to fake problems.
  */
 @Profile({"rhs-srs-stub"})
 @RestController
 @RequestMapping("/api/stub/srs")
 public class SRSStubRestApi {
 
-    @Autowired
-    private SRSStub srsStub;
+  @Autowired private SRSStub srsStub;
 
-    @RequestMapping(method = RequestMethod.GET, path = "/active")
-    public ResponseEntity<String> activate() {
-        boolean lastState = srsStub.isActive();
-        srsStub.setActive(true);
-        return new ResponseEntity<>("Set to 'true', previous state was '" + Boolean.toString(lastState) + "'", HttpStatus.OK);
-    }
+  @RequestMapping(method = RequestMethod.GET, path = "/active")
+  public ResponseEntity<String> activate() {
+    boolean lastState = srsStub.isActive();
+    srsStub.setActive(true);
+    return new ResponseEntity<>(
+        "Set to 'true', previous state was '" + Boolean.toString(lastState) + "'", HttpStatus.OK);
+  }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/inactive")
-    public ResponseEntity<String> deactivate() {
-        boolean lastState = srsStub.isActive();
-        srsStub.setActive(false);
-        return new ResponseEntity<>("Set to 'false', previous state was '" + Boolean.toString(lastState) + "'", HttpStatus.OK);
-    }
-
+  @RequestMapping(method = RequestMethod.GET, path = "/inactive")
+  public ResponseEntity<String> deactivate() {
+    boolean lastState = srsStub.isActive();
+    srsStub.setActive(false);
+    return new ResponseEntity<>(
+        "Set to 'false', previous state was '" + Boolean.toString(lastState) + "'", HttpStatus.OK);
+  }
 }

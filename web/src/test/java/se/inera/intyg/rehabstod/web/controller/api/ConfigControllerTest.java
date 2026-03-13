@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,54 +39,48 @@ import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 @ExtendWith(MockitoExtension.class)
 class ConfigControllerTest {
 
-    @Mock
-    private DiagnosKapitelService diagnosKapitelService;
+  @Mock private DiagnosKapitelService diagnosKapitelService;
 
-    @Mock
-    private DynamicLinkService dynamicLinkService;
+  @Mock private DynamicLinkService dynamicLinkService;
 
-    @Mock
-    private IABannerService iaBannerService;
+  @Mock private IABannerService iaBannerService;
 
-    @Mock
-    private Environment env;
+  @Mock private Environment env;
 
-    @InjectMocks
-    private ConfigController configController;
+  @InjectMocks private ConfigController configController;
 
-    @Nested
-    class GetConfigTest {
+  @Nested
+  class GetConfigTest {
 
-        private static final String EXPECTED_WEBCERT_LAUNCH_URL_TEMPLATE = "webcert-launch-url-template";
-        private static final String EXPECTED_PROJECT_VERSION_PROPERTY = "project-version";
-        private static final String EXPECTED_SITHS_IDP_URL = "/saml/login";
+    private static final String EXPECTED_WEBCERT_LAUNCH_URL_TEMPLATE =
+        "webcert-launch-url-template";
+    private static final String EXPECTED_PROJECT_VERSION_PROPERTY = "project-version";
+    private static final String EXPECTED_SITHS_IDP_URL = "/saml/login";
 
-        @BeforeEach
-        void setUp() {
-            doReturn(EXPECTED_WEBCERT_LAUNCH_URL_TEMPLATE).when(env).getProperty(WEBCERT_LAUNCH_URL_TEMPLATE);
-            doReturn(EXPECTED_SITHS_IDP_URL).when(env).getProperty(SITHS_IDP_URL);
-            doReturn(EXPECTED_PROJECT_VERSION_PROPERTY).when(env).getProperty(PROJECT_VERSION_PROPERTY);
-        }
-
-        @Test
-        void shallIncludeWebcertLaunchUrlTemplate() {
-            assertEquals(EXPECTED_WEBCERT_LAUNCH_URL_TEMPLATE,
-                configController.getConfig().getWebcertLaunchUrlTemplate()
-            );
-        }
-
-        @Test
-        void shallIncludeProjectVersion() {
-            assertEquals(EXPECTED_PROJECT_VERSION_PROPERTY,
-                configController.getConfig().getVersion()
-            );
-        }
-
-        @Test
-        void shallIncludeSithsIdpUrl() {
-            assertEquals(EXPECTED_SITHS_IDP_URL,
-                configController.getConfig().getSithsIdpUrl()
-            );
-        }
+    @BeforeEach
+    void setUp() {
+      doReturn(EXPECTED_WEBCERT_LAUNCH_URL_TEMPLATE)
+          .when(env)
+          .getProperty(WEBCERT_LAUNCH_URL_TEMPLATE);
+      doReturn(EXPECTED_SITHS_IDP_URL).when(env).getProperty(SITHS_IDP_URL);
+      doReturn(EXPECTED_PROJECT_VERSION_PROPERTY).when(env).getProperty(PROJECT_VERSION_PROPERTY);
     }
+
+    @Test
+    void shallIncludeWebcertLaunchUrlTemplate() {
+      assertEquals(
+          EXPECTED_WEBCERT_LAUNCH_URL_TEMPLATE,
+          configController.getConfig().getWebcertLaunchUrlTemplate());
+    }
+
+    @Test
+    void shallIncludeProjectVersion() {
+      assertEquals(EXPECTED_PROJECT_VERSION_PROPERTY, configController.getConfig().getVersion());
+    }
+
+    @Test
+    void shallIncludeSithsIdpUrl() {
+      assertEquals(EXPECTED_SITHS_IDP_URL, configController.getConfig().getSithsIdpUrl());
+    }
+  }
 }
