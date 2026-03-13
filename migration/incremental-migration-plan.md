@@ -4,9 +4,30 @@ Based on [`first-migration-scope.md`](first-migration-scope.md) and [`goal-tech-
 migration into **small, independently verifiable increments**. After each step the application must:
 **compile ✅, pass all tests ✅, start ✅, and be deployable ✅**.
 
-The phases from `first-migration-scope.md` are retained but each phase is split into atomic steps. Steps 1–11 do not change how the
-application runs (still WAR/Tomcat/Gretty). Step 12 is the actual Spring Boot switch; it is small because all preparation is done. Steps
-13–17 are safe because Spring Boot auto-configuration backs off gracefully when existing beans are present.
+The phases from `first-migration-scope.md` are retained but each phase is split into atomic steps. Steps 1–12 do not change how the
+application runs (still WAR/Tomcat/Gretty). Step 13 is the actual Spring Boot switch; it is small because all preparation is done. Steps
+14–18 are safe because Spring Boot auto-configuration backs off gracefully when existing beans are present.
+
+> **Run the de-risk spike first (Step 0 below) before committing to any of the subsequent steps.**
+
+---
+
+## Step 0 — De-risk spike: verify CXF + Spring Boot coexistence *(throwaway branch)*
+
+**Why first:** The highest unknown in this migration is whether Apache CXF JAXWS endpoints start correctly inside Spring Boot's embedded
+Tomcat. If this does not work, the entire strategy must change. Validating it now (before any production-code changes) eliminates the
+biggest risk.
+
+**Scope:**
+
+- On a throwaway branch, add the `org.springframework.boot` plugin to root and `web/build.gradle` (`apply false` / `apply`).
+- Add `spring-boot-starter-web` and create a minimal `RehabstodApplication.java` with `@SpringBootApplication`.
+- **Do not** change any production configuration classes — the goal is only to see if it starts.
+- Confirm CXF wires up (check `/services/` endpoint map loads) and SAML `RelyingPartyRegistrationRepository` bean resolves.
+
+**Discard the branch afterward.** The real implementation begins at Step 1.
+
+**Verify:** `./gradlew bootRun` — application starts as an executable JAR. No `NoSuchBeanDefinitionException` for CXF or SAML beans.
 
 ---
 
@@ -15,11 +36,16 @@ application runs (still WAR/Tomcat/Gretty). Step 12 is the actual Spring Boot sw
 **Why first:** Purely test-code changes. Zero risk to the running application. Removes `junit-vintage-engine` early so every subsequent
 step's test run is clean.
 
-**Scope (four modules have JUnit 4 tests):**
+**Scope (eight modules have JUnit 4 dependencies — confirmed from build files):**
 
 - `web/build.gradle` — remove `testImplementation 'junit:junit'` and `testRuntimeOnly "org.junit.vintage:junit-vintage-engine"`
 - `persistence/build.gradle` — same removals
 - `common/build.gradle` — same removals
+- `integration/srs-integration/build.gradle` — same removals
+- `integration/samtyckestjanst-integration/build.gradle` — same removals
+- `integration/sparrtjanst-integration/build.gradle` — same removals
+- `integration/wc-integration/build.gradle` — same removals
+- `integration/it-integration/build.gradle` — remove `testRuntimeOnly "org.junit.vintage:junit-vintage-engine"` only (no `junit:junit` dep present; no JUnit 4 test classes)
 - For each JUnit 4 test file: update imports (`org.junit.*` → `org.junit.jupiter.api.*`), replace `@RunWith` with `@ExtendWith`,
   replace `@Rule ExpectedException` with `assertThrows`, etc. (see migration table in `first-migration-scope.md §3.6`).
 
@@ -97,6 +123,11 @@ all build on. Inline them first so subsequent steps can reference local types.
 - Copy `security-authorities` classes (`CommonAuthoritiesResolver`, `AuthoritiesException`, `SecurityConfigurationLoader`,
   `AuthoritiesConfiguration`, `AuthExpectationSpecImpl`, `AuthExpectationSpecification`) into a local package. Update imports in `web` (14
   files).
+- Remove the `@ComponentScan("se.inera.intyg.infra.security.authorities")` from `SecurityConfig` — the local copy is now component-scanned
+  from its local package instead.
+- **Resolve duplicate `CookieSerializer` bean:** both `ApplicationConfig` and `WebSecurityConfig` declare a bean named `cookieSerializer`
+  returning `IneraCookieSerializer`. Remove the one in `ApplicationConfig`; keep (and update to the local class) the one in
+  `WebSecurityConfig`.
 
 > Both infra JARs remain on the classpath during this step.
 
@@ -154,6 +185,9 @@ is in flight at a time.
 - **PU:** Define local `PersonSvar` and `Person` DTOs. Implement `PuService` locally calling `intyg-proxy-service` REST API. Remove
   `PuIntygProxyServiceConfiguration` and its `@ImportResource` for `pu-integration-intyg-proxy-service-config.xml`. Remove
   `pu-integration-api` and `pu-integration-intyg-proxy-service` usages (3 files in `web`).
+- Remove the two infra `@ComponentScan` entries from `ApplicationConfig`:
+  - `"se.inera.intyg.infra.integration.intygproxyservice"` (HSA proxy service components)
+  - `"se.inera.intyg.infra.pu.integration.intygproxyservice"` (PU proxy service components)
 
 **Verify:** `./gradlew test` + start. Employee searches, care unit lookups, and patient PU lookups return correct results via the new REST
 clients.
@@ -172,6 +206,9 @@ find-and-replace rather than a combined refactor.
   etc. — see mapping table in `first-migration-scope.md §3.3`).
 - Convert `SparrtjanstStubRestApi` → `@RestController @Profile("rhs-sparrtjanst-stub")`.
 - Remove `jakarta.ws.rs:jakarta.ws.rs-api` and `cxf-rt-frontend-jaxrs` from the affected integration module build files.
+- **SRS stub:** `SRSIntegrationStubConfiguration` (`@Profile("rhs-srs-stub")`) registers a CXF SOAP endpoint (`SRSStub`) — this is a
+  JAXWS SOAP stub, not JAX-RS, so no JAX-RS annotations to remove. Confirm it is already `@WebService`/CXF-based and will coexist with
+  Spring Boot in Step 13. If any JAX-RS annotations are found, convert them to Spring MVC here.
 
 **Verify:** `./gradlew test` + start with stub profiles active. Stub REST endpoints return correct responses. No JAX-RS annotations remain.
 
@@ -190,7 +227,7 @@ now means `@ImportResource` disappears before the Spring Boot switch.
 - **`sparrtjanst-services-config.xml`** → `SparrtjanstTlsConfig.java` (same TLS pattern).
 - **`sparrtjanst-stub-context.xml`** → absorbed by the `@RestController` created in Step 9; remove the XML file.
 - **`classpath:META-INF/cxf/cxf.xml`** → remove `@ImportResource` from `ApplicationConfig` and `WebConfig`; configure CXF `Bus` as a
-  `@Bean` via `SpringBus` (or rely on the CXF Spring Boot starter in Step 12 to auto-load it).
+  `@Bean` via `SpringBus` (or rely on the CXF Spring Boot starter in Step 13 to auto-load it).
 - Remove `web/src/main/webapp/WEB-INF/web.xml` — already listed as a §3.1 action; confirm removal here so no XML file is carried into the
   Spring Boot step.
 
@@ -207,7 +244,7 @@ referenced anywhere. Each module is handled:
 
 | Module | Lines removed |
 |---|---|
-| `web/build.gradle` | 16 infra lines (see §3.5.6) |
+| `web/build.gradle` | 16 infra lines including `common-redis-cache-core` (see §3.5.6) |
 | `common/build.gradle` | `log-messages`, `sjukfall-engine` |
 | `integration/it-integration/build.gradle` | `certificate`, `monitoring`, `sjukfall-engine` |
 | `integration/sparrtjanst-integration/build.gradle` | `common-redis-cache-core`, `sjukfall-engine` |
@@ -215,7 +252,11 @@ referenced anywhere. Each module is handled:
 | `integration/wc-integration/build.gradle` | `monitoring` |
 | `build.gradle` (root) | `intygInfraVersion` property |
 
-Also remove all `@ComponentScan` entries referencing `se.inera.intyg.infra.*` packages (in `InfraConfig`, `SjukfallConfig`, and others).
+Also remove all `@ComponentScan` entries referencing `se.inera.intyg.infra.*` packages. Known locations:
+- `InfraConfig` — `infra.dynamiclink`, `infra.monitoring.logging`
+- `SjukfallConfig` — `infra.sjukfall.services`
+- `SecurityConfig` — `infra.security.authorities` *(already removed in Step 5)*
+- `ApplicationConfig` — `infra.integration.intygproxyservice`, `infra.pu.integration.intygproxyservice` *(already removed in Step 8)*
 
 **Verify:** `./gradlew build` — compiles cleanly. All tests pass. `grep -r "se.inera.intyg.infra" --include="*.gradle"` returns no results.
 Application starts.
@@ -255,10 +296,13 @@ step only changes the application entry point and build packaging.
 - Register `CXFServlet` as a `ServletRegistrationBean` at `/services/*`.
 - Keep `HttpSessionEventPublisher` as a `@Bean`.
 - Remove `@EnableWebMvc` from `WebConfig`; retain all `WebMvcConfigurer` settings as-is.
+- Ensure all integration module configuration classes previously registered in `ApplicationInitializer` are reachable via component-scan
+  or explicit `@Import` in the main application class. Key classes to verify:
+  `SRSIntegrationConfiguration`, `SRSIntegrationClientConfiguration`, `SRSIntegrationStubConfiguration`,
+  `SamtyckestjanstConfiguration`, `SparrtjanstConfiguration`, `IntygstjanstIntegrationConfiguration`, etc.
 - **Do not change** JPA, JMS, Redis, or metrics config in this step.
 
-> **De-risk spike:** Before investing in Steps 1–12, run a quick spike on a throwaway branch — add the Spring Boot plugin and main class,
-> and verify that CXF + Spring Boot coexist. If it starts, proceed with confidence.
+> **Note:** The de-risk spike for this step was performed in Step 0. Use those findings to guide the implementation.
 
 **Verify:** `./gradlew bootRun` — application starts as an executable JAR. All REST endpoints respond. All SOAP stubs respond. SAML
 login/logout flow works end-to-end.
@@ -357,6 +401,7 @@ respond.
 
 | Step | Description | Phase | App broken? |
 |------|-------------|-------|-------------|
+| **0** | De-risk spike: CXF + Spring Boot coexistence check | Pre-migration | ❌ No (throwaway branch) |
 | **1** | Migrate all tests to JUnit 5 | 0 — Test Modernisation | ❌ No |
 | **2** | Copy simple DTOs (certificate, log-messages, driftbanner-dto) | 1 — Inline Infra | ❌ No |
 | **3** | Inline `monitoring` + replace `LogMarkers` | 1 — Inline Infra | ❌ No |
@@ -376,7 +421,7 @@ respond.
 | **17** | Redis auto-configuration + ShedLock prefix fix | 4 — Auto-Config | ❌ No |
 | **18** | Spring Boot ECS logging + Dockerfile | 4 — Auto-Config | ❌ No |
 
-Steps 1–12 are still WAR/Tomcat/Gretty — only production code and configuration change. Step 13 is the actual runtime switch.
+Steps 0 (throwaway spike) and 1–12 do not break the running WAR/Tomcat/Gretty application. Step 13 is the actual runtime switch.
 Steps 14–18 each swap one infrastructure concern using Spring Boot auto-configuration.
 
 ---
@@ -389,7 +434,7 @@ Steps 14–18 each swap one infrastructure concern using Spring Boot auto-config
 - `@EnableWebMvc` removal potentially changing MVC behaviour (content negotiation, message converters).
 - CXF JAXWS compatibility with Spring Boot auto-configuration.
 
-**Mitigation:** Run the de-risk spike described in Step 13 early. Test SAML login/logout end-to-end immediately after the switch before
+**Mitigation:** The de-risk spike in Step 0 validates this before any production-code work begins. Test SAML login/logout end-to-end immediately after the switch before
 proceeding to Steps 14–18.
 
 **Step 8 (HSA/PU REST clients)** is the second-highest risk because the REST response shapes from `intyg-proxy-service` must be verified
