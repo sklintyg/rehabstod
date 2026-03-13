@@ -1,4 +1,4 @@
-# Intygstjänst — Goal Tech Stack
+# Rehabstöd — Goal Tech Stack
 
 *Based on the established patterns in **certificate-service** and **intyg-proxy-service**.*
 
@@ -7,14 +7,14 @@
 ## Rationale
 
 The target services (**certificate-service** and **intyg-proxy-service**) represent the modern standard for the Inera Intyg platform. This
-document defines what intygstjänst's tech stack should look like after consolidation, derived purely from what those two services already
+document defines what rehabstöd's tech stack should look like after consolidation, derived purely from what those two services already
 use.
 
 ---
 
 ## Core Platform
 
-| Aspect               | Current (Intygstjänst)                    | Goal                                                            |
+| Aspect               | Current (Rehabstöd)                       | Goal                                                            |
 |----------------------|-------------------------------------------|-----------------------------------------------------------------|
 | **Language**         | Java 21                                   | **Java 21** — no change                                         |
 | **Framework**        | Spring Framework (no Boot)                | **Spring Boot** — align with both target services               |
@@ -65,7 +65,7 @@ use.
 | **Caching**          | Redis (manual config, profile `caching-enabled`) | **Spring Data Redis** (`spring-boot-starter-data-redis`) — auto-configured       |
 | **Distributed Lock** | ShedLock (shedlock-spring + redis provider)      | **ShedLock** — retain if still needed (not present in target services; evaluate) |
 
-> **Note:** ShedLock is used in intygstjänst but not in either target service. If the scheduled task locking requirement remains, ShedLock
+> **Note:** ShedLock is used in rehabstöd but not in either target service. If the scheduled task locking requirement remains, ShedLock
 > can be retained. If the scheduling pattern can be redesigned, consider removing it to fully align.
 
 ---
@@ -150,7 +150,7 @@ The target module structure should follow the patterns established in certificat
 domain) and intyg-proxy-service (dedicated integration modules):
 
 ```
-intygstjanst (goal)
+rehabstod (goal)
 ├── app                          → Spring Boot application (controllers, services, Spring config)
 ├── domain                       → Pure business logic (minimal deps: Jackson, SLF4J only)
 ├── logging                      → Cross-cutting logging/AOP (AspectJ, Logback) — already exists
@@ -186,7 +186,7 @@ separating business logic from infrastructure concerns.
 
 ## Items Requiring Decision
 
-These items differ between the current state and the target services, or are unique to intygstjänst, and need a deliberate decision:
+These items differ between the current state and the target services, or are unique to rehabstöd, and need a deliberate decision:
 
 1. **ShedLock** — Keep or remove? Not used in either target service.
 2. **ANTLR ST4** — Keep or remove? Not used in either target service.
@@ -196,4 +196,3 @@ These items differ between the current state and the target services, or are uni
    REST APIs?
 6. **PDF generation** — If needed, adopt Apache PDFBox (from certificate-service).
 7. **Redis usage** — Align with intyg-proxy-service's Spring Data Redis pattern, or simplify if caching needs differ.
-
