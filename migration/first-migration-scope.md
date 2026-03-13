@@ -56,10 +56,10 @@ Complete the first migration step towards the [goal tech stack](goal-tech-stack.
 - Replace `ApplicationInitializer` (`WebApplicationInitializer`) with Spring Boot auto-configuration:
   - Convert the 12 servlet filter registrations to `FilterRegistrationBean` beans.
   - Register `CXFServlet` as a `ServletRegistrationBean` at `/services/*`.
-  - Remove the `MetricsServlet` registration (replaced by Actuator, see §3.4.3).
   - Remove listener registrations that Spring Boot handles automatically (`ContextLoaderListener`, `RequestContextListener`).
   - Convert `LogbackConfiguratorContextListener` usage to Spring Boot native logging (see §3.7).
   - Keep `HttpSessionEventPublisher` as a `@Bean`.
+- Delete `web/src/main/webapp/WEB-INF/web.xml` — it contains only the `MetricsServlet` registration, which is replaced by Actuator (see §3.4.3). Executable JARs do not use `web.xml`.
 - Remove `@EnableWebMvc` from `WebConfig` (conflicts with Spring Boot auto-configuration). Move any custom
   `WebMvcConfigurer` settings (message converters, resource handlers, interceptors) to a `WebMvcConfigurer` bean without `@EnableWebMvc`.
 - Remove the Gretty plugin configuration from `web/build.gradle`.
@@ -71,6 +71,7 @@ Complete the first migration step towards the [goal tech stack](goal-tech-stack.
 - `build.gradle` — add Spring Boot plugin to the root project (apply false)
 - New: `web/src/main/java/.../RehabstodApplication.java`
 - Remove: `web/src/main/java/.../ApplicationInitializer.java`
+- Remove: `web/src/main/webapp/WEB-INF/web.xml`
 - Modify: `web/src/main/java/.../config/WebConfig.java` — remove `@EnableWebMvc`
 - `Dockerfile` — change from WAR/Catalina to JAR-based
 
@@ -226,7 +227,7 @@ Replace manually configured beans with Spring Boot auto-configuration.
 
 #### 3.4.3 Metrics / Health (replaces Prometheus servlet)
 
-- **Remove:** `io.prometheus:simpleclient_servlet` dependency and the `MetricsServlet` registration in `ApplicationInitializer`.
+- **Remove:** `io.prometheus:simpleclient_servlet` dependency and `web/src/main/webapp/WEB-INF/web.xml` (which registers `MetricsServlet` at `/metrics` — deleted entirely in §3.1).
 - **Replace with:** `spring-boot-starter-actuator` with Micrometer Prometheus registry.
 - **Migrate:** `@PrometheusTimeMethod` annotations → Micrometer `@Timed` annotations (or evaluate if `PerformanceLogging` already covers
   the timing concern sufficiently).
@@ -272,7 +273,7 @@ local package (e.g., `se.inera.intyg.rehabstod.common.model` or module-appropria
 | Infra Module        | Files Using It | Classes to Copy                                                                                                         | Effort |
 |---------------------|----------------|-------------------------------------------------------------------------------------------------------------------------|--------|
 | **certificate**     | 6 files        | `DiagnosedCertificate`, `SickLeaveCertificate`, `SickLeaveCertificate.WorkCapacity`, `TypedCertificateRequest`, `BaseCertificate`, builders | Low    |
-| **logmessages**     | 22 files       | `ActivityType`, `ResourceType`, `PdlLogMessage`, `PdlResource`, `Patient`, `Enhet`, `ActivityPurpose`                   | Low    |
+| **log-messages**    | 22 files       | `ActivityType`, `ResourceType`, `PdlLogMessage`, `PdlResource`, `Patient`, `Enhet`, `ActivityPurpose`                   | Low    |
 | **driftbanner-dto** | 2 files        | `Application`, `Banner`                                                                                                  | Low    |
 
 #### 3.5.2 Security Models & Utilities — Copy Into Project
@@ -352,6 +353,31 @@ runtimeOnly "se.inera.intyg.infra:pu-integration-intyg-proxy-service:${intygInfr
 // Remove entirely:
 intygInfraVersion = System.properties['infraVersion'] ?: '4.1.0-SNAPSHOT'
 ```
+
+**From other submodule build files** (these are also present and must be cleaned up):
+
+```groovy
+// common/build.gradle — remove:
+implementation "se.inera.intyg.infra:log-messages:${intygInfraVersion}"
+implementation "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
+
+// integration/it-integration/build.gradle — remove:
+implementation "se.inera.intyg.infra:certificate:${intygInfraVersion}"
+implementation "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
+implementation "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
+
+// integration/sparrtjanst-integration/build.gradle — remove:
+implementation "se.inera.intyg.infra:common-redis-cache-core:${intygInfraVersion}"
+implementation "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
+
+// integration/samtyckestjanst-integration/build.gradle — remove:
+implementation "se.inera.intyg.infra:common-redis-cache-core:${intygInfraVersion}"
+
+// integration/wc-integration/build.gradle — remove:
+implementation "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
+```
+
+> **Note:** The `intygInfraVersion` property cannot be removed from root `build.gradle` until all of the above submodule references are also cleared.
 
 **Also remove all `@ComponentScan` entries referencing `se.inera.intyg.infra.*` packages** (found in `InfraConfig`, `SjukfallConfig`,
 `PuIntygProxyServiceConfiguration`, and others).
