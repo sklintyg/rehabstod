@@ -20,7 +20,7 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusDTO;

@@ -22,10 +22,10 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
-import se.inera.intyg.infra.sjukfall.dto.Lakare;
-import se.inera.intyg.infra.sjukfall.dto.OccupationTypeDTO;
-import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.sjukfall.dto.Lakare;
+import se.inera.intyg.rehabstod.sjukfall.dto.OccupationTypeDTO;
+import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 
 @Data
 @NoArgsConstructor

@@ -49,11 +49,11 @@ import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
-import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
-import se.inera.intyg.infra.sjukfall.dto.Patient;
-import se.inera.intyg.infra.sjukfall.dto.Vardgivare;
-import se.inera.intyg.infra.sjukfall.services.SjukfallEngineServiceImpl;
+import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.sjukfall.dto.IntygParametrar;
+import se.inera.intyg.rehabstod.sjukfall.dto.Patient;
+import se.inera.intyg.rehabstod.sjukfall.dto.Vardgivare;
+import se.inera.intyg.rehabstod.sjukfall.services.SjukfallEngineServiceImpl;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
@@ -769,8 +769,8 @@ class SjukfallServiceTest {
     return user;
   }
 
-  private List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> createSjukfallEnhetList() {
-    List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> sjukfallList = new ArrayList<>();
+  private List<se.inera.intyg.rehabstod.sjukfall.dto.SjukfallEnhet> createSjukfallEnhetList() {
+    List<se.inera.intyg.rehabstod.sjukfall.dto.SjukfallEnhet> sjukfallList = new ArrayList<>();
 
     sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
     sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId11, patientId1));
@@ -811,19 +811,19 @@ class SjukfallServiceTest {
     return intygsData;
   }
 
-  private se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet createSjukfallEnhet(
+  private se.inera.intyg.rehabstod.sjukfall.dto.SjukfallEnhet createSjukfallEnhet(
       String lakareId, String lakareNamn, String enhetsId, String patiendId) {
 
     Vardgivare vardgivare = Vardgivare.create(vgId1, "vg");
 
-    se.inera.intyg.infra.sjukfall.dto.Vardenhet vardenhet =
-        se.inera.intyg.infra.sjukfall.dto.Vardenhet.create(enhetsId, "ve-" + enhetsId);
+    se.inera.intyg.rehabstod.sjukfall.dto.Vardenhet vardenhet =
+        se.inera.intyg.rehabstod.sjukfall.dto.Vardenhet.create(enhetsId, "ve-" + enhetsId);
 
-    se.inera.intyg.infra.sjukfall.dto.Lakare lakare =
-        se.inera.intyg.infra.sjukfall.dto.Lakare.create(lakareId, lakareNamn);
+    se.inera.intyg.rehabstod.sjukfall.dto.Lakare lakare =
+        se.inera.intyg.rehabstod.sjukfall.dto.Lakare.create(lakareId, lakareNamn);
 
-    se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet sjukfall =
-        new se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet();
+    se.inera.intyg.rehabstod.sjukfall.dto.SjukfallEnhet sjukfall =
+        new se.inera.intyg.rehabstod.sjukfall.dto.SjukfallEnhet();
 
     Patient patient = Patient.create(patiendId, "name");
 
@@ -978,17 +978,17 @@ class SjukfallServiceTest {
 
     @Override
     public SjukfallEnhet mapToSjukfallEnhetDto(
-        se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from,
+        se.inera.intyg.rehabstod.sjukfall.dto.SjukfallEnhet from,
         int maxDagarSedanAvslut,
         LocalDate today) {
-      se.inera.intyg.infra.sjukfall.dto.Vardgivare vardgivare =
-          se.inera.intyg.infra.sjukfall.dto.Vardgivare.create(vardgivareId, vardgivareNamn);
+      se.inera.intyg.rehabstod.sjukfall.dto.Vardgivare vardgivare =
+          se.inera.intyg.rehabstod.sjukfall.dto.Vardgivare.create(vardgivareId, vardgivareNamn);
 
-      se.inera.intyg.infra.sjukfall.dto.Patient patient =
-          se.inera.intyg.infra.sjukfall.dto.Patient.create(patientId, patinetNamn);
+      se.inera.intyg.rehabstod.sjukfall.dto.Patient patient =
+          se.inera.intyg.rehabstod.sjukfall.dto.Patient.create(patientId, patinetNamn);
 
-      se.inera.intyg.infra.sjukfall.dto.DiagnosKod diagnosKod =
-          se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create("J22");
+      se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKod diagnosKod =
+          se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKod.create("J22");
 
       // Update Sjukfall with these objects to avoid failing test
       from.setVardgivare(vardgivare);
@@ -1000,19 +1000,19 @@ class SjukfallServiceTest {
 
     @Override
     public SjukfallPatient mapToSjukfallPatientDto(
-        se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from,
+        se.inera.intyg.rehabstod.sjukfall.dto.SjukfallPatient from,
         Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
       return super.mapToSjukfallPatientDto(from, intygAccessMetaData);
     }
 
     @Override
     public PatientData mapSjukfallIntygToPatientData(
-        se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg from, IntygAccessControlMetaData iacm) {
+        se.inera.intyg.rehabstod.sjukfall.dto.SjukfallIntyg from, IntygAccessControlMetaData iacm) {
       return super.mapSjukfallIntygToPatientData(from, iacm);
     }
 
     @Override
-    public Diagnos getDiagnos(se.inera.intyg.infra.sjukfall.dto.DiagnosKod from) {
+    public Diagnos getDiagnos(se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKod from) {
       Diagnos to = new Diagnos(from.getOriginalCode(), from.getCleanedCode(), from.getName());
       to.setBeskrivning("En beskrivning");
       to.setKapitel("Ett kapitel");

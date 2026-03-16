@@ -20,7 +20,7 @@ package se.inera.intyg.rehabstod.integration.sparrtjanst.service;
 
 import java.util.List;
 import java.util.Map;
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 
 /** Created by marced on 2018-09-28. */

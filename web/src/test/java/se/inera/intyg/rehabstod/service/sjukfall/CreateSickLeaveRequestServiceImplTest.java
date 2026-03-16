@@ -453,9 +453,9 @@ class CreateSickLeaveRequestServiceImplTest {
 
       final var expectedResult =
           List.of(
-              new se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel(
-                  new se.inera.intyg.infra.sjukfall.dto.DiagnosKategori('A', 5),
-                  new se.inera.intyg.infra.sjukfall.dto.DiagnosKategori('B', 5),
+              new se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKapitel(
+                  new se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKategori('A', 5),
+                  new se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKategori('B', 5),
                   DIAGNOSIS_NAME));
       final var response =
           getSickLeaveRequestService.create(

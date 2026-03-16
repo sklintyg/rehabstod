@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.service.sjukfall.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 
 @Data
 @NoArgsConstructor

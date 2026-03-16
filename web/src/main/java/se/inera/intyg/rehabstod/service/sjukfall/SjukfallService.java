@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.util.Collection;
-import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
+import se.inera.intyg.rehabstod.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 

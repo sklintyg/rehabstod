@@ -34,9 +34,9 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
 import se.inera.intyg.infra.pu.integration.api.model.PersonSvar.Status;
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
-import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
-import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
+import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.sjukfall.dto.IntygParametrar;
+import se.inera.intyg.rehabstod.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
@@ -173,7 +173,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         !Strings.isNullOrEmpty(patientId), "patientId may not be null or empty");
     Preconditions.checkArgument(urval != null, "urval may not be null");
 
-    List<se.inera.intyg.infra.sjukfall.dto.SjukfallPatient> sjukfallList;
+    List<se.inera.intyg.rehabstod.sjukfall.dto.SjukfallPatient> sjukfallList;
     Map<String, IntygAccessControlMetaData> intygAccessMetaData = new HashMap<>();
 
     LOG.debug("Calling HSA - fetching information about the current care unit.");
@@ -416,7 +416,7 @@ public class SjukfallServiceImpl implements SjukfallService {
   }
 
   private void updateAccessMetaDataWithContributingStatus(
-      List<se.inera.intyg.infra.sjukfall.dto.SjukfallPatient> sjukfallList,
+      List<se.inera.intyg.rehabstod.sjukfall.dto.SjukfallPatient> sjukfallList,
       Map<String, IntygAccessControlMetaData> intygAccessMetaData,
       IntygParametrar parameters) {
     if (sjukfallList.isEmpty()) {
@@ -424,7 +424,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     // Update BidrarTillAktivtSjukfall for all that are part of active sjukfall.
-    final se.inera.intyg.infra.sjukfall.dto.SjukfallPatient aktivtSjukfall = sjukfallList.get(0);
+    final se.inera.intyg.rehabstod.sjukfall.dto.SjukfallPatient aktivtSjukfall = sjukfallList.get(0);
 
     if (aktivtSjukfall.getSlut().isAfter(parameters.getAktivtDatum())) {
       aktivtSjukfall

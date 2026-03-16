@@ -18,12 +18,10 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /** Created by Magnus Ekstrand on 2017-02-21. */
 @Configuration
-@ComponentScan("se.inera.intyg.infra.sjukfall.services")
 public class SjukfallConfig {
 
   public SjukfallConfig() { // NOSONAR
