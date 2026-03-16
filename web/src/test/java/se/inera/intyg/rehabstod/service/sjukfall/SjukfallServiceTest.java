@@ -18,10 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -36,13 +36,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
@@ -91,8 +93,9 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 /** Created by Magnus Ekstrand on 2016-02-24. */
-@RunWith(MockitoJUnitRunner.class)
-public class SjukfallServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class SjukfallServiceTest {
 
   // CHECKSTYLE:OFF MagicNumber
   private static final int MAX_DAGAR_SEDAN_AVSLUT = 0;
@@ -165,8 +168,8 @@ public class SjukfallServiceTest {
 
   @InjectMocks private SjukfallServiceImpl testee;
 
-  @Before
-  public void init() {
+  @BeforeEach
+  void init() {
     when(integrationService.getAllIntygsDataForPatient(anyString())).thenReturn(createIntygsData());
     when(puService.filterSekretessForPatientHistory(anyList())).thenAnswer(returnsFirstArg());
 
@@ -186,7 +189,7 @@ public class SjukfallServiceTest {
    * ska resultera i ett sjukfall med två intyg i sig.
    */
   @Test
-  public void testGetByPatient_utanSamtycke() {
+  void testGetByPatient_utanSamtycke() {
     List<String> vgHsaId = new ArrayList<>();
     List<String> veHsaId = new ArrayList<>();
 
@@ -211,7 +214,7 @@ public class SjukfallServiceTest {
    * vårdgivare ska resultera i ett sjukfall med tre intyg i sig när samtycke finns.
    */
   @Test
-  public void testGetByPatient_medSamtyckeForVardgivare() {
+  void testGetByPatient_medSamtyckeForVardgivare() {
     when(samtyckestjanstIntegrationService.checkForConsent(
             patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
@@ -250,7 +253,7 @@ public class SjukfallServiceTest {
    * Testet ska visa att samtyckesläsning INTE PDL loggas om inget samtycke fanns
    */
   @Test
-  public void testGetByPatientNoConsentPDLLoggingIfNoConsent() {
+  void testGetByPatientNoConsentPDLLoggingIfNoConsent() {
     when(samtyckestjanstIntegrationService.checkForConsent(
             patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(false);
@@ -272,7 +275,7 @@ public class SjukfallServiceTest {
    * Testet ska visa att samtyckesläsning PDL loggas om samtycke fanns
    */
   @Test
-  public void testGetByPatientConsentPDLLoggingIfConsentExists() {
+  void testGetByPatientConsentPDLLoggingIfConsentExists() {
     when(samtyckestjanstIntegrationService.checkForConsent(
             patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
@@ -299,7 +302,7 @@ public class SjukfallServiceTest {
    * Testet ska visa att samtyckesläsning PDL loggas endast en gång om anropad flera gånger per user
    */
   @Test
-  public void testGetByPatientConsentPDLLoggingOnlyOnceIfActivityAlreadyLogged() {
+  void testGetByPatientConsentPDLLoggingOnlyOnceIfActivityAlreadyLogged() {
     when(samtyckestjanstIntegrationService.checkForConsent(
             patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
@@ -340,7 +343,7 @@ public class SjukfallServiceTest {
    * intyg utan spärr på samma vårdenhet VE kommer med.
    */
   @Test
-  public void testGetByPatient_medSamtyckeForVardenhet() {
+  void testGetByPatient_medSamtyckeForVardenhet() {
 
     List<String> vgHsaId = new ArrayList<>();
     List<String> veHsaId = new ArrayList<>();
@@ -370,7 +373,7 @@ public class SjukfallServiceTest {
    * ska resultera i två sjukfall med ett intyg vardera i sig.
    */
   @Test
-  public void testGetByPatient_inomVardgivareOchInomEnhet() {
+  void testGetByPatient_inomVardgivareOchInomEnhet() {
     List<IntygsData> data =
         new ArrayList<>() {
           {
@@ -418,7 +421,7 @@ public class SjukfallServiceTest {
    * en underenhet ska resultera i ett sjukfall med ett intyg vardera i sig.
    */
   @Test
-  public void testGetByPatient_whenInomVardgivareOchInomEnhet_andMottagning() {
+  void testGetByPatient_whenInomVardgivareOchInomEnhet_andMottagning() {
     List<IntygsData> data =
         new ArrayList<>() {
           {
@@ -473,7 +476,7 @@ public class SjukfallServiceTest {
    * så ska intyg på enheten komma med.
    */
   @Test
-  public void testGetByPatient_whenInomVardgivareOchInomMottagning_andParent() {
+  void testGetByPatient_whenInomVardgivareOchInomMottagning_andParent() {
     List<IntygsData> data =
         new ArrayList<>() {
           {
@@ -527,7 +530,7 @@ public class SjukfallServiceTest {
    * ska resultera i ett sjukfall (det aktiva) med ett intyg i sig.
    */
   @Test
-  public void testGetByPatient_inomVardgivareOchAnnanEnhetOchUtanforGlappet() {
+  void testGetByPatient_inomVardgivareOchAnnanEnhetOchUtanforGlappet() {
     List<IntygsData> data =
         new ArrayList<>() {
           {
@@ -581,7 +584,7 @@ public class SjukfallServiceTest {
    * ska resultera i ett sjukfall (det aktiva) med två intyg i sig.
    */
   @Test
-  public void testGetByPatient_inomVardgivareOchUtanforEnhetMenInomGlappet() {
+  void testGetByPatient_inomVardgivareOchUtanforEnhetMenInomGlappet() {
     List<IntygsData> data =
         new ArrayList<>() {
           {
@@ -637,7 +640,7 @@ public class SjukfallServiceTest {
    * aktiva sjukfallet eller inte.
    */
   @Test
-  public void testGetByPatient_allaVardgivareSkaFinnasMedISjfMetaData() {
+  void testGetByPatient_allaVardgivareSkaFinnasMedISjfMetaData() {
     List<IntygsData> data =
         new ArrayList<>() {
           {

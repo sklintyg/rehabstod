@@ -18,8 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.when;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import se.inera.intyg.infra.logmessages.ActivityPurpose;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.PdlLogMessage;
@@ -41,12 +42,12 @@ import se.inera.intyg.rehabstod.testutil.TestDataGen;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /** Created by eriklupander on 2016-03-03. */
-public class PdlLogMessageFactoryImplTest {
+class PdlLogMessageFactoryImplTest {
 
   private PdlLogMessageFactoryImpl testee = new PdlLogMessageFactoryImpl();
 
   @Test
-  public void testBuildLogMessage() {
+  void testBuildLogMessage() {
 
     // Then
     PdlLogMessage pdlLogMessage =
@@ -85,7 +86,7 @@ public class PdlLogMessageFactoryImplTest {
   }
 
   @Test
-  public void testBuildLogMessageWithEmptyCareGiverName() {
+  void testBuildLogMessageWithEmptyCareGiverName() {
     PdlLogMessage pdlLogMessage =
         testee.buildLogMessage(
             buildSjukfallListWithEmptyCareGiverName(),
@@ -106,7 +107,7 @@ public class PdlLogMessageFactoryImplTest {
   }
 
   @Test
-  public void testBuildPrintLogMessage() {
+  void testBuildPrintLogMessage() {
     // Then
     PdlLogMessage pdlLogMessage =
         testee.buildLogMessage(
@@ -120,7 +121,7 @@ public class PdlLogMessageFactoryImplTest {
   }
 
   @Test
-  public void testBuildLogMessageForLakare() {
+  void testBuildLogMessageForLakare() {
     PdlLogMessage pdlLogMessage =
         testee.buildLogMessage(
             TestDataGen.buildSjukfallList(5),
@@ -132,7 +133,7 @@ public class PdlLogMessageFactoryImplTest {
   }
 
   @Test
-  public void testBuildLogMessageForLakareHavingRehabkoordinatorRole() {
+  void testBuildLogMessageForLakareHavingRehabkoordinatorRole() {
     Map<String, Role> rolesMap = mock(Map.class);
     RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser(true);
     rehabstodUser.setRoles(rolesMap);
@@ -150,7 +151,7 @@ public class PdlLogMessageFactoryImplTest {
   }
 
   @Test
-  public void testBuildLogMessageForIckeLakare() {
+  void testBuildLogMessageForIckeLakare() {
     RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser(false);
     rehabstodUser.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_KOORDINATOR, new Role()));
     PdlLogMessage pdlLogMessage =
@@ -163,12 +164,16 @@ public class PdlLogMessageFactoryImplTest {
     assertEquals("Rehabkoordinator", pdlLogMessage.getUserTitle());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testBuildWithUnknownType() {
-    testee.buildLogMessage(
-        TestDataGen.buildSjukfallList(1),
-        LogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
-        ActivityType.EMERGENCY_ACCESS,
-        ResourceType.RESOURCE_TYPE_SJUKFALL);
+  @Test
+  void testBuildWithUnknownType() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          testee.buildLogMessage(
+              TestDataGen.buildSjukfallList(1),
+              LogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
+              ActivityType.EMERGENCY_ACCESS,
+              ResourceType.RESOURCE_TYPE_SJUKFALL);
+        });
   }
 }

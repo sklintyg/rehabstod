@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.rehabstod.auth.pdl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
@@ -36,7 +36,7 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /** Created by marced on 22/02/16. */
-public class PDLActivityEntryStoreImplTest {
+class PDLActivityEntryStoreImplTest {
   // CHECKSTYLE:OFF MagicNumber
 
   private static final SjukfallEnhet SJUKFALL_1 = createSjukFallForPatient("19990824-2382");
@@ -55,7 +55,7 @@ public class PDLActivityEntryStoreImplTest {
   final List<SjukfallEnhet> sjukfallList2 = Arrays.asList(SJUKFALL_2, SJUKFALL_3, SJUKFALL_5);
 
   @Test
-  public void testGetActivitiesNotInStoreEmptyOrNullList() throws Exception {
+  void testGetActivitiesNotInStoreEmptyOrNullList() throws Exception {
     assertTrue(
         PDLActivityStore.getActivitiesNotInStore(
                 VARDENHET_1,
@@ -87,7 +87,7 @@ public class PDLActivityEntryStoreImplTest {
   }
 
   @Test
-  public void testGetActivitiesNotInStoreSimple() throws Exception {
+  void testGetActivitiesNotInStoreSimple() throws Exception {
     // Asking for stored activities when none is stored should return all
     assertEquals(
         sjukfallList1,
@@ -100,7 +100,7 @@ public class PDLActivityEntryStoreImplTest {
   }
 
   @Test
-  public void testGetActivitiesNotInStoreDifferentEventTypes() throws Exception {
+  void testGetActivitiesNotInStoreDifferentEventTypes() throws Exception {
     Map<String, List<PDLActivityEntry>> storedActivities = new HashMap<>();
 
     // Asking for stored activities when none is stored should return all
@@ -143,7 +143,7 @@ public class PDLActivityEntryStoreImplTest {
   }
 
   @Test
-  public void testActivitiesNotInStoreComplexScenario() throws Exception {
+  void testActivitiesNotInStoreComplexScenario() throws Exception {
     Map<String, List<PDLActivityEntry>> storedActivities = new HashMap<>();
 
     // Asking for stored activities when none is stored should return all

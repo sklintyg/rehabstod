@@ -18,18 +18,19 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos.dto;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Created by marced on 14/03/16. */
-public class DiagnosGruppTest {
+class DiagnosGruppTest {
 
   @Test
-  public void testConstructor() {
+  void testConstructor() {
     DiagnosKapitel expected = new DiagnosKapitel("A00-D88");
 
     DiagnosGrupp grupp = new DiagnosGrupp(expected.getId() + ":En grupp av diagnoser");
@@ -40,7 +41,7 @@ public class DiagnosGruppTest {
   }
 
   @Test
-  public void testConstructorMultipleKapitels() {
+  void testConstructorMultipleKapitels() {
     DiagnosKapitel expected1 = new DiagnosKapitel("A00-D88");
     DiagnosKapitel expected2 = new DiagnosKapitel("B00-B67");
     DiagnosKapitel expected3 = new DiagnosKapitel("C00-C99");
@@ -52,13 +53,17 @@ public class DiagnosGruppTest {
     assertTrue(grupp.getKapitelList().containsAll(Arrays.asList(expected1, expected2, expected3)));
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testBadFormatConstructor() {
-    DiagnosKapitel grupp = new DiagnosKapitel("A00 D00En grupp av diagnoser");
+  @Test
+  void testBadFormatConstructor() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          new DiagnosKapitel("A00 D00En grupp av diagnoser");
+        });
   }
 
   @Test
-  public void testInclude() {
+  void testInclude() {
     DiagnosGrupp grupp = new DiagnosGrupp("A00-D88,F00-V67:En saling blandning av diagnoser");
 
     assertTrue(grupp.includes("A22"));

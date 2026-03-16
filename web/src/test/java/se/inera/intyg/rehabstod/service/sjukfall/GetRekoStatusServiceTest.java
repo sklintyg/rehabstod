@@ -44,7 +44,7 @@ import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrati
 import se.inera.intyg.rehabstod.service.user.UserService;
 
 @ExtendWith(MockitoExtension.class)
-public class GetRekoStatusServiceTest {
+class GetRekoStatusServiceTest {
 
   @Mock IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
   @Mock UserService userService;

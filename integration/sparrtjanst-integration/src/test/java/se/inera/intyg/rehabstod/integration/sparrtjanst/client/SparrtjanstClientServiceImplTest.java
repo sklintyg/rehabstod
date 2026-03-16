@@ -18,19 +18,20 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.client;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.util.SparrtjanstUtil;
@@ -38,8 +39,8 @@ import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp2
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksType;
 
 /** Created by marced on 2018-10-16. */
-@RunWith(MockitoJUnitRunner.class)
-public class SparrtjanstClientServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class SparrtjanstClientServiceImplTest {
 
   private static final String VG_HSA_ID = "vg1";
   private static final String VE_HSA_ID = "ve1.1";
@@ -54,7 +55,7 @@ public class SparrtjanstClientServiceImplTest {
   @InjectMocks private SparrtjanstClientServiceImpl testee;
 
   @Test
-  public void getCheckBlocks() throws Exception {
+  void getCheckBlocks() throws Exception {
     ReflectionTestUtils.setField(testee, "logicalAddress", LOGICAL_ADDRESS);
     ArgumentCaptor<CheckBlocksType> requestCapture = ArgumentCaptor.forClass(CheckBlocksType.class);
 
@@ -85,12 +86,16 @@ public class SparrtjanstClientServiceImplTest {
     assertEquals(date2, args.getInformationEntities().get(1).getInformationEndDate());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void getCheckBlocksThrowsExceptionForInvalidPatientId() throws Exception {
+  @Test
+  void getCheckBlocksThrowsExceptionForInvalidPatientId() throws Exception {
     ReflectionTestUtils.setField(testee, "logicalAddress", LOGICAL_ADDRESS);
 
     List<IntygData> intygLista = new ArrayList<>();
-    testee.getCheckBlocks(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, "123211122", intygLista);
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          testee.getCheckBlocks(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, "123211122", intygLista);
+        });
   }
 
   private IntygData createIntygData(String vg, String ve, LocalDateTime signDate) {

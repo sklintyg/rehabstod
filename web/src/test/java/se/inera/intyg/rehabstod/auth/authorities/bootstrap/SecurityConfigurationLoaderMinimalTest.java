@@ -18,19 +18,20 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities.bootstrap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import se.inera.intyg.infra.security.authorities.AuthoritiesConfiguration;
@@ -42,8 +43,8 @@ import se.inera.intyg.infra.security.common.model.Title;
 import se.inera.intyg.infra.security.common.model.TitleCode;
 
 // CHECKSTYLE:OFF MagicNumber
-@RunWith(MockitoJUnitRunner.class)
-public class SecurityConfigurationLoaderMinimalTest {
+@ExtendWith(MockitoExtension.class)
+class SecurityConfigurationLoaderMinimalTest {
 
   private static final String AUTHORITIES_CONFIGURATION_TEST_FILE =
       "classpath:AuthoritiesConfigurationLoaderTest/authorities-test-minimal.yaml";
@@ -60,8 +61,8 @@ public class SecurityConfigurationLoaderMinimalTest {
           FEATURES_CONFIGURATION_TEST_FILE,
           DEFAULT_MAX_ALIASES_FOR_COLLECTIONS);
 
-  @Before
-  public void setupAuthoritiesConfiguration() {
+  @BeforeEach
+  void setupAuthoritiesConfiguration() {
     // When
     try {
       loader.afterPropertiesSet();
@@ -71,7 +72,7 @@ public class SecurityConfigurationLoaderMinimalTest {
   }
 
   @Test
-  public void loadConfigurationAndAssertTypeOfObjects() {
+  void loadConfigurationAndAssertTypeOfObjects() {
     AuthoritiesConfiguration configuration = loader.getAuthoritiesConfiguration();
 
     assertEquals(0, configuration.getRequestOrigins().size());
@@ -93,8 +94,8 @@ public class SecurityConfigurationLoaderMinimalTest {
   }
 
   // @Test
-  @Ignore
-  public void loadConfigurationAndAssertString() {
+  @Disabled
+  void loadConfigurationAndAssertString() {
     AuthoritiesConfiguration configuration = loader.getAuthoritiesConfiguration();
 
     String actual = configuration.toString().replaceAll("\\s", "").trim();
@@ -111,9 +112,13 @@ public class SecurityConfigurationLoaderMinimalTest {
     assertEquals(expected, actual);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void loadConfigurationWithBadLocation() {
-    SecurityConfigurationLoader loader = new SecurityConfigurationLoader(null, null, null);
+  @Test
+  void loadConfigurationWithBadLocation() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          SecurityConfigurationLoader loader = new SecurityConfigurationLoader(null, null, null);
+        });
   }
 
   // ~ Private scope

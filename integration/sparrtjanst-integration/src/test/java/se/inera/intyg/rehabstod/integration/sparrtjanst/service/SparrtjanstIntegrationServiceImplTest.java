@@ -18,8 +18,9 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.service;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -29,12 +30,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.client.SparrtjanstClientService;
@@ -47,8 +48,8 @@ import se.riv.informationsecurity.authorization.blocking.v4.ResultCodeType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultType;
 
 /** Created by marced on 2018-10-12. */
-@RunWith(MockitoJUnitRunner.class)
-public class SparrtjanstIntegrationServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class SparrtjanstIntegrationServiceImplTest {
 
   private static final String VG_HSA_ID = "vg1";
   private static final String VE_HSA_ID = "ve1.1";
@@ -68,8 +69,8 @@ public class SparrtjanstIntegrationServiceImplTest {
 
   @InjectMocks private SparrtjanstIntegrationServiceImpl testee;
 
-  @Before
-  public void setup() {
+  @BeforeEach
+  void setup() {
     aclList = new HashMap<>();
     intygList = new ArrayList<>();
     intygOnOtherUnitsList = new ArrayList<>();
@@ -102,7 +103,7 @@ public class SparrtjanstIntegrationServiceImplTest {
   }
 
   @Test
-  public void decorateDoesNotHaveSparr() {
+  void decorateDoesNotHaveSparr() {
 
     CheckBlocksResponseType response = createResponse(ResultCodeType.OK, CheckStatusType.OK);
     when(sparrtjanstClientService.getCheckBlocks(
@@ -126,7 +127,7 @@ public class SparrtjanstIntegrationServiceImplTest {
   }
 
   @Test
-  public void decorateHasSparr() {
+  void decorateHasSparr() {
 
     CheckBlocksResponseType response = createResponse(ResultCodeType.OK, CheckStatusType.BLOCKED);
     when(sparrtjanstClientService.getCheckBlocks(
@@ -149,8 +150,8 @@ public class SparrtjanstIntegrationServiceImplTest {
     assertFalse(aclList.get(INTYGS_ID_3).isSparr());
   }
 
-  @Test(expected = SparrtjanstIntegrationException.class)
-  public void shouldThrowSparrtjanstIntegrationExceptionOnErrorResponse() {
+  @Test
+  void shouldThrowSparrtjanstIntegrationExceptionOnErrorResponse() {
 
     CheckBlocksResponseType response =
         createResponse(ResultCodeType.ERROR, CheckStatusType.BLOCKED);
@@ -158,12 +159,16 @@ public class SparrtjanstIntegrationServiceImplTest {
             eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), anyList()))
         .thenReturn(response);
 
-    testee.decorateWithBlockStatus(
-        VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygOnOtherUnitsList);
+    assertThrows(
+        SparrtjanstIntegrationException.class,
+        () -> {
+          testee.decorateWithBlockStatus(
+              VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygOnOtherUnitsList);
+        });
   }
 
-  @Test(expected = SparrtjanstIntegrationException.class)
-  public void shouldThrowSparrtjanstIntegrationExceptionWhenResponseRowsMismatch() {
+  @Test
+  void shouldThrowSparrtjanstIntegrationExceptionWhenResponseRowsMismatch() {
 
     CheckBlocksResponseType response = createResponse(ResultCodeType.OK, CheckStatusType.BLOCKED);
     response.getCheckBlocksResult().getCheckResults().remove(0);
@@ -171,8 +176,12 @@ public class SparrtjanstIntegrationServiceImplTest {
             eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), anyList()))
         .thenReturn(response);
 
-    testee.decorateWithBlockStatus(
-        VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygOnOtherUnitsList);
+    assertThrows(
+        SparrtjanstIntegrationException.class,
+        () -> {
+          testee.decorateWithBlockStatus(
+              VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygOnOtherUnitsList);
+        });
   }
 
   private CheckBlocksResponseType createResponse(ResultCodeType code, CheckStatusType rowResult) {

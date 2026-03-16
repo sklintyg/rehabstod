@@ -77,7 +77,7 @@ import se.inera.intyg.schemas.contract.Personnummer;
 
 /** Created by Magnus Ekstrand on 03/02/16. */
 @ExtendWith(MockitoExtension.class)
-public class SjukfallControllerTest {
+class SjukfallControllerTest {
 
   public static final String PATIENT_ID_1 = "19121212-1212";
   public static final String PATIENT_ID_2 = "20121212-1212";
@@ -118,7 +118,7 @@ public class SjukfallControllerTest {
   class GetSjukfallByUnitTests {
 
     @BeforeEach
-    public void init() {
+    void init() {
       when(userService.getUser()).thenReturn(rehabstodUser);
       when(rehabstodUser.getValdVardenhet()).thenReturn(DEFAULT_VARDENHET);
       when(rehabstodUser.getUrval()).thenReturn(Urval.ALL);
@@ -134,7 +134,7 @@ public class SjukfallControllerTest {
   class GetSjukfallByPatientTests {
 
     @BeforeEach
-    public void init() {
+    void init() {
       when(userService.getUser()).thenReturn(rehabstodUser);
       when(rehabstodUser.getValdVardenhet()).thenReturn(DEFAULT_VARDENHET);
       when(rehabstodUser.getUrval()).thenReturn(Urval.ALL);
@@ -292,7 +292,7 @@ public class SjukfallControllerTest {
   class PdlLogTests {
 
     @BeforeEach
-    public void init() {
+    void init() {
       when(userService.getUser()).thenReturn(rehabstodUser);
     }
 

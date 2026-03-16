@@ -8,8 +8,5 @@ dependencies {
     implementation "org.springframework.data:spring-data-jpa"
 
     testImplementation "com.h2database:h2"
-    testImplementation 'junit:junit'
     testImplementation "org.springframework:spring-test"
-
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
 }

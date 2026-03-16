@@ -18,25 +18,25 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * @author Magnus Ekstrand on 2017-02-21.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class PatientTest {
+@ExtendWith(MockitoExtension.class)
+class PatientTest {
 
   private LocalDate tolvanBirthdate = LocalDate.parse("1912-12-12");
   private LocalDate samordningsBirthdate = LocalDate.parse("1970-10-03");
 
   @Test
-  public void testPatient() {
+  void testPatient() {
     String fullstandigtNamn = "Anders Andersson";
     String id = " 19121212-1212 ";
     final int expectedYear = (int) ChronoUnit.YEARS.between(tolvanBirthdate, LocalDate.now());
@@ -47,7 +47,7 @@ public class PatientTest {
   }
 
   @Test
-  public void testPatientShortId() {
+  void testPatientShortId() {
     String fullstandigtNamn = "Anders Andersson";
     String id = " 19121212 ";
     final int expectedYear = (int) ChronoUnit.YEARS.between(tolvanBirthdate, LocalDate.now());
@@ -58,7 +58,7 @@ public class PatientTest {
   }
 
   @Test
-  public void testPatientEvenShorterId() {
+  void testPatientEvenShorterId() {
     String fullstandigtNamn = "Anders Andersson";
     String id = " 121212 ";
     final int expectedYear = 0;
@@ -69,7 +69,7 @@ public class PatientTest {
   }
 
   @Test
-  public void testPatientBadId() {
+  void testPatientBadId() {
     String fullstandigtNamn = "Anders Andersson";
     String id = " 191212AB-ABCD ";
     final int expectedYear = 0;
@@ -80,7 +80,7 @@ public class PatientTest {
   }
 
   @Test
-  public void testSamordningnummer() {
+  void testSamordningnummer() {
     String fullstandigtNamn = "Anders Andersson";
     String id = "19701063-2391";
 
@@ -92,7 +92,7 @@ public class PatientTest {
   }
 
   @Test
-  public void testShortSamordningnummer() {
+  void testShortSamordningnummer() {
     String fullstandigtNamn = "Anders Andersson";
     String id = "701063-2391";
     final int expectedYear = (int) ChronoUnit.YEARS.between(samordningsBirthdate, LocalDate.now());
@@ -103,7 +103,7 @@ public class PatientTest {
   }
 
   @Test
-  public void testWhitespaceTrimming() {
+  void testWhitespaceTrimming() {
     String fullstandigtNamn = "Anders Andersson";
     String id = " 19121212-1212 ";
 

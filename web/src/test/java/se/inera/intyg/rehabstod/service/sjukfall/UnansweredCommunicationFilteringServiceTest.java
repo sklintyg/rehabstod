@@ -34,7 +34,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilt
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 @ExtendWith(MockitoExtension.class)
-public class UnansweredCommunicationFilteringServiceTest {
+class UnansweredCommunicationFilteringServiceTest {
 
   SjukfallEnhet sickLeave;
   List<SjukfallEnhet> sickLeaves;

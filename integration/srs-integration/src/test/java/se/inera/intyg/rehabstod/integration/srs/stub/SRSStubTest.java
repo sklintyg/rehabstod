@@ -18,20 +18,20 @@
  */
 package se.inera.intyg.rehabstod.integration.srs.stub;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /** Created by eriklupander on 2017-10-31. */
-@RunWith(MockitoJUnitRunner.class)
-public class SRSStubTest {
+@ExtendWith(MockitoExtension.class)
+class SRSStubTest {
 
   private SRSStub testee = new SRSStub();
 
   @Test
-  public void generateRiskInt() {
+  void generateRiskInt() {
     assertEquals(1, testee.getRiskInt(0).intValue());
     assertEquals(2, testee.getRiskInt(1).intValue());
     assertEquals(3, testee.getRiskInt(2).intValue());

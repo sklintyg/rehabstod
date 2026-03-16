@@ -18,16 +18,16 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
@@ -40,8 +40,8 @@ import se.inera.intyg.infra.security.common.model.Title;
  *
  * <p>Created by eriklupander on 2016-05-17.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class RehabstodAuthoritiesResolverTest {
+@ExtendWith(MockitoExtension.class)
+class RehabstodAuthoritiesResolverTest {
 
   private final String authoritiesConfigurationFile =
       "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
@@ -61,13 +61,13 @@ public class RehabstodAuthoritiesResolverTest {
   @InjectMocks
   private CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();
 
-  @Before
-  public void setup() throws Exception {
+  @BeforeEach
+  void setup() throws Exception {
     configurationLoader.afterPropertiesSet();
   }
 
   @Test
-  public void testGetIntygsTyper() {
+  void testGetIntygsTyper() {
     // Arrange
 
     // Act
@@ -79,7 +79,7 @@ public class RehabstodAuthoritiesResolverTest {
   }
 
   @Test
-  public void testGetPrivileges() {
+  void testGetPrivileges() {
     // Arrange
 
     // Act
@@ -91,7 +91,7 @@ public class RehabstodAuthoritiesResolverTest {
   }
 
   @Test
-  public void testGetRequestOrigins() {
+  void testGetRequestOrigins() {
     // Arrange
 
     // Act
@@ -103,7 +103,7 @@ public class RehabstodAuthoritiesResolverTest {
   }
 
   @Test
-  public void testGetTitles() {
+  void testGetTitles() {
     // Arrange
 
     // Act

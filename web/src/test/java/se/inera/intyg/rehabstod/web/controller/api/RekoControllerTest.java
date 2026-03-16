@@ -37,7 +37,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.CreateRekoStatusRequestDT
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetRekoStatusRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
-public class RekoControllerTest {
+class RekoControllerTest {
 
   @Mock private CreateRekoStatusService createRekoStatusService;
 

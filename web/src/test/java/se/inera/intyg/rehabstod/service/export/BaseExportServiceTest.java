@@ -18,25 +18,25 @@
  */
 package se.inera.intyg.rehabstod.service.export;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
-public class BaseExportServiceTest {
+class BaseExportServiceTest {
 
   private BaseExportService baseExportService = new BaseExportService() {};
 
   @Test
-  public void testGetFilterDate() {
+  void testGetFilterDate() {
     LangdIntervall interval = new LangdIntervall();
     interval.setMin("2017-12-01");
     interval.setMax("2017-12-12");
@@ -49,7 +49,7 @@ public class BaseExportServiceTest {
   }
 
   @Test
-  public void testGetFilterDateEmpty() {
+  void testGetFilterDateEmpty() {
     LangdIntervall interval = new LangdIntervall();
 
     String date = baseExportService.getFilterDate(interval);
@@ -60,7 +60,7 @@ public class BaseExportServiceTest {
   }
 
   @Test
-  public void testGetFilterDateSame() {
+  void testGetFilterDateSame() {
     LangdIntervall interval = new LangdIntervall();
     interval.setMin("2017-12-01");
     interval.setMax("2017-12-01");
@@ -73,7 +73,7 @@ public class BaseExportServiceTest {
   }
 
   @Test
-  public void testDiagnoseListToStringNull() {
+  void testDiagnoseListToStringNull() {
     String diagnoseString = baseExportService.diagnoseListToString(null);
 
     String expected = "";
@@ -82,7 +82,7 @@ public class BaseExportServiceTest {
   }
 
   @Test
-  public void testDiagnoseListToStringEmpty() {
+  void testDiagnoseListToStringEmpty() {
     List<Diagnos> diagnoses = new ArrayList<>();
     String diagnoseString = baseExportService.diagnoseListToString(diagnoses);
 
@@ -92,7 +92,7 @@ public class BaseExportServiceTest {
   }
 
   @Test
-  public void testDiagnoseListToStringOne() {
+  void testDiagnoseListToStringOne() {
     List<Diagnos> diagnoses = new ArrayList<>();
     diagnoses.add(new Diagnos("J20V", "J20", "Test"));
     String diagnoseString = baseExportService.diagnoseListToString(diagnoses);
@@ -103,7 +103,7 @@ public class BaseExportServiceTest {
   }
 
   @Test
-  public void testDiagnoseListToStringList() {
+  void testDiagnoseListToStringList() {
     List<Diagnos> diagnoses = new ArrayList<>();
     diagnoses.add(new Diagnos("J20V", "J20", "Test"));
     diagnoses.add(new Diagnos("J21V", "J21", "Test2"));
@@ -115,7 +115,7 @@ public class BaseExportServiceTest {
   }
 
   @Test
-  public void testNotEmpty() {
+  void testNotEmpty() {
     PrintSjukfallRequest request = new PrintSjukfallRequest();
     request.setFritext("Search");
 
@@ -125,7 +125,7 @@ public class BaseExportServiceTest {
   }
 
   @Test
-  public void testNotEmptyBlank() {
+  void testNotEmptyBlank() {
     PrintSjukfallRequest request = new PrintSjukfallRequest();
     request.setFritext("");
 
@@ -135,7 +135,7 @@ public class BaseExportServiceTest {
   }
 
   @Test
-  public void testNotEmptyNull() {
+  void testNotEmptyNull() {
     PrintSjukfallRequest request = new PrintSjukfallRequest();
 
     boolean notEmpty = baseExportService.notEmpty(request);
@@ -144,7 +144,7 @@ public class BaseExportServiceTest {
   }
 
   @Test
-  public void testShouldShowSort() {
+  void testShouldShowSort() {
     PrintSjukfallRequest request = new PrintSjukfallRequest();
     List<ExportField> fields = Arrays.asList(ExportField.DAYS, ExportField.DIAGNOSE);
 

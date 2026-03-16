@@ -18,18 +18,20 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.nameresolver;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.PatientData;
@@ -37,8 +39,9 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 /** Created by eriklupander on 2017-02-24. */
-@RunWith(MockitoJUnitRunner.class)
-public class SjukfallEmployeeNameResolverTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class SjukfallEmployeeNameResolverTest {
 
   private final String lakareId1 = "IFV1239877878-1049";
   private final String lakareNamn1 = "Jan Nilsson";
@@ -53,7 +56,7 @@ public class SjukfallEmployeeNameResolverTest {
   @InjectMocks private SjukfallEmployeeNameResolver testee = new SjukfallEmployeeNameResolverImpl();
 
   @Test
-  public void testUpdateDuplicateDoctorNamesWithHsaId() {
+  void testUpdateDuplicateDoctorNamesWithHsaId() {
     List<SjukfallEnhet> sjukfallList = createSjukfallList();
     testee.updateDuplicateDoctorNamesWithHsaId(sjukfallList);
 
@@ -63,7 +66,7 @@ public class SjukfallEmployeeNameResolverTest {
   }
 
   @Test
-  public void testUpdateNoDuplicateDoctorNames() {
+  void testUpdateNoDuplicateDoctorNames() {
     List<SjukfallEnhet> sjukfallList =
         createSjukfallList().stream()
             .filter(sf -> sf.getLakare().getNamn().equals(lakareNamn2))
@@ -75,7 +78,7 @@ public class SjukfallEmployeeNameResolverTest {
   }
 
   @Test
-  public void testEmployeeNameLakare1HasNoRecordShowHsaIdAsName() {
+  void testEmployeeNameLakare1HasNoRecordShowHsaIdAsName() {
     List<SjukfallEnhet> sjukfallList = createSjukfallList();
     when(employeeNameService.getEmployeeHsaName(lakareId1)).thenReturn(null);
     testee.enrichWithHsaEmployeeNames(sjukfallList);
@@ -83,7 +86,7 @@ public class SjukfallEmployeeNameResolverTest {
   }
 
   @Test
-  public void testEmployeeNameLakare2HasRecordSameAsNameOnSjukfall() {
+  void testEmployeeNameLakare2HasRecordSameAsNameOnSjukfall() {
     List<SjukfallEnhet> sjukfallList = createSjukfallList();
     when(employeeNameService.getEmployeeHsaName(lakareId2)).thenReturn(lakareNamn2);
     testee.enrichWithHsaEmployeeNames(sjukfallList);
@@ -91,7 +94,7 @@ public class SjukfallEmployeeNameResolverTest {
   }
 
   @Test
-  public void testEmployeeNameLakare3HasRecordDifferentNameOnSjukfall() {
+  void testEmployeeNameLakare3HasRecordDifferentNameOnSjukfall() {
     List<SjukfallEnhet> sjukfallList = createSjukfallList();
     when(employeeNameService.getEmployeeHsaName(lakareId3)).thenReturn(lakareNamn3Alt);
     testee.enrichWithHsaEmployeeNames(sjukfallList);
@@ -99,7 +102,7 @@ public class SjukfallEmployeeNameResolverTest {
   }
 
   @Test
-  public void testEnrichSjukfallPaientWithHsaEmployeeNamesNoRecord() {
+  void testEnrichSjukfallPaientWithHsaEmployeeNamesNoRecord() {
     List<SjukfallPatient> sjukfallList = createSjukfallPatientList();
     when(employeeNameService.getEmployeeHsaName(lakareId1)).thenReturn(lakareNamn3Alt);
     testee.enrichSjukfallPaientWithHsaEmployeeNames(sjukfallList);
@@ -107,7 +110,7 @@ public class SjukfallEmployeeNameResolverTest {
   }
 
   @Test
-  public void testEnrichSjukfallPaientWithHsaEmployeeNames() {
+  void testEnrichSjukfallPaientWithHsaEmployeeNames() {
     List<SjukfallPatient> sjukfallList = createSjukfallPatientList();
     when(employeeNameService.getEmployeeHsaName(lakareId1)).thenReturn(null);
     testee.enrichSjukfallPaientWithHsaEmployeeNames(sjukfallList);
@@ -115,7 +118,7 @@ public class SjukfallEmployeeNameResolverTest {
   }
 
   @Test
-  public void shallReturnEmployeeNameWhenExists() {
+  void shallReturnEmployeeNameWhenExists() {
     final var employeeId = "employeeId";
     final var expectedName = "Name Found";
     doReturn(expectedName).when(employeeNameService).getEmployeeHsaName(employeeId);
@@ -124,7 +127,7 @@ public class SjukfallEmployeeNameResolverTest {
   }
 
   @Test
-  public void shallReturnHsaIdAsEmployeeNameWhenNotExists() {
+  void shallReturnHsaIdAsEmployeeNameWhenNotExists() {
     final var employeeId = "employeeId";
     doReturn(null).when(employeeNameService).getEmployeeHsaName(employeeId);
     final var actualName = testee.getEmployeeName(employeeId);
@@ -132,7 +135,7 @@ public class SjukfallEmployeeNameResolverTest {
   }
 
   @Test
-  public void shallAddHsaIdForDuplicateNames() {
+  void shallAddHsaIdForDuplicateNames() {
     final var lakareList =
         List.of(new Lakare("HSA-ID1", "Duplicate Name"), new Lakare("HSA-ID2", "Duplicate Name"));
 
@@ -147,7 +150,7 @@ public class SjukfallEmployeeNameResolverTest {
   }
 
   @Test
-  public void shallNotAddHsaIdForUniqueNames() {
+  void shallNotAddHsaIdForUniqueNames() {
     final var lakareList =
         List.of(new Lakare("HSA-ID1", "Unique Name 1"), new Lakare("HSA-ID2", "Unique Name 2"));
 

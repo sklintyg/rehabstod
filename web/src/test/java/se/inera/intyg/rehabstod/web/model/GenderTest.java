@@ -18,15 +18,15 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Created by martin on 11/02/16. */
-public class GenderTest {
+class GenderTest {
 
   @Test
-  public void testGetMale() {
+  void testGetMale() {
     assertEquals(Gender.M, Gender.getGenderFromString("1"));
     assertEquals(Gender.M, Gender.getGenderFromString("3"));
     assertEquals(Gender.M, Gender.getGenderFromString("5"));
@@ -35,7 +35,7 @@ public class GenderTest {
   }
 
   @Test
-  public void testGetFemale() {
+  void testGetFemale() {
     assertEquals(Gender.F, Gender.getGenderFromString("0"));
     assertEquals(Gender.F, Gender.getGenderFromString("2"));
     assertEquals(Gender.F, Gender.getGenderFromString("4"));
@@ -44,7 +44,7 @@ public class GenderTest {
   }
 
   @Test
-  public void testGetUnknown() {
+  void testGetUnknown() {
     assertEquals(Gender.UNKNOWN, Gender.getGenderFromString("A"));
     assertEquals(Gender.UNKNOWN, Gender.getGenderFromString(""));
     assertEquals(Gender.UNKNOWN, Gender.getGenderFromString(null));

@@ -18,23 +18,24 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /** Created by martin on 10/02/16. */
-@RunWith(MockitoJUnitRunner.class)
-public class DiagnosBeskrivningServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class DiagnosBeskrivningServiceImplTest {
 
   private static final String KOD_1 = "M123";
   private static final String KOD_2 = "A123B";
@@ -47,14 +48,14 @@ public class DiagnosBeskrivningServiceImplTest {
 
   @InjectMocks private DiagnosBeskrivningServiceImpl testee;
 
-  @Before
-  public void init() throws IOException {
+  @BeforeEach
+  void init() throws IOException {
     when(diagnosKoderLoader.loadDiagnosKoder()).thenReturn(buildDiagnosKoderMap());
     testee.init();
   }
 
   @Test
-  public void testGetDiagnosBeskrivning() {
+  void testGetDiagnosBeskrivning() {
 
     assertEquals(BESKRIVNING_1, testee.getDiagnosBeskrivning(KOD_1));
     assertEquals(BESKRIVNING_2, testee.getDiagnosBeskrivning(KOD_2));
@@ -62,10 +63,14 @@ public class DiagnosBeskrivningServiceImplTest {
     assertNull(testee.getDiagnosBeskrivning(KOD_4));
   }
 
-  @Test(expected = DiagnosServiceException.class)
-  public void testDiagnosServiceExceptionOnFailedInit() throws IOException {
+  @Test
+  void testDiagnosServiceExceptionOnFailedInit() throws IOException {
     when(diagnosKoderLoader.loadDiagnosKoder()).thenThrow(new IOException("Faked IO Exception"));
-    testee.init();
+    assertThrows(
+        DiagnosServiceException.class,
+        () -> {
+          testee.init();
+        });
   }
 
   private Map<String, String> buildDiagnosKoderMap() {

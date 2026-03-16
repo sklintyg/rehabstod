@@ -70,7 +70,7 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetDoctorsForUnitResponse;
 
 @ExtendWith(MockitoExtension.class)
-public class PopulateFiltersServiceTest {
+class PopulateFiltersServiceTest {
 
   @Mock UserService userService;
 

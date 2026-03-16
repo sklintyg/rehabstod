@@ -18,28 +18,28 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil;
 import se.inera.intyg.infra.security.common.model.Privilege;
 import se.inera.intyg.infra.security.common.model.Role;
 
 /** Created by marced on 13/04/16. */
-public class AuthoritiesResolverUtilTest {
+class AuthoritiesResolverUtilTest {
 
   private static final String KEY = "1";
   private static final String VALUE = "2";
   Role role = new Role();
 
-  @Before
-  public void before() {
+  @BeforeEach
+  void before() {
 
     role.setName("ROLENAME");
     List<Privilege> privileges = new ArrayList<>();
@@ -50,7 +50,7 @@ public class AuthoritiesResolverUtilTest {
   }
 
   @Test
-  public void testRoleToMap() {
+  void testRoleToMap() {
     // Act
     final Map<String, Role> stringRoleMap = AuthoritiesResolverUtil.toMap(role);
 
@@ -60,7 +60,7 @@ public class AuthoritiesResolverUtilTest {
   }
 
   @Test
-  public void testPrivilegesToMapWithNullElementInList() {
+  void testPrivilegesToMapWithNullElementInList() {
     // Act
     final Map<String, Privilege> stringPrivilegeMap =
         AuthoritiesResolverUtil.toMap(Arrays.asList(new Privilege(), null), Privilege::getName);
@@ -70,7 +70,7 @@ public class AuthoritiesResolverUtilTest {
   }
 
   @Test
-  public void testPrivilegesToMap() {
+  void testPrivilegesToMap() {
     // Act
     final Map<String, Privilege> stringPrivilegeMap =
         AuthoritiesResolverUtil.toMap(role.getPrivileges(), Privilege::getName);
@@ -82,7 +82,7 @@ public class AuthoritiesResolverUtilTest {
   }
 
   @Test
-  public void testToList() {
+  void testToList() {
     // Arrange
     Map<String, Object> map = new HashMap<>();
     map.put(KEY, VALUE);
@@ -96,7 +96,7 @@ public class AuthoritiesResolverUtilTest {
   }
 
   @Test
-  public void testToArray() {
+  void testToArray() {
     // Arrange
     Map<String, Object> map = new HashMap<>();
     map.put(KEY, VALUE);

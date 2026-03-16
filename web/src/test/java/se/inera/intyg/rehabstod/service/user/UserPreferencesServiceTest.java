@@ -18,25 +18,28 @@
  */
 package se.inera.intyg.rehabstod.service.user;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UserPreferencesServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class UserPreferencesServiceTest {
 
   private static final String KEY = "maxAntalDagarMellanIntyg";
   private static final String HSA_ID = "abcdefghijkl";
@@ -48,13 +51,13 @@ public class UserPreferencesServiceTest {
 
   @Mock private UserService userService;
 
-  @Before
-  public void setup() {
+  @BeforeEach
+  void setup() {
     when(userService.getUser()).thenReturn(new RehabstodUser(HSA_ID, "rehabstod-username", true));
   }
 
   @Test
-  public void testUpdatingExistingPreference() throws Exception {
+  void testUpdatingExistingPreference() throws Exception {
     AnvandarPreference anvPref = new AnvandarPreference(HSA_ID, KEY, "old value");
     when(anvandarPreferenceRepository.findByHsaIdAndKey(eq(HSA_ID), eq(KEY))).thenReturn(anvPref);
 

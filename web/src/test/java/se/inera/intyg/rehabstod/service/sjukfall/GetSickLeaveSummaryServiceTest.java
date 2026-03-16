@@ -42,7 +42,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDT
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 @ExtendWith(MockitoExtension.class)
-public class GetSickLeaveSummaryServiceTest {
+class GetSickLeaveSummaryServiceTest {
 
   @Mock PuService puService;
   @Mock StatisticsCalculator statisticsCalculator;

@@ -18,11 +18,12 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -37,13 +38,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -73,8 +76,9 @@ import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 
 /** Created by marced on 29/01/16. */
-@RunWith(MockitoJUnitRunner.class)
-public class RehabstodUserDetailsServiceTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class RehabstodUserDetailsServiceTest {
 
   protected static final String AUTHORITIES_CONFIGURATION_FILE =
       "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
@@ -119,7 +123,7 @@ public class RehabstodUserDetailsServiceTest {
 
   @Mock private RehabstodUnitChangeService rehabstodUnitChangeService;
 
-  @BeforeClass
+  @BeforeAll
   public static void setupAuthoritiesConfiguration() throws Exception {
 
     // Load configuration
@@ -129,8 +133,8 @@ public class RehabstodUserDetailsServiceTest {
     AUTHORITIES_RESOLVER.setConfigurationLoader(CONFIGURATION_LOADER);
   }
 
-  @Before
-  public void setup() {
+  @BeforeEach
+  void setup() {
     // Setup a servlet request
     final var request = mock(HttpServletRequest.class);
     RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
@@ -148,7 +152,7 @@ public class RehabstodUserDetailsServiceTest {
   }
 
   @Test
-  public void assertLoadsOkWhenHasMatchingSystemRole() throws Exception {
+  void assertLoadsOkWhenHasMatchingSystemRole() throws Exception {
     // given
     UserCredentials userCredz = new UserCredentials();
     userCredz.getHsaSystemRole().addAll(buildSystemRoles());
@@ -167,15 +171,15 @@ public class RehabstodUserDetailsServiceTest {
         .orThrow();
     assertEquals(3, rehabstodUser.getTotaltAntalVardenheter());
     assertNotNull(
-        "A default vardenhet should have been selected", rehabstodUser.getValdVardenhet());
+        rehabstodUser.getValdVardenhet(), "A default vardenhet should have been selected");
     assertEquals(
-        ENHET_HSAID_2 + " should have been selected as valdVardgivare",
         ENHET_HSAID_2,
-        rehabstodUser.getValdVardenhet().getId());
+        rehabstodUser.getValdVardenhet().getId(),
+        ENHET_HSAID_2 + " should have been selected as valdVardgivare");
   }
 
   @Test
-  public void assertSelectsDefaultVardenhetWhenOnlyOneExists() throws Exception {
+  void assertSelectsDefaultVardenhetWhenOnlyOneExists() throws Exception {
     // given
     UserCredentials userCredz = new UserCredentials();
     userCredz.getHsaSystemRole().addAll(buildSystemRoles());
@@ -200,14 +204,13 @@ public class RehabstodUserDetailsServiceTest {
         .orThrow();
     assertEquals(1, rehabstodUser.getTotaltAntalVardenheter());
     assertEquals(
-        ENHET_HSAID_2 + " should have been selected as valdVardgivare",
         ENHET_HSAID_2,
-        rehabstodUser.getValdVardenhet().getId());
+        rehabstodUser.getValdVardenhet().getId(),
+        ENHET_HSAID_2 + " should have been selected as valdVardgivare");
   }
 
   @Test
-  public void assertSelectsDefaultVardenhetWhenOnlyOneExistsEvenIfMottagningarExists()
-      throws Exception {
+  void assertSelectsDefaultVardenhetWhenOnlyOneExistsEvenIfMottagningarExists() throws Exception {
     // given
     UserCredentials userCredz = new UserCredentials();
     userCredz.getHsaSystemRole().addAll(buildSystemRoles());
@@ -236,81 +239,105 @@ public class RehabstodUserDetailsServiceTest {
         .orThrow();
     assertEquals(2, rehabstodUser.getTotaltAntalVardenheter());
     assertEquals(
-        ENHET_HSAID_2 + " should have been selected as valdVardgivare",
         ENHET_HSAID_2,
-        rehabstodUser.getValdVardenhet().getId());
+        rehabstodUser.getValdVardenhet().getId(),
+        ENHET_HSAID_2 + " should have been selected as valdVardgivare");
   }
 
-  @Test(expected = MissingUnitWithRehabSystemRoleException.class)
-  public void assertThrowsExceptionWhenNoMatchingSystemRole() throws Exception {
-    // given
-    setupCallToAuthorizedEnheterForHosPerson();
-    setupCallToGetHsaPersonInfoNonDoctor();
+  @Test
+  void assertThrowsExceptionWhenNoMatchingSystemRole() throws Exception {
+    assertThrows(
+        MissingUnitWithRehabSystemRoleException.class,
+        () -> {
+          // given
+          setupCallToAuthorizedEnheterForHosPerson();
+          setupCallToGetHsaPersonInfoNonDoctor();
 
-    // then
-    userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
+          // then
+          userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
+        });
   }
 
-  @Test(expected = MissingUnitWithRehabSystemRoleException.class)
-  public void assertNoRoleWhenUserHasTitleLakareButNoSystemRoles() throws Exception {
-    // given
-    setupCallToAuthorizedEnheterForHosPerson();
-    setupCallToGetHsaPersonInfoNonDoctor("Läkare");
+  @Test
+  void assertNoRoleWhenUserHasTitleLakareButNoSystemRoles() throws Exception {
+    assertThrows(
+        MissingUnitWithRehabSystemRoleException.class,
+        () -> {
+          // given
+          setupCallToAuthorizedEnheterForHosPerson();
+          setupCallToGetHsaPersonInfoNonDoctor("Läkare");
 
-    // then
-    userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
+          // then
+          userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
+        });
   }
 
-  @Test(expected = HsaServiceException.class)
-  public void testHsaServiceExceptionIsThrownWhenHsaGetPersonThrowsUncheckedException()
-      throws Exception {
-    // given
-    when(hsaPersonService.getHsaPersonInfo(anyString()))
-        .thenThrow(new RuntimeException("some-exception"));
-    setupCallToAuthorizedEnheterForHosPerson();
+  @Test
+  void testHsaServiceExceptionIsThrownWhenHsaGetPersonThrowsUncheckedException() throws Exception {
+    assertThrows(
+        HsaServiceException.class,
+        () -> {
+          // given
+          when(hsaPersonService.getHsaPersonInfo(anyString()))
+              .thenThrow(new RuntimeException("some-exception"));
+          setupCallToAuthorizedEnheterForHosPerson();
 
-    // then
-    userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
+          // then
+          userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
+        });
   }
 
-  @Test(expected = HsaServiceException.class)
-  public void testHsaServiceExceptionIsThrownWhenHsaThrowsException() throws Exception {
-    // given
-    when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
-        .thenThrow(new RuntimeException("some-hsa-exception"));
+  @Test
+  void testHsaServiceExceptionIsThrownWhenHsaThrowsException() throws Exception {
+    assertThrows(
+        HsaServiceException.class,
+        () -> {
+          // given
+          when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
+              .thenThrow(new RuntimeException("some-hsa-exception"));
 
-    // then
-    userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
+          // then
+          userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
+        });
   }
 
-  @Test(expected = MissingMedarbetaruppdragException.class)
-  public void testMissingMedarbetaruppdragExceptionIsThrownWhenEmployeeHasNoVardgivare()
-      throws Exception {
-    // given
-    setupCallToGetHsaPersonInfo();
-    when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
-        .thenReturn(
-            new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>(), new HashMap<>()));
+  @Test
+  void testMissingMedarbetaruppdragExceptionIsThrownWhenEmployeeHasNoVardgivare() throws Exception {
+    assertThrows(
+        MissingMedarbetaruppdragException.class,
+        () -> {
+          // given
+          setupCallToGetHsaPersonInfo();
+          when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
+              .thenReturn(
+                  new UserAuthorizationInfo(
+                      new UserCredentials(), new ArrayList<>(), new HashMap<>()));
 
-    // then
-    userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
+          // then
+          userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
+        });
   }
 
-  @Test(expected = MissingMedarbetaruppdragException.class)
-  public void testMissingMedarbetaruppdragExceptionIsThrownWhenEmployeeHasNoMIU() throws Exception {
-    // given
-    when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
-        .thenReturn(
-            new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>(), new HashMap<>()));
-    setupCallToGetHsaPersonInfo();
+  @Test
+  void testMissingMedarbetaruppdragExceptionIsThrownWhenEmployeeHasNoMIU() throws Exception {
+    assertThrows(
+        MissingMedarbetaruppdragException.class,
+        () -> {
+          // given
+          when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
+              .thenReturn(
+                  new UserAuthorizationInfo(
+                      new UserCredentials(), new ArrayList<>(), new HashMap<>()));
+          setupCallToGetHsaPersonInfo();
 
-    // then
-    userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
+          // then
+          userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
+        });
   }
 
   // INTYG-2629
   @Test
-  public void testUserWithTitleLakareBecomesVardadmin() throws Exception {
+  void testUserWithTitleLakareBecomesVardadmin() throws Exception {
     UserCredentials userCredz = new UserCredentials();
     userCredz.getHsaSystemRole().addAll(buildSystemRoles());
     when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
@@ -327,7 +354,7 @@ public class RehabstodUserDetailsServiceTest {
   }
 
   @Test
-  public void testLakareWithNoSystemRolesKeepsAllUnits() throws Exception {
+  void testLakareWithNoSystemRolesKeepsAllUnits() throws Exception {
     UserCredentials userCredz = new UserCredentials();
     when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
         .thenReturn(
@@ -339,12 +366,12 @@ public class RehabstodUserDetailsServiceTest {
     AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_LAKARE).orThrow();
     assertEquals(4, rehabstodUser.getTotaltAntalVardenheter());
     assertNull(
-        "No default vardenenhet should have been selected since user have more than 1 available unit",
-        rehabstodUser.getValdVardenhet());
+        rehabstodUser.getValdVardenhet(),
+        "No default vardenenhet should have been selected since user have more than 1 available unit");
   }
 
   @Test
-  public void testRemoveEnheterMissingRehabKoordinatorRole() {
+  void testRemoveEnheterMissingRehabKoordinatorRole() {
     // Arrange
     Vardgivare vardgivare1 = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
     Vardenhet enhet1 = new Vardenhet(ENHET_HSAID_1, "Skall bort");
@@ -394,7 +421,7 @@ public class RehabstodUserDetailsServiceTest {
   }
 
   @Test
-  public void testRemoveEnheterMissingRehabKoordinatorRoleRemovedEmptyVardgivare() {
+  void testRemoveEnheterMissingRehabKoordinatorRoleRemovedEmptyVardgivare() {
     // Arrange
     Vardgivare vardgivare1 = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting - skall bort");
     Vardenhet enhet1 = new Vardenhet(ENHET_HSAID_1, "Skall bort");
@@ -425,20 +452,25 @@ public class RehabstodUserDetailsServiceTest {
     assertFalse(vardgivare2.getVardenheter().contains(enhet22));
   }
 
-  @Test(expected = MissingUnitWithRehabSystemRoleException.class)
-  public void testRemoveEnheterMissingRehabKoordinatorRoleRemoveAllThrowsException() {
-    // Arrange
-    Vardgivare vardgivare1 = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
-    Vardenhet enhet1 = new Vardenhet(ENHET_HSAID_1, "Skall bort");
-    vardgivare1.getVardenheter().add(enhet1);
+  @Test
+  void testRemoveEnheterMissingRehabKoordinatorRoleRemoveAllThrowsException() {
+    assertThrows(
+        MissingUnitWithRehabSystemRoleException.class,
+        () -> {
+          // Arrange
+          Vardgivare vardgivare1 = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
+          Vardenhet enhet1 = new Vardenhet(ENHET_HSAID_1, "Skall bort");
+          vardgivare1.getVardenheter().add(enhet1);
 
-    List<String> systemRoles =
-        List.of(SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2);
+          List<String> systemRoles =
+              List.of(SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2);
 
-    List<Vardgivare> original = new ArrayList<>(List.of(vardgivare1));
+          List<Vardgivare> original = new ArrayList<>(List.of(vardgivare1));
 
-    // Act
-    userDetailsService.removeEnheterMissingRehabKoordinatorRole(original, systemRoles, "userHsaId");
+          // Act
+          userDetailsService.removeEnheterMissingRehabKoordinatorRole(
+              original, systemRoles, "userHsaId");
+        });
   }
 
   private void setupCallToAuthorizedEnheterForHosPerson() {

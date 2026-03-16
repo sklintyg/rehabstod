@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -26,12 +27,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -42,8 +43,8 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 
 /** Created by eriklupander on 2016-03-03. */
-@RunWith(MockitoJUnitRunner.class)
-public class LogServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class LogServiceImplTest {
 
   @Mock private JmsTemplate template = mock(JmsTemplate.class);
 
@@ -54,42 +55,54 @@ public class LogServiceImplTest {
   @InjectMocks private LogServiceImpl testee;
 
   @Test
-  public void testSendPdlReadMessage() {
+  void testSendPdlReadMessage() {
     when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser(true));
     testee.logSjukfallData(
         TestDataGen.buildSjukfallList(5), ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
     verify(template, times(1)).send(any());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testSendPdlUnknownMessage() {
-    when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser(true));
-    try {
-      testee.logSjukfallData(
-          TestDataGen.buildSjukfallList(5),
-          ActivityType.EMERGENCY_ACCESS,
-          ResourceType.RESOURCE_TYPE_SJUKFALL);
-    } finally {
-      verify(template, times(0)).send(any());
-    }
+  @Test
+  void testSendPdlUnknownMessage() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser(true));
+          try {
+            testee.logSjukfallData(
+                TestDataGen.buildSjukfallList(5),
+                ActivityType.EMERGENCY_ACCESS,
+                ResourceType.RESOURCE_TYPE_SJUKFALL);
+          } finally {
+            verify(template, times(0)).send(any());
+          }
+        });
   }
 
   @Test
-  public void testNoLogMessageSentWhenSjukfallListIsEmpty() {
+  void testNoLogMessageSentWhenSjukfallListIsEmpty() {
     testee.logSjukfallData(
         new ArrayList<>(), ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
     verify(template, times(0)).send(any());
   }
 
-  @Test(expected = JmsException.class)
-  public void testSendPdlJmsException() {
-    when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser(true));
-    doThrow(new DestinationResolutionException("")).when(template).send(any(MessageCreator.class));
-    try {
-      testee.logSjukfallData(
-          TestDataGen.buildSjukfallList(5), ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
-    } finally {
-      verify(template, times(1)).send(any());
-    }
+  @Test
+  void testSendPdlJmsException() {
+    assertThrows(
+        JmsException.class,
+        () -> {
+          when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser(true));
+          doThrow(new DestinationResolutionException(""))
+              .when(template)
+              .send(any(MessageCreator.class));
+          try {
+            testee.logSjukfallData(
+                TestDataGen.buildSjukfallList(5),
+                ActivityType.READ,
+                ResourceType.RESOURCE_TYPE_SJUKFALL);
+          } finally {
+            verify(template, times(1)).send(any());
+          }
+        });
   }
 }

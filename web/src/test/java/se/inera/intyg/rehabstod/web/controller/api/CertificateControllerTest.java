@@ -36,7 +36,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPerso
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForPersonRequest;
 
 @ExtendWith(MockitoExtension.class)
-public class CertificateControllerTest {
+class CertificateControllerTest {
 
   private static final String ENCRYPTED_PATIENT_ID = "ENCRYPTED_PATIENT_ID";
   private static final String PATIENT_ID = "PATIENT_ID";
