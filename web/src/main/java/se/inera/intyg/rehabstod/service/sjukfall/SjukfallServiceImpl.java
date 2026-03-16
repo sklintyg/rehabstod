@@ -32,7 +32,6 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
-import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
 import se.inera.intyg.infra.pu.integration.api.model.PersonSvar.Status;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
@@ -47,6 +46,7 @@ import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationSe
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.service.SparrtjanstIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
+import se.inera.intyg.rehabstod.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
