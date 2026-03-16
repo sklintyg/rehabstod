@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.common.model;
 
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
 
 /** Created by marced on 2018-09-27. */
 public class IntygAccessControlMetaData {

@@ -75,7 +75,7 @@ class DiagnosKodTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> {
-          se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create("");
+          se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKod.create("");
         });
   }
 
@@ -84,7 +84,7 @@ class DiagnosKodTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> {
-          se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create(null);
+          se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKod.create(null);
         });
   }
 }

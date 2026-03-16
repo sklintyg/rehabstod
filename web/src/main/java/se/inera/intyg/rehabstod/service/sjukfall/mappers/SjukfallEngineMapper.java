@@ -29,12 +29,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
 import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
+import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
@@ -55,7 +55,7 @@ public class SjukfallEngineMapper {
 
   /** Mapping from SjukfallEngine's format to Rehabstod internal format. */
   public SjukfallEnhet mapToSjukfallEnhetDto(
-      se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from,
+      se.inera.intyg.rehabstod.sjukfall.dto.SjukfallEnhet from,
       int maxDagarSedanAvslut,
       LocalDate today) {
     SjukfallEnhet to = new SjukfallEnhet();
@@ -93,7 +93,8 @@ public class SjukfallEngineMapper {
     return to;
   }
 
-  private static RekoStatusDTO getRekoStatus(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from) {
+  private static RekoStatusDTO getRekoStatus(
+      se.inera.intyg.rehabstod.sjukfall.dto.SjukfallEnhet from) {
     return new RekoStatusDTO(
         new RekoStatusTypeDTO(
             from.getRekoStatus().getStatus().getId(), from.getRekoStatus().getStatus().getName()));
@@ -101,7 +102,7 @@ public class SjukfallEngineMapper {
 
   /** Mapping from SjukfallEngine's format to Rehabstod internal format. */
   public SjukfallPatient mapToSjukfallPatientDto(
-      se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from,
+      se.inera.intyg.rehabstod.sjukfall.dto.SjukfallPatient from,
       Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
     SjukfallPatient to = new SjukfallPatient();
 
@@ -137,7 +138,7 @@ public class SjukfallEngineMapper {
 
   /** Mapping from SjukfallEngine's format to Rehabstod internal format. */
   public PatientData mapSjukfallIntygToPatientData(
-      se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg from, IntygAccessControlMetaData iacm) {
+      se.inera.intyg.rehabstod.sjukfall.dto.SjukfallIntyg from, IntygAccessControlMetaData iacm) {
     PatientData to = new PatientData();
 
     try {
@@ -178,25 +179,25 @@ public class SjukfallEngineMapper {
     return new Lakare(lakareId, lakareNamn);
   }
 
-  public Diagnos getDiagnos(se.inera.intyg.infra.sjukfall.dto.DiagnosKod from) {
+  public Diagnos getDiagnos(se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKod from) {
     return diagnosFactory.getDiagnos(from.getOriginalCode(), from.getCleanedCode(), from.getName());
   }
 
   // private scope
 
-  private Lakare map(se.inera.intyg.infra.sjukfall.dto.Lakare from) {
+  private Lakare map(se.inera.intyg.rehabstod.sjukfall.dto.Lakare from) {
     return new Lakare(from.getId(), from.getNamn());
   }
 
-  private Patient map(se.inera.intyg.infra.sjukfall.dto.Patient from) {
+  private Patient map(se.inera.intyg.rehabstod.sjukfall.dto.Patient from) {
     return new Patient(from.getId(), from.getNamn());
   }
 
-  private Diagnos mapDiagnos(se.inera.intyg.infra.sjukfall.dto.DiagnosKod from) {
+  private Diagnos mapDiagnos(se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKod from) {
     return getDiagnos(from);
   }
 
-  private List<Diagnos> mapDiagnos(List<se.inera.intyg.infra.sjukfall.dto.DiagnosKod> from) {
+  private List<Diagnos> mapDiagnos(List<se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKod> from) {
     return Optional.ofNullable(from).orElse(Collections.emptyList()).stream()
         .map(this::mapDiagnos)
         .collect(Collectors.toList());

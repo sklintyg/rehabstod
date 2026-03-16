@@ -45,10 +45,6 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
-import se.inera.intyg.infra.sjukfall.dto.DiagnosKategori;
-import se.inera.intyg.infra.sjukfall.dto.Lakare;
-import se.inera.intyg.infra.sjukfall.dto.OccupationTypeDTO;
-import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
@@ -67,6 +63,10 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilt
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.FeatureService;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKategori;
+import se.inera.intyg.rehabstod.sjukfall.dto.Lakare;
+import se.inera.intyg.rehabstod.sjukfall.dto.OccupationTypeDTO;
+import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetDoctorsForUnitResponse;
 
 @ExtendWith(MockitoExtension.class)
@@ -112,8 +112,8 @@ class PopulateFiltersServiceTest {
   DiagnosKategori diagnosisChapterFrom = new DiagnosKategori(LETTER_FROM, NUMBER_FROM);
   RekoStatusTypeDTO rekoStatus = new RekoStatusTypeDTO("REKO_1", "Ingen");
   OccupationTypeDTO occupationTypeDTO = new OccupationTypeDTO("OCCUPATION_STUDIER", "Studier");
-  se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel enabledDiagnosisChapter =
-      new se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel(
+  se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKapitel enabledDiagnosisChapter =
+      new se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKapitel(
           diagnosisChapterTo, diagnosisChapterFrom, DIAGNOSIS_CHAPTER_NAME);
   List<DiagnosKapitel> allDiagnosisChapters = Collections.singletonList(new DiagnosKapitel());
 

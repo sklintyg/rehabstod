@@ -24,7 +24,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
@@ -43,6 +42,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilt
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.FeatureService;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 
@@ -110,7 +110,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
   }
 
   private List<OccupationTypeDTO> convertOccupationTypes(
-      List<se.inera.intyg.infra.sjukfall.dto.OccupationTypeDTO> occupationTypeDTOList) {
+      List<se.inera.intyg.rehabstod.sjukfall.dto.OccupationTypeDTO> occupationTypeDTOList) {
     if (occupationTypeDTOList == null) {
       return Collections.emptyList();
     }
@@ -135,7 +135,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
   }
 
   private List<Lakare> convertDoctors(
-      List<se.inera.intyg.infra.sjukfall.dto.Lakare> listToConvert) {
+      List<se.inera.intyg.rehabstod.sjukfall.dto.Lakare> listToConvert) {
     if (listToConvert == null) {
       return Collections.emptyList();
     }
@@ -156,7 +156,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
   }
 
   private List<DiagnosKapitel> convertDiagnosisChapters(
-      List<se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel> diagnosisChapters) {
+      List<se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKapitel> diagnosisChapters) {
     if (diagnosisChapters == null) {
       return Collections.emptyList();
     }
@@ -171,7 +171,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
   }
 
   private DiagnosKategori convertDiagnosisCategory(
-      se.inera.intyg.infra.sjukfall.dto.DiagnosKategori diagnosisCategory) {
+      se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKategori diagnosisCategory) {
     return new DiagnosKategori(diagnosisCategory.getLetter(), diagnosisCategory.getNumber());
   }
 

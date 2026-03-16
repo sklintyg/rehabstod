@@ -25,18 +25,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
 import se.inera.intyg.infra.pu.integration.api.model.PersonSvar.Status;
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
-import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
-import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
@@ -63,43 +60,47 @@ import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.sjukfall.dto.IntygParametrar;
+import se.inera.intyg.rehabstod.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 /** Created by eriklupander on 2016-02-01. */
 @Service("sjukfallService")
+@RequiredArgsConstructor
 public class SjukfallServiceImpl implements SjukfallService {
 
   private static final Logger LOG = LoggerFactory.getLogger(SjukfallServiceImpl.class);
 
-  @Autowired private IntygstjanstIntegrationService intygstjanstIntegrationService;
+  private final IntygstjanstIntegrationService intygstjanstIntegrationService;
 
-  @Autowired private SjukfallEngineService sjukfallEngine;
+  private final SjukfallEngineService sjukfallEngineService;
 
-  @Autowired private SjukfallEngineMapper sjukfallEngineMapper;
+  private final SjukfallEngineMapper sjukfallEngineMapper;
 
-  @Autowired private IntygstjanstMapper intygstjanstMapper;
+  private final IntygstjanstMapper intygstjanstMapper;
 
-  @Autowired private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+  private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
-  @Autowired private UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
+  private final UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
 
-  @Autowired private PuService puService;
+  private final PuService puService;
 
-  @Autowired private MonitoringLogService monitoringLogService;
+  private final MonitoringLogService monitoringLogService;
 
-  @Autowired private RiskPredictionService riskPredictionService;
+  private final RiskPredictionService riskPredictionService;
 
-  @Autowired private SparrtjanstIntegrationService sparrtjanstIntegrationService;
+  private final SparrtjanstIntegrationService sparrtjanstIntegrationService;
 
-  @Autowired private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+  private final SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
-  @Autowired private HsaOrganizationsService hsaOrganizationsService;
+  private final HsaOrganizationsService hsaOrganizationsService;
 
-  @Autowired private UserService userService;
+  private final UserService userService;
 
-  @Autowired private LogService logService;
+  private final LogService logService;
 
   @Override
   @PrometheusTimeMethod
@@ -173,7 +174,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         !Strings.isNullOrEmpty(patientId), "patientId may not be null or empty");
     Preconditions.checkArgument(urval != null, "urval may not be null");
 
-    List<se.inera.intyg.infra.sjukfall.dto.SjukfallPatient> sjukfallList;
+    List<se.inera.intyg.rehabstod.sjukfall.dto.SjukfallPatient> sjukfallList;
     Map<String, IntygAccessControlMetaData> intygAccessMetaData = new HashMap<>();
 
     LOG.debug("Calling HSA - fetching information about the current care unit.");
@@ -229,7 +230,7 @@ public class SjukfallServiceImpl implements SjukfallService {
           sjfMetaData);
 
       // Make an initial calculation using _all_ available intyg...
-      sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parameters);
+      sjukfallList = sjukfallEngineService.beraknaSjukfallForPatient(data, parameters);
 
       // ... and check which intyg is contributing to the active sjukfall
       updateAccessMetaDataWithContributingStatus(sjukfallList, intygAccessMetaData, parameters);
@@ -254,7 +255,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     data = filterByAcessMetaData(data, intygAccessMetaData, haveConsent);
 
     // Make final calculation
-    sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parameters);
+    sjukfallList = sjukfallEngineService.beraknaSjukfallForPatient(data, parameters);
 
     LOG.debug("Mapping response from calculation engine to internal objects.");
     List<SjukfallPatient> rehabstodSjukfall =
@@ -416,7 +417,7 @@ public class SjukfallServiceImpl implements SjukfallService {
   }
 
   private void updateAccessMetaDataWithContributingStatus(
-      List<se.inera.intyg.infra.sjukfall.dto.SjukfallPatient> sjukfallList,
+      List<se.inera.intyg.rehabstod.sjukfall.dto.SjukfallPatient> sjukfallList,
       Map<String, IntygAccessControlMetaData> intygAccessMetaData,
       IntygParametrar parameters) {
     if (sjukfallList.isEmpty()) {
@@ -424,7 +425,8 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     // Update BidrarTillAktivtSjukfall for all that are part of active sjukfall.
-    final se.inera.intyg.infra.sjukfall.dto.SjukfallPatient aktivtSjukfall = sjukfallList.get(0);
+    final se.inera.intyg.rehabstod.sjukfall.dto.SjukfallPatient aktivtSjukfall =
+        sjukfallList.get(0);
 
     if (aktivtSjukfall.getSlut().isAfter(parameters.getAktivtDatum())) {
       aktivtSjukfall
