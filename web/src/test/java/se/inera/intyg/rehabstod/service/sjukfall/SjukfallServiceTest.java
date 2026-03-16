@@ -49,11 +49,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
-import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
-import se.inera.intyg.rehabstod.sjukfall.dto.IntygParametrar;
-import se.inera.intyg.rehabstod.sjukfall.dto.Patient;
-import se.inera.intyg.rehabstod.sjukfall.dto.Vardgivare;
-import se.inera.intyg.rehabstod.sjukfall.services.SjukfallEngineServiceImpl;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
@@ -79,6 +74,11 @@ import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator
 import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.sjukfall.dto.IntygParametrar;
+import se.inera.intyg.rehabstod.sjukfall.dto.Patient;
+import se.inera.intyg.rehabstod.sjukfall.dto.Vardgivare;
+import se.inera.intyg.rehabstod.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -136,7 +136,7 @@ class SjukfallServiceTest {
 
   @Mock private MonitoringLogService monitoringLogService;
 
-  @Spy private SjukfallEngineServiceImpl sjukfallEngine;
+  @Spy private SjukfallEngineService sjukfallEngine;
 
   @Spy private SjukfallEngineMapperTest sjukfallEngineMapper;
 

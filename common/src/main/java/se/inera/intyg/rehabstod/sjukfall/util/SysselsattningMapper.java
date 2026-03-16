@@ -26,18 +26,19 @@ import java.util.stream.Stream;
 
 public class SysselsattningMapper extends Mapper {
 
-    public static List<String> mapSysselsattning(List<String> values) {
-        return values.stream()
-            .map(SysselsattningMapper::mapSysselsattning)
-            .collect(Collectors.toList());
-    }
+  public static List<String> mapSysselsattning(List<String> values) {
+    return values.stream()
+        .map(SysselsattningMapper::mapSysselsattning)
+        .collect(Collectors.toList());
+  }
 
-    public static String mapSysselsattning(String key) {
-        return sysselsattningMap().get(key);
-    }
+  public static String mapSysselsattning(String key) {
+    return sysselsattningMap().get(key);
+  }
 
-    private static Map<String, String> sysselsattningMap() {
-        return Collections.unmodifiableMap(Stream.of(
+  private static Map<String, String> sysselsattningMap() {
+    return Collections.unmodifiableMap(
+        Stream.of(
                 entry("ARBETSLOSHET", "Arbetssökande"),
                 entry("ARBETSSOKANDE", "Arbetssökande"),
                 entry("FORALDRALEDIG", "Föräldraledighet"),
@@ -45,6 +46,5 @@ public class SysselsattningMapper extends Mapper {
                 entry("NUVARANDE_ARBETE", "Nuvarande arbete"),
                 entry("STUDIER", "Studier"))
             .collect(entriesToMap()));
-    }
-
+  }
 }

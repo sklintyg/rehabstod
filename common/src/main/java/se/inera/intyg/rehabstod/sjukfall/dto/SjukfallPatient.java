@@ -23,59 +23,58 @@ import java.util.List;
 
 public class SjukfallPatient {
 
-    private Patient patient;
-    private DiagnosKod diagnosKod;
-    private LocalDate start;
-    private LocalDate slut;
-    private Integer dagar;
-    private List<SjukfallIntyg> sjukfallIntygList;
+  private Patient patient;
+  private DiagnosKod diagnosKod;
+  private LocalDate start;
+  private LocalDate slut;
+  private Integer dagar;
+  private List<SjukfallIntyg> sjukfallIntygList;
 
-    public Patient getPatient() {
-        return patient;
-    }
+  public Patient getPatient() {
+    return patient;
+  }
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
+  public void setPatient(Patient patient) {
+    this.patient = patient;
+  }
 
-    public DiagnosKod getDiagnosKod() {
-        return diagnosKod;
-    }
+  public DiagnosKod getDiagnosKod() {
+    return diagnosKod;
+  }
 
-    public void setDiagnosKod(DiagnosKod diagnosKod) {
-        this.diagnosKod = diagnosKod;
-    }
+  public void setDiagnosKod(DiagnosKod diagnosKod) {
+    this.diagnosKod = diagnosKod;
+  }
 
-    public LocalDate getStart() {
-        return start;
-    }
+  public LocalDate getStart() {
+    return start;
+  }
 
-    public void setStart(LocalDate start) {
-        this.start = start;
-    }
+  public void setStart(LocalDate start) {
+    this.start = start;
+  }
 
-    public LocalDate getSlut() {
-        return slut;
-    }
+  public LocalDate getSlut() {
+    return slut;
+  }
 
-    public void setSlut(LocalDate slut) {
-        this.slut = slut;
-    }
+  public void setSlut(LocalDate slut) {
+    this.slut = slut;
+  }
 
-    public Integer getDagar() {
-        return dagar;
-    }
+  public Integer getDagar() {
+    return dagar;
+  }
 
-    public void setDagar(Integer dagar) {
-        this.dagar = dagar;
-    }
+  public void setDagar(Integer dagar) {
+    this.dagar = dagar;
+  }
 
-    public List<SjukfallIntyg> getSjukfallIntygList() {
-        return sjukfallIntygList;
-    }
+  public List<SjukfallIntyg> getSjukfallIntygList() {
+    return sjukfallIntygList;
+  }
 
-    public void setSjukfallIntygList(List<SjukfallIntyg> sjukfallIntygList) {
-        this.sjukfallIntygList = sjukfallIntygList;
-    }
-
+  public void setSjukfallIntygList(List<SjukfallIntyg> sjukfallIntygList) {
+    this.sjukfallIntygList = sjukfallIntygList;
+  }
 }

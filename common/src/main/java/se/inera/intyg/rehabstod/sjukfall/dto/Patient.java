@@ -22,46 +22,43 @@ import java.util.Objects;
 
 public class Patient {
 
-    private String id;
-    private String namn;
+  private String id;
+  private String namn;
 
-    public static Patient create(String id, String namn) {
-        final var patient = new Patient();
-        patient.id = id;
-        patient.namn = namn;
-        return patient;
-    }
+  public static Patient create(String id, String namn) {
+    final var patient = new Patient();
+    patient.id = id;
+    patient.namn = namn;
+    return patient;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public String getNamn() {
-        return namn;
-    }
+  public String getNamn() {
+    return namn;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final Patient patient = (Patient) o;
-        return Objects.equals(id, patient.id) && Objects.equals(namn, patient.namn);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    final Patient patient = (Patient) o;
+    return Objects.equals(id, patient.id) && Objects.equals(namn, patient.namn);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, namn);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, namn);
+  }
 
-    @Override
-    public String toString() {
-        return "Patient{"
-            + "id='" + id + '\''
-            + ", namn='" + namn + '\''
-            + '}';
-    }
+  @Override
+  public String toString() {
+    return "Patient{" + "id='" + id + '\'' + ", namn='" + namn + '\'' + '}';
+  }
 }

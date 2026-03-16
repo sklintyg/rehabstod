@@ -24,32 +24,33 @@ import java.time.LocalDate;
 
 public class LocalDateInterval {
 
-    private LocalDate startDate;
-    private LocalDate endDate;
+  private LocalDate startDate;
+  private LocalDate endDate;
 
-    public LocalDateInterval(LocalDate startDate, LocalDate endDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
+  public LocalDateInterval(LocalDate startDate, LocalDate endDate) {
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
 
-    public LocalDate getEndDate() {
-        return endDate;
-    }
+  public LocalDate getEndDate() {
+    return endDate;
+  }
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
+  public LocalDate getStartDate() {
+    return startDate;
+  }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
+  public void setEndDate(LocalDate endDate) {
+    this.endDate = endDate;
+  }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
+  public void setStartDate(LocalDate startDate) {
+    this.startDate = startDate;
+  }
 
-    public int getDurationInDays() {
-        // ChronoUnit.DAYS does not include the endDate (just between), so to get "duration", we need to add 1.
-        return Long.valueOf(DAYS.between(startDate, endDate)).intValue() + 1;
-    }
+  public int getDurationInDays() {
+    // ChronoUnit.DAYS does not include the endDate (just between), so to get "duration", we need to
+    // add 1.
+    return Long.valueOf(DAYS.between(startDate, endDate)).intValue() + 1;
+  }
 }

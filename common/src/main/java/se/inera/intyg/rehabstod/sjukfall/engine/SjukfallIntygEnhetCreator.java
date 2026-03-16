@@ -34,107 +34,116 @@ import se.inera.intyg.rehabstod.sjukfall.dto.SjukfallIntyg;
 
 public class SjukfallIntygEnhetCreator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygEnhetCreator.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygEnhetCreator.class);
 
-    public Map<String, List<SjukfallIntyg>> create(List<IntygData> intygData, IntygParametrar parameters) {
-        LOG.debug("Start creating a map of 'sjukfallintyg'...");
+  public Map<String, List<SjukfallIntyg>> create(
+      List<IntygData> intygData, IntygParametrar parameters) {
+    LOG.debug("Start creating a map of 'sjukfallintyg'...");
 
-        Map<String, List<SjukfallIntyg>> map;
+    Map<String, List<SjukfallIntyg>> map;
 
-        map = createMap(intygData, parameters);
-        map = reduceMap(map);
-        map = sortValues(map);
-        map = setActive(map);
+    map = createMap(intygData, parameters);
+    map = reduceMap(map);
+    map = sortValues(map);
+    map = setActive(map);
 
-        LOG.debug("...stop creating a map of 'sjukfallintyg'.");
-        return map;
+    LOG.debug("...stop creating a map of 'sjukfallintyg'.");
+    return map;
+  }
+
+  Map<String, List<SjukfallIntyg>> createMap(
+      List<IntygData> intygsData, IntygParametrar parameters) {
+    LOG.debug("  1. Create the map");
+
+    Map<String, List<SjukfallIntyg>> map = new HashMap<>();
+
+    for (IntygData i : intygsData) {
+      String k = i.getPatientId();
+
+      map.computeIfAbsent(k, k1 -> new ArrayList<>());
+      SjukfallIntyg v =
+          new SjukfallIntyg.SjukfallIntygBuilder(
+                  i, parameters.getAktivtDatum(), parameters.getMaxAntalDagarSedanSjukfallAvslut())
+              .build();
+      map.get(k).add(v);
     }
 
-    Map<String, List<SjukfallIntyg>> createMap(List<IntygData> intygsData, IntygParametrar parameters) {
-        LOG.debug("  1. Create the map");
+    return map;
+  }
 
-        Map<String, List<SjukfallIntyg>> map = new HashMap<>();
+  Map<String, List<SjukfallIntyg>> reduceMap(Map<String, List<SjukfallIntyg>> map) {
+    LOG.debug("  2. Reduce map - filter out each entry where there is no active certificate.");
 
-        for (IntygData i : intygsData) {
-            String k = i.getPatientId();
+    return map.entrySet().stream()
+        .filter(
+            e ->
+                e.getValue().stream()
+                        .filter(o -> o.isAktivtIntyg() || o.isNyligenAvslutat())
+                        .count()
+                    > 0)
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+  }
 
-            map.computeIfAbsent(k, k1 -> new ArrayList<>());
-            SjukfallIntyg v = new SjukfallIntyg.SjukfallIntygBuilder(i, parameters.getAktivtDatum(),
-                parameters.getMaxAntalDagarSedanSjukfallAvslut()).build();
-            map.get(k).add(v);
-        }
+  Map<String, List<SjukfallIntyg>> sortValues(Map<String, List<SjukfallIntyg>> unsortedMap) {
+    LOG.debug("  3. Sort map - sort each entry by its end date using ascending order.");
 
-        return map;
-    }
+    Comparator<SjukfallIntyg> dateComparator =
+        (o1, o2) -> o1.getSlutDatum().compareTo(o2.getSlutDatum());
 
-    Map<String, List<SjukfallIntyg>> reduceMap(Map<String, List<SjukfallIntyg>> map) {
-        LOG.debug("  2. Reduce map - filter out each entry where there is no active certificate.");
-
-        return map.entrySet().stream()
-            .filter(e -> e.getValue().stream()
-                .filter(o -> o.isAktivtIntyg() || o.isNyligenAvslutat()).count() > 0)
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-    Map<String, List<SjukfallIntyg>> sortValues(Map<String, List<SjukfallIntyg>> unsortedMap) {
-        LOG.debug("  3. Sort map - sort each entry by its end date using ascending order.");
-
-        Comparator<SjukfallIntyg> dateComparator = (o1, o2) -> o1.getSlutDatum().compareTo(o2.getSlutDatum());
-
-        return unsortedMap.entrySet().stream()
-            .collect(Collectors.toMap(Map.Entry::getKey,
-                e -> e.getValue().stream()
-                    .sorted(dateComparator)
-                    .collect(Collectors.toList())));
-    }
-
-    Map<String, List<SjukfallIntyg>> setActive(Map<String, List<SjukfallIntyg>> map) {
-        LOG.debug("  4. Set the active certificate - there can be only one active certificate, find it and make it active.");
-
-        return map.entrySet().stream()
-            .collect(Collectors.toMap(
+    return unsortedMap.entrySet().stream()
+        .collect(
+            Collectors.toMap(
                 Map.Entry::getKey,
-                e -> e.setValue(setActive(e.getValue())).stream()
-                    .collect(Collectors.toList())));
-    }
+                e -> e.getValue().stream().sorted(dateComparator).collect(Collectors.toList())));
+  }
 
-    private List<SjukfallIntyg> setActive(List<SjukfallIntyg> intygsDataList) {
-        List<SjukfallIntyg> values = new ArrayList<>();
+  Map<String, List<SjukfallIntyg>> setActive(Map<String, List<SjukfallIntyg>> map) {
+    LOG.debug(
+        "  4. Set the active certificate - there can be only one active certificate, find it and make it active.");
 
-        int aktivtIntygIndex = 0;
-        SjukfallIntyg sjukfallIntyg = null;
+    return map.entrySet().stream()
+        .collect(
+            Collectors.toMap(
+                Map.Entry::getKey,
+                e -> e.setValue(setActive(e.getValue())).stream().collect(Collectors.toList())));
+  }
 
-        ListIterator<SjukfallIntyg> iterator = intygsDataList.listIterator();
-        while (iterator.hasNext()) {
-            int currentIndex = iterator.nextIndex();
-            SjukfallIntyg current = iterator.next();
+  private List<SjukfallIntyg> setActive(List<SjukfallIntyg> intygsDataList) {
+    List<SjukfallIntyg> values = new ArrayList<>();
 
-            values.add(current);
+    int aktivtIntygIndex = 0;
+    SjukfallIntyg sjukfallIntyg = null;
 
-            if (current.isAktivtIntyg()) {
+    ListIterator<SjukfallIntyg> iterator = intygsDataList.listIterator();
+    while (iterator.hasNext()) {
+      int currentIndex = iterator.nextIndex();
+      SjukfallIntyg current = iterator.next();
 
-                if (sjukfallIntyg == null) {
-                    sjukfallIntyg = current;
-                    aktivtIntygIndex = currentIndex;
-                    continue;
-                }
+      values.add(current);
 
-                LocalDateTime dtAktivt = sjukfallIntyg.getSigneringsTidpunkt();
-                LocalDateTime dtCurrent = current.getSigneringsTidpunkt();
+      if (current.isAktivtIntyg()) {
 
-                if (dtAktivt.isBefore(dtCurrent)) {
-                    sjukfallIntyg.setAktivtIntyg(false);
-                    values.set(aktivtIntygIndex, sjukfallIntyg);
-                    sjukfallIntyg = current;
-                    aktivtIntygIndex = currentIndex;
-                } else {
-                    current.setAktivtIntyg(false);
-                    values.set(currentIndex, current);
-                }
-            }
+        if (sjukfallIntyg == null) {
+          sjukfallIntyg = current;
+          aktivtIntygIndex = currentIndex;
+          continue;
         }
 
-        return values;
+        LocalDateTime dtAktivt = sjukfallIntyg.getSigneringsTidpunkt();
+        LocalDateTime dtCurrent = current.getSigneringsTidpunkt();
+
+        if (dtAktivt.isBefore(dtCurrent)) {
+          sjukfallIntyg.setAktivtIntyg(false);
+          values.set(aktivtIntygIndex, sjukfallIntyg);
+          sjukfallIntyg = current;
+          aktivtIntygIndex = currentIndex;
+        } else {
+          current.setAktivtIntyg(false);
+          values.set(currentIndex, current);
+        }
+      }
     }
 
+    return values;
+  }
 }

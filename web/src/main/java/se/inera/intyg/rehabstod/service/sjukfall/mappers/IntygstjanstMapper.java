@@ -23,10 +23,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
+import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
 import se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.rehabstod.sjukfall.dto.Formaga;
 import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
-import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 /**

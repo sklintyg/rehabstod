@@ -33,8 +33,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.util.SparrtjanstUtil;
+import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksType;
 

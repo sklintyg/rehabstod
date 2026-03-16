@@ -32,75 +32,78 @@ import se.inera.intyg.rehabstod.sjukfall.dto.SjukfallIntyg;
 
 public class SjukfallIntygPatientCreator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygPatientCreator.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygPatientCreator.class);
 
-    public Map<Integer, List<SjukfallIntyg>> create(final List<IntygData> intygsData, final int maxIntygsGlapp,
-        final LocalDate aktivtDatum) {
-        LOG.debug("Start creating a map of 'sjukfallintyg'...");
+  public Map<Integer, List<SjukfallIntyg>> create(
+      final List<IntygData> intygsData, final int maxIntygsGlapp, final LocalDate aktivtDatum) {
+    LOG.debug("Start creating a map of 'sjukfallintyg'...");
 
-        Map<Integer, List<SjukfallIntyg>> map = createMap(intygsData, maxIntygsGlapp, aktivtDatum);
+    Map<Integer, List<SjukfallIntyg>> map = createMap(intygsData, maxIntygsGlapp, aktivtDatum);
 
-        LOG.debug("...stop creating a map of 'sjukfallintyg'.");
-        return map;
+    LOG.debug("...stop creating a map of 'sjukfallintyg'.");
+    return map;
+  }
+
+  Map<Integer, List<SjukfallIntyg>> createMap(
+      final List<IntygData> intygsData, final int maxIntygsGlapp, final LocalDate aktivtDatum) {
+    LOG.debug("  2. Create the map");
+
+    List<SjukfallIntyg> sjukfallIntygList = mapIntyg(intygsData, aktivtDatum);
+
+    return collectIntyg(sjukfallIntygList, maxIntygsGlapp);
+  }
+
+  private List<SjukfallIntyg> mapIntyg(List<IntygData> intygsData, LocalDate aktivtDatum) {
+    LOG.debug("     a. Transform 'intygsdata' to intermediate format");
+
+    List<SjukfallIntyg> list = new ArrayList<>();
+    for (IntygData i : intygsData) {
+      SjukfallIntyg v = new SjukfallIntyg.SjukfallIntygBuilder(i, aktivtDatum, 0).build();
+      list.add(v);
     }
 
-    Map<Integer, List<SjukfallIntyg>> createMap(final List<IntygData> intygsData, final int maxIntygsGlapp,
-        final LocalDate aktivtDatum) {
-        LOG.debug("  2. Create the map");
+    return list;
+  }
 
-        List<SjukfallIntyg> sjukfallIntygList = mapIntyg(intygsData, aktivtDatum);
+  private Map<Integer, List<SjukfallIntyg>> collectIntyg(
+      List<SjukfallIntyg> intygsData, int maxIntygsGlapp) {
 
-        return collectIntyg(sjukfallIntygList, maxIntygsGlapp);
+    Map<Integer, List<SjukfallIntyg>> map = new HashMap<>();
+
+    Comparator<SjukfallIntyg> dateComparator = Comparator.comparing(SjukfallIntyg::getStartDatum);
+
+    List<SjukfallIntyg> sortedList =
+        intygsData.stream().sorted(dateComparator).collect(Collectors.toList());
+
+    collectIntyg(sortedList, map, 0, sortedList.get(0), maxIntygsGlapp);
+
+    return map;
+  }
+
+  private void collectIntyg(
+      List<SjukfallIntyg> input,
+      Map<Integer, List<SjukfallIntyg>> output,
+      Integer key,
+      SjukfallIntyg first,
+      int maxIntygsGlapp) {
+
+    int tmp = key;
+
+    if (input.contains(first)) {
+      input.remove(first);
     }
 
-    private List<SjukfallIntyg> mapIntyg(List<IntygData> intygsData, LocalDate aktivtDatum) {
-        LOG.debug("     a. Transform 'intygsdata' to intermediate format");
+    output.computeIfAbsent(tmp, v -> new ArrayList<>()).add(first);
 
-        List<SjukfallIntyg> list = new ArrayList<>();
-        for (IntygData i : intygsData) {
-            SjukfallIntyg v = new SjukfallIntyg.SjukfallIntygBuilder(i, aktivtDatum, 0).build();
-            list.add(v);
-        }
-
-        return list;
+    if (input.isEmpty()) {
+      return;
     }
 
-    private Map<Integer, List<SjukfallIntyg>> collectIntyg(List<SjukfallIntyg> intygsData, int maxIntygsGlapp) {
-
-        Map<Integer, List<SjukfallIntyg>> map = new HashMap<>();
-
-        Comparator<SjukfallIntyg> dateComparator
-            = Comparator.comparing(SjukfallIntyg::getStartDatum);
-
-        List<SjukfallIntyg> sortedList = intygsData.stream()
-            .sorted(dateComparator)
-            .collect(Collectors.toList());
-
-        collectIntyg(sortedList, map, 0, sortedList.get(0), maxIntygsGlapp);
-
-        return map;
+    SjukfallIntyg second = input.get(0);
+    if (first.getSlutDatum().plusDays(maxIntygsGlapp + 1).isBefore(second.getStartDatum())) {
+      tmp++;
     }
 
-    private void collectIntyg(List<SjukfallIntyg> input, Map<Integer, List<SjukfallIntyg>> output,
-        Integer key, SjukfallIntyg first, int maxIntygsGlapp) {
-
-        int tmp = key;
-
-        if (input.contains(first)) {
-            input.remove(first);
-        }
-
-        output.computeIfAbsent(tmp, v -> new ArrayList<>()).add(first);
-
-        if (input.isEmpty()) {
-            return;
-        }
-
-        SjukfallIntyg second = input.get(0);
-        if (first.getSlutDatum().plusDays(maxIntygsGlapp + 1).isBefore(second.getStartDatum())) {
-            tmp++;
-        }
-
-        collectIntyg(input, output, tmp, second, maxIntygsGlapp);
-    }
+    collectIntyg(input, output, tmp, second, maxIntygsGlapp);
+  }
 }

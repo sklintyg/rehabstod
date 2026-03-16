@@ -22,54 +22,51 @@ import java.util.Objects;
 
 public class Lakare {
 
-    private String id;
-    private String namn;
+  private String id;
+  private String namn;
 
-    public static Lakare create(String lakareId, String lakareNamn) {
-        final var lakare = new Lakare();
-        lakare.id = lakareId;
-        lakare.namn = lakareNamn;
-        return lakare;
-    }
+  public static Lakare create(String lakareId, String lakareNamn) {
+    final var lakare = new Lakare();
+    lakare.id = lakareId;
+    lakare.namn = lakareNamn;
+    return lakare;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public String getNamn() {
-        return namn;
-    }
+  public String getNamn() {
+    return namn;
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public void setNamn(String namn) {
-        this.namn = namn;
-    }
+  public void setNamn(String namn) {
+    this.namn = namn;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final Lakare lakare = (Lakare) o;
-        return Objects.equals(id, lakare.id) && Objects.equals(namn, lakare.namn);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    final Lakare lakare = (Lakare) o;
+    return Objects.equals(id, lakare.id) && Objects.equals(namn, lakare.namn);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, namn);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, namn);
+  }
 
-    @Override
-    public String toString() {
-        return "Lakare{"
-            + "id='" + id + '\''
-            + ", namn='" + namn + '\''
-            + '}';
-    }
+  @Override
+  public String toString() {
+    return "Lakare{" + "id='" + id + '\'' + ", namn='" + namn + '\'' + '}';
+  }
 }

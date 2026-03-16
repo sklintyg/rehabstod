@@ -29,12 +29,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
 import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
+import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
@@ -93,7 +93,8 @@ public class SjukfallEngineMapper {
     return to;
   }
 
-  private static RekoStatusDTO getRekoStatus(se.inera.intyg.rehabstod.sjukfall.dto.SjukfallEnhet from) {
+  private static RekoStatusDTO getRekoStatus(
+      se.inera.intyg.rehabstod.sjukfall.dto.SjukfallEnhet from) {
     return new RekoStatusDTO(
         new RekoStatusTypeDTO(
             from.getRekoStatus().getStatus().getId(), from.getRekoStatus().getStatus().getName()));

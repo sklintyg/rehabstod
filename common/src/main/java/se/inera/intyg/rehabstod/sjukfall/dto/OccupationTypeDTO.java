@@ -27,6 +27,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OccupationTypeDTO {
 
-    private String id;
-    private String name;
+  private String id;
+  private String name;
 }

@@ -20,8 +20,7 @@ package se.inera.intyg.rehabstod.sjukfall.services;
 
 public class SjukfallEngineServiceException extends RuntimeException {
 
-    public SjukfallEngineServiceException(String msg) {
-        super(msg);
-    }
-
+  public SjukfallEngineServiceException(String msg) {
+    super(msg);
+  }
 }
