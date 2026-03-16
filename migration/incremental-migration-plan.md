@@ -8,26 +8,9 @@ The phases from `first-migration-scope.md` are retained but each phase is split 
 application runs (still WAR/Tomcat/Gretty). Step 13 is the actual Spring Boot switch; it is small because all preparation is done. Steps
 14–18 are safe because Spring Boot auto-configuration backs off gracefully when existing beans are present.
 
-> **Run the de-risk spike first (Step 0 below) before committing to any of the subsequent steps.**
-
----
-
-## Step 0 — De-risk spike: verify CXF + Spring Boot coexistence *(throwaway branch)*
-
-**Why first:** The highest unknown in this migration is whether Apache CXF JAXWS endpoints start correctly inside Spring Boot's embedded
-Tomcat. If this does not work, the entire strategy must change. Validating it now (before any production-code changes) eliminates the
-biggest risk.
-
-**Scope:**
-
-- On a throwaway branch, add the `org.springframework.boot` plugin to root and `web/build.gradle` (`apply false` / `apply`).
-- Add `spring-boot-starter-web` and create a minimal `RehabstodApplication.java` with `@SpringBootApplication`.
-- **Do not** change any production configuration classes — the goal is only to see if it starts.
-- Confirm CXF wires up (check `/services/` endpoint map loads) and SAML `RelyingPartyRegistrationRepository` bean resolves.
-
-**Discard the branch afterward.** The real implementation begins at Step 1.
-
-**Verify:** `./gradlew bootRun` — application starts as an executable JAR. No `NoSuchBeanDefinitionException` for CXF or SAML beans.
+> **CXF + Spring Boot coexistence has been validated** in the
+> [intygstjanst migration](https://github.com/sklintyg/intygstjanst) (Step 10 — Spring Boot Bootstrap). CXF JAXWS endpoints run correctly
+> inside Spring Boot's embedded Tomcat using `ServletRegistrationBean<CXFServlet>`. No de-risk spike is needed for rehabstöd.
 
 ---
 
@@ -164,8 +147,9 @@ now empties the last "medium complexity" infra bucket before tackling the HSA/PU
   `ia-services-config.xml` and `ia-stub-context.xml` from `IaConfiguration` and `IaStubConfiguration`. Convert both to pure Java
   `@Configuration` (aligns with §3.2.2 from scope doc).
 - **`rediscache`:** Remove `RedisCacheOptionsSetter` usages from `EmployeeNameCacheConfig`. Adapt the cache config to use Spring
-  `RedisCacheConfiguration` directly (preparation for Step 16). Also remove `common-redis-cache-core` from
-  `integration/sparrtjanst-integration/build.gradle` and `integration/samtyckestjanst-integration/build.gradle`.
+  `RedisCacheConfiguration` directly (preparation for Step 16).
+
+> **Do not remove** the `common-redis-cache-core` dependency from build files yet — that is Step 11.
 
 **Verify:** `./gradlew test` + start. Dynamic links load. Banner service operates. Caching (if profile active) works.
 
@@ -179,10 +163,12 @@ is in flight at a time.
 **Scope:**
 
 - **HSA:** Define local DTOs for HSA models (`Vardenhet`, `Vardgivare`, `Mottagning`, `PersonInformation`, etc.). Implement
-  `HsaOrganizationsService` and `HsaEmployeeService` locally using Spring `RestTemplate` (not `RestClient` yet — not on Spring Boot).
+  `HsaOrganizationsService` and `HsaEmployeeService` locally using Spring `RestClient` (already available on Spring 6.1+ and used in
+  `wc-integration` and `it-integration`).
   Call `intyg-proxy-service` REST APIs directly. Remove `hsa-integration-api` and `hsa-integration-intyg-proxy-service` usages (29 files in
   `web`).
-- **PU:** Define local `PersonSvar` and `Person` DTOs. Implement `PuService` locally calling `intyg-proxy-service` REST API. Remove
+- **PU:** Define local `PersonSvar` and `Person` DTOs. Implement `PuService` locally using Spring `RestClient`, calling
+  `intyg-proxy-service` REST API. Remove
   `PuIntygProxyServiceConfiguration` and its `@ImportResource` for `pu-integration-intyg-proxy-service-config.xml`. Remove
   `pu-integration-api` and `pu-integration-intyg-proxy-service` usages (3 files in `web`).
 - Remove the two infra `@ComponentScan` entries from `ApplicationConfig`:
@@ -228,10 +214,12 @@ now means `@ImportResource` disappears before the Spring Boot switch.
 - **`sparrtjanst-stub-context.xml`** → absorbed by the `@RestController` created in Step 9; remove the XML file.
 - **`classpath:META-INF/cxf/cxf.xml`** → remove `@ImportResource` from `ApplicationConfig` and `WebConfig`; configure CXF `Bus` as a
   `@Bean` via `SpringBus` (or rely on the CXF Spring Boot starter in Step 13 to auto-load it).
-- Remove `web/src/main/webapp/WEB-INF/web.xml` — already listed as a §3.1 action; confirm removal here so no XML file is carried into the
-  Spring Boot step.
 
 **After this step:** `grep -r "@ImportResource" --include="*.java" src/` returns no results.
+
+> **Note:** Do **not** remove `web/src/main/webapp/WEB-INF/web.xml` in this step — it registers the `MetricsServlet` at `/metrics`, which
+> is still needed while the application runs as a WAR. The `web.xml` is removed in Step 13 (JAR packaging makes it irrelevant) and the
+> `/metrics` endpoint is replaced by Actuator in Step 16.
 
 **Verify:** `./gradlew test` + start. All CXF TLS connections work (Samtyckestjänst, Spärrtjänst). Stubs respond under their profiles.
 
@@ -290,6 +278,8 @@ step only changes the application entry point and build packaging.
 
 - Add `org.springframework.boot` plugin to root `build.gradle` (`apply false`) and `web/build.gradle` (apply + `bootJar`).
 - Remove `org.gretty` plugin and `war` plugin from `web/build.gradle`. Remove `web/tomcat-gretty.xml`.
+- Remove `web/src/main/webapp/WEB-INF/web.xml` — the `MetricsServlet` it registers is replaced by Actuator in Step 16; executable JARs
+  do not use `web.xml`.
 - Create `RehabstodApplication.java` with `@SpringBootApplication`.
 - Add `spring-boot-starter-web` starter.
 - Convert the 12 `ApplicationInitializer` filter registrations to `FilterRegistrationBean` beans (preserving exact order — see §3.1).
@@ -302,7 +292,9 @@ step only changes the application entry point and build packaging.
   `SamtyckestjanstConfiguration`, `SparrtjanstConfiguration`, `IntygstjanstIntegrationConfiguration`, etc.
 - **Do not change** JPA, JMS, Redis, or metrics config in this step.
 
-> **Note:** The de-risk spike for this step was performed in Step 0. Use those findings to guide the implementation.
+> **Note:** CXF + Spring Boot coexistence has been validated in the
+> [intygstjanst migration](https://github.com/sklintyg/intygstjanst) (Step 10 — Spring Boot Bootstrap). Use that implementation as a
+> reference for the `ServletRegistrationBean<CXFServlet>` pattern and DispatcherServlet remapping.
 
 **Verify:** `./gradlew bootRun` — application starts as an executable JAR. All REST endpoints respond. All SOAP stubs respond. SAML
 login/logout flow works end-to-end.
@@ -401,7 +393,6 @@ respond.
 
 | Step | Description | Phase | App broken? |
 |------|-------------|-------|-------------|
-| **0** | De-risk spike: CXF + Spring Boot coexistence check | Pre-migration | ❌ No (throwaway branch) |
 | **1** | Migrate all tests to JUnit 5 | 0 — Test Modernisation | ❌ No |
 | **2** | Copy simple DTOs (certificate, log-messages, driftbanner-dto) | 1 — Inline Infra | ❌ No |
 | **3** | Inline `monitoring` + replace `LogMarkers` | 1 — Inline Infra | ❌ No |
@@ -421,7 +412,7 @@ respond.
 | **17** | Redis auto-configuration + ShedLock prefix fix | 4 — Auto-Config | ❌ No |
 | **18** | Spring Boot ECS logging + Dockerfile | 4 — Auto-Config | ❌ No |
 
-Steps 0 (throwaway spike) and 1–12 do not break the running WAR/Tomcat/Gretty application. Step 13 is the actual runtime switch.
+Steps 1–12 do not break the running WAR/Tomcat/Gretty application. Step 13 is the actual runtime switch.
 Steps 14–18 each swap one infrastructure concern using Spring Boot auto-configuration.
 
 ---
@@ -434,7 +425,8 @@ Steps 14–18 each swap one infrastructure concern using Spring Boot auto-config
 - `@EnableWebMvc` removal potentially changing MVC behaviour (content negotiation, message converters).
 - CXF JAXWS compatibility with Spring Boot auto-configuration.
 
-**Mitigation:** The de-risk spike in Step 0 validates this before any production-code work begins. Test SAML login/logout end-to-end immediately after the switch before
+**Mitigation:** CXF + Spring Boot coexistence has been validated in the [intygstjanst migration](https://github.com/sklintyg/intygstjanst)
+(Step 10 — Spring Boot Bootstrap), which uses the same `ServletRegistrationBean<CXFServlet>` pattern. Test SAML login/logout end-to-end immediately after the switch before
 proceeding to Steps 14–18.
 
 **Step 8 (HSA/PU REST clients)** is the second-highest risk because the REST response shapes from `intyg-proxy-service` must be verified
