@@ -20,9 +20,9 @@ package se.inera.intyg.rehabstod.service.pdl;
 
 import java.util.List;
 import java.util.Map;
-import se.inera.intyg.infra.logmessages.ActivityType;
-import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
+import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;

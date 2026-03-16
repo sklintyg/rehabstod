@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.rehabstod.common.logging.pdl;
 
-import se.inera.intyg.infra.logmessages.ActivityPurpose;
-import se.inera.intyg.infra.logmessages.ActivityType;
-import se.inera.intyg.infra.logmessages.PdlLogMessage;
+import se.inera.intyg.rehabstod.common.logmessages.ActivityPurpose;
+import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.common.logmessages.PdlLogMessage;
 
 /** Created by eriklupander on 2016-02-19. */
 public abstract class SjukfallDataLogMessage {

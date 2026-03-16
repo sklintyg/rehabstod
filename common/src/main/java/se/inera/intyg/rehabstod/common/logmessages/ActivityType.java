@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,16 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.sjukfall;
+package se.inera.intyg.rehabstod.common.logmessages;
 
-import java.util.List;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+public enum ActivityType {
+  READ("Läsa"),
+  CREATE("Skriva"),
+  UPDATE("Skriva"),
+  SIGN("Signera"),
+  DELETE("Radera"),
+  PRINT("Utskrift"),
+  REVOKE("Radera"),
+  SEND("Utskrift"),
+  EMERGENCY_ACCESS("Nödöppning");
 
-public interface PdlLogSickLeavesService {
+  private final String type;
 
-  void log(List<SjukfallEnhet> sickLeaves, ActivityType activityType, ResourceType resourceType);
+  ActivityType(String type) {
+    this.type = type;
+  }
 
-  void logPrint(List<SjukfallEnhet> sickLeaves);
+  public String getType() {
+    return type;
+  }
 }
