@@ -27,10 +27,29 @@ project (expected in a later step that removes the `ia-integration` infra depend
 **File:** `web/src/main/java/se/inera/intyg/rehabstod/web/controller/api/dto/GetConfigResponse.java`
 
 **Reason:** `ConfigController` populates the `banners` field by calling
-`IABannerService.getCurrentBanners()`, which returns `List<se.inera.intyg.infra.driftbannerdto.Banner>`.
+`IABannerService.getCurrentBanners()`, which returns
+`List<se.inera.intyg.infra.driftbannerdto.Banner>`.
 Switching `GetConfigResponse.banners` to the local `Banner` type would require a conversion step
 in `ConfigController` that is out of scope for Step 2 (purely additive, no behavioural change).
 
 **Resolution:** Switch to the local `Banner` type when `IABannerService` is replaced with a local
 implementation (expected in the same step that inlines `BannerJob` and removes the
 `ia-integration` infra dependency).
+
+---
+
+## Step 3 — Inline `monitoring`
+
+### `ApplicationConfig` still imports `MonitoringConfiguration`
+
+**File:** `web/src/main/java/se/inera/intyg/rehabstod/config/ApplicationConfig.java`
+
+**Reason:**  
+Removing `@Import(MonitoringConfiguration.class)` had to be reverted. Current runtime behavior for
+`RSBannerJob` depends on monitoring wiring via `LogMcdHelper`, so removing `MonitoringConfiguration`
+breaks Step 3 in the current state.
+
+**Resolution:**  
+Keep `MonitoringConfiguration` import in `ApplicationConfig` for now. Remove it in the step where
+`RSBannerJob` and its infra coupling are replaced/inlined and the `LogMcdHelper` dependency is no
+longer required.

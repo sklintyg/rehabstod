@@ -22,10 +22,10 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
-import se.inera.intyg.infra.monitoring.logging.LogMarkers;
+import se.inera.intyg.rehabstod.logging.LogMarkers;
 import se.inera.intyg.rehabstod.logging.MdcCloseableMap;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.monitoring.annotation.PrometheusTimeMethod;
 
 @Service("webMonitoringLogService")
 public class MonitoringLogServiceImpl implements MonitoringLogService {

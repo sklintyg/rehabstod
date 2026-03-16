@@ -27,7 +27,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaEmployeeService;
-import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
+import se.inera.intyg.rehabstod.monitoring.annotation.PrometheusTimeMethod;
 
 @Service
 public class EmployeeNameServiceImpl implements EmployeeNameService {

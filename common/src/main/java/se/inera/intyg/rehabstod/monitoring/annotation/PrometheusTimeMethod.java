@@ -16,16 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.config;
+package se.inera.intyg.rehabstod.monitoring.annotation;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/** Created by eriklup. */
-@Configuration
-@ComponentScan({"se.inera.intyg.infra.dynamiclink"})
-public class InfraConfig {
-
-  public InfraConfig() { // NOSONAR
-  }
-}
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface PrometheusTimeMethod {}
