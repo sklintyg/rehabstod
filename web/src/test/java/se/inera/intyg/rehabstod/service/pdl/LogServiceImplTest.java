@@ -37,8 +37,8 @@ import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.support.destination.DestinationResolutionException;
-import se.inera.intyg.infra.logmessages.ActivityType;
-import se.inera.intyg.infra.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 

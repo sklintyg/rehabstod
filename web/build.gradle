@@ -70,6 +70,7 @@ dependencies {
 
     implementation "ch.qos.logback:logback-classic"
     implementation "co.elastic.logging:logback-ecs-encoder"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     implementation "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider"
     implementation "com.google.guava:guava"
     implementation "io.prometheus:simpleclient_servlet"

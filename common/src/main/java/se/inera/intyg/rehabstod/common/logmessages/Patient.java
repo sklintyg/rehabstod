@@ -16,16 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.sjukfall;
+package se.inera.intyg.rehabstod.common.logmessages;
 
-import java.util.List;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import java.io.Serializable;
 
-public interface PdlLogSickLeavesService {
+public class Patient implements Serializable {
 
-  void log(List<SjukfallEnhet> sickLeaves, ActivityType activityType, ResourceType resourceType);
+  private static final long serialVersionUID = -3089443403583678480L;
 
-  void logPrint(List<SjukfallEnhet> sickLeaves);
+  private String patientId;
+  private String patientNamn;
+
+  public Patient() {
+    // Needed for deserialization
+  }
+
+  public Patient(String patientId) {
+    this.patientId = patientId;
+  }
+
+  public Patient(String patientId, String patientNamn) {
+    this.patientId = patientId;
+    this.patientNamn = patientNamn;
+  }
+
+  public String getPatientId() {
+    return patientId;
+  }
+
+  public String getPatientNamn() {
+    return patientNamn;
+  }
 }

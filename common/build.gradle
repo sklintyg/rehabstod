@@ -3,5 +3,6 @@ dependencies {
     implementation "se.inera.intyg.infra:log-messages:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
 
-
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
 }

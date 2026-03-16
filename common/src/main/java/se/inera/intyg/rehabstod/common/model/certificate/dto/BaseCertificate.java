@@ -16,16 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.sjukfall;
+package se.inera.intyg.rehabstod.common.model.certificate.dto;
 
-import java.util.List;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import java.time.LocalDateTime;
+import lombok.Data;
 
-public interface PdlLogSickLeavesService {
+@Data
+public class BaseCertificate {
 
-  void log(List<SjukfallEnhet> sickLeaves, ActivityType activityType, ResourceType resourceType);
+  private String certificateId;
 
-  void logPrint(List<SjukfallEnhet> sickLeaves);
+  private String certificateType;
+
+  private LocalDateTime signingDateTime;
+
+  private String personId;
+
+  private String patientFullName;
+
+  private String personalHsaId;
+
+  private String personalFullName;
+
+  private String careUnitId;
+
+  private String careUnitName;
+
+  private String careProviderId;
+
+  private boolean deleted;
+
+  private boolean testCertificate;
 }

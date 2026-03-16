@@ -16,16 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.sjukfall;
+package se.inera.intyg.rehabstod.common.logmessages;
 
-import java.util.List;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+public enum ActivityPurpose {
+  CARE_TREATMENT("Vård och behandling");
 
-public interface PdlLogSickLeavesService {
+  private final String type;
 
-  void log(List<SjukfallEnhet> sickLeaves, ActivityType activityType, ResourceType resourceType);
+  ActivityPurpose(String type) {
+    this.type = type;
+  }
 
-  void logPrint(List<SjukfallEnhet> sickLeaves);
+  public String getType() {
+    return type;
+  }
 }

@@ -20,10 +20,10 @@ package se.inera.intyg.rehabstod.service.pdl;
 
 import java.util.List;
 import java.util.Map;
-import se.inera.intyg.infra.logmessages.ActivityType;
-import se.inera.intyg.infra.logmessages.PdlLogMessage;
-import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
+import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.common.logmessages.PdlLogMessage;
+import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogPatient;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
 import se.inera.intyg.rehabstod.web.model.LUCertificate;
