@@ -52,19 +52,17 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 @Import(MonitoringConfiguration.class)
 @ImportResource({"classpath:META-INF/cxf/cxf.xml"})
 @ComponentScan({
-    "se.inera.intyg.infra.integration.intygproxyservice",
-    "se.inera.intyg.rehabstod.logging",
-    "se.inera.intyg.infra.pu.integration.intygproxyservice",
-    "se.inera.intyg.rehabstod.integration.it",
-    "se.inera.intyg.rehabstod.integration.wc"
+  "se.inera.intyg.infra.integration.intygproxyservice",
+  "se.inera.intyg.rehabstod.logging",
+  "se.inera.intyg.infra.pu.integration.intygproxyservice",
+  "se.inera.intyg.rehabstod.integration.it",
+  "se.inera.intyg.rehabstod.integration.wc"
 })
 public class ApplicationConfig implements TransactionManagementConfigurer {
 
-  @Autowired
-  private Bus bus;
+  @Autowired private Bus bus;
 
-  @Autowired
-  private PlatformTransactionManager transactionManager;
+  @Autowired private PlatformTransactionManager transactionManager;
 
   @Bean
   public CookieSerializer cookieSerializer() {
