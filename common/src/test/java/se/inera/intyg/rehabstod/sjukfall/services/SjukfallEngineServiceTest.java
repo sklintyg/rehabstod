@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.rehabstod.sjukfall.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,13 +51,12 @@ import se.inera.intyg.rehabstod.sjukfall.engine.SjukfallIntygEnhetCreator;
 import se.inera.intyg.rehabstod.sjukfall.engine.SjukfallIntygEnhetResolver;
 import se.inera.intyg.rehabstod.sjukfall.testdata.SjukfallIntygGenerator;
 
-/**
- * Created by martin on 11/02/16.
- */
+/** Created by martin on 11/02/16. */
 @ExtendWith(MockitoExtension.class)
 class SjukfallEngineServiceTest {
 
-  private static final String LOCATION_INTYGSDATA = "classpath:SjukfallServiceTest/intygsdata-engine.csv";
+  private static final String LOCATION_INTYGSDATA =
+      "classpath:SjukfallServiceTest/intygsdata-engine.csv";
 
   private static List<IntygData> intygDataList;
   private static List<SjukfallEnhet> sjukfallListUnit;
@@ -47,14 +64,11 @@ class SjukfallEngineServiceTest {
 
   private LocalDate activeDate = LocalDate.parse("2016-02-16");
 
-  @Spy
-  SjukfallIntygEnhetCreator creator = new SjukfallIntygEnhetCreator();
+  @Spy SjukfallIntygEnhetCreator creator = new SjukfallIntygEnhetCreator();
 
-  @Spy
-  private SjukfallIntygEnhetResolver resolver = new SjukfallIntygEnhetResolver(creator);
+  @Spy private SjukfallIntygEnhetResolver resolver = new SjukfallIntygEnhetResolver(creator);
 
-  @InjectMocks
-  private SjukfallEngineServiceImplTest testee = new SjukfallEngineServiceImplTest();
+  @InjectMocks private SjukfallEngineServiceImplTest testee = new SjukfallEngineServiceImplTest();
 
   @BeforeEach
   void init() throws IOException {
@@ -63,22 +77,24 @@ class SjukfallEngineServiceTest {
     intygDataList = generator.generate().get();
     assertInit(intygDataList, 33);
 
-    sjukfallListUnit = testee.beraknaSjukfallForEnhet(intygDataList,
-        getIntygParametrar(5, activeDate));
+    sjukfallListUnit =
+        testee.beraknaSjukfallForEnhet(intygDataList, getIntygParametrar(5, activeDate));
     assertInit(sjukfallListUnit, 11);
 
-    List<IntygData> intygDataListPatient
-        = intygDataList.stream().filter(o -> o.getPatientId().equals("19710301-1032")).toList();
+    List<IntygData> intygDataListPatient =
+        intygDataList.stream().filter(o -> o.getPatientId().equals("19710301-1032")).toList();
 
-    sjukfallListPatient = testee.beraknaSjukfallForPatient(intygDataListPatient,
-        getIntygParametrar(5, activeDate));
+    sjukfallListPatient =
+        testee.beraknaSjukfallForPatient(intygDataListPatient, getIntygParametrar(5, activeDate));
     assertInit(sjukfallListPatient, 2);
   }
 
-  // ~ ======================================================================================================== ~
+  // ~
+  // ======================================================================================================== ~
   // ~ Specification för test av sjukfall #1 - #12 finns på URL:
   // ~ https://inera-certificate.atlassian.net/wiki/pages/viewpage.action?pageId=39747618
-  // ~ ======================================================================================================== ~
+  // ~
+  // ======================================================================================================== ~
 
   @Test
   void testCalculateSjukfallEnhet1() {
@@ -132,13 +148,23 @@ class SjukfallEngineServiceTest {
 
   @Test
   void testCalculateSjukfallEnhet11() {
-    assertSjukfallEnhet("19630206-2846", "2016-02-01", "2016-03-04", 4, 29,
+    assertSjukfallEnhet(
+        "19630206-2846",
+        "2016-02-01",
+        "2016-03-04",
+        4,
+        29,
         Arrays.asList("fall-11-intyg-1", "fall-11-intyg-2", "fall-11-intyg-3", "fall-11-intyg-4"));
   }
 
   @Test
   void testCalculateSjukfallEnhet12() {
-    assertSjukfallEnhet("19710301-1032", "2016-02-15", "2016-03-04", 3, 19,
+    assertSjukfallEnhet(
+        "19710301-1032",
+        "2016-02-15",
+        "2016-03-04",
+        3,
+        19,
         Arrays.asList("fall-12-intyg-2", "fall-12-intyg-3", "fall-12-intyg-4"));
   }
 
@@ -161,22 +187,32 @@ class SjukfallEngineServiceTest {
   // - - -  Private scope  - - -
 
   private static void assertInit(List<?> list, int expectedListSize) {
-    assertEquals(list.size(), expectedListSize,
-        "Expected " + expectedListSize + " but was " + list.size());
+    assertEquals(
+        list.size(), expectedListSize, "Expected " + expectedListSize + " but was " + list.size());
   }
 
-  private static void assertSjukfallEnhet(String patientId, String startDatum, String slutDatum,
+  private static void assertSjukfallEnhet(
+      String patientId,
+      String startDatum,
+      String slutDatum,
       int antalIntyg,
       int effektivSjukskrivningslangd) {
-    assertSjukfallEnhet(patientId, startDatum, slutDatum, antalIntyg, effektivSjukskrivningslangd,
-        null);
+    assertSjukfallEnhet(
+        patientId, startDatum, slutDatum, antalIntyg, effektivSjukskrivningslangd, null);
   }
 
-  private static void assertSjukfallEnhet(String patientId, String startDatum, String slutDatum,
+  private static void assertSjukfallEnhet(
+      String patientId,
+      String startDatum,
+      String slutDatum,
       int antalIntyg,
-      int effektivSjukskrivningslangd, List<String> expectedIntygsIds) {
-    SjukfallEnhet sjukfallEnhet = sjukfallListUnit.stream().
-        filter(o -> o.getPatient().getId().equals(patientId)).findFirst().orElse(null);
+      int effektivSjukskrivningslangd,
+      List<String> expectedIntygsIds) {
+    SjukfallEnhet sjukfallEnhet =
+        sjukfallListUnit.stream()
+            .filter(o -> o.getPatient().getId().equals(patientId))
+            .findFirst()
+            .orElse(null);
 
     if (antalIntyg == 0) {
       assertNull(sjukfallEnhet);
@@ -191,12 +227,14 @@ class SjukfallEngineServiceTest {
       assertEquals(expectedIntygsIds.size(), sjukfallEnhet.getIntygLista().size());
       assertTrue(sjukfallEnhet.getIntygLista().containsAll(expectedIntygsIds));
     }
-
   }
 
-  private static void assertSjukfallPatient(SjukfallPatient sjukfallPatient, String startDatum,
+  private static void assertSjukfallPatient(
+      SjukfallPatient sjukfallPatient,
+      String startDatum,
       String slutDatum,
-      int antalIntyg, int effektivSjukskrivningslangd) {
+      int antalIntyg,
+      int effektivSjukskrivningslangd) {
 
     assertTrue(sjukfallPatient.getStart().isEqual(LocalDate.parse(startDatum)));
     assertTrue(sjukfallPatient.getSlut().isEqual(LocalDate.parse(slutDatum)));
@@ -205,8 +243,10 @@ class SjukfallEngineServiceTest {
 
     // Kolla av att intygen är i fallande ordning gällande signeringstidpunkt
     SjukfallIntyg intyg = sjukfallPatient.getSjukfallIntygList().get(0);
-    List<SjukfallIntyg> subList = sjukfallPatient.getSjukfallIntygList()
-        .subList(1, sjukfallPatient.getSjukfallIntygList().size());
+    List<SjukfallIntyg> subList =
+        sjukfallPatient
+            .getSjukfallIntygList()
+            .subList(1, sjukfallPatient.getSjukfallIntygList().size());
 
     assertSortOrder(intyg, subList);
   }
@@ -239,8 +279,11 @@ class SjukfallEngineServiceTest {
   }
 
   private static void assertGrader(String intygId, List<Integer> grader) {
-    IntygData data = intygDataList.stream()
-        .filter(obj -> obj.getIntygId().equalsIgnoreCase(intygId)).findFirst().get();
+    IntygData data =
+        intygDataList.stream()
+            .filter(obj -> obj.getIntygId().equalsIgnoreCase(intygId))
+            .findFirst()
+            .get();
     List<Formaga> formagor =
         data.getFormagor().stream().sorted(Comparator.comparing(Formaga::getStartdatum)).toList();
 
@@ -264,15 +307,17 @@ class SjukfallEngineServiceTest {
       clock = Clock.fixed(Instant.ofEpochSecond(date), ZoneId.systemDefault());
     }
 
-    protected SjukfallEnhet buildSjukfallEnhet(List<SjukfallIntyg> values,
-        SjukfallIntyg aktivtIntyg, LocalDate aktivtDatum,
+    protected SjukfallEnhet buildSjukfallEnhet(
+        List<SjukfallIntyg> values,
+        SjukfallIntyg aktivtIntyg,
+        LocalDate aktivtDatum,
         IntygParametrar intygParameters) {
       Vardgivare vardgivare = Vardgivare.create(" IFV1239877878-0000 ", "Webcert-Vårdgivare1");
       Vardenhet vardenhet = Vardenhet.create(" IFV1239877878-1045 ", "Webcert-Enhet2");
       Lakare lakare = Lakare.create(aktivtIntyg.getLakareId(), aktivtIntyg.getLakareNamn());
 
-      SjukfallEnhet sjukfallEnhet = super.buildSjukfallEnhet(values, aktivtIntyg, aktivtDatum,
-          intygParameters);
+      SjukfallEnhet sjukfallEnhet =
+          super.buildSjukfallEnhet(values, aktivtIntyg, aktivtDatum, intygParameters);
       sjukfallEnhet.setVardgivare(vardgivare);
       sjukfallEnhet.setVardenhet(vardenhet);
       sjukfallEnhet.setLakare(lakare);
