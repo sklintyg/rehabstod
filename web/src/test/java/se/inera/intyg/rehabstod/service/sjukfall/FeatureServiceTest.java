@@ -38,7 +38,7 @@ import se.inera.intyg.rehabstod.service.user.FeatureServiceImpl;
 import se.inera.intyg.rehabstod.service.user.UserService;
 
 @ExtendWith(MockitoExtension.class)
-public class FeatureServiceTest {
+class FeatureServiceTest {
 
   @Mock UserService userService;
 

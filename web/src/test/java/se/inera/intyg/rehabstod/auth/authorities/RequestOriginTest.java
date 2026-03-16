@@ -18,19 +18,19 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import se.inera.intyg.infra.security.common.model.RequestOrigin;
 
 /** Created by marced on 14/04/16. */
-public class RequestOriginTest {
+class RequestOriginTest {
 
   @Test
-  public void testGetSetIntygstyper() throws Exception {
+  void testGetSetIntygstyper() throws Exception {
 
     // Arrange
     RequestOrigin requestOrigin = new RequestOrigin();

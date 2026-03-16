@@ -47,7 +47,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDT
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 @ExtendWith(MockitoExtension.class)
-public class SickLeaveControllerTest {
+class SickLeaveControllerTest {
 
   @Mock private GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
   @Mock private PopulateFiltersService populateFiltersService;

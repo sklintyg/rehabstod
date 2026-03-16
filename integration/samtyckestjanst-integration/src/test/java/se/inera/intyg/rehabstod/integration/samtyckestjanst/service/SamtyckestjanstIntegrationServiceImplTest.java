@@ -18,19 +18,19 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.service;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 
 import java.util.UUID;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.client.SamtyckestjanstClientService;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
@@ -41,8 +41,8 @@ import se.riv.informationsecurity.authorization.consent.v2.ResultType;
 /**
  * @author Magnus Ekstrand on 2018-10-11.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class SamtyckestjanstIntegrationServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class SamtyckestjanstIntegrationServiceImplTest {
 
   private static final String USER_HSA_ID = UUID.randomUUID().toString();
   private static final String PATIENT_ID = "20121212-1212";
@@ -55,8 +55,8 @@ public class SamtyckestjanstIntegrationServiceImplTest {
   private SamtyckestjanstIntegrationServiceImpl testee =
       new SamtyckestjanstIntegrationServiceImpl();
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     doAnswer(
             new Answer<CheckConsentResponseType>() {
               @Override
@@ -74,7 +74,7 @@ public class SamtyckestjanstIntegrationServiceImplTest {
   }
 
   @Test
-  public void testCheckForConsent_missing() {
+  void testCheckForConsent_missing() {
     String currentVgHsaId = "vgHsaId-3";
     String currentVeHsaId = "veHsaId-3";
 
@@ -85,7 +85,7 @@ public class SamtyckestjanstIntegrationServiceImplTest {
   }
 
   @Test
-  public void testCheckForConsent() {
+  void testCheckForConsent() {
     boolean haveConsent = testee.checkForConsent(PATIENT_ID, USER_HSA_ID, VG_HSAID_2, VE_HSAID_2);
 
     assertTrue(haveConsent);

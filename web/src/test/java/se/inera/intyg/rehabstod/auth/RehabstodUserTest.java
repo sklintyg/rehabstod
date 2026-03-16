@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static se.inera.intyg.rehabstod.auth.util.SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX;
 
 import com.google.common.collect.ImmutableMap;
@@ -34,7 +34,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.security.common.model.Role;
@@ -44,7 +44,7 @@ import se.inera.intyg.rehabstod.service.Urval;
 /**
  * @author marced on 01/03/16.
  */
-public class RehabstodUserTest {
+class RehabstodUserTest {
 
   private static final String VG_1 = "VG_1";
   private static final String VG_1_NAME = "Vårdgivare 1";
@@ -57,7 +57,7 @@ public class RehabstodUserTest {
   private static final String ENHET_2_NAME = "En annan enhet";
 
   @Test
-  public void testGetUrvalLakare() throws Exception {
+  void testGetUrvalLakare() throws Exception {
     RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
     user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_LAKARE, new Role()));
 
@@ -65,7 +65,7 @@ public class RehabstodUserTest {
   }
 
   @Test
-  public void testGetUrvalTandlakare() throws Exception {
+  void testGetUrvalTandlakare() throws Exception {
     RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
     user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_TANDLAKARE, new Role()));
 
@@ -73,7 +73,7 @@ public class RehabstodUserTest {
   }
 
   @Test
-  public void testGetUrvalRehabKoordinator() throws Exception {
+  void testGetUrvalRehabKoordinator() throws Exception {
     RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", false);
     user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_KOORDINATOR, new Role()));
 
@@ -81,7 +81,7 @@ public class RehabstodUserTest {
   }
 
   @Test
-  public void testChangeValdVardenhet() throws Exception {
+  void testChangeValdVardenhet() throws Exception {
     RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
     user.setVardgivare(buildVardgivare(VG_1, VG_1_NAME));
 
@@ -96,7 +96,7 @@ public class RehabstodUserTest {
   }
 
   @Test
-  public void testGetTotaltAntalVardenheter() throws Exception {
+  void testGetTotaltAntalVardenheter() throws Exception {
     RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
     List<Vardgivare> vgList = new ArrayList<>();
     vgList.addAll(buildVardgivare(VG_1, VG_1_NAME));
@@ -107,7 +107,7 @@ public class RehabstodUserTest {
   }
 
   @Test
-  public void testRoleSwitchPossibleForDoctorWithMatchingSystemRole() {
+  void testRoleSwitchPossibleForDoctorWithMatchingSystemRole() {
     RehabstodUser user =
         setupRehabstodUserWithSystemRoles(
             true, new ArrayList<>(), HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_1);
@@ -115,7 +115,7 @@ public class RehabstodUserTest {
   }
 
   @Test
-  public void testRoleSwitchNotPossibleForDoctorWithoutMatchingSystemRole() {
+  void testRoleSwitchNotPossibleForDoctorWithoutMatchingSystemRole() {
     RehabstodUser user =
         setupRehabstodUserWithSystemRoles(
             true, new ArrayList<>(), HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "some-other-unit-id");
@@ -123,7 +123,7 @@ public class RehabstodUserTest {
   }
 
   @Test
-  public void testRoleSwitchNotPossibleForNonDoctorWithMatchingSystemRole() {
+  void testRoleSwitchNotPossibleForNonDoctorWithMatchingSystemRole() {
     RehabstodUser user =
         setupRehabstodUserWithSystemRoles(
             false, new ArrayList<>(), HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_1);
@@ -143,7 +143,7 @@ public class RehabstodUserTest {
   }
 
   @Test
-  public void serializeToDisk() {
+  void serializeToDisk() {
     try {
       RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
       user.setVardgivare(buildVardgivare(VG_1, VG_1_NAME));

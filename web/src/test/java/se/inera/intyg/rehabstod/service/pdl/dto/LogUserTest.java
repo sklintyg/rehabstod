@@ -18,17 +18,18 @@
  */
 package se.inera.intyg.rehabstod.service.pdl.dto;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Created by eriklupander on 2017-01-31. */
-public class LogUserTest {
+class LogUserTest {
 
   @Test
-  public void testBuildLogUserWithRequiredValues() {
+  void testBuildLogUserWithRequiredValues() {
     LogUser logUser = new LogUser.Builder("1", "2", "3").build();
     assertNotNull(logUser);
     assertEquals("1", logUser.getUserId());
@@ -36,9 +37,13 @@ public class LogUserTest {
     assertEquals("3", logUser.getVardgivareId());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testBuildLogUserWithNullRequiredValues() {
-    new LogUser.Builder("1", "2", null);
-    fail("This assert should be unreachable!");
+  @Test
+  void testBuildLogUserWithNullRequiredValues() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          new LogUser.Builder("1", "2", null);
+          fail("This assert should be unreachable!");
+        });
   }
 }

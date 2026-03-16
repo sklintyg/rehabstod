@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.integration.srs.service;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -27,26 +27,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.RiskPrediktion;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.Risksignal;
 import se.inera.intyg.rehabstod.integration.srs.client.SRSClientService;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 
 /** Created by eriklupander on 2017-11-01. */
-@RunWith(MockitoJUnitRunner.class)
-public class SRSIntegrationServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class SRSIntegrationServiceImplTest {
 
   @Mock private SRSClientService srsClientService;
 
   @InjectMocks private SRSIntegrationServiceImpl testee;
 
   @Test
-  public void testHappyPath() {
+  void testHappyPath() {
     String intygsId = UUID.randomUUID().toString();
 
     when(srsClientService.getRiskPrediktionForCertificate(anyList()))
@@ -59,7 +59,7 @@ public class SRSIntegrationServiceImplTest {
   }
 
   @Test
-  public void testEmptyListReturnedWhenNullIdsSupplied() {
+  void testEmptyListReturnedWhenNullIdsSupplied() {
     List<RiskSignal> result = testee.getRiskPrediktionerForIntygsId(null);
     assertEquals(0, result.size());
     verifyNoInteractions(srsClientService);

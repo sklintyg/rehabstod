@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.komplettering;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,12 +28,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
@@ -41,8 +41,8 @@ import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UnansweredQAsInfoDecoratorImplTest {
+@ExtendWith(MockitoExtension.class)
+class UnansweredQAsInfoDecoratorImplTest {
 
   public static final String PATIENT_ID = "191212121212";
 
@@ -51,7 +51,7 @@ public class UnansweredQAsInfoDecoratorImplTest {
   @InjectMocks private UnansweredQAsInfoDecoratorImpl testee;
 
   @Test
-  public void updateSjukfallPatientKompletteringar() {
+  void updateSjukfallPatientKompletteringar() {
 
     // Results returned from wc integration service..
     Map<String, UnansweredQAs> kompl = new HashMap<>();

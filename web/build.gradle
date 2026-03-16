@@ -104,10 +104,9 @@ dependencies {
     runtimeOnly "se.inera.intyg.infra:hsa-integration-intyg-proxy-service:${intygInfraVersion}"
     runtimeOnly "se.inera.intyg.infra:pu-integration-intyg-proxy-service:${intygInfraVersion}"
 
-    testImplementation 'junit:junit'
     testImplementation "org.mockito:mockito-junit-jupiter"
+    testImplementation "org.hamcrest:hamcrest"
     testImplementation "org.springframework:spring-test"
 
     testRuntimeOnly "jakarta.servlet:jakarta.servlet-api"
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
 }

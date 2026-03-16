@@ -48,7 +48,7 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 @ExtendWith(MockitoExtension.class)
-public class PdlLogSickLeavesServiceTest {
+class PdlLogSickLeavesServiceTest {
 
   @Mock UserService userService;
 

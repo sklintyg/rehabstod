@@ -18,19 +18,20 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos.dto;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Created by marced on 08/02/16. */
 // CHECKSTYLE:OFF MagicNumber
-public class DiagnosKapitelTest {
+class DiagnosKapitelTest {
 
   @Test
-  public void testConstructor() {
+  void testConstructor() {
     DiagnosKapitel interval = new DiagnosKapitel("A00-D88En grupp av diagnoser");
     assertEquals("En grupp av diagnoser", interval.getName());
     assertEquals("A", String.valueOf(interval.getFrom().getLetter()));
@@ -43,7 +44,7 @@ public class DiagnosKapitelTest {
   }
 
   @Test
-  public void testConstructorWithoutName() {
+  void testConstructorWithoutName() {
     DiagnosKapitel interval = new DiagnosKapitel("A00-D88");
     assertTrue(interval.getName().isEmpty());
     assertEquals("A", String.valueOf(interval.getFrom().getLetter()));
@@ -55,13 +56,17 @@ public class DiagnosKapitelTest {
     assertEquals("A00-D88", interval.getId());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testBadFormatConstructor() {
-    DiagnosKapitel interval = new DiagnosKapitel("A00-D8En grupp av diagnoser");
+  @Test
+  void testBadFormatConstructor() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          new DiagnosKapitel("A00-D8En grupp av diagnoser");
+        });
   }
 
   @Test
-  public void testIncludes() {
+  void testIncludes() {
     DiagnosKapitel kapitel = new DiagnosKapitel("B00-D88En grupp av diagnoser");
 
     assertTrue(kapitel.includes(Optional.of(new DiagnosKategori('B', 0))));

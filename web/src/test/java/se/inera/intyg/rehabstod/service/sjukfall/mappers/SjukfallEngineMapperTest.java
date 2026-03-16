@@ -19,10 +19,10 @@
 package se.inera.intyg.rehabstod.service.sjukfall.mappers;
 
 import static java.time.temporal.ChronoUnit.DAYS;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -31,12 +31,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.sjukfall.dto.RekoStatusDTO;
 import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
@@ -50,8 +50,8 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 /**
  * @author Magnus Ekstrand on 2017-09-22.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class SjukfallEngineMapperTest {
+@ExtendWith(MockitoExtension.class)
+class SjukfallEngineMapperTest {
 
   private static final int MAX_DAGAR_SEDAN_AVSLUT = 5;
   private static final String INTYGSID = "A1234-B1234-C1234-D1234-E1234";
@@ -84,8 +84,8 @@ public class SjukfallEngineMapperTest {
 
   @InjectMocks private SjukfallEngineMapper testee = new SjukfallEngineMapper();
 
-  @Before
-  public void beforeEach() {
+  @BeforeEach
+  void beforeEach() {
     when(diagnosFactory.getDiagnos(DIAGNOS, DIAGNOS_KOD, "Palindrom reumatism"))
         .thenReturn(createDiagnos(DIAGNOS, DIAGNOS_KOD, "Palindrom reumatism"));
     when(diagnosFactory.getDiagnos(
@@ -100,7 +100,7 @@ public class SjukfallEngineMapperTest {
   }
 
   @Test
-  public void testMappingOfSjukfallEnhet() {
+  void testMappingOfSjukfallEnhet() {
     // given
     se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from = createSjukfallEnhet();
     LocalDate today = LocalDate.now();
@@ -140,7 +140,7 @@ public class SjukfallEngineMapperTest {
   }
 
   @Test
-  public void testMappingOfSjukfallEnhetEndDateToday() {
+  void testMappingOfSjukfallEnhetEndDateToday() {
     // given
     se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from = createSjukfallEnhet();
     LocalDate today = LocalDate.now().plusDays(7L);
@@ -153,7 +153,7 @@ public class SjukfallEngineMapperTest {
   }
 
   @Test
-  public void testMappingOfSjukfallPatient() {
+  void testMappingOfSjukfallPatient() {
     // given
     se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
     Map<String, IntygAccessControlMetaData> intygAccessMetaData =
@@ -187,7 +187,7 @@ public class SjukfallEngineMapperTest {
   }
 
   @Test
-  public void testMappingOfSjukfallPatientClearDataVardgivare() {
+  void testMappingOfSjukfallPatientClearDataVardgivare() {
     // given
     se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
     Map<String, IntygAccessControlMetaData> intygAccessMetaData =
@@ -213,7 +213,7 @@ public class SjukfallEngineMapperTest {
   }
 
   @Test
-  public void testMappingOfSjukfallPatientClearDataVardenhet() {
+  void testMappingOfSjukfallPatientClearDataVardenhet() {
     // given
     se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
     Map<String, IntygAccessControlMetaData> intygAccessMetaData =
@@ -240,7 +240,7 @@ public class SjukfallEngineMapperTest {
   }
 
   @Test
-  public void testMappingOfSjukfallIntyg() {
+  void testMappingOfSjukfallIntyg() {
     // given
     se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg from = createSjukfallIntyg();
     Map<String, IntygAccessControlMetaData> intygAccessMetaData =

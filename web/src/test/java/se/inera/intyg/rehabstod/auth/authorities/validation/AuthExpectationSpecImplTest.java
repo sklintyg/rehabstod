@@ -18,11 +18,12 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities.validation;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.common.collect.ImmutableMap;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.authorities.validation.AuthExpectationSpecImpl;
 import se.inera.intyg.infra.security.common.model.IntygUser;
@@ -30,32 +31,40 @@ import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 
 /** Created by marced on 14/04/16. */
-public class AuthExpectationSpecImplTest {
+class AuthExpectationSpecImplTest {
 
   private static final String LAKARE = "LAKARE";
   IntygUser user = new RehabstodUser("11111", "Dr Doctor", true);
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     user.setRoles(ImmutableMap.of(LAKARE, new Role()));
   }
 
   @Test
-  public void testIsVerified() throws Exception {
+  void testIsVerified() throws Exception {
     AuthExpectationSpecImpl authExpectationSpec = new AuthExpectationSpecImpl(user, null);
     assertTrue(authExpectationSpec.roles(LAKARE).isVerified());
     assertTrue(authExpectationSpec.notRoles("ANNAN").isVerified());
   }
 
-  @Test(expected = AuthoritiesException.class)
-  public void testOrThrowRole() throws Exception {
-    AuthExpectationSpecImpl authExpectationSpec = new AuthExpectationSpecImpl(user, null);
-    authExpectationSpec.roles("ANNAN").orThrow();
+  @Test
+  void testOrThrowRole() throws Exception {
+    assertThrows(
+        AuthoritiesException.class,
+        () -> {
+          AuthExpectationSpecImpl authExpectationSpec = new AuthExpectationSpecImpl(user, null);
+          authExpectationSpec.roles("ANNAN").orThrow();
+        });
   }
 
-  @Test(expected = AuthoritiesException.class)
-  public void testOrThrowRoleNot() throws Exception {
-    AuthExpectationSpecImpl authExpectationSpec = new AuthExpectationSpecImpl(user, null);
-    authExpectationSpec.notRoles(LAKARE).orThrow();
+  @Test
+  void testOrThrowRoleNot() throws Exception {
+    assertThrows(
+        AuthoritiesException.class,
+        () -> {
+          AuthExpectationSpecImpl authExpectationSpec = new AuthExpectationSpecImpl(user, null);
+          authExpectationSpec.notRoles(LAKARE).orThrow();
+        });
   }
 }

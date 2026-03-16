@@ -18,8 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.srs;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -35,12 +36,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -55,8 +58,9 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 /** Created by eriklupander on 2017-11-01. */
-@RunWith(MockitoJUnitRunner.class)
-public class RiskPredictionServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class RiskPredictionServiceImplTest {
 
   private static final String ENHET_1 = "enhet-1";
   private static final String ENHET_2 = "enhet-2";
@@ -69,21 +73,21 @@ public class RiskPredictionServiceImplTest {
 
   private RehabstodUser user;
 
-  @Before
-  public void init() {
+  @BeforeEach
+  void init() {
     user = buildUser(ENHET_1);
     when(userService.getUser()).thenReturn(user);
   }
 
   @Test
-  public void testNoInteractionWithSRSWhenFeatureNotActive() {
+  void testNoInteractionWithSRSWhenFeatureNotActive() {
     when(user.getFeatures()).thenReturn(Collections.emptyMap());
     testee.updateWithRiskPredictions(buildSjukfallEnhetList(UUID.randomUUID().toString()));
     verifyNoInteractions(srsIntegrationService);
   }
 
   @Test
-  public void testNoInteractionWithSRSWhenFeatureNotActiveForUnit() {
+  void testNoInteractionWithSRSWhenFeatureNotActiveForUnit() {
     RehabstodUser user = buildUser(ENHET_2);
     when(user.getFeatures()).thenReturn(Collections.emptyMap());
     when(userService.getUser()).thenReturn(user);
@@ -92,7 +96,7 @@ public class RiskPredictionServiceImplTest {
   }
 
   @Test
-  public void testPatientDataNoInteractionWithSRSWhenFeatureNotActive() {
+  void testPatientDataNoInteractionWithSRSWhenFeatureNotActive() {
     when(user.getFeatures()).thenReturn(Collections.emptyMap());
     testee.updateSjukfallPatientListWithRiskPredictions(
         buildSjukfallPatientList(UUID.randomUUID().toString()));
@@ -100,19 +104,19 @@ public class RiskPredictionServiceImplTest {
   }
 
   @Test
-  public void testNoInteractionWithSRSWhenFeatureActiveButNoSjukfallSupplied() {
+  void testNoInteractionWithSRSWhenFeatureActiveButNoSjukfallSupplied() {
     testee.updateWithRiskPredictions(new ArrayList<>());
     verifyNoInteractions(srsIntegrationService);
   }
 
   @Test
-  public void testPatientDataNoInteractionWithSRSWhenFeatureActiveButNoSjukfallSupplied() {
+  void testPatientDataNoInteractionWithSRSWhenFeatureActiveButNoSjukfallSupplied() {
     testee.updateSjukfallPatientListWithRiskPredictions(new ArrayList<>());
     verifyNoInteractions(srsIntegrationService);
   }
 
   @Test
-  public void testInteractionWithSRSWhenFeatureActive() {
+  void testInteractionWithSRSWhenFeatureActive() {
     String intygsId = UUID.randomUUID().toString();
 
     when(srsIntegrationService.getRiskPrediktionerForIntygsId(anyList()))
@@ -132,7 +136,7 @@ public class RiskPredictionServiceImplTest {
   }
 
   @Test
-  public void testPatientDataInteractionWithSRSWhenFeatureActive() {
+  void testPatientDataInteractionWithSRSWhenFeatureActive() {
     String intygsId = UUID.randomUUID().toString();
 
     when(srsIntegrationService.getRiskPrediktionerForIntygsId(anyList()))
@@ -150,23 +154,31 @@ public class RiskPredictionServiceImplTest {
     verify(srsIntegrationService, times(1)).getRiskPrediktionerForIntygsId(anyList());
   }
 
-  @Test(expected = SRSServiceException.class)
-  public void testExpectedExceptionIsThrownWhenCallToSRSFails() {
-    when(srsIntegrationService.getRiskPrediktionerForIntygsId(anyList()))
-        .thenThrow(new RuntimeException("FEL FEL FEL"));
-    testee.updateWithRiskPredictions(buildSjukfallEnhetList(UUID.randomUUID().toString()));
-  }
-
-  @Test(expected = SRSServiceException.class)
-  public void testPatientListExpectedExceptionIsThrownWhenCallToSRSFails() {
-    when(srsIntegrationService.getRiskPrediktionerForIntygsId(anyList()))
-        .thenThrow(new RuntimeException("FEL FEL FEL"));
-    testee.updateSjukfallPatientListWithRiskPredictions(
-        buildSjukfallPatientList(UUID.randomUUID().toString()));
+  @Test
+  void testExpectedExceptionIsThrownWhenCallToSRSFails() {
+    assertThrows(
+        SRSServiceException.class,
+        () -> {
+          when(srsIntegrationService.getRiskPrediktionerForIntygsId(anyList()))
+              .thenThrow(new RuntimeException("FEL FEL FEL"));
+          testee.updateWithRiskPredictions(buildSjukfallEnhetList(UUID.randomUUID().toString()));
+        });
   }
 
   @Test
-  public void testRiskLevelZeroIsFilteredOut() {
+  void testPatientListExpectedExceptionIsThrownWhenCallToSRSFails() {
+    assertThrows(
+        SRSServiceException.class,
+        () -> {
+          when(srsIntegrationService.getRiskPrediktionerForIntygsId(anyList()))
+              .thenThrow(new RuntimeException("FEL FEL FEL"));
+          testee.updateSjukfallPatientListWithRiskPredictions(
+              buildSjukfallPatientList(UUID.randomUUID().toString()));
+        });
+  }
+
+  @Test
+  void testRiskLevelZeroIsFilteredOut() {
     String intygsId = UUID.randomUUID().toString();
     LocalDateTime now = LocalDateTime.now();
     List<String> diagnosisList = Arrays.asList("F43", "M79", "S52");
@@ -184,7 +196,7 @@ public class RiskPredictionServiceImplTest {
   }
 
   @Test
-  public void testGetLatestRiskLevel() {
+  void testGetLatestRiskLevel() {
     String intygsId = UUID.randomUUID().toString();
     LocalDateTime now = LocalDateTime.now();
     LocalDateTime earlier = LocalDateTime.now().minus(1, ChronoUnit.HOURS);

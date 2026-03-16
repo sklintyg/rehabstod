@@ -18,30 +18,30 @@
  */
 package se.inera.intyg.rehabstod.auth.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static se.inera.intyg.rehabstod.auth.util.SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class SystemRolesParserTest {
+class SystemRolesParserTest {
 
   @Test
-  public void testParseNullList() {
+  void testParseNullList() {
     List<String> enhetIds = SystemRolesParser.parseEnhetsIdsFromSystemRoles(null);
     assertEquals(0, enhetIds.size());
   }
 
   @Test
-  public void testParseEmptyList() {
+  void testParseEmptyList() {
     List<String> enhetIds = SystemRolesParser.parseEnhetsIdsFromSystemRoles(new ArrayList<>());
     assertEquals(0, enhetIds.size());
   }
 
   @Test
-  public void testParseSingleValidRole() {
+  void testParseSingleValidRole() {
     List<String> enhetIds =
         SystemRolesParser.parseEnhetsIdsFromSystemRoles(
             Arrays.asList(HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "TSTNMT-ABC-123"));
@@ -50,7 +50,7 @@ public class SystemRolesParserTest {
   }
 
   @Test
-  public void testParseTwoValidRoles() {
+  void testParseTwoValidRoles() {
     List<String> enhetIds =
         SystemRolesParser.parseEnhetsIdsFromSystemRoles(
             Arrays.asList(

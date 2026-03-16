@@ -18,18 +18,21 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.core.env.Environment;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
@@ -43,8 +46,9 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 
 /** Created by marced on 01/02/16. */
-@RunWith(MockitoJUnitRunner.class)
-public class UserControllerTest {
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class UserControllerTest {
 
   private static final String HSA_ID = "abcdefghijkl";
 
@@ -64,8 +68,8 @@ public class UserControllerTest {
 
   @InjectMocks private UserController userController = new UserController();
 
-  @Before
-  public void before() {
+  @BeforeEach
+  void before() {
     when(commonAuthoritiesResolver.getFeatures(any())).thenReturn(Collections.emptyMap());
     when(rehabUserMock.getValdVardenhet()).thenReturn(new Vardenhet("123", "enhet"));
     when(rehabUserMock.getValdVardgivare()).thenReturn(new Vardenhet("456", "vardgivare"));
@@ -75,14 +79,14 @@ public class UserControllerTest {
   }
 
   @Test
-  public void testCreateGet() {
+  void testCreateGet() {
     userController.getUser();
 
     verify(userService).getUser();
   }
 
   @Test
-  public void testChangeEnhetSuccess() {
+  void testChangeEnhetSuccess() {
     ChangeSelectedUnitRequest req = new ChangeSelectedUnitRequest("123");
     when(rehabstodUnitChangeService.changeValdVardenhet(eq(req.getId()), eq(rehabUserMock)))
         .thenReturn(true);
@@ -93,20 +97,25 @@ public class UserControllerTest {
     verify(rehabstodUnitChangeService).changeValdVardenhet(eq(req.getId()), eq(rehabUserMock));
   }
 
-  @Test(expected = AuthoritiesException.class)
-  public void testChangeEnhetFails() {
-    ChangeSelectedUnitRequest req = new ChangeSelectedUnitRequest("123");
-    when(rehabstodUnitChangeService.changeValdVardenhet(eq(req.getId()), eq(rehabUserMock)))
-        .thenReturn(false);
+  @Test
+  void testChangeEnhetFails() {
+    assertThrows(
+        AuthoritiesException.class,
+        () -> {
+          ChangeSelectedUnitRequest req = new ChangeSelectedUnitRequest("123");
+          when(rehabstodUnitChangeService.changeValdVardenhet(eq(req.getId()), eq(rehabUserMock)))
+              .thenReturn(false);
 
-    userController.changeSelectedUnitOnUser(req);
+          userController.changeSelectedUnitOnUser(req);
 
-    verify(userService).getUser();
-    verify(rehabstodUnitChangeService).changeValdVardenhet(eq(req.getId()), eq(rehabUserMock));
+          verify(userService).getUser();
+          verify(rehabstodUnitChangeService)
+              .changeValdVardenhet(eq(req.getId()), eq(rehabUserMock));
+        });
   }
 
   @Test
-  public void clearAddedVardgivareAndVardeneheterWhenPreferencesHasChanged() {
+  void clearAddedVardgivareAndVardeneheterWhenPreferencesHasChanged() {
     when(userPreferencesService.getAllPreferences()).thenReturn(defaultPreferences());
 
     RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
@@ -120,20 +129,28 @@ public class UserControllerTest {
     verify(rehabUserMock).clearSjfData();
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void validateInvalidMaxDagarMellanIntygPreference() {
-    RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
-    preferences.updatePreference(
-        RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "91");
-    preferences.validate();
+  @Test
+  void validateInvalidMaxDagarMellanIntygPreference() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+          preferences.updatePreference(
+              RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "91");
+          preferences.validate();
+        });
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void validateInvalidMaxDagarSedanSjukfallPreference() {
-    RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
-    preferences.updatePreference(
-        RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "-1");
-    preferences.validate();
+  @Test
+  void validateInvalidMaxDagarSedanSjukfallPreference() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+          preferences.updatePreference(
+              RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "-1");
+          preferences.validate();
+        });
   }
 
   private RehabstodUserPreferences defaultPreferences() {

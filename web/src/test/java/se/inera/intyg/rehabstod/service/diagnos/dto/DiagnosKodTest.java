@@ -18,17 +18,18 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos.dto;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Magnus Ekstrand on 2017-02-20.
  */
-public class DiagnosKodTest {
+class DiagnosKodTest {
 
   @Test
-  public void testCleanDignosKod() {
+  void testCleanDignosKod() {
     DiagnosKod diagnosKod = new DiagnosKod("M80-   Diagnos", false);
     assertEquals("M80-", diagnosKod.getCode());
     assertEquals("Diagnos", diagnosKod.getName());
@@ -63,21 +64,27 @@ public class DiagnosKodTest {
   }
 
   @Test
-  public void testSplitNormalDignosKod() {
+  void testSplitNormalDignosKod() {
     DiagnosKod kod = new DiagnosKod("M123   Palindrom reumatism", false);
     assertEquals("M123", kod.getCode());
     assertEquals("Palindrom reumatism", kod.getName());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testEmptyDiagnosKod() {
-    se.inera.intyg.infra.sjukfall.dto.DiagnosKod kod =
-        se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create("");
+  @Test
+  void testEmptyDiagnosKod() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create("");
+        });
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testNullDiagnosKod() {
-    se.inera.intyg.infra.sjukfall.dto.DiagnosKod kod =
-        se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create(null);
+  @Test
+  void testNullDiagnosKod() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create(null);
+        });
   }
 }

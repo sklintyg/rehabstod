@@ -18,25 +18,26 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.client;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 import com.google.common.base.Strings;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
@@ -51,8 +52,8 @@ import se.riv.informationsecurity.authorization.consent.v2.ScopeType;
 /**
  * @author Magnus Ekstrand on 2018-10-18.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class SamtyckestjanstClientServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class SamtyckestjanstClientServiceImplTest {
 
   private static final String REGISTERED_BY_HSA_ID = UUID.randomUUID().toString();
   private static final String USER_HSA_ID = UUID.randomUUID().toString();
@@ -69,13 +70,13 @@ public class SamtyckestjanstClientServiceImplTest {
 
   @InjectMocks private SamtyckestjanstClientServiceImpl testee;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     ReflectionTestUtils.setField(testee, "logicalAddress", LOGICAL_ADDRESS);
   }
 
   @Test
-  public void checkConsent() {
+  void checkConsent() {
     ArgumentCaptor<CheckConsentType> requestCapture =
         ArgumentCaptor.forClass(CheckConsentType.class);
 
@@ -91,13 +92,17 @@ public class SamtyckestjanstClientServiceImplTest {
     assertEquals(PATIENT_ID.replace("-", ""), args.getPatientId().getExtension());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void checkConsentThrowsExceptionForInvalidPatientId() throws Exception {
-    testee.checkConsent(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, "123456789");
+  @Test
+  void checkConsentThrowsExceptionForInvalidPatientId() throws Exception {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          testee.checkConsent(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, "123456789");
+        });
   }
 
   @Test
-  public void registerExtendedConsent() {
+  void registerExtendedConsent() {
     ArgumentCaptor<RegisterExtendedConsentType> requestCapture =
         ArgumentCaptor.forClass(RegisterExtendedConsentType.class);
 
@@ -133,26 +138,30 @@ public class SamtyckestjanstClientServiceImplTest {
     assertEquals(registrationDate, args.getRegistrationAction().getRequestDate());
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void registerExtendedConsentThrowsExceptionForInvalidRepresentedBy() throws Exception {
-    LocalDateTime registrationDate = LocalDateTime.now();
-    ActionType registrationAction =
-        createActionType(
-            REGISTERED_BY_HSA_ID, registrationDate, REGISTERED_BY_HSA_ID, registrationDate);
+  @Test
+  void registerExtendedConsentThrowsExceptionForInvalidRepresentedBy() throws Exception {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          LocalDateTime registrationDate = LocalDateTime.now();
+          ActionType registrationAction =
+              createActionType(
+                  REGISTERED_BY_HSA_ID, registrationDate, REGISTERED_BY_HSA_ID, registrationDate);
 
-    testee.registerExtendedConsent(
-        VG_HSA_ID,
-        VE_HSA_ID,
-        USER_HSA_ID,
-        PERSONNUMMER,
-        "123456789",
-        null,
-        null,
-        registrationAction);
+          testee.registerExtendedConsent(
+              VG_HSA_ID,
+              VE_HSA_ID,
+              USER_HSA_ID,
+              PERSONNUMMER,
+              "123456789",
+              null,
+              null,
+              registrationAction);
+        });
   }
 
   @Test
-  public void registerExtendedConsentThrowsExceptionForInvalidConsentDate() throws Exception {
+  void registerExtendedConsentThrowsExceptionForInvalidConsentDate() throws Exception {
     LocalDateTime registrationDate = LocalDateTime.now();
     ActionType registrationAction =
         createActionType(

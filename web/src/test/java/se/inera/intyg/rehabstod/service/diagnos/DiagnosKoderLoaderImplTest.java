@@ -18,27 +18,27 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
 import java.util.Map;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 /** Created by eriklupander on 2016-04-14. */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DiagnosKoderLoaderImpl.class, IcdCodeConverter.class})
-public class DiagnosKoderLoaderImplTest {
+class DiagnosKoderLoaderImplTest {
 
   @Autowired private DiagnosKoderLoaderImpl diagnosKoderLoader;
 
   @Test
-  public void testLoadDiagnosKoder() throws IOException {
+  void testLoadDiagnosKoder() throws IOException {
     specifyDiagnosKodFiler();
     Map<String, String> diagnosKoder = diagnosKoderLoader.loadDiagnosKoder();
     assertNotNull(diagnosKoder);

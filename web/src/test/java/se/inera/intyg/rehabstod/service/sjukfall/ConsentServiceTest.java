@@ -25,11 +25,11 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
@@ -37,8 +37,8 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ConsentServiceTest {
+@ExtendWith(MockitoExtension.class)
+class ConsentServiceTest {
 
   private static final String PERSON_ID = "19121212-1212";
   private static final String VARDGIVARE_ID = "VG123";
@@ -53,7 +53,7 @@ public class ConsentServiceTest {
   @InjectMocks private ConsentServiceImpl testee = new ConsentServiceImpl();
 
   @Test
-  public void testGiveConsentLoggedInOnCareUnit() {
+  void testGiveConsentLoggedInOnCareUnit() {
     LocalDateTime consentFrom = LocalDateTime.now();
     LocalDateTime consentTo = consentFrom.plusDays(10);
 
@@ -79,7 +79,7 @@ public class ConsentServiceTest {
   }
 
   @Test
-  public void testGiveConsentLoggedInOnSubUnit() {
+  void testGiveConsentLoggedInOnSubUnit() {
     LocalDateTime consentFrom = LocalDateTime.now();
     LocalDateTime consentTo = consentFrom.plusDays(10);
 

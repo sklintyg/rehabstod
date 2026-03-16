@@ -18,27 +18,27 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos.dto;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Created by marced on 09/02/16. */
-public class DiagnosKategoriTest {
+class DiagnosKategoriTest {
 
   private static final Optional<DiagnosKategori> EXPECTED_A =
       Optional.of(new DiagnosKategori('A', 22));
 
   @Test
-  public void testExtractFromStringSuccesses() throws Exception {
+  void testExtractFromStringSuccesses() throws Exception {
     assertTrue(DiagnosKategori.extractFromString("A22").isPresent());
     assertTrue(DiagnosKategori.extractFromString("A22").equals(EXPECTED_A));
     assertTrue(DiagnosKategori.extractFromString("A2230.5").equals(EXPECTED_A));
   }
 
   @Test
-  public void testExtractFromStringFailures() throws Exception {
+  void testExtractFromStringFailures() throws Exception {
     assertFalse(DiagnosKategori.extractFromString(null).isPresent());
     assertFalse(DiagnosKategori.extractFromString("").isPresent());
     assertFalse(DiagnosKategori.extractFromString("A").isPresent());

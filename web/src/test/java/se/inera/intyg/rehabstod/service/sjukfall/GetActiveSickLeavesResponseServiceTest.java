@@ -52,7 +52,7 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
-public class GetActiveSickLeavesResponseServiceTest {
+class GetActiveSickLeavesResponseServiceTest {
 
   @Mock private UserService userService;
   @Mock private MonitoringLogService monitoringLogService;

@@ -18,26 +18,26 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSessionStatusResponse;
 
 /** Created by marced on 09/03/16. */
-@RunWith(MockitoJUnitRunner.class)
-public class SessionStatusControllerTest {
+@ExtendWith(MockitoExtension.class)
+class SessionStatusControllerTest {
 
   @Mock HttpServletRequest request;
 
@@ -50,7 +50,7 @@ public class SessionStatusControllerTest {
   @InjectMocks private SessionStatusController controller = new SessionStatusController();
 
   @Test
-  public void testGetSessionStatusOk() {
+  void testGetSessionStatusOk() {
     // Arrange
     when(request.getSession((false))).thenReturn(session);
     when(session.getAttribute(anyString())).thenReturn(context);
@@ -66,7 +66,7 @@ public class SessionStatusControllerTest {
   }
 
   @Test
-  public void testGetSessionStatusNoSession() {
+  void testGetSessionStatusNoSession() {
     // Arrange
     when(request.getSession((false))).thenReturn(null);
 

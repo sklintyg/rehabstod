@@ -18,12 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.mappers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Befattning;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
@@ -40,7 +40,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
 /**
  * @author Magnus Ekstrand on 2017-09-22.
  */
-public class IntygstjanstMapperTest {
+class IntygstjanstMapperTest {
 
   private static final String INTYGSID = "A1234-B1234-C1234-D1234-E1234";
   private static final LocalDateTime SIGNERINGSTIDPUNKT = LocalDateTime.now();
@@ -64,7 +64,7 @@ public class IntygstjanstMapperTest {
   private IntygstjanstMapper testee = new IntygstjanstMapper();
 
   @Test
-  public void testMapppingOfIntygsData() {
+  void testMapppingOfIntygsData() {
     // given
     IntygsData from = createIntygsData();
 

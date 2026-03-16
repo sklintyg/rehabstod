@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.statistics;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -26,12 +26,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosGruppLoader;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.GenderStat;
@@ -42,8 +42,8 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /** Created by marced on 04/03/16. */
-@RunWith(MockitoJUnitRunner.class)
-public class StatisticsCalculatorImplTest {
+@ExtendWith(MockitoExtension.class)
+class StatisticsCalculatorImplTest {
 
   private String lakareId1 = "hsaid1";
   private String lakareNamn1 = "Läkare1";
@@ -61,8 +61,8 @@ public class StatisticsCalculatorImplTest {
 
   @InjectMocks private StatisticsCalculatorImpl testee;
 
-  @Before
-  public void init() throws IOException {
+  @BeforeEach
+  void init() throws IOException {
 
     when(diagnosGruppLoader.loadDiagnosGrupper()).thenReturn(createDiagnosGruppList());
     testee.init();
@@ -80,7 +80,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testGetSjukfallDifferentSjukskrivningsGradFemale() throws Exception {
+  void testGetSjukfallDifferentSjukskrivningsGradFemale() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
 
     internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16", 25));
@@ -109,7 +109,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testGetSjukfallDifferentSjukskrivningsGradMale() throws Exception {
+  void testGetSjukfallDifferentSjukskrivningsGradMale() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
 
     internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16", 25));
@@ -139,7 +139,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testGetSjukfallAllOneGenderSickLeaveSummary() throws Exception {
+  void testGetSjukfallAllOneGenderSickLeaveSummary() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
 
     internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16"));
@@ -157,7 +157,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testGetSjukfallDifferentSjukskrivningsGradSickLeaveSummary() throws Exception {
+  void testGetSjukfallDifferentSjukskrivningsGradSickLeaveSummary() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
 
     internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16", 25));
@@ -181,7 +181,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testSickLeaveSummaryWhenSickLeaveHasSeveralSickLeaveDegrees() throws Exception {
+  void testSickLeaveSummaryWhenSickLeaveHasSeveralSickLeaveDegrees() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
 
     internalSjukfallList.add(
@@ -214,8 +214,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testSickLeaveSummaryWhenSickLeaveHasSeveralSickLeaveDegreesForMales()
-      throws Exception {
+  void testSickLeaveSummaryWhenSickLeaveHasSeveralSickLeaveDegreesForMales() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
 
     internalSjukfallList.add(
@@ -248,8 +247,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testSickLeaveSummaryWhenSickLeaveHasSeveralSickLeaveDegreesForFemales()
-      throws Exception {
+  void testSickLeaveSummaryWhenSickLeaveHasSeveralSickLeaveDegreesForFemales() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
 
     internalSjukfallList.add(
@@ -286,7 +284,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testSickLeaveSummarySickLeaveLength() throws Exception {
+  void testSickLeaveSummarySickLeaveLength() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
 
     internalSjukfallList.add(
@@ -321,7 +319,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testSickLeaveSummarySickLeaveLengthMale() throws Exception {
+  void testSickLeaveSummarySickLeaveLengthMale() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
 
     internalSjukfallList.add(
@@ -364,7 +362,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testSickLeaveSummarySickLeaveLengthFemale() throws Exception {
+  void testSickLeaveSummarySickLeaveLengthFemale() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
 
     internalSjukfallList.add(
@@ -407,7 +405,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testGenderStatForSickLeaveSummary() throws Exception {
+  void testGenderStatForSickLeaveSummary() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
 
     internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16"));
@@ -428,7 +426,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testGetSickLeaveSummaryDiagnosisGroups() throws Exception {
+  void testGetSickLeaveSummaryDiagnosisGroups() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
 
     internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16"));
@@ -456,7 +454,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testGetSickLeaveSummaryDiagnosisGroupsForMale() throws Exception {
+  void testGetSickLeaveSummaryDiagnosisGroupsForMale() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
 
     internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.M, "M16"));
@@ -490,7 +488,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testGetSickLeaveSummaryDiagnosisGroupsForFemale() throws Exception {
+  void testGetSickLeaveSummaryDiagnosisGroupsForFemale() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
 
     internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16"));
@@ -524,7 +522,7 @@ public class StatisticsCalculatorImplTest {
   }
 
   @Test
-  public void testShouldReturnEmptyListIfValuesAreZeroForSickLeaveSummary() throws Exception {
+  void testShouldReturnEmptyListIfValuesAreZeroForSickLeaveSummary() throws Exception {
     List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
     final var summary = testee.getSickLeaveSummary(internalSjukfallList);
     assertEquals(0, summary.getTotal());

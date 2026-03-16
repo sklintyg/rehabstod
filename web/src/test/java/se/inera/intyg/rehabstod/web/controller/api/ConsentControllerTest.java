@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.eq;
@@ -33,12 +33,12 @@ import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
@@ -53,8 +53,8 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRe
 import se.inera.intyg.schemas.contract.Personnummer;
 
 /** Created by Magnus Ekstrand on 03/02/16. */
-@RunWith(MockitoJUnitRunner.class)
-public class ConsentControllerTest {
+@ExtendWith(MockitoExtension.class)
+class ConsentControllerTest {
 
   private static final String PERSON_ID = "19121212-1212";
   private static final String LAKARE_ID = "L999";
@@ -72,13 +72,13 @@ public class ConsentControllerTest {
 
   @InjectMocks ConsentController testee = new ConsentController();
 
-  @Before
-  public void before() {
+  @BeforeEach
+  void before() {
     when(userServiceMock.getUser()).thenReturn(buildUser());
   }
 
   @Test
-  public void testRegisterExtendedConsent() {
+  void testRegisterExtendedConsent() {
     LocalDateTime result = LocalDateTime.now();
 
     when(consentServiceMock.giveConsent(any(), anyBoolean(), isNull(), any(), any(), any()))
@@ -110,7 +110,7 @@ public class ConsentControllerTest {
   }
 
   @Test
-  public void testRegisterExtendedConsentMaxDays() {
+  void testRegisterExtendedConsentMaxDays() {
     LocalDateTime result = LocalDateTime.now();
 
     when(consentServiceMock.giveConsent(any(), anyBoolean(), isNull(), any(), any(), any()))
@@ -144,7 +144,7 @@ public class ConsentControllerTest {
   }
 
   @Test
-  public void testRegisterExtendedConsent_invalidPersonnummer() {
+  void testRegisterExtendedConsent_invalidPersonnummer() {
     RegisterExtendedConsentResponse response =
         testee.registerConsent(buildRequest("21121212-1212"));
 
@@ -156,7 +156,7 @@ public class ConsentControllerTest {
   }
 
   @Test
-  public void testRegisterExtendedConsent_invalidConsentBoundary() {
+  void testRegisterExtendedConsent_invalidConsentBoundary() {
     RegisterExtendedConsentResponse response =
         testee.registerConsent(buildRequest(PERSON_ID, ConsentController.MAX_DAYS_FOR_CONSENT + 1));
 
@@ -168,7 +168,7 @@ public class ConsentControllerTest {
   }
 
   @Test
-  public void testRegisterExtendedConsent_error() {
+  void testRegisterExtendedConsent_error() {
     when(consentServiceMock.giveConsent(any(), anyBoolean(), isNull(), any(), any(), any()))
         .thenReturn(null);
 

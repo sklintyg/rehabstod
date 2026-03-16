@@ -18,25 +18,25 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
 /** Created by marced on 10/02/16. */
 // CHECKSTYLE:OFF MagicNumber
-@RunWith(MockitoJUnitRunner.class)
-public class DiagnosKapitelServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class DiagnosKapitelServiceImplTest {
 
   private static final DiagnosKapitel DEFAULT_KAPITEL =
       new DiagnosKapitel("A00-C00En ganska bred diagnos");
@@ -45,14 +45,14 @@ public class DiagnosKapitelServiceImplTest {
 
   @InjectMocks private DiagnosKapitelServiceImpl testee;
 
-  @Before
-  public void init() throws IOException {
+  @BeforeEach
+  void init() throws IOException {
     when(diagnosKapitelLoader.loadDiagnosKapitel()).thenReturn(buildDiagnosKapitelList());
     testee.init();
   }
 
   @Test
-  public void testGetDiagnosKapitelList() throws Exception {
+  void testGetDiagnosKapitelList() throws Exception {
 
     final List<DiagnosKapitel> diagnosKapitelList = testee.getDiagnosKapitelList();
     assertEquals(4, diagnosKapitelList.size());
@@ -61,7 +61,7 @@ public class DiagnosKapitelServiceImplTest {
   }
 
   @Test
-  public void testGetDiagnosKapitel() throws Exception {
+  void testGetDiagnosKapitel() throws Exception {
     assertEquals(DEFAULT_KAPITEL, testee.getDiagnosKapitel("A00"));
     assertEquals(DEFAULT_KAPITEL, testee.getDiagnosKapitel("B01"));
     assertEquals(DEFAULT_KAPITEL, testee.getDiagnosKapitel("C00"));

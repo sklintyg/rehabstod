@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.certificate;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -35,12 +35,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.certificate.builder.DiagnosedCertificateBuilder;
 import se.inera.intyg.infra.certificate.builder.SickLeaveCertificateBuilder;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
@@ -64,8 +64,8 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CertificateServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class CertificateServiceImplTest {
 
   private static final String ENCRYPTED_PATIENT_ID = "patient_id";
   private static final String CERT_TYPE_LUSE = "LUSE";
@@ -118,8 +118,8 @@ public class CertificateServiceImplTest {
 
   CertificateServiceImpl service;
 
-  @Before
-  public void setup() {
+  @BeforeEach
+  void setup() {
     service =
         new CertificateServiceImpl(
             intygstjanstRestIntegrationService,
@@ -135,7 +135,7 @@ public class CertificateServiceImplTest {
   }
 
   @Test
-  public void getLUCertificatesForCareUnit() {
+  void getLUCertificatesForCareUnit() {
     final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
 
     final var argumentCapture = ArgumentCaptor.forClass(List.class);
@@ -168,15 +168,15 @@ public class CertificateServiceImplTest {
     assertEquals(DIAGNOSE_CODE, luCertificates.get(1).getDiagnosis().getKod());
 
     final var actualUnitIds = argumentCapture.getValue();
-    assertNotNull("Doesn't expect actual unitIds to be null", actualUnitIds);
+    assertNotNull(actualUnitIds, "Doesn't expect actual unitIds to be null");
     assertEquals(expectedUnitIds.size(), actualUnitIds.size());
     for (var actualUnitId : actualUnitIds) {
-      assertTrue("Doesn't expect unitId: " + actualUnitId, expectedUnitIds.contains(actualUnitId));
+      assertTrue(expectedUnitIds.contains(actualUnitId), "Doesn't expect unitId: " + actualUnitId);
     }
   }
 
   @Test
-  public void shouldCallUnansweredCommunicationServiceWhenGettingLuCertificatesForCareUnit() {
+  void shouldCallUnansweredCommunicationServiceWhenGettingLuCertificatesForCareUnit() {
     final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
 
     final var argumentCapture = ArgumentCaptor.forClass(List.class);
@@ -207,7 +207,7 @@ public class CertificateServiceImplTest {
   }
 
   @Test
-  public void shouldSetEncryptedPatientIdForLUForUnit() {
+  void shouldSetEncryptedPatientIdForLUForUnit() {
     final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
     final var selectableVardenhet = mock(SelectableVardenhet.class);
 
@@ -235,7 +235,7 @@ public class CertificateServiceImplTest {
   }
 
   @Test
-  public void getLUCertificatesForPerson() {
+  void getLUCertificatesForPerson() {
     final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
 
     final var argumentCapture = ArgumentCaptor.forClass(List.class);
@@ -269,15 +269,15 @@ public class CertificateServiceImplTest {
     assertEquals(DIAGNOSE_CODE, luCertificates.get(1).getDiagnosis().getKod());
 
     final var actualUnitIds = argumentCapture.getValue();
-    assertNotNull("Doesn't expect actual unitIds to be null", actualUnitIds);
+    assertNotNull(actualUnitIds, "Doesn't expect actual unitIds to be null");
     assertEquals(expectedUnitIds.size(), actualUnitIds.size());
     for (var actualUnitId : actualUnitIds) {
-      assertTrue("Doesn't expect unitId: " + actualUnitId, expectedUnitIds.contains(actualUnitId));
+      assertTrue(expectedUnitIds.contains(actualUnitId), "Doesn't expect unitId: " + actualUnitId);
     }
   }
 
   @Test
-  public void shouldCallUnansweredCommunicationServiceWhenGettingLuCertificatesForPerson() {
+  void shouldCallUnansweredCommunicationServiceWhenGettingLuCertificatesForPerson() {
     final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
 
     final var selectableVardenhet = mock(SelectableVardenhet.class);
@@ -307,7 +307,7 @@ public class CertificateServiceImplTest {
   }
 
   @Test
-  public void shouldSetEncryptedPatientIdForLUCertificateForPerson() {
+  void shouldSetEncryptedPatientIdForLUCertificateForPerson() {
     final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
 
     final var selectableVardenhet = mock(SelectableVardenhet.class);
@@ -338,7 +338,7 @@ public class CertificateServiceImplTest {
   }
 
   @Test
-  public void getAGCertificatesForPersonWhenAdmin() {
+  void getAGCertificatesForPersonWhenAdmin() {
     final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
 
     final var argumentCapture = ArgumentCaptor.forClass(List.class);
@@ -378,15 +378,15 @@ public class CertificateServiceImplTest {
     assertEquals(REDUCTION_3, agCertificates.get(0).getDegree().get(2).intValue());
 
     final var actualUnitIds = argumentCapture.getValue();
-    assertNotNull("Doesn't expect actual unitIds to be null", actualUnitIds);
+    assertNotNull(actualUnitIds, "Doesn't expect actual unitIds to be null");
     assertEquals(expectedUnitIds.size(), actualUnitIds.size());
     for (var actualUnitId : actualUnitIds) {
-      assertTrue("Doesn't expect unitId: " + actualUnitId, expectedUnitIds.contains(actualUnitId));
+      assertTrue(expectedUnitIds.contains(actualUnitId), "Doesn't expect unitId: " + actualUnitId);
     }
   }
 
   @Test
-  public void getAGCertificatesForPersonWhenDoctor() {
+  void getAGCertificatesForPersonWhenDoctor() {
     final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
 
     final var argumentCapture = ArgumentCaptor.forClass(List.class);
@@ -416,7 +416,7 @@ public class CertificateServiceImplTest {
   }
 
   @Test
-  public void ifUserLoggedInOnCareUnitSearchDoctorsIncludingSubUnits() {
+  void ifUserLoggedInOnCareUnitSearchDoctorsIncludingSubUnits() {
     final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
     final var expectedDoctors = Arrays.asList("DOCTOR-1", "DOCTOR-2", "DOCTOR-3");
 
@@ -433,24 +433,24 @@ public class CertificateServiceImplTest {
 
     final var actualDoctors = service.getDoctorsForUnit().getDoctors();
 
-    assertNotNull("Doesn't expect actual doctors to be null", actualDoctors);
+    assertNotNull(actualDoctors, "Doesn't expect actual doctors to be null");
     assertEquals(actualDoctors.size(), actualDoctors.size());
     for (var actualDoctor : actualDoctors) {
       assertTrue(
-          "Doesn't expect doctor with id: " + actualDoctor.getHsaId(),
-          expectedDoctors.contains(actualDoctor.getHsaId()));
+          expectedDoctors.contains(actualDoctor.getHsaId()),
+          "Doesn't expect doctor with id: " + actualDoctor.getHsaId());
     }
 
     final var actualUnitIds = argumentCapture.getValue();
-    assertNotNull("Doesn't expect actual unitIds to be null", actualUnitIds);
+    assertNotNull(actualUnitIds, "Doesn't expect actual unitIds to be null");
     assertEquals(expectedUnitIds.size(), actualUnitIds.size());
     for (var actualUnitId : actualUnitIds) {
-      assertTrue("Doesn't expect unitId: " + actualUnitId, expectedUnitIds.contains(actualUnitId));
+      assertTrue(expectedUnitIds.contains(actualUnitId), "Doesn't expect unitId: " + actualUnitId);
     }
   }
 
   @Test
-  public void shallUseHSAIdWhenDoctorIsMissingInHSA() {
+  void shallUseHSAIdWhenDoctorIsMissingInHSA() {
     final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
     final var expectedDoctors = Arrays.asList("DOCTOR-1", "DOCTOR-2", "DOCTOR-3");
 
@@ -466,12 +466,12 @@ public class CertificateServiceImplTest {
 
     final var actualDoctors = service.getDoctorsForUnit().getDoctors();
 
-    assertNotNull("Doesn't expect actual doctors to be null", actualDoctors);
+    assertNotNull(actualDoctors, "Doesn't expect actual doctors to be null");
     assertEquals(actualDoctors.size(), actualDoctors.size());
     for (var actualDoctor : actualDoctors) {
       assertTrue(
-          "Doesn't expect doctor with name: " + actualDoctor.getNamn(),
-          expectedDoctors.contains(actualDoctor.getNamn()));
+          expectedDoctors.contains(actualDoctor.getNamn()),
+          "Doesn't expect doctor with name: " + actualDoctor.getNamn());
     }
   }
 

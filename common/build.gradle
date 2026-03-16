@@ -3,7 +3,5 @@ dependencies {
     implementation "se.inera.intyg.infra:log-messages:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
 
-    testImplementation 'junit:junit'
 
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
 }
