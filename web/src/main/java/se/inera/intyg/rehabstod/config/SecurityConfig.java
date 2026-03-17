@@ -37,7 +37,9 @@ import org.springframework.web.client.RestTemplate;
 
 /** Created by eriklupander on 2016-05-18. */
 @Configuration
-@ComponentScan("se.inera.intyg.infra.security.authorities")
+@ComponentScan({
+  "se.inera.intyg.rehabstod.security.authorities"
+})
 public class SecurityConfig {
 
   private static final int RESTTEMPLATE_TIMEOUT_MS = 10000;

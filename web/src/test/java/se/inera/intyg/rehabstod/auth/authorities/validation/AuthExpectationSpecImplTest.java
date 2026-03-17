@@ -24,10 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.infra.security.authorities.AuthoritiesException;
-import se.inera.intyg.infra.security.authorities.validation.AuthExpectationSpecImpl;
-import se.inera.intyg.infra.security.common.model.IntygUser;
-import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.rehabstod.security.authorities.AuthoritiesException;
+import se.inera.intyg.rehabstod.security.authorities.validation.AuthExpectationSpecImpl;
+import se.inera.intyg.rehabstod.security.common.model.IntygUser;
+import se.inera.intyg.rehabstod.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 
 /** Created by marced on 14/04/16. */

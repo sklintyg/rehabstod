@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil;
-import se.inera.intyg.infra.security.common.model.Privilege;
-import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.rehabstod.security.authorities.AuthoritiesResolverUtil;
+import se.inera.intyg.rehabstod.security.common.model.Privilege;
+import se.inera.intyg.rehabstod.security.common.model.Role;
 
 /** Created by marced on 13/04/16. */
 class AuthoritiesResolverUtilTest {

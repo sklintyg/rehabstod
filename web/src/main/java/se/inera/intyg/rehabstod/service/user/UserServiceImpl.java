@@ -20,8 +20,8 @@ package se.inera.intyg.rehabstod.service.user;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.security.common.model.IntygUser;
-import se.inera.intyg.infra.security.common.service.CareUnitAccessHelper;
+import se.inera.intyg.rehabstod.security.common.model.IntygUser;
+import se.inera.intyg.rehabstod.security.common.service.CareUnitAccessHelper;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 
 /** Created by eriklupander on 2016-01-19. */

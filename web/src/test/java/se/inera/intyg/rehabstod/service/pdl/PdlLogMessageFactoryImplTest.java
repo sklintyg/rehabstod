@@ -29,7 +29,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.rehabstod.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.common.logmessages.ActivityPurpose;
