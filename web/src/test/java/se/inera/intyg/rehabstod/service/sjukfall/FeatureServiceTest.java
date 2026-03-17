@@ -31,9 +31,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.security.common.model.Feature;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
+import se.inera.intyg.rehabstod.security.common.model.Feature;
 import se.inera.intyg.rehabstod.service.user.FeatureServiceImpl;
 import se.inera.intyg.rehabstod.service.user.UserService;
 

@@ -71,12 +71,12 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
-import se.inera.intyg.rehabstod.security.common.cookie.IneraCookieSerializer;
 import se.inera.intyg.rehabstod.auth.CsrfCookieFilter;
 import se.inera.intyg.rehabstod.auth.CustomAuthenticationFailureHandler;
 import se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService;
 import se.inera.intyg.rehabstod.auth.Saml2AuthenticationToken;
 import se.inera.intyg.rehabstod.auth.SpaCsrfTokenRequestHandler;
+import se.inera.intyg.rehabstod.security.common.cookie.IneraCookieSerializer;
 
 @Configuration
 @EnableWebSecurity

@@ -112,7 +112,7 @@ public class RehabstodUserDetailsService {
       assertAuthorizedVardgivare(employeeHsaId, userAuthorizationInfo.getVardgivare());
 
       final var intygUser =
-      createIntygUser(employeeHsaId, authenticationScheme, userAuthorizationInfo, personInfo);
+          createIntygUser(employeeHsaId, authenticationScheme, userAuthorizationInfo, personInfo);
       // Clean out förskrivarkod
       intygUser.setForskrivarkod("0000000");
 
@@ -165,7 +165,7 @@ public class RehabstodUserDetailsService {
             rehabstodUser.getValdVardenhet().getId(), rehabstodUser);
       }
 
-    if (rehabstodUser.getValdVardenhet() != null) {
+      if (rehabstodUser.getValdVardenhet() != null) {
         rehabstodUser.setFeatures(
             commonAuthoritiesResolver.getFeatures(
                 Arrays.asList(
@@ -226,7 +226,8 @@ public class RehabstodUserDetailsService {
       List<PersonInformation> personInfo) {
     LOG.debug("Decorate/populate user object with additional information");
     final var intygUser = new IntygUser(employeeHsaId);
-    decorateIntygUserWithBasicInfo(intygUser, userAuthorizationInfo, personInfo, authenticationScheme);
+    decorateIntygUserWithBasicInfo(
+        intygUser, userAuthorizationInfo, personInfo, authenticationScheme);
     decorateIntygUserWithAdditionalInfo(intygUser, personInfo);
     decorateIntygUserWithAuthenticationMethod(intygUser, authenticationScheme);
     decorateIntygUserWithRoleAndAuthorities(
@@ -269,8 +270,7 @@ public class RehabstodUserDetailsService {
     List<String> legitimeradeYrkesgrupper =
         hsaAttributeExtractor.extractLegitimeradeYrkesgrupper(hsaPersonInfo);
     List<String> befattningar = hsaAttributeExtractor.extractBefattningar(hsaPersonInfo);
-    List<PaTitle> befattningskoder =
-        hsaAttributeExtractor.extractBefattningsKoder(hsaPersonInfo);
+    List<PaTitle> befattningskoder = hsaAttributeExtractor.extractBefattningsKoder(hsaPersonInfo);
     String titel = hsaAttributeExtractor.extractTitel(hsaPersonInfo);
     intygUser.setSpecialiseringar(specialiseringar);
     intygUser.setLegitimeradeYrkesgrupper(legitimeradeYrkesgrupper);
@@ -296,7 +296,8 @@ public class RehabstodUserDetailsService {
     LOG.debug("User role is set to {}", roleResolveResult.getRole());
     intygUser.setRoles(toMap(roleResolveResult.getRole()));
     intygUser.setRoleTypeName(roleResolveResult.getRoleTypeName());
-    intygUser.setAuthorities(toMap(roleResolveResult.getRole().getPrivileges(), Privilege::getName));
+    intygUser.setAuthorities(
+        toMap(roleResolveResult.getRole().getPrivileges(), Privilege::getName));
   }
 
   private void decorateIntygUserWithSystemRoles(
@@ -351,7 +352,7 @@ public class RehabstodUserDetailsService {
     return sb.toString();
   }
 
-private String getDefaultRole() {
+  private String getDefaultRole() {
     return AuthoritiesConstants.ROLE_KOORDINATOR;
   }
 

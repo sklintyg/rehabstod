@@ -37,8 +37,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
-import se.inera.intyg.rehabstod.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
+import se.inera.intyg.rehabstod.security.common.model.Role;
 import se.inera.intyg.rehabstod.service.Urval;
 
 /**

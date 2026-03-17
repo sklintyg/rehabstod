@@ -20,10 +20,8 @@ package se.inera.intyg.rehabstod.security.common.model;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-/**
- * Created by eriklupander on 2016-05-13.
- */
+/** Created by eriklupander on 2016-05-13. */
 public interface UserOrigin {
 
-    String resolveOrigin(HttpServletRequest request);
+  String resolveOrigin(HttpServletRequest request);
 }

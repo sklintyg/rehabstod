@@ -18,11 +18,8 @@
  */
 package se.inera.intyg.rehabstod.security.common.model;
 
-/**
- * Created by eriklupander on 2016-05-13.
- */
+/** Created by eriklupander on 2016-05-13. */
 public enum UserOriginType {
-
-    DJUPINTEGRATION,
-    NORMAL
+  DJUPINTEGRATION,
+  NORMAL
 }

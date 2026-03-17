@@ -24,19 +24,17 @@ import java.util.List;
 
 public class PilotList {
 
-    @JsonProperty
-    private List<Pilot> pilots;
+  @JsonProperty private List<Pilot> pilots;
 
-    public List<Pilot> getPilots() {
-        return pilots;
+  public List<Pilot> getPilots() {
+    return pilots;
+  }
+
+  public void setPilots(List<Pilot> pilots) {
+    if (pilots == null) {
+      this.pilots = Collections.emptyList();
+    } else {
+      this.pilots = pilots;
     }
-
-    public void setPilots(List<Pilot> pilots) {
-        if (pilots == null) {
-            this.pilots = Collections.emptyList();
-        } else {
-            this.pilots = pilots;
-        }
-    }
-
+  }
 }

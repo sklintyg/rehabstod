@@ -60,12 +60,6 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
-import se.inera.intyg.rehabstod.security.authorities.CommonAuthoritiesResolver;
-import se.inera.intyg.rehabstod.security.authorities.bootstrap.SecurityConfigurationLoader;
-import se.inera.intyg.rehabstod.security.common.model.IntygUser;
-import se.inera.intyg.rehabstod.security.common.model.UserOrigin;
-import se.inera.intyg.rehabstod.security.common.model.UserOriginType;
-import se.inera.intyg.rehabstod.security.common.service.AuthenticationLogger;
 import se.inera.intyg.infra.security.exception.HsaServiceException;
 import se.inera.intyg.infra.security.exception.MissingMedarbetaruppdragException;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
@@ -74,6 +68,12 @@ import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleEx
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
+import se.inera.intyg.rehabstod.security.authorities.CommonAuthoritiesResolver;
+import se.inera.intyg.rehabstod.security.authorities.bootstrap.SecurityConfigurationLoader;
+import se.inera.intyg.rehabstod.security.common.model.IntygUser;
+import se.inera.intyg.rehabstod.security.common.model.UserOrigin;
+import se.inera.intyg.rehabstod.security.common.model.UserOriginType;
+import se.inera.intyg.rehabstod.security.common.service.AuthenticationLogger;
 
 /** Created by marced on 29/01/16. */
 @ExtendWith(MockitoExtension.class)

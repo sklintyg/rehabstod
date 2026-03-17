@@ -20,29 +20,26 @@ package se.inera.intyg.rehabstod.security.common.exception;
 
 import org.springframework.security.core.AuthenticationException;
 
-/**
- * Created by Magnus Ekstrand on 2016-04-07.
- */
+/** Created by Magnus Ekstrand on 2016-04-07. */
 public class GenericAuthenticationException extends AuthenticationException {
 
-    /**
-     * Constructs an {@code GenericAuthenticationException} with the specified message and root
-     * cause.
-     *
-     * @param msg the detail message
-     * @param t the root cause
-     */
-    public GenericAuthenticationException(String msg, Throwable t) {
-        super(msg, t);
-    }
+  /**
+   * Constructs an {@code GenericAuthenticationException} with the specified message and root cause.
+   *
+   * @param msg the detail message
+   * @param t the root cause
+   */
+  public GenericAuthenticationException(String msg, Throwable t) {
+    super(msg, t);
+  }
 
-    /**
-     * Constructs an {@code GenericAuthenticationException} with the specified message and no
-     * root cause.
-     *
-     * @param msg the detail message
-     */
-    public GenericAuthenticationException(String msg) {
-        super(msg);
-    }
+  /**
+   * Constructs an {@code GenericAuthenticationException} with the specified message and no root
+   * cause.
+   *
+   * @param msg the detail message
+   */
+  public GenericAuthenticationException(String msg) {
+    super(msg);
+  }
 }

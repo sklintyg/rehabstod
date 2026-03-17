@@ -29,35 +29,50 @@ import se.inera.intyg.rehabstod.security.common.model.AuthoritiesConstants;
 
 class CommonAuthoritiesResolverTest {
 
-    private static final String authoritiesConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/security-authorities-test.yaml";
-    private static final String featuresConfigurationLocation = "classpath:AuthoritiesConfigurationLoaderTest/security-features-test.yaml";
-    private static final Integer defaultMaxAliasesForCollections = 300;
+  private static final String authoritiesConfigurationLocation =
+      "classpath:AuthoritiesConfigurationLoaderTest/security-authorities-test.yaml";
+  private static final String featuresConfigurationLocation =
+      "classpath:AuthoritiesConfigurationLoaderTest/security-features-test.yaml";
+  private static final Integer defaultMaxAliasesForCollections = 300;
 
-    private static final SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationLocation,
-        featuresConfigurationLocation, defaultMaxAliasesForCollections);
+  private static final SecurityConfigurationLoader configurationLoader =
+      new SecurityConfigurationLoader(
+          authoritiesConfigurationLocation,
+          featuresConfigurationLocation,
+          defaultMaxAliasesForCollections);
 
-    private static final CommonAuthoritiesResolver commonAuthoritiesResolver = new CommonAuthoritiesResolver();
+  private static final CommonAuthoritiesResolver commonAuthoritiesResolver =
+      new CommonAuthoritiesResolver();
 
-    @BeforeAll
-    static void setupAuthoritiesConfiguration() {
-        // Load configuration
-        configurationLoader.afterPropertiesSet();
+  @BeforeAll
+  static void setupAuthoritiesConfiguration() {
+    // Load configuration
+    configurationLoader.afterPropertiesSet();
 
-        // Setup resolver class
-        commonAuthoritiesResolver.setConfigurationLoader(configurationLoader);
-    }
+    // Setup resolver class
+    commonAuthoritiesResolver.setConfigurationLoader(configurationLoader);
+  }
 
-    @Test
-    void testFeaturesDisabled() {
-        final var availableFeatures = commonAuthoritiesResolver.getFeatures(Collections.emptyList());
-        assertFalse(availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_WARNING_ORIGIN_NORMAL).getGlobal());
-        assertFalse(availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL).getGlobal());
-    }
+  @Test
+  void testFeaturesDisabled() {
+    final var availableFeatures = commonAuthoritiesResolver.getFeatures(Collections.emptyList());
+    assertFalse(
+        availableFeatures
+            .get(AuthoritiesConstants.FEATURE_ENABLE_WARNING_ORIGIN_NORMAL)
+            .getGlobal());
+    assertFalse(
+        availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL).getGlobal());
+  }
 
-    @Test
-    void testFeaturesEnabled() {
-        final var availableFeatures = commonAuthoritiesResolver.getFeatures(Collections.singletonList("TSTNMT2321000156-1077"));
-        assertTrue(availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_WARNING_ORIGIN_NORMAL).getGlobal());
-        assertTrue(availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL).getGlobal());
-    }
+  @Test
+  void testFeaturesEnabled() {
+    final var availableFeatures =
+        commonAuthoritiesResolver.getFeatures(Collections.singletonList("TSTNMT2321000156-1077"));
+    assertTrue(
+        availableFeatures
+            .get(AuthoritiesConstants.FEATURE_ENABLE_WARNING_ORIGIN_NORMAL)
+            .getGlobal());
+    assertTrue(
+        availableFeatures.get(AuthoritiesConstants.FEATURE_ENABLE_BLOCK_ORIGIN_NORMAL).getGlobal());
+  }
 }

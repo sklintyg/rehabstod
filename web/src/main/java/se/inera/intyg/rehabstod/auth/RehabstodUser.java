@@ -33,11 +33,11 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.AbstractVardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
-import se.inera.intyg.rehabstod.security.common.model.IntygUser;
-import se.inera.intyg.rehabstod.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
+import se.inera.intyg.rehabstod.security.common.model.IntygUser;
+import se.inera.intyg.rehabstod.security.common.model.Role;
 import se.inera.intyg.rehabstod.service.Urval;
 
 /**
