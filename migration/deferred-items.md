@@ -53,3 +53,39 @@ breaks Step 3 in the current state.
 Keep `MonitoringConfiguration` import in `ApplicationConfig` for now. Remove it in the step where
 `RSBannerJob` and its infra coupling are replaced/inlined and the `LogMcdHelper` dependency is no
 longer required.
+
+---
+
+## Step 5 — Inline `security-common` + `security-authorities`
+
+### `BaseUserDetailsService` + `DefaultUserDetailsDecorator` — pulled forward from Step 6
+
+**Files (infra):**
+- `se.inera.intyg.infra.security.siths.BaseUserDetailsService`
+- `se.inera.intyg.infra.security.siths.DefaultUserDetailsDecorator`
+
+**Reason:** Step 6 originally planned to inline these two classes. They were pulled forward into
+Step 5 due to a type incompatibility: `RehabstodUser extends (local) IntygUser`, but
+`BaseUserDetailsService` declared methods returning `(infra) IntygUser`. The override chain was
+incompatible, requiring `RehabstodUserDetailsService` to be fully rewritten.
+
+**Resolution:** Done. `RehabstodUserDetailsService` no longer extends `BaseUserDetailsService`.
+All logic from `BaseUserDetailsService` and `DefaultUserDetailsDecorator` is inlined. Step 6 did
+not need to repeat this.
+
+---
+
+## Step 6 — Inline `security-filter` + `security-siths`
+
+### `InternalApiFilter` — intentionally skipped
+
+**File (infra):** `se.inera.intyg.infra.security.filter.InternalApiFilter`
+
+**Reason:** This filter restricts API access to a specific port (`${internal.api.port}`). It is
+not used anywhere in rehabstod (not registered in `ApplicationInitializer`, not declared as a
+bean, no imports found). Copying it would add dead code.
+
+**Resolution:** Leave it out. If a port-based API filter is needed in the future, implement it
+directly in the rehabstod codebase without copying from infra.
+
+---

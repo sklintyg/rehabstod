@@ -37,7 +37,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
-import se.inera.intyg.infra.security.filter.PrincipalUpdatedFilter;
+import se.inera.intyg.rehabstod.security.filter.PrincipalUpdatedFilter;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.filters.PdlConsentGivenAssuranceFilter;
 import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
