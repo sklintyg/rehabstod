@@ -18,14 +18,10 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -125,22 +121,23 @@ public class BasicCacheConfig {
     @Bean
     @DependsOn("redisCacheOptionsSetter")
     public Cache iaCache() {
-      return redisCacheOptionsSetter().createCache("iaCache:" + appName,
-          String.valueOf(Duration.ofSeconds(iaCacheExpiry)));
+      return redisCacheOptionsSetter()
+          .createCache("iaCache:" + appName, String.valueOf(Duration.ofSeconds(iaCacheExpiry)));
     }
 
     @Bean
     @DependsOn("redisCacheOptionsSetter")
     public Cache employeeCache() {
-      return redisCacheOptionsSetter().createCache("employeeName",  String.valueOf(Duration.ofSeconds(employeeNameCacheExpiry)));
+      return redisCacheOptionsSetter()
+          .createCache("employeeName", String.valueOf(Duration.ofSeconds(employeeNameCacheExpiry)));
     }
 
     @Bean
     public RedisCacheManager cacheManager() {
       return new CacheFactory(
           RedisCacheWriter.nonLockingRedisCacheWriter(jedisConnectionFactory()),
-          RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(defaultEntryExpiry))
-      );
+          RedisCacheConfiguration.defaultCacheConfig()
+              .entryTtl(Duration.ofSeconds(defaultEntryExpiry)));
     }
 
     @Bean(name = "rediscache")

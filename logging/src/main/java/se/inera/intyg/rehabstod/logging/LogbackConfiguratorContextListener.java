@@ -23,10 +23,10 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.classic.util.ContextInitializer;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
-import java.io.IOException;
-import java.io.InputStream;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
+import java.io.IOException;
+import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -35,26 +35,29 @@ import org.springframework.core.io.Resource;
 
 public class LogbackConfiguratorContextListener implements ServletContextListener {
 
-  private static final Logger LOG = LoggerFactory.getLogger(LogbackConfiguratorContextListener.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(LogbackConfiguratorContextListener.class);
 
   private static final String CLASSPATH = "classpath:";
   private static final String DEFAULTURI = CLASSPATH + "logback-spring.xml";
 
-  /**
-   * initialize logback with external configuration file.
-   */
+  /** initialize logback with external configuration file. */
   @Override
   public void contextInitialized(final ServletContextEvent servletContextEvent) {
     final Resource resource = getConfigurationResource(getConfigurationUri(servletContextEvent));
 
     if (!resource.exists()) {
-      LOG.error("Can't read logback configuration from "
-          + resource.getDescription() + " - Keep default configuration");
+      LOG.error(
+          "Can't read logback configuration from "
+              + resource.getDescription()
+              + " - Keep default configuration");
       return;
     }
 
-    LOG.info("Found logback configuration " + resource.getDescription()
-        + " - Overriding default configuration");
+    LOG.info(
+        "Found logback configuration "
+            + resource.getDescription()
+            + " - Overriding default configuration");
     final LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 
     try {
@@ -66,8 +69,10 @@ public class LogbackConfiguratorContextListener implements ServletContextListene
         LOG.error("Can't fallback to default (auto) configuration", e);
       }
       LOG.error(
-          "Can't configure logback from " + resource.getDescription()
-              + " - Keep default configuration", ex);
+          "Can't configure logback from "
+              + resource.getDescription()
+              + " - Keep default configuration",
+          ex);
     }
   }
 
@@ -78,7 +83,8 @@ public class LogbackConfiguratorContextListener implements ServletContextListene
   }
 
   //
-  private void configure(final LoggerContext ctx, final Resource config) throws IOException, JoranException {
+  private void configure(final LoggerContext ctx, final Resource config)
+      throws IOException, JoranException {
     final JoranConfigurator jc = new JoranConfigurator();
     jc.setContext(ctx);
     ctx.reset();

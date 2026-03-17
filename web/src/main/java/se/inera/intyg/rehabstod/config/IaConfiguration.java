@@ -35,7 +35,7 @@ public class IaConfiguration {
   @Profile("!ia-stub")
   public IABannerServiceImpl iaBannerService() {
     return new IABannerServiceImpl();
-}
+  }
 
   @Bean
   @Profile("ia-stub")
