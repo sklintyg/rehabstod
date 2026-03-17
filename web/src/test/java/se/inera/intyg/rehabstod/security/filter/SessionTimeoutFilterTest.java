@@ -39,9 +39,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-/**
- * Created by marced on 10/03/16.
- */
+/** Created by marced on 10/03/16. */
 @ExtendWith(MockitoExtension.class)
 class SessionTimeoutFilterTest {
 
@@ -53,17 +51,13 @@ class SessionTimeoutFilterTest {
 
   private SessionTimeoutFilter filter;
 
-  @Mock
-  HttpServletRequest request;
+  @Mock HttpServletRequest request;
 
-  @Mock
-  HttpServletResponse response;
+  @Mock HttpServletResponse response;
 
-  @Mock
-  FilterChain filterChain;
+  @Mock FilterChain filterChain;
 
-  @Mock
-  HttpSession session;
+  @Mock HttpSession session;
 
   @BeforeEach
   void setupFilter() throws Exception {

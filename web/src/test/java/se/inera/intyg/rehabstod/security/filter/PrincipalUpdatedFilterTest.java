@@ -58,17 +58,13 @@ class PrincipalUpdatedFilterTest {
 
   private PrincipalUpdatedFilter testee = new PrincipalUpdatedFilter();
 
-  @Mock
-  private HttpServletRequest request;
+  @Mock private HttpServletRequest request;
 
-  @Mock
-  private HttpServletResponse response;
+  @Mock private HttpServletResponse response;
 
-  @Mock
-  private FilterChain filterChain;
+  @Mock private FilterChain filterChain;
 
-  @Mock
-  private HttpSession session;
+  @Mock private HttpSession session;
 
   private Authentication auth1;
   private Authentication auth2;
