@@ -24,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.infra.security.common.model.Privilege;
-import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.rehabstod.security.common.model.Privilege;
+import se.inera.intyg.rehabstod.security.common.model.Role;
 
 /** Created by marced on 14/04/16. */
 class RoleTest {

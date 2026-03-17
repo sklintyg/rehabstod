@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.infra.security.common.model.RequestOrigin;
+import se.inera.intyg.rehabstod.security.common.model.RequestOrigin;
 
 /** Created by marced on 14/04/16. */
 class RequestOriginTest {

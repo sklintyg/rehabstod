@@ -82,6 +82,7 @@ dependencies {
     implementation "org.apache.cxf:cxf-rt-frontend-jaxrs"
     implementation "org.apache.cxf:cxf-rt-frontend-jaxws"
     implementation "org.apache.cxf:cxf-rt-transports-http"
+    implementation "org.yaml:snakeyaml"
     implementation "org.apache.httpcomponents.client5:httpclient5"
     implementation "org.apache.poi:poi-ooxml"
     implementation "codes.rafael.jaxb2_commons:jaxb2-basics"

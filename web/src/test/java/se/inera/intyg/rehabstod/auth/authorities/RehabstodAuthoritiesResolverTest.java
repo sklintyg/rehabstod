@@ -29,11 +29,11 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
-import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
-import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
-import se.inera.intyg.infra.security.common.model.Privilege;
-import se.inera.intyg.infra.security.common.model.RequestOrigin;
-import se.inera.intyg.infra.security.common.model.Title;
+import se.inera.intyg.rehabstod.security.authorities.CommonAuthoritiesResolver;
+import se.inera.intyg.rehabstod.security.authorities.bootstrap.SecurityConfigurationLoader;
+import se.inera.intyg.rehabstod.security.common.model.Privilege;
+import se.inera.intyg.rehabstod.security.common.model.RequestOrigin;
+import se.inera.intyg.rehabstod.security.common.model.Title;
 
 /**
  * Should _only_ contain asserts specific to the Rehabstöd authorities-test.yaml file.
