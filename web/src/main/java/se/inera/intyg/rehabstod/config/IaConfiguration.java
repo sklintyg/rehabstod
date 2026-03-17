@@ -18,11 +18,39 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.Profile;
+import org.springframework.web.client.RestTemplate;
+import se.inera.intyg.rehabstod.integration.ia.cache.IaCacheConfiguration;
+import se.inera.intyg.rehabstod.integration.ia.services.IABannerServiceImpl;
+import se.inera.intyg.rehabstod.integration.ia.stub.IABannerServiceStub;
 
 @Configuration
-@ImportResource("classpath:ia-services-config.xml")
 @Import(IaStubConfiguration.class)
-public class IaConfiguration {}
+public class IaConfiguration {
+
+  @Bean
+  @Profile("!ia-stub")
+  public IABannerServiceImpl iaBannerService() {
+    return new IABannerServiceImpl();
+}
+
+  @Bean
+  @Profile("ia-stub")
+  public IABannerServiceStub iaBannerServiceStub() {
+    return new IABannerServiceStub();
+  }
+
+  @Bean
+  @Profile({"qa", "prod", "caching-enabled"})
+  public IaCacheConfiguration iaCacheConfiguration() {
+    return new IaCacheConfiguration();
+  }
+
+  @Bean("iaRestTemplate")
+  public RestTemplate restTemplate() {
+    return new RestTemplate();
+  }
+}

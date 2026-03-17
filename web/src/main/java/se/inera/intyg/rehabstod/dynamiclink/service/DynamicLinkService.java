@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,15 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.config;
+package se.inera.intyg.rehabstod.dynamiclink.service;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
+import java.util.List;
+import java.util.Map;
+import se.inera.intyg.rehabstod.dynamiclink.model.DynamicLink;
 
-@Configuration
-@ImportResource({"classpath:basic-cache-config.xml"})
-public class CacheConfigurationFromInfra {
+/** Created by eriklupander on 2017-05-03. */
+public interface DynamicLinkService {
 
-  public CacheConfigurationFromInfra() { // NOSONAR
-  }
+  Map<String, DynamicLink> getAllAsMap();
+
+  List<DynamicLink> getAllAsList();
+
+  DynamicLink get(String key);
 }

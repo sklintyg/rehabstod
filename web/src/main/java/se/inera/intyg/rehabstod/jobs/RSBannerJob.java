@@ -18,16 +18,29 @@
  */
 package se.inera.intyg.rehabstod.jobs;
 
+import java.util.List;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.infra.driftbannerdto.Application;
-import se.inera.intyg.infra.integration.ia.jobs.BannerJob;
+import se.inera.intyg.rehabstod.integration.ia.services.IABannerService;
+import se.inera.intyg.rehabstod.web.dto.driftbanner.Application;
+import se.inera.intyg.rehabstod.web.dto.driftbanner.Banner;
 
 /** Load banners from IntygsAdmin. */
 @Component
-public class RSBannerJob extends BannerJob {
+public class RSBannerJob {
 
-  @Override
-  protected Application getApplication() {
-    return Application.REHABSTOD;
+  private static final Logger LOG = LoggerFactory.getLogger(RSBannerJob.class);
+
+  @Autowired private IABannerService iaBannerService;
+
+  @Scheduled(cron = "${intygsadmin.cron}")
+  @SchedulerLock(name = "BannerJob.run", lockAtLeastFor = "PT30S", lockAtMostFor = "PT10M")
+  public void run() {
+    List<Banner> banners = iaBannerService.loadBanners(Application.REHABSTOD);
+    LOG.debug("Loaded banners from IA, found {} banners", banners.size());
   }
 }

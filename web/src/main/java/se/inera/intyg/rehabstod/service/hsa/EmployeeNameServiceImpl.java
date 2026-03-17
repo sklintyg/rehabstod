@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.hsa;
 
-import static se.inera.intyg.rehabstod.config.EmployeeNameCacheConfig.EMPLOYEE_NAME_CACHE_NAME;
-
 import jakarta.xml.ws.WebServiceException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +29,8 @@ import se.inera.intyg.rehabstod.monitoring.annotation.PrometheusTimeMethod;
 
 @Service
 public class EmployeeNameServiceImpl implements EmployeeNameService {
+
+  public static final String EMPLOYEE_NAME_CACHE_NAME = "employeeName";
 
   @Autowired private HsaEmployeeService employeeService;
 

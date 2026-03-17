@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 
 /** Created by eriklup. */
 @Configuration
-@ComponentScan({"se.inera.intyg.infra.dynamiclink"})
+@ComponentScan({"se.inera.intyg.rehabstod.dynamiclink"})
 public class InfraConfig {
 
   public InfraConfig() { // NOSONAR

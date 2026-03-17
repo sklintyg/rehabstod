@@ -18,11 +18,19 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.Condition;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.core.env.Profiles;
+import org.springframework.core.type.AnnotatedTypeMetadata;
 
-@Configuration
-@ComponentScan("se.inera.intyg.rehabstod.integration.ia.stub")
-@Profile({"dev", "ia-stub"})
-public class IaStubConfiguration {}
+/**
+ * Condition that matches when none of the caching profiles (caching-enabled, prod, qa) are active.
+ * Used to activate NoOpCacheManager as a fallback.
+ */
+public class NoCachingCondition implements Condition {
+
+  @Override
+  public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+    return !context.getEnvironment().acceptsProfiles(Profiles.of("caching-enabled | prod | qa"));
+  }
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.config;
+package se.inera.intyg.rehabstod.integration.ia.services;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import java.util.List;
+import se.inera.intyg.rehabstod.web.dto.driftbanner.Application;
+import se.inera.intyg.rehabstod.web.dto.driftbanner.Banner;
 
-@Configuration
-@ComponentScan("se.inera.intyg.rehabstod.integration.ia.stub")
-@Profile({"dev", "ia-stub"})
-public class IaStubConfiguration {}
+public interface IABannerService {
+
+  List<Banner> getCurrentBanners();
+
+  List<Banner> loadBanners(Application application);
+}

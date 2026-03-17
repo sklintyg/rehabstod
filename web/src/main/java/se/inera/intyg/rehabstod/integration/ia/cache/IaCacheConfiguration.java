@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,30 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.config;
+package se.inera.intyg.rehabstod.integration.ia.cache;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.Cache;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.web.client.RestTemplate;
 
-/** Created by eriklupander on 2017-02-23. */
 @Configuration
-@Profile("caching-enabled")
-public class EmployeeNameCacheConfig {
+public class IaCacheConfiguration {
 
-  public static final String EMPLOYEE_NAME_CACHE_NAME = "employeeName";
-  private static final String EMPLOYEE_NAME_CACHE_EXPIRY = "employee.name.cache.expiry";
+  public static final String CACHE_KEY = "BANNER";
 
-  @Value("${" + EMPLOYEE_NAME_CACHE_EXPIRY + "}")
-  private String employeeNameCacheExpirySeconds;
+  @Value("${app.name:noname}")
+  private String appName;
 
-  @Autowired private RedisCacheOptionsSetter redisCacheOptionsSetter;
+  @Autowired private RedisCacheManager cacheManager;
 
-  @PostConstruct
-  public void init() {
-    redisCacheOptionsSetter.createCache(EMPLOYEE_NAME_CACHE_NAME, EMPLOYEE_NAME_CACHE_EXPIRY);
+  @Bean
+  public Cache iaCache() {
+    return cacheManager.getCache("iaCache:" + appName);
+  }
+
+  @Bean("iaRestTemplate")
+  public RestTemplate restTemplate() {
+    return new RestTemplate();
   }
 }
