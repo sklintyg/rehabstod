@@ -20,12 +20,10 @@ package se.inera.intyg.rehabstod.security.exception;
 
 import org.springframework.security.core.AuthenticationException;
 
-/**
- * Created by eriklupander on 2016-05-11.
- */
+/** Created by eriklupander on 2016-05-11. */
 public class MissingHsaEmployeeInformation extends AuthenticationException {
 
-    public MissingHsaEmployeeInformation(String msg) {
-        super(msg);
-    }
+  public MissingHsaEmployeeInformation(String msg) {
+    super(msg);
+  }
 }

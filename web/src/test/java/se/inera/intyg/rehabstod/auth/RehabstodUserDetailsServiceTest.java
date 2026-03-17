@@ -60,8 +60,6 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
-import se.inera.intyg.rehabstod.security.exception.HsaServiceException;
-import se.inera.intyg.rehabstod.security.exception.MissingMedarbetaruppdragException;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.authorities.validation.AuthoritiesValidator;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
@@ -74,6 +72,8 @@ import se.inera.intyg.rehabstod.security.common.model.IntygUser;
 import se.inera.intyg.rehabstod.security.common.model.UserOrigin;
 import se.inera.intyg.rehabstod.security.common.model.UserOriginType;
 import se.inera.intyg.rehabstod.security.common.service.AuthenticationLogger;
+import se.inera.intyg.rehabstod.security.exception.HsaServiceException;
+import se.inera.intyg.rehabstod.security.exception.MissingMedarbetaruppdragException;
 
 /** Created by marced on 29/01/16. */
 @ExtendWith(MockitoExtension.class)

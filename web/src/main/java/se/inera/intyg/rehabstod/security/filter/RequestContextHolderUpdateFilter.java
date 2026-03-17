@@ -18,27 +18,28 @@
  */
 package se.inera.intyg.rehabstod.security.filter;
 
-import java.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
- * Replace org.apache.catalina.connect.Request in RequestContextHolder with the request used by spring session.
- * https://github.com/spring-projects/spring-session/issues/135
+ * Replace org.apache.catalina.connect.Request in RequestContextHolder with the request used by
+ * spring session. https://github.com/spring-projects/spring-session/issues/135
  */
 public class RequestContextHolderUpdateFilter extends OncePerRequestFilter {
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
 
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+    RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
-        filterChain.doFilter(request, response);
-    }
+    filterChain.doFilter(request, response);
+  }
 }
