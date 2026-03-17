@@ -27,9 +27,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.infra.security.exception.HsaServiceException;
-import se.inera.intyg.infra.security.exception.MissingMedarbetaruppdragException;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
+import se.inera.intyg.rehabstod.security.exception.HsaServiceException;
+import se.inera.intyg.rehabstod.security.exception.MissingMedarbetaruppdragException;
 
 @Component
 @Slf4j

@@ -29,7 +29,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import se.inera.intyg.infra.security.filter.SecurityHeadersFilter;
+import se.inera.intyg.rehabstod.security.filter.SecurityHeadersFilter;
 
 public class RSSecurityHeadersFilter extends SecurityHeadersFilter {
 

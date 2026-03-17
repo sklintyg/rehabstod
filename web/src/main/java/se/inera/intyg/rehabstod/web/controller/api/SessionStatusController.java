@@ -25,9 +25,9 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import se.inera.intyg.infra.security.filter.SessionTimeoutFilter;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.security.filter.SessionTimeoutFilter;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSessionStatusResponse;
 
 /**
