@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -33,7 +33,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-/** Created by marced on 10/03/16. */
+/**
+ * Created by marced on 10/03/16.
+ */
 public class SessionTimeoutFilter extends OncePerRequestFilter {
 
   public static final String TIME_TO_INVALIDATE_ATTRIBUTE_NAME =
@@ -62,8 +64,8 @@ public class SessionTimeoutFilter extends OncePerRequestFilter {
       LOG.info(
           "Configured skipRenewSessionUrls as:"
               + skipRenewSessionUrlsList.stream()
-                  .map(Object::toString)
-                  .collect(Collectors.joining(", ")));
+              .map(Object::toString)
+              .collect(Collectors.joining(", ")));
     }
   }
 

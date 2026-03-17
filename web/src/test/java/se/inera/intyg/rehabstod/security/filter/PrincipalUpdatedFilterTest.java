@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -58,13 +58,17 @@ class PrincipalUpdatedFilterTest {
 
   private PrincipalUpdatedFilter testee = new PrincipalUpdatedFilter();
 
-  @Mock private HttpServletRequest request;
+  @Mock
+  private HttpServletRequest request;
 
-  @Mock private HttpServletResponse response;
+  @Mock
+  private HttpServletResponse response;
 
-  @Mock private FilterChain filterChain;
+  @Mock
+  private FilterChain filterChain;
 
-  @Mock private HttpSession session;
+  @Mock
+  private HttpSession session;
 
   private Authentication auth1;
   private Authentication auth2;

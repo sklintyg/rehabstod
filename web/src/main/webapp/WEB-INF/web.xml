@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2025 Inera AB (http://www.inera.se)
+  ~ Copyright (C) 2026 Inera AB (http://www.inera.se)
   ~
   ~ This file is part of sklintyg (https://github.com/sklintyg).
   ~
@@ -17,18 +17,19 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
                       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-		version="3.0" metadata-complete="true">
-	<!-- Prometheus, metrics -->
-	<servlet>
-		<servlet-name>metrics</servlet-name>
-		<servlet-class>io.prometheus.client.servlet.jakarta.exporter.MetricsServlet</servlet-class>
-	</servlet>
+  version="3.0" metadata-complete="true">
+  <!-- Prometheus, metrics -->
+  <servlet>
+    <servlet-name>metrics</servlet-name>
+    <servlet-class>io.prometheus.client.servlet.jakarta.exporter.MetricsServlet</servlet-class>
+  </servlet>
 
-	<servlet-mapping>
-		<servlet-name>metrics</servlet-name>
-		<url-pattern>/metrics</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>metrics</servlet-name>
+    <url-pattern>/metrics</url-pattern>
+  </servlet-mapping>
 </web-app>

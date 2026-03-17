@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -39,7 +39,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-/** Created by marced on 10/03/16. */
+/**
+ * Created by marced on 10/03/16.
+ */
 @ExtendWith(MockitoExtension.class)
 class SessionTimeoutFilterTest {
 
@@ -51,13 +53,17 @@ class SessionTimeoutFilterTest {
 
   private SessionTimeoutFilter filter;
 
-  @Mock HttpServletRequest request;
+  @Mock
+  HttpServletRequest request;
 
-  @Mock HttpServletResponse response;
+  @Mock
+  HttpServletResponse response;
 
-  @Mock FilterChain filterChain;
+  @Mock
+  FilterChain filterChain;
 
-  @Mock HttpSession session;
+  @Mock
+  HttpSession session;
 
   @BeforeEach
   void setupFilter() throws Exception {
