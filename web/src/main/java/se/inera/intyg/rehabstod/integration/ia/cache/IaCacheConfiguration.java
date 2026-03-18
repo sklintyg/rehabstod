@@ -18,28 +18,14 @@
  */
 package se.inera.intyg.rehabstod.integration.ia.cache;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.Cache;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class IaCacheConfiguration {
 
   public static final String CACHE_KEY = "BANNER";
-
-  @Value("${app.name:noname}")
-  private String appName;
-
-  @Autowired private RedisCacheManager cacheManager;
-
-  @Bean
-  public Cache iaCache() {
-    return cacheManager.getCache("iaCache:" + appName);
-  }
 
   @Bean("iaRestTemplate")
   public RestTemplate restTemplate() {
