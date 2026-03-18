@@ -35,13 +35,7 @@ import java.security.cert.X509Certificate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opensaml.core.xml.schema.impl.XSStringImpl;
-import org.opensaml.saml.common.xml.SAMLConstants;
-import org.opensaml.saml.saml2.core.AuthnContextClassRef;
-import org.opensaml.saml.saml2.core.AuthnContextComparisonTypeEnumeration;
-import org.opensaml.saml.saml2.core.RequestedAuthnContext;
 import org.opensaml.saml.saml2.core.SessionIndex;
-import org.opensaml.saml.saml2.core.impl.AuthnContextClassRefBuilder;
-import org.opensaml.saml.saml2.core.impl.RequestedAuthnContextBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -258,10 +252,7 @@ public class WebSecurityConfig {
     OpenSaml4AuthenticationRequestResolver authenticationRequestResolver =
         new OpenSaml4AuthenticationRequestResolver(registrationResolver);
     authenticationRequestResolver.setAuthnRequestCustomizer(
-        context -> {
-          context.getAuthnRequest().setAttributeConsumingServiceIndex(1);
-          context.getAuthnRequest().setRequestedAuthnContext(buildRequestedAuthnContext());
-        });
+        context -> context.getAuthnRequest().setAttributeConsumingServiceIndex(1));
     return authenticationRequestResolver;
   }
 
@@ -294,29 +285,5 @@ public class WebSecurityConfig {
     public MySessionIndex(String namespaceURI, String elementLocalName, String namespacePrefix) {
       super(namespaceURI, elementLocalName, namespacePrefix);
     }
-  }
-
-  private RequestedAuthnContext buildRequestedAuthnContext() {
-    final var authnContextClassRefBuilder = new AuthnContextClassRefBuilder();
-    final var authnContextClassRefLoa2 =
-        authnContextClassRefBuilder.buildObject(
-            SAMLConstants.SAML20_NS,
-            AuthnContextClassRef.DEFAULT_ELEMENT_LOCAL_NAME,
-            SAMLConstants.SAML20_PREFIX);
-    final var authnContextClassRefLoa3 =
-        authnContextClassRefBuilder.buildObject(
-            SAMLConstants.SAML20_NS,
-            AuthnContextClassRef.DEFAULT_ELEMENT_LOCAL_NAME,
-            SAMLConstants.SAML20_PREFIX);
-    authnContextClassRefLoa2.setURI("http://id.sambi.se/loa/loa2");
-    authnContextClassRefLoa3.setURI("http://id.sambi.se/loa/loa3");
-
-    final var requestedAuthnContextBuilder = new RequestedAuthnContextBuilder();
-    final var requestedAuthnContext = requestedAuthnContextBuilder.buildObject();
-    requestedAuthnContext.setComparison(AuthnContextComparisonTypeEnumeration.EXACT);
-    requestedAuthnContext.getAuthnContextClassRefs().add(authnContextClassRefLoa2);
-    requestedAuthnContext.getAuthnContextClassRefs().add(authnContextClassRefLoa3);
-
-    return requestedAuthnContext;
   }
 }
