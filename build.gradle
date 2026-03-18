@@ -16,6 +16,8 @@ ext {
     schemasContractVersion = "2.2.0.1"
     srsSchemasVersion = "1.0.0.1"
 
+    guavaVersion = '33.5.0-jre'
+
     nvdMirror = 'https://vulnz-nvd-mirror-devtest.intyg.nordicmedtest.se'
 }
 

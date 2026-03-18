@@ -47,9 +47,7 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
     value = {"classpath:application.properties", "file:${dev.config.file}"})
 @ImportResource({"classpath:META-INF/cxf/cxf.xml"})
 @ComponentScan({
-  "se.inera.intyg.infra.integration.intygproxyservice",
   "se.inera.intyg.rehabstod.logging",
-  "se.inera.intyg.infra.pu.integration.intygproxyservice",
   "se.inera.intyg.rehabstod.integration.it",
   "se.inera.intyg.rehabstod.integration.wc",
   "se.inera.intyg.rehabstod.sjukfall"
