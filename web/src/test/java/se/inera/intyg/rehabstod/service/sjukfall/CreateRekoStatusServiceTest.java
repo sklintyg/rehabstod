@@ -35,11 +35,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
@@ -49,9 +49,12 @@ import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 @ExtendWith(MockitoExtension.class)
 class CreateRekoStatusServiceTest {
 
-  @Mock IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
-  @Mock UserService userService;
-  @InjectMocks CreateRekoStatusServiceImpl createRekoStatusService;
+  @Mock
+  IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+  @Mock
+  UserService userService;
+  @InjectMocks
+  CreateRekoStatusServiceImpl createRekoStatusService;
 
   private static final String PATIENT_ID = "191212121212";
   private static final String REKO_ID = "REKO_1";

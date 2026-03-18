@@ -18,12 +18,13 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:http="http://cxf.apache.org/transports/http/configuration"
-    xmlns:jaxws="http://cxf.apache.org/jaxws"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:sec="http://cxf.apache.org/configuration/security" xmlns:cache="http://www.springframework.org/schema/cache"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:http="http://cxf.apache.org/transports/http/configuration"
+  xmlns:jaxws="http://cxf.apache.org/jaxws"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:sec="http://cxf.apache.org/configuration/security"
+  xmlns:cache="http://www.springframework.org/schema/cache"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
         http://cxf.apache.org/transports/http/configuration
         http://cxf.apache.org/schemas/configuration/http-conf.xsd
@@ -34,7 +35,7 @@
   <cache:annotation-driven cache-manager="cacheManager"/>
 
   <beans profile="caching-enabled,prod">
-    <bean class="se.inera.intyg.infra.rediscache.core.BasicCacheConfiguration" />
+    <bean class="se.inera.intyg.rehabstod.rediscache.core.BasicCacheConfiguration"/>
   </beans>
   <beans profile="!caching-enabled">
     <beans profile="!prod">

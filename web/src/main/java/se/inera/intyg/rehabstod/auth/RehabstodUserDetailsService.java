@@ -32,20 +32,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import se.inera.intyg.infra.integration.hsatk.model.HsaSystemRole;
-import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
-import se.inera.intyg.infra.integration.hsatk.model.PersonInformation.PaTitle;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
-import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
-import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
-import se.inera.intyg.infra.integration.hsatk.util.HsaAttributeExtractor;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
+import se.inera.intyg.rehabstod.integration.hsatk.model.HsaSystemRole;
+import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation.PaTitle;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.UserAuthorizationInfo;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.UserCredentials;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.rehabstod.integration.hsatk.services.legacy.HsaOrganizationsService;
+import se.inera.intyg.rehabstod.integration.hsatk.services.legacy.HsaPersonService;
+import se.inera.intyg.rehabstod.integration.hsatk.util.HsaAttributeExtractor;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 import se.inera.intyg.rehabstod.security.authorities.CommonAuthoritiesResolver;
@@ -70,18 +70,23 @@ public class RehabstodUserDetailsService {
 
   public static final String PDL_CONSENT_GIVEN = "user_pdl_consent_given";
 
-  @Autowired private AnvandarPreferenceRepository anvandarPreferenceRepository;
+  @Autowired
+  private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
-  @Autowired private RehabstodUnitChangeService rehabstodUnitChangeService;
+  @Autowired
+  private RehabstodUnitChangeService rehabstodUnitChangeService;
 
   @Autowired(required = false)
   private Optional<UserOrigin> userOrigin;
 
-  @Autowired private HsaOrganizationsService hsaOrganizationsService;
+  @Autowired
+  private HsaOrganizationsService hsaOrganizationsService;
 
-  @Autowired private HsaPersonService hsaPersonService;
+  @Autowired
+  private HsaPersonService hsaPersonService;
 
-  @Autowired private AuthenticationLogger monitoringLogService;
+  @Autowired
+  private AuthenticationLogger monitoringLogService;
 
   @Autowired
   public void setCommonAuthoritiesResolver(CommonAuthoritiesResolver commonAuthoritiesResolver) {

@@ -20,14 +20,15 @@ package se.inera.intyg.rehabstod.security.common.service;
 
 import java.util.HashSet;
 import java.util.Set;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.security.common.model.IntygUser;
 
 /**
- * Helper class for checking whether a {@link IntygUser} has access to a given vardenhet/mottagning.
+ * Helper class for checking whether a {@link IntygUser} has access to a given
+ * vardenhet/mottagning.
  *
  * <p>Remember that having medarbetaruppdrag on a Vardenhet implicitly gives full access to all its
  * mottagninar.
@@ -36,13 +37,14 @@ import se.inera.intyg.rehabstod.security.common.model.IntygUser;
  */
 public final class CareUnitAccessHelper {
 
-  private CareUnitAccessHelper() {}
+  private CareUnitAccessHelper() {
+  }
 
   /**
-   * Since the WebCertUser#getValdVardenhet may either return a {@link
-   * se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet} or a {@link
-   * se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning}, this method can be used to
-   * determine if:
+   * Since the WebCertUser#getValdVardenhet may either return a
+   * {@link se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet} or a
+   * {@link se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning}, this method can be
+   * used to determine if:
    *
    * <ul>
    *   <li>If the selectedVardenhet is a Vardenhet: The supplied enhetsId is for the Vardenhet or

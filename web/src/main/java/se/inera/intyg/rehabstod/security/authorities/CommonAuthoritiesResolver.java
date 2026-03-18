@@ -38,10 +38,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
-import se.inera.intyg.infra.integration.hsatk.model.PersonInformation.PaTitle;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
-import se.inera.intyg.infra.integration.hsatk.util.HsaAttributeExtractor;
+import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation.PaTitle;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.UserCredentials;
+import se.inera.intyg.rehabstod.integration.hsatk.util.HsaAttributeExtractor;
 import se.inera.intyg.rehabstod.security.authorities.bootstrap.SecurityConfigurationLoader;
 import se.inera.intyg.rehabstod.security.common.model.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.security.common.model.Feature;
@@ -54,13 +54,16 @@ import se.inera.intyg.rehabstod.security.common.model.RoleResolveResult;
 import se.inera.intyg.rehabstod.security.common.model.Title;
 import se.inera.intyg.rehabstod.security.common.model.TitleCode;
 
-/** Created by Magnus Ekstrand on 20/11/15. */
+/**
+ * Created by Magnus Ekstrand on 20/11/15.
+ */
 @Service
 public class CommonAuthoritiesResolver {
 
   private static final Logger LOG = LoggerFactory.getLogger(CommonAuthoritiesResolver.class);
 
-  @Autowired private SecurityConfigurationLoader configurationLoader;
+  @Autowired
+  private SecurityConfigurationLoader configurationLoader;
   private Function<String, RequestOrigin> fnRequestOrigin =
       (name) -> getRequestOrigins().stream().filter(isRequestOrigin(name)).findFirst().orElse(null);
   private Function<String, Role> fnRole =

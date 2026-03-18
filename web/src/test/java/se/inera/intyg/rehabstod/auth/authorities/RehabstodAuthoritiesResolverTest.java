@@ -28,7 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
+import se.inera.intyg.rehabstod.integration.hsatk.services.legacy.HsaPersonService;
 import se.inera.intyg.rehabstod.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.rehabstod.security.authorities.bootstrap.SecurityConfigurationLoader;
 import se.inera.intyg.rehabstod.security.common.model.Privilege;
@@ -49,7 +49,8 @@ class RehabstodAuthoritiesResolverTest {
       "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
   private final Integer defaultMaxAliasesForCollections = 300;
 
-  @Mock private HsaPersonService hsaPersonService;
+  @Mock
+  private HsaPersonService hsaPersonService;
 
   @Spy
   private SecurityConfigurationLoader configurationLoader =

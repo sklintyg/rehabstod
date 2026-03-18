@@ -44,9 +44,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.integration.srs.service.SRSIntegrationService;
 import se.inera.intyg.rehabstod.security.common.model.Feature;
@@ -57,7 +57,9 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-/** Created by eriklupander on 2017-11-01. */
+/**
+ * Created by eriklupander on 2017-11-01.
+ */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class RiskPredictionServiceImplTest {
@@ -65,11 +67,14 @@ class RiskPredictionServiceImplTest {
   private static final String ENHET_1 = "enhet-1";
   private static final String ENHET_2 = "enhet-2";
 
-  @Mock private SRSIntegrationService srsIntegrationService;
+  @Mock
+  private SRSIntegrationService srsIntegrationService;
 
-  @Mock private UserService userService;
+  @Mock
+  private UserService userService;
 
-  @InjectMocks private RiskPredictionServiceImpl testee;
+  @InjectMocks
+  private RiskPredictionServiceImpl testee;
 
   private RehabstodUser user;
 

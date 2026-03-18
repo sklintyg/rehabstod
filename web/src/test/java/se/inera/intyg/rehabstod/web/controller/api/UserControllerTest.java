@@ -34,10 +34,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.core.env.Environment;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 import se.inera.intyg.rehabstod.security.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.security.authorities.CommonAuthoritiesResolver;
@@ -45,28 +45,38 @@ import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 
-/** Created by marced on 01/02/16. */
+/**
+ * Created by marced on 01/02/16.
+ */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class UserControllerTest {
 
   private static final String HSA_ID = "abcdefghijkl";
 
-  @Mock RehabstodUser rehabUserMock;
+  @Mock
+  RehabstodUser rehabUserMock;
 
-  @Mock UserService userService;
+  @Mock
+  UserService userService;
 
-  @Mock RehabstodUnitChangeService rehabstodUnitChangeService;
+  @Mock
+  RehabstodUnitChangeService rehabstodUnitChangeService;
 
-  @Mock private CommonAuthoritiesResolver commonAuthoritiesResolver;
+  @Mock
+  private CommonAuthoritiesResolver commonAuthoritiesResolver;
 
-  @Mock private AnvandarPreferenceRepository anvandarPreferenceRepository;
+  @Mock
+  private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
-  @Mock private UserPreferencesService userPreferencesService;
+  @Mock
+  private UserPreferencesService userPreferencesService;
 
-  @Mock private Environment environment;
+  @Mock
+  private Environment environment;
 
-  @InjectMocks private UserController userController = new UserController();
+  @InjectMocks
+  private UserController userController = new UserController();
 
   @BeforeEach
   void before() {

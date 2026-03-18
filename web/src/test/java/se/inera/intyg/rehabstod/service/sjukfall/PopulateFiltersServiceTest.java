@@ -41,14 +41,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
@@ -72,20 +72,28 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetDoctorsForUnitResponse
 @ExtendWith(MockitoExtension.class)
 class PopulateFiltersServiceTest {
 
-  @Mock UserService userService;
+  @Mock
+  UserService userService;
 
-  @Mock IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+  @Mock
+  IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
 
-  @Mock DiagnosKapitelService diagnosKapitelService;
+  @Mock
+  DiagnosKapitelService diagnosKapitelService;
 
-  @Mock SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+  @Mock
+  SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
-  @Mock PuService puService;
+  @Mock
+  PuService puService;
 
-  @Mock FeatureService featureService;
-  @Mock CertificateService certificateService;
+  @Mock
+  FeatureService featureService;
+  @Mock
+  CertificateService certificateService;
 
-  @InjectMocks PopulateFiltersServiceImpl populateActiveFilters;
+  @InjectMocks
+  PopulateFiltersServiceImpl populateActiveFilters;
 
   static final String HSA_ID = "HSA_ID";
   static final String HSA_ID2 = "HSA_ID2";

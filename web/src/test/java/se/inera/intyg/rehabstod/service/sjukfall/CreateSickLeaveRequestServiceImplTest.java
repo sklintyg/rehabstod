@@ -33,14 +33,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.security.common.model.Role;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
@@ -52,10 +52,13 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDT
 @ExtendWith(MockitoExtension.class)
 class CreateSickLeaveRequestServiceImplTest {
 
-  @Mock private UserService userService;
-  @Mock private PuService puService;
+  @Mock
+  private UserService userService;
+  @Mock
+  private PuService puService;
 
-  @InjectMocks private CreateSickLeaveRequestServiceImpl getSickLeaveRequestService;
+  @InjectMocks
+  private CreateSickLeaveRequestServiceImpl getSickLeaveRequestService;
   private static final String HSA_ID = "hsaId";
   private static final String UNIT_ID_2 = "unitId";
   private static final String UNIT_ID_1 = "anotherUnitId";

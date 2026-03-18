@@ -39,11 +39,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.pu.integration.api.model.Person;
 import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
 import se.inera.intyg.infra.pu.integration.api.services.PUService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.rehabstod.security.common.model.Role;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
@@ -54,7 +54,9 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-/** Created by eriklupander on 2017-09-06. */
+/**
+ * Created by eriklupander on 2017-09-06.
+ */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class PuServiceImplTest {
@@ -70,11 +72,14 @@ class PuServiceImplTest {
   private static final String LAKARE2_HSA_ID = "lakare-2";
   private static final String LAKARE1_NAMN = "Läkare Läkarsson";
 
-  @Mock private PUService puService;
+  @Mock
+  private PUService puService;
 
-  @Mock private UserService userService;
+  @Mock
+  private UserService userService;
 
-  @InjectMocks private PuServiceImpl testee;
+  @InjectMocks
+  private PuServiceImpl testee;
 
   @BeforeEach
   void init() {
@@ -282,7 +287,7 @@ class PuServiceImplTest {
 
   @Test
   void
-      testSekretessmarkeradIsExcludedWhenUserIsLakareAsRehabkoordinatorOnSameUnitButIsNotSigning() {
+  testSekretessmarkeradIsExcludedWhenUserIsLakareAsRehabkoordinatorOnSameUnitButIsNotSigning() {
     RehabstodUser rehabstodUser = buildLakareAsRehabkoordinator(VARDENHET_1);
     when(rehabstodUser.getHsaId()).thenReturn(LAKARE2_HSA_ID);
     when(userService.getUser()).thenReturn(rehabstodUser);

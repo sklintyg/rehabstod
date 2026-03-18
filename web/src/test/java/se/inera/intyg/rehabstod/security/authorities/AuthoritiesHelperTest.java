@@ -33,7 +33,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
+import se.inera.intyg.rehabstod.integration.hsatk.services.legacy.HsaPersonService;
 import se.inera.intyg.rehabstod.security.authorities.bootstrap.SecurityConfigurationLoader;
 import se.inera.intyg.rehabstod.security.common.model.IntygUser;
 import se.inera.intyg.rehabstod.security.common.model.Privilege;
@@ -66,7 +66,8 @@ class AuthoritiesHelperTest {
           defaultMaxAliasesForCollections);
   private final CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();
 
-  @Mock private HsaPersonService hsaPersonService;
+  @Mock
+  private HsaPersonService hsaPersonService;
 
   @InjectMocks
   private AuthoritiesHelper authoritiesHelper = new AuthoritiesHelper(authoritiesResolver);

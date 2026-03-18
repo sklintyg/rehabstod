@@ -46,14 +46,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.test.util.ReflectionTestUtils;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationServiceImpl;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.service.SparrtjanstIntegrationServiceImpl;
@@ -92,7 +92,9 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-/** Created by Magnus Ekstrand on 2016-02-24. */
+/**
+ * Created by Magnus Ekstrand on 2016-02-24.
+ */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class SjukfallServiceTest {
@@ -130,43 +132,62 @@ class SjukfallServiceTest {
   private final IntygParametrar parameters =
       new IntygParametrar(intygsGlapp, MAX_DAGAR_SEDAN_AVSLUT, activeDate);
 
-  @Mock private IntygstjanstIntegrationServiceImpl integrationService;
+  @Mock
+  private IntygstjanstIntegrationServiceImpl integrationService;
 
-  @Mock private StatisticsCalculator statisticsCalculator;
+  @Mock
+  private StatisticsCalculator statisticsCalculator;
 
-  @Mock private MonitoringLogService monitoringLogService;
+  @Mock
+  private MonitoringLogService monitoringLogService;
 
-  @Spy private SjukfallEngineService sjukfallEngine;
+  @Spy
+  private SjukfallEngineService sjukfallEngine;
 
-  @Spy private SjukfallEngineMapperTest sjukfallEngineMapper;
+  @Spy
+  private SjukfallEngineMapperTest sjukfallEngineMapper;
 
-  @Spy private IntygstjanstMapper intygstjanstMapper;
+  @Spy
+  private IntygstjanstMapper intygstjanstMapper;
 
-  @Mock private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+  @Mock
+  private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
-  @Mock private EmployeeNameService employeeNameService;
+  @Mock
+  private EmployeeNameService employeeNameService;
 
-  @Mock private PuService puService;
+  @Mock
+  private PuService puService;
 
-  @Mock private RiskPredictionService riskPredictionService;
+  @Mock
+  private RiskPredictionService riskPredictionService;
 
-  @Mock private UserPreferencesService userPreferencesService;
+  @Mock
+  private UserPreferencesService userPreferencesService;
 
-  @Spy private SparrtjanstIntegrationServiceImplTest sparrtjanstIntegrationService;
+  @Spy
+  private SparrtjanstIntegrationServiceImplTest sparrtjanstIntegrationService;
 
-  @Mock private HsaOrganizationsService hsaOrganizationsService;
+  @Mock
+  private HsaOrganizationsService hsaOrganizationsService;
 
-  @Mock private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+  @Mock
+  private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
-  @Mock private UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
+  @Mock
+  private UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
 
-  @Mock private UserService userService;
+  @Mock
+  private UserService userService;
 
-  @Mock private LogService logService;
+  @Mock
+  private LogService logService;
 
-  @Mock private PatientIdEncryption patientIdEncryption;
+  @Mock
+  private PatientIdEncryption patientIdEncryption;
 
-  @InjectMocks private SjukfallServiceImpl testee;
+  @InjectMocks
+  private SjukfallServiceImpl testee;
 
   @BeforeEach
   void init() {
@@ -216,7 +237,7 @@ class SjukfallServiceTest {
   @Test
   void testGetByPatient_medSamtyckeForVardgivare() {
     when(samtyckestjanstIntegrationService.checkForConsent(
-            patientId1, lakareId1, vgId1, enhetsId11))
+        patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     List<String> vgHsaId = new ArrayList<>();
@@ -255,7 +276,7 @@ class SjukfallServiceTest {
   @Test
   void testGetByPatientNoConsentPDLLoggingIfNoConsent() {
     when(samtyckestjanstIntegrationService.checkForConsent(
-            patientId1, lakareId1, vgId1, enhetsId11))
+        patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(false);
 
     testee.getByPatient(
@@ -277,7 +298,7 @@ class SjukfallServiceTest {
   @Test
   void testGetByPatientConsentPDLLoggingIfConsentExists() {
     when(samtyckestjanstIntegrationService.checkForConsent(
-            patientId1, lakareId1, vgId1, enhetsId11))
+        patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     testee.getByPatient(
@@ -304,7 +325,7 @@ class SjukfallServiceTest {
   @Test
   void testGetByPatientConsentPDLLoggingOnlyOnceIfActivityAlreadyLogged() {
     when(samtyckestjanstIntegrationService.checkForConsent(
-            patientId1, lakareId1, vgId1, enhetsId11))
+        patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     testee.getByPatient(
@@ -613,7 +634,7 @@ class SjukfallServiceTest {
 
     when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
     when(samtyckestjanstIntegrationService.checkForConsent(
-            patientId1, lakareId1, vgId1, enhetsId11))
+        patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     List<String> vgHsaId = new ArrayList<>();
@@ -679,7 +700,7 @@ class SjukfallServiceTest {
 
     when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
     when(samtyckestjanstIntegrationService.checkForConsent(
-            patientId1, lakareId1, vgId1, enhetsId11))
+        patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     List<String> vgHsaId = new ArrayList<>();
@@ -704,13 +725,13 @@ class SjukfallServiceTest {
 
     assertTrue(
         metaData.getKraverSamtycke().stream()
-                .filter(md -> md.getItemId().equals(vgId2) && md.isBidrarTillAktivtSjukfall())
-                .count()
+            .filter(md -> md.getItemId().equals(vgId2) && md.isBidrarTillAktivtSjukfall())
+            .count()
             > 0);
     assertTrue(
         metaData.getKraverSamtycke().stream()
-                .filter(md -> md.getItemId().equals(vgId3) && !md.isBidrarTillAktivtSjukfall())
-                .count()
+            .filter(md -> md.getItemId().equals(vgId3) && !md.isBidrarTillAktivtSjukfall())
+            .count()
             > 0);
   }
 
@@ -762,7 +783,7 @@ class SjukfallServiceTest {
     RehabstodUser user = new RehabstodUser(LAKARE_ID, LAKARE_NAMN, true);
     user.setPreferences(preferences);
     user.setValdVardgivare(
-        new se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare(
+        new se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare(
             VARDGIVARE_ID, "vårdgivare"));
     user.setValdVardenhet(new Vardenhet(VARDENHETS_ID, "enhet"));
 
@@ -922,17 +943,17 @@ class SjukfallServiceTest {
     return intygsData;
   }
 
-  private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare createVardgivare(
+  private se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare createVardgivare(
       String id, String namn) {
-    return new se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare(id, namn);
+    return new se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare(id, namn);
   }
 
-  private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet createVardenhet(
+  private se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet createVardenhet(
       String id, String namn) {
     return createVardenhet(id, namn, new ArrayList<>());
   }
 
-  private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet createVardenhet(
+  private se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet createVardenhet(
       String id, String namn, Mottagning mottagning) {
     if (mottagning == null) {
       return createVardenhet(id, namn, new ArrayList<>());
@@ -942,10 +963,10 @@ class SjukfallServiceTest {
     return createVardenhet(id, namn, mottagningar);
   }
 
-  private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet createVardenhet(
+  private se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet createVardenhet(
       String id, String namn, List<Mottagning> mottagningar) {
-    se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet vardenhet =
-        new se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet(id, namn);
+    se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet vardenhet =
+        new se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet(id, namn);
 
     if (mottagningar == null) {
       mottagningar = new ArrayList<>();
@@ -955,7 +976,7 @@ class SjukfallServiceTest {
     return vardenhet;
   }
 
-  private se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning createMottagning(
+  private se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning createMottagning(
       String id, String namn, String parentId) {
     Mottagning mottagning = new Mottagning();
     mottagning.setId(id);

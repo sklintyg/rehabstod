@@ -50,20 +50,20 @@ import org.mockito.quality.Strictness;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import se.inera.intyg.infra.integration.hsatk.model.HsaSystemRole;
-import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
-import se.inera.intyg.infra.integration.hsatk.model.PersonInformation.PaTitle;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
-import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
-import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.authorities.validation.AuthoritiesValidator;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
+import se.inera.intyg.rehabstod.integration.hsatk.model.HsaSystemRole;
+import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation.PaTitle;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.UserAuthorizationInfo;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.UserCredentials;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.rehabstod.integration.hsatk.services.legacy.HsaOrganizationsService;
+import se.inera.intyg.rehabstod.integration.hsatk.services.legacy.HsaPersonService;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 import se.inera.intyg.rehabstod.security.authorities.CommonAuthoritiesResolver;
@@ -75,7 +75,9 @@ import se.inera.intyg.rehabstod.security.common.service.AuthenticationLogger;
 import se.inera.intyg.rehabstod.security.exception.HsaServiceException;
 import se.inera.intyg.rehabstod.security.exception.MissingMedarbetaruppdragException;
 
-/** Created by marced on 29/01/16. */
+/**
+ * Created by marced on 29/01/16.
+ */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class RehabstodUserDetailsServiceTest {
@@ -111,17 +113,23 @@ class RehabstodUserDetailsServiceTest {
   @InjectMocks
   private RehabstodUserDetailsService userDetailsService = new RehabstodUserDetailsService();
 
-  @Mock private HsaOrganizationsService hsaOrganizationsService;
+  @Mock
+  private HsaOrganizationsService hsaOrganizationsService;
 
-  @Mock private HsaPersonService hsaPersonService;
+  @Mock
+  private HsaPersonService hsaPersonService;
 
-  @Mock private UserOrigin userOrigin;
+  @Mock
+  private UserOrigin userOrigin;
 
-  @Mock private AuthenticationLogger monitoringLogService;
+  @Mock
+  private AuthenticationLogger monitoringLogService;
 
-  @Mock private AnvandarPreferenceRepository anvandarPreferenceRepository;
+  @Mock
+  private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
-  @Mock private RehabstodUnitChangeService rehabstodUnitChangeService;
+  @Mock
+  private RehabstodUnitChangeService rehabstodUnitChangeService;
 
   @BeforeAll
   public static void setupAuthoritiesConfiguration() throws Exception {

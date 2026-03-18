@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.pdl.dto;
 
-import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 
 /**
@@ -31,13 +31,14 @@ public final class LogUtil {
   public static final String PDL_TITEL_LAKARE = "Läkare";
   public static final String PDL_TITEL_REHABSTOD = "Rehabkoordinator";
 
-  private LogUtil() {}
+  private LogUtil() {
+  }
 
   public static LogPatient getLogPatient(PatientData patientData) {
     return new LogPatient.Builder(
-            patientData.getPatient().getId(),
-            patientData.getVardenhetId(),
-            patientData.getVardgivareId())
+        patientData.getPatient().getId(),
+        patientData.getVardenhetId(),
+        patientData.getVardgivareId())
         .patientNamn(patientData.getPatient().getNamn())
         .enhetsNamn(patientData.getVardenhetNamn())
         .vardgivareNamn(patientData.getVardgivareNamn())

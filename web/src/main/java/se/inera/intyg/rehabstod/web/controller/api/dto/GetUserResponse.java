@@ -20,14 +20,16 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.List;
 import java.util.Map;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.security.common.model.Feature;
 import se.inera.intyg.rehabstod.security.common.model.Role;
 import se.inera.intyg.rehabstod.service.Urval;
 
-/** Reponse dto for the getUser api. */
+/**
+ * Reponse dto for the getUser api.
+ */
 public class GetUserResponse {
 
   private String hsaId;

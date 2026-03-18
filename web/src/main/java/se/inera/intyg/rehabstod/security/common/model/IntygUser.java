@@ -28,10 +28,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import se.inera.intyg.infra.integration.hsatk.model.PersonInformation.PaTitle;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation.PaTitle;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 
 public class IntygUser implements UserDetails {
 
@@ -69,7 +69,9 @@ public class IntygUser implements UserDetails {
   protected String origin;
   protected String roleTypeName;
 
-  /** The sole constructor. */
+  /**
+   * The sole constructor.
+   */
   public IntygUser(String employeeHsaId) {
     this.hsaId = employeeHsaId;
   }
@@ -175,7 +177,9 @@ public class IntygUser implements UserDetails {
     return this.authorities;
   }
 
-  /** Set the authorities/privileges granted to a user. */
+  /**
+   * Set the authorities/privileges granted to a user.
+   */
   @Override
   public void setAuthorities(Map<String, Privilege> authorities) {
     this.authorities = authorities;
@@ -309,7 +313,9 @@ public class IntygUser implements UserDetails {
     return this.roles;
   }
 
-  /** Set the roles granted to a user. */
+  /**
+   * Set the roles granted to a user.
+   */
   @Override
   public void setRoles(Map<String, Role> roles) {
     this.roles = roles;
@@ -403,9 +409,9 @@ public class IntygUser implements UserDetails {
    * vårdenhet.
    *
    * @return The name of the medarbetaruppdrag. (Derived from
-   *     infrastructure:directory:authorizationmanagement CommissionType#commissionName)
+   * infrastructure:directory:authorizationmanagement CommissionType#commissionName)
    * @throws IllegalStateException if no vardenhet is selected or if the map that maps enhetsId to
-   *     commissionName hasn't been initialized.
+   *                               commissionName hasn't been initialized.
    */
   @JsonIgnore
   public String getSelectedMedarbetarUppdragNamn() {
@@ -441,7 +447,7 @@ public class IntygUser implements UserDetails {
    *   <li>ROLE_PRIVATLAKARE
    *   <li>ROLE_TANDLAKARE
    * </ul>
-   *
+   * <p>
    * Note: This construct smells a bit, as it's somewhat ambigous what isLakare could be interpreted
    * as?
    *

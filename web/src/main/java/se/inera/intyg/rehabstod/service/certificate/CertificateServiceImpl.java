@@ -31,9 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
-import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
@@ -43,6 +40,9 @@ import se.inera.intyg.rehabstod.common.model.certificate.dto.BaseCertificate;
 import se.inera.intyg.rehabstod.common.model.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.rehabstod.common.model.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.rehabstod.common.model.certificate.dto.SickLeaveCertificate.WorkCapacity;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.rehabstod.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
@@ -309,13 +309,13 @@ public class CertificateServiceImpl implements CertificateService {
 
     if (c.getUnAnsweredComplement() > 0
         && containsIgnoreCase(
-            String.format("Komplettering (%d)", c.getUnAnsweredComplement()), searchText)) {
+        String.format("Komplettering (%d)", c.getUnAnsweredComplement()), searchText)) {
       return true;
     }
 
     if (c.getUnAnsweredOther() > 0
         && containsIgnoreCase(
-            String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()), searchText)) {
+        String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()), searchText)) {
       return true;
     }
 

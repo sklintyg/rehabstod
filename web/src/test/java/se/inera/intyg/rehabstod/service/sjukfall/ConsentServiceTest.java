@@ -30,10 +30,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
 import se.inera.intyg.schemas.contract.Personnummer;
 
@@ -46,11 +46,14 @@ class ConsentServiceTest {
   private static final String MOTTAGNINGS_ID = "VG123-VEA-E1";
   private static final String USER_HSA_ID = "USERHSA";
 
-  @Mock private RehabstodUser rehabstodUserMock;
+  @Mock
+  private RehabstodUser rehabstodUserMock;
 
-  @Mock private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+  @Mock
+  private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
-  @InjectMocks private ConsentServiceImpl testee = new ConsentServiceImpl();
+  @InjectMocks
+  private ConsentServiceImpl testee = new ConsentServiceImpl();
 
   @Test
   void testGiveConsentLoggedInOnCareUnit() {

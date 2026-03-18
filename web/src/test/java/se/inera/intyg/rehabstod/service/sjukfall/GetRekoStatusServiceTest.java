@@ -35,8 +35,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.rehabstod.integration.it.dto.GetRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
@@ -46,9 +46,12 @@ import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 @ExtendWith(MockitoExtension.class)
 class GetRekoStatusServiceTest {
 
-  @Mock IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
-  @Mock UserService userService;
-  @InjectMocks GetRekoStatusServiceImpl getRekoStatusService;
+  @Mock
+  IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+  @Mock
+  UserService userService;
+  @InjectMocks
+  GetRekoStatusServiceImpl getRekoStatusService;
 
   private static final String PATIENT_ID = "191212121212";
   private static final String REKO_ID = "REKO_1";
