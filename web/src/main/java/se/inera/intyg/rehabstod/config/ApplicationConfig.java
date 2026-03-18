@@ -53,6 +53,8 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
     "se.inera.intyg.rehabstod.sjukfall",
     "se.inera.intyg.rehabstod.pu.integration.api",
     "se.inera.intyg.rehabstod.integration.hsatk",
+    "se.inera.intyg.rehabstod.integration.intygproxyservice",
+    "se.inera.intyg.rehabstod.pu.integration.intygproxyservice",
 })
 public class ApplicationConfig implements TransactionManagementConfigurer {
 
