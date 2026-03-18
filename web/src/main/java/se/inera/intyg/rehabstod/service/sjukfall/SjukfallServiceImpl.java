@@ -29,8 +29,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
-import se.inera.intyg.infra.pu.integration.api.model.PersonSvar.Status;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
@@ -44,6 +42,8 @@ import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.Samtyckestja
 import se.inera.intyg.rehabstod.integration.sparrtjanst.service.SparrtjanstIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
 import se.inera.intyg.rehabstod.monitoring.annotation.PrometheusTimeMethod;
+import se.inera.intyg.rehabstod.pu.integration.api.model.PersonSvar;
+import se.inera.intyg.rehabstod.pu.integration.api.model.PersonSvar.Status;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;

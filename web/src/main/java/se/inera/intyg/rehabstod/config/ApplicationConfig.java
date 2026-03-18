@@ -55,6 +55,7 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
     "se.inera.intyg.rehabstod.integration.hsatk",
     "se.inera.intyg.rehabstod.integration.intygproxyservice",
     "se.inera.intyg.rehabstod.pu.integration.intygproxyservice",
+    "se.inera.intyg.rehabstod.rediscache",
 })
 public class ApplicationConfig implements TransactionManagementConfigurer {
 

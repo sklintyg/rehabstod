@@ -19,9 +19,9 @@
 package se.inera.intyg.rehabstod.service.pu;
 
 import java.util.List;
-import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.model.certificate.dto.DiagnosedCertificate;
+import se.inera.intyg.rehabstod.pu.integration.api.model.PersonSvar;
 import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
@@ -38,7 +38,9 @@ public interface PuService {
    */
   void filterSekretessForSummary(List<SjukfallEnhet> sjukfallList);
 
-  /** Removes intyg from other careUnits belonging to the patient with sekretessmarkering. */
+  /**
+   * Removes intyg from other careUnits belonging to the patient with sekretessmarkering.
+   */
   List<IntygData> filterSekretessForPatientHistory(List<IntygData> intygsData);
 
   boolean shouldFilterSickLeavesOnProtectedPerson(RehabstodUser user);

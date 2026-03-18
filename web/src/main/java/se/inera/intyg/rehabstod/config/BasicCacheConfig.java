@@ -44,8 +44,8 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.util.StringUtils;
-import se.inera.intyg.infra.rediscache.core.CacheFactory;
-import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
+import se.inera.intyg.rehabstod.rediscache.core.CacheFactory;
+import se.inera.intyg.rehabstod.rediscache.core.RedisCacheOptionsSetter;
 
 /**
  * Local replacement for infra's basic-cache-config.xml + BasicCacheConfiguration. Provides
