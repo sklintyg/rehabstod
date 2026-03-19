@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -96,11 +95,6 @@ public class ApplicationConfig implements TransactionManagementConfigurer {
   @Bean
   public PrincipalUpdatedFilter principalUpdatedFilter() {
     return new PrincipalUpdatedFilter();
-  }
-
-  @Bean(name = "jacksonJsonProvider")
-  public JacksonJsonProvider jacksonJsonProvider() {
-    return new JacksonJsonProvider();
   }
 
   @Bean
