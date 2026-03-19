@@ -7,16 +7,16 @@
 
 | Step     | Description                                                         | Status  | Verified | Notes |
 |----------|---------------------------------------------------------------------|---------|----------|-------|
-| **9.1**  | Convert `SamtyckestjanstStubRestApi` to `@RestController`           | ⬜ TODO |          |       |
-| **9.2**  | Convert `SparrtjanstStubRestApi` to `@RestController`               | ⬜ TODO |          |       |
-| **9.3**  | Update `samtyckestjanst-stub-context.xml` — remove JAX-RS sections  | ⬜ TODO |          |       |
-| **9.4**  | Update `sparrtjanst-stub-context.xml` — remove JAX-RS sections      | ⬜ TODO |          |       |
-| **9.5**  | Remove JAX-RS dependencies from integration module build files      | ⬜ TODO |          |       |
-| **9.6**  | Remove JAX-RS dependencies from `web/build.gradle`                  | ⬜ TODO |          |       |
-| **9.7**  | Confirm SRS stub needs no changes                                   | ⬜ TODO |          |       |
-| **9.8**  | Build verification: `./gradlew build`                               | ⬜ TODO |          |       |
-| **9.9**  | Runtime verification: `./gradlew appRunDebug` — no exceptions       | ⬜ TODO |          |       |
-| **9.10** | Integration tests: `./gradlew :rehabstod-restassured:test`          | ⬜ TODO |          |       |
+| **9.1**  | Convert `SamtyckestjanstStubRestApi` to `@RestController`           | ✅ DONE |          |       |
+| **9.2**  | Convert `SparrtjanstStubRestApi` to `@RestController`               | ✅ DONE |          |       |
+| **9.3**  | Update `samtyckestjanst-stub-context.xml` — remove JAX-RS sections  | ✅ DONE |          |       |
+| **9.4**  | Update `sparrtjanst-stub-context.xml` — remove JAX-RS sections      | ✅ DONE |          |       |
+| **9.5**  | Remove JAX-RS dependencies from integration module build files      | ✅ DONE |          |       |
+| **9.6**  | Remove JAX-RS dependencies from `web/build.gradle`                  | ✅ DONE |          |       |
+| **9.7**  | Confirm SRS stub needs no changes                                   | ✅ DONE |          |       |
+| **9.8**  | Build verification: `./gradlew build`                               | ✅ DONE |          |       |
+| **9.9**  | Runtime verification: `./gradlew appRunDebug` — no exceptions       | ✅ DONE |          |       |
+| **9.10** | Integration tests: `./gradlew :rehabstod-restassured:test`          | ✅ DONE |          |       |
 
 ---
 

@@ -24,6 +24,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentType;
@@ -32,7 +34,8 @@ import se.riv.informationsecurity.authorization.consent.v2.CheckResultType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultCodeType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultType;
 
-/** Created by Magnus Ekstrand on 2018-10-10. */
+@Component
+@Profile("rhs-samtyckestjanst-stub")
 public class CheckConsentStub implements CheckConsentResponderInterface {
 
   @Autowired private SamtyckestjanstStubStore store;

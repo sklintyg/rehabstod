@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.integration.it.config;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-/** Just a placeholder class to configure by @ComponentScan and @ImportResource. */
+/** Configuration for Intygstjanst integration. */
 @Configuration
 @ComponentScan({
   "se.inera.intyg.rehabstod.integration.it.client",

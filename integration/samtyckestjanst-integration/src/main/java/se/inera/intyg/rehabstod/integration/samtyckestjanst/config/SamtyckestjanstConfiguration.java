@@ -21,16 +21,13 @@ package se.inera.intyg.rehabstod.integration.samtyckestjanst.config;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportResource;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstStubConfiguration;
 
-/** Java config entry for Samtyckestjanst Created by Magnus Ekstrand on 2018-10-16. */
 @Configuration
 @ComponentScan({
   "se.inera.intyg.rehabstod.integration.samtyckestjanst.client",
   "se.inera.intyg.rehabstod.integration.samtyckestjanst.service"
 })
-@ImportResource("classpath:samtyckestjanst-services-config.xml")
 @Import(SamtyckestjanstStubConfiguration.class)
 public class SamtyckestjanstConfiguration {
 
