@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.sjukfall.testdata.builders;
 
-import se.inera.intyg.infra.sjukfall.dto.Patient;
+import se.inera.intyg.rehabstod.sjukfall.dto.Patient;
 
 /** Created by Magnus Ekstrand on 2016-02-10. */
 public final class PatientT {
