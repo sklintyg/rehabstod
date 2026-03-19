@@ -18,57 +18,55 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.stub;
 
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import java.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-/** Created by marced on 2018-10-01. */
+@RestController
+@Profile("rhs-sparrtjanst-stub")
+@RequestMapping("/api/stub/sparrtjanst-api")
 public class SparrtjanstStubRestApi {
 
-  @Autowired private SparrtjanstStubStore store;
+  private final SparrtjanstStubStore store;
 
-  @PUT
-  @Path("/person/{personId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response addBlocksForPerson(
-      @PathParam("personId") String personId,
-      @QueryParam("from") String from,
-      @QueryParam("to") String to,
-      @QueryParam("vardgivare") String vardgivare,
-      @QueryParam("vardenhet") String vardenhet) {
+  public SparrtjanstStubRestApi(SparrtjanstStubStore store) {
+    this.store = store;
+  }
+
+  @PutMapping(value = "/person/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> addBlocksForPerson(
+      @PathVariable("personId") String personId,
+      @RequestParam("from") String from,
+      @RequestParam("to") String to,
+      @RequestParam("vardgivare") String vardgivare,
+      @RequestParam("vardenhet") String vardenhet) {
     store.add(
         new BlockData(personId, LocalDate.parse(from), LocalDate.parse(to), vardgivare, vardenhet));
-    return Response.ok().build();
+    return ResponseEntity.ok().build();
   }
 
-  @DELETE
-  @Path("/person/{personId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response removeBlocksForPerson(@PathParam("personId") String personId) {
+  @DeleteMapping("/person/{personId}")
+  public ResponseEntity<Void> removeBlocksForPerson(@PathVariable("personId") String personId) {
     store.remove(personId);
-    return Response.ok().build();
+    return ResponseEntity.ok().build();
   }
 
-  @DELETE
-  @Path("/person")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response removeAllBlocks() {
+  @DeleteMapping("/person")
+  public ResponseEntity<Void> removeAllBlocks() {
     store.removeAll();
-    return Response.ok().build();
+    return ResponseEntity.ok().build();
   }
 
-  @GET
-  @Path("/")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getAllBlocks() {
-    return Response.ok(store.getAll()).build();
+  @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getAllBlocks() {
+    return ResponseEntity.ok(store.getAll());
   }
 }

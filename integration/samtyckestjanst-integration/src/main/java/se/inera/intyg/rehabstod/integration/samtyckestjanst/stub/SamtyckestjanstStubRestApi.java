@@ -20,38 +20,42 @@ package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.ActorType;
 
-/** Created by Magnus Ekstrand on 2018-10-10. */
+@RestController
+@Profile("rhs-samtyckestjanst-stub")
+@RequestMapping("/api/stub/samtyckestjanst-api")
 public class SamtyckestjanstStubRestApi {
 
-  @Autowired private SamtyckestjanstStubStore store;
+  private final SamtyckestjanstStubStore store;
 
-  @PUT
-  @Path("/consent/{personId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response addConsentForPerson(
-      @PathParam("personId") String personId,
-      @QueryParam("vardgivareId") String vgHsaId,
-      @QueryParam("vardenhetId") String veHsaId,
-      @QueryParam("employeeId") String userHsaId,
-      @QueryParam("from") String from,
-      @QueryParam("to") String to) {
+  public SamtyckestjanstStubRestApi(SamtyckestjanstStubStore store) {
+    this.store = store;
+  }
+
+  @PutMapping(value = "/consent/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> addConsentForPerson(
+      @PathVariable("personId") String personId,
+      @RequestParam("vardgivareId") String vgHsaId,
+      @RequestParam("vardenhetId") String veHsaId,
+      @RequestParam("employeeId") String userHsaId,
+      @RequestParam(value = "from", required = false) String from,
+      @RequestParam(value = "to", required = false) String to) {
 
     Preconditions.checkArgument(!Strings.isNullOrEmpty(personId));
     Preconditions.checkArgument(!Strings.isNullOrEmpty(vgHsaId));
@@ -84,47 +88,41 @@ public class SamtyckestjanstStubRestApi {
             .build();
 
     store.add(consentData);
-    return Response.ok().build();
+    return ResponseEntity.ok().build();
   }
 
-  @DELETE
-  @Path("/consent/{personId}")
-  public Response removeConsentForPerson(@PathParam("personId") String personId) {
+  @DeleteMapping("/consent/{personId}")
+  public ResponseEntity<Void> removeConsentForPerson(@PathVariable("personId") String personId) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(personId));
 
     Personnummer pnr = parsePersonId(personId);
     store.remove(pnr.getPersonnummer());
-    return Response.ok().build();
+    return ResponseEntity.ok().build();
   }
 
-  @DELETE
-  @Path("/consent")
-  public Response removeAllConsent() {
+  @DeleteMapping("/consent")
+  public ResponseEntity<Void> removeAllConsent() {
     store.removeAll();
-    return Response.ok().build();
+    return ResponseEntity.ok().build();
   }
 
-  @GET
-  @Path("/consent/{personId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getConsentForPerson(
-      @PathParam("personId") String personId,
-      @QueryParam("vardgivareId") String vgHsaId,
-      @QueryParam("vardenhetId") String veHsaId) {
+  @GetMapping(value = "/consent/{personId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Boolean> getConsentForPerson(
+      @PathVariable("personId") String personId,
+      @RequestParam("vardgivareId") String vgHsaId,
+      @RequestParam("vardenhetId") String veHsaId) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(personId));
     Preconditions.checkArgument(!Strings.isNullOrEmpty(vgHsaId));
     Preconditions.checkArgument(!Strings.isNullOrEmpty(veHsaId));
 
     Personnummer pnr = parsePersonId(personId);
-    return Response.ok(store.hasConsent(vgHsaId, veHsaId, pnr.getPersonnummer(), LocalDate.now()))
-        .build();
+    return ResponseEntity.ok(
+        store.hasConsent(vgHsaId, veHsaId, pnr.getPersonnummer(), LocalDate.now()));
   }
 
-  @GET
-  @Path("/consent")
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getAllConsent() {
-    return Response.ok(store.getAll()).build();
+  @GetMapping(value = "/consent", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> getAllConsent() {
+    return ResponseEntity.ok(store.getAll());
   }
 
   private Personnummer parsePersonId(String personId) {
