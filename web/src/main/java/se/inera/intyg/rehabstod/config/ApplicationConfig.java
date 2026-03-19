@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +56,7 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
   "se.inera.intyg.rehabstod.integration.intygproxyservice",
   "se.inera.intyg.rehabstod.pu.integration.intygproxyservice",
   "se.inera.intyg.rehabstod.rediscache",
+  "se.inera.intyg.rehabstod.dynamiclink"
 })
 public class ApplicationConfig implements TransactionManagementConfigurer {
 
@@ -94,6 +96,11 @@ public class ApplicationConfig implements TransactionManagementConfigurer {
   @Bean
   public PrincipalUpdatedFilter principalUpdatedFilter() {
     return new PrincipalUpdatedFilter();
+  }
+
+  @Bean(name = "jacksonJsonProvider")
+  public JacksonJsonProvider jacksonJsonProvider() {
+    return new JacksonJsonProvider();
   }
 
   @Bean

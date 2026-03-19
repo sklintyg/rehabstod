@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,6 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+<<<<<<<< HEAD:integration/pu-integration-intyg-proxy-service/src/main/java/se/inera/intyg/rehabstod/pu/integration/intygproxyservice/dto/PersonRequestDTO.java
+package se.inera.intyg.rehabstod.pu.integration.intygproxyservice.dto;
+
+import lombok.Builder;
+import lombok.Value;
+
+@Value
+@Builder
+public class PersonRequestDTO {
+
+  String personId;
+  boolean queryCache;
+========
 package se.inera.intyg.rehabstod.integration.hsatk.model;
 
 import java.io.Serializable;
@@ -28,4 +41,5 @@ public class HCPSpecialityCodes implements Serializable {
   protected String healthCareProfessionalLicenceCode;
   protected String specialityCode;
   protected String specialityName;
+>>>>>>>> f1ea1a5635c5953c3133731533b3a4e6114a89ba:integration/hsa-integration-api/src/main/java/se/inera/intyg/rehabstod/integration/hsatk/model/HCPSpecialityCodes.java
 }
