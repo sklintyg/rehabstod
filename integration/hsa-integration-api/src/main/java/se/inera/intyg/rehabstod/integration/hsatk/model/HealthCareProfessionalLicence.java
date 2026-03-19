@@ -20,15 +20,8 @@ package se.inera.intyg.rehabstod.integration.hsatk.model;
 
 import lombok.Data;
 
-<<<<<<<< HEAD:web/src/main/java/se/inera/intyg/rehabstod/config/InfraConfig.java
-/** Created by eriklup. */
-@Configuration
-@ComponentScan({"se.inera.intyg.rehabstod.dynamiclink"})
-public class InfraConfig {
-========
 @Data
 public class HealthCareProfessionalLicence {
->>>>>>>> f1ea1a5635c5953c3133731533b3a4e6114a89ba:integration/hsa-integration-api/src/main/java/se/inera/intyg/rehabstod/integration/hsatk/model/HealthCareProfessionalLicence.java
 
   protected String healthCareProfessionalLicenceCode;
   protected String healthCareProfessionalLicenceName;
