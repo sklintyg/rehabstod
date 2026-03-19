@@ -49,12 +49,9 @@ import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 @ExtendWith(MockitoExtension.class)
 class CreateRekoStatusServiceTest {
 
-  @Mock
-  IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
-  @Mock
-  UserService userService;
-  @InjectMocks
-  CreateRekoStatusServiceImpl createRekoStatusService;
+  @Mock IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+  @Mock UserService userService;
+  @InjectMocks CreateRekoStatusServiceImpl createRekoStatusService;
 
   private static final String PATIENT_ID = "191212121212";
   private static final String REKO_ID = "REKO_1";

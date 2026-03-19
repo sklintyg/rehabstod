@@ -36,8 +36,7 @@ import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
  */
 public final class ControllerUtil {
 
-  private ControllerUtil() {
-  }
+  private ControllerUtil() {}
 
   @SafeVarargs
   public static <T> Predicate<T> distinctByKeys(Function<? super T, ?>... keyExtractors) {

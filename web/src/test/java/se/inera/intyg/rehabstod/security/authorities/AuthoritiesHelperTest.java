@@ -66,8 +66,7 @@ class AuthoritiesHelperTest {
           defaultMaxAliasesForCollections);
   private final CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();
 
-  @Mock
-  private HsaPersonService hsaPersonService;
+  @Mock private HsaPersonService hsaPersonService;
 
   @InjectMocks
   private AuthoritiesHelper authoritiesHelper = new AuthoritiesHelper(authoritiesResolver);

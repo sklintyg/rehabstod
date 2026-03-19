@@ -45,11 +45,9 @@ class GetHospCertificationPersonServiceTest {
   private static final String RESULT_TEXT = "resultText";
   private static final String RESULT_CODE = "resultCode";
 
-  @Mock
-  private HsaIntygProxyServiceHospCertificationPersonClient hospCertificationPersonClient;
+  @Mock private HsaIntygProxyServiceHospCertificationPersonClient hospCertificationPersonClient;
 
-  @InjectMocks
-  private GetHospCertificationPersonService getHospCertificationPersonService;
+  @InjectMocks private GetHospCertificationPersonService getHospCertificationPersonService;
 
   @BeforeEach
   void setup() {

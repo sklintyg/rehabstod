@@ -58,9 +58,7 @@ public class RehabstodUser extends IntygUser implements Serializable, Saml2Authe
   private Map<String, Set<String>> sjfPatientVardenhet = new HashMap<>();
   private Map<String, Role> originalRoles = new HashMap<>();
 
-  /**
-   * Typically used by unit tests.
-   */
+  /** Typically used by unit tests. */
   public RehabstodUser(String hsaId, String namn, boolean isLakare) {
     super(hsaId);
     this.storedActivities = new HashMap<>();
@@ -79,9 +77,9 @@ public class RehabstodUser extends IntygUser implements Serializable, Saml2Authe
    * or more care units must be able to "switch" between roles when changing units without losing
    * the original "isLakare" information. See INTYG-5068.
    *
-   * @param intygUser       User principal
+   * @param intygUser User principal
    * @param pdlConsentGiven Whether the user has given PDL logging consent.
-   * @param isLakare        Wheter the user is LAKARE or not. Immutable once set.
+   * @param isLakare Wheter the user is LAKARE or not. Immutable once set.
    */
   public RehabstodUser(IntygUser intygUser, boolean pdlConsentGiven, boolean isLakare) {
     super(intygUser.getHsaId());
@@ -137,7 +135,7 @@ public class RehabstodUser extends IntygUser implements Serializable, Saml2Authe
 
   public Urval getDefaultUrval() {
     return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE)
-        || roles.containsKey(AuthoritiesConstants.ROLE_TANDLAKARE)
+            || roles.containsKey(AuthoritiesConstants.ROLE_TANDLAKARE)
         ? Urval.ISSUED_BY_ME
         : Urval.ALL;
   }

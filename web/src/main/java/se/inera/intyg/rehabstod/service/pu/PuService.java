@@ -38,9 +38,7 @@ public interface PuService {
    */
   void filterSekretessForSummary(List<SjukfallEnhet> sjukfallList);
 
-  /**
-   * Removes intyg from other careUnits belonging to the patient with sekretessmarkering.
-   */
+  /** Removes intyg from other careUnits belonging to the patient with sekretessmarkering. */
   List<IntygData> filterSekretessForPatientHistory(List<IntygData> intygsData);
 
   boolean shouldFilterSickLeavesOnProtectedPerson(RehabstodUser user);

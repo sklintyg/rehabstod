@@ -56,8 +56,7 @@ public final class TestDataGen {
   private static final String CAREGIVER_ID = "caregiver-1";
   private static final String CAREGIVER_NAME = "Vårdgivare 1";
 
-  private TestDataGen() {
-  }
+  private TestDataGen() {}
 
   // CHECKSTYLE:OFF MagicNumber
 

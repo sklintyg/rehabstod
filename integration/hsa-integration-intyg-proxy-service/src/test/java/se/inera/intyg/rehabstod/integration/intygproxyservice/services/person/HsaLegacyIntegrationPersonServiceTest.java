@@ -37,11 +37,9 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.services.employee.
 @ExtendWith(MockitoExtension.class)
 class HsaLegacyIntegrationPersonServiceTest {
 
-  @Mock
-  GetEmployeeService getEmployeeService;
+  @Mock GetEmployeeService getEmployeeService;
 
-  @InjectMocks
-  HsaLegacyIntegrationPersonService hsaLegacyIntegrationPersonService;
+  @InjectMocks HsaLegacyIntegrationPersonService hsaLegacyIntegrationPersonService;
 
   @Test
   void shouldThrowError() {

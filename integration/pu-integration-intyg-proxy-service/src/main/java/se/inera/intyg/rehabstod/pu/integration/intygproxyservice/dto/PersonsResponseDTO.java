@@ -33,7 +33,5 @@ public class PersonsResponseDTO {
   List<PersonResponseDTO> persons;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class PersonsResponseDTOBuilder {
-
-  }
+  public static class PersonsResponseDTOBuilder {}
 }

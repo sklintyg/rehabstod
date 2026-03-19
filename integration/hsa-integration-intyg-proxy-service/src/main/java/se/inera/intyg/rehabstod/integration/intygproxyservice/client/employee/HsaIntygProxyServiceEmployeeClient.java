@@ -37,8 +37,7 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.employee.GetEm
 public class HsaIntygProxyServiceEmployeeClient {
 
   @Autowired
-  @Qualifier("hsaIntygProxyServiceRestClient")
-  private RestClient ipsRestClient;
+  @Qualifier("hsaIntygProxyServiceRestClient") private RestClient ipsRestClient;
 
   @Value("${integration.intygproxyservice.employee.endpoint}")
   private String employeeEndpoint;

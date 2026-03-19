@@ -37,10 +37,8 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organizat
 class GetHealthCareUnitServiceTest {
 
   private static final String HSA_ID = "hsaId";
-  @Mock
-  private HsaIntygProxyServiceHealthCareUnitClient healthCareUnitClient;
-  @InjectMocks
-  private GetHealthCareUnitService getHealthCareUnitService;
+  @Mock private HsaIntygProxyServiceHealthCareUnitClient healthCareUnitClient;
+  @InjectMocks private GetHealthCareUnitService getHealthCareUnitService;
 
   @Test
   void shouldThrowIfHsaIdIsNull() {

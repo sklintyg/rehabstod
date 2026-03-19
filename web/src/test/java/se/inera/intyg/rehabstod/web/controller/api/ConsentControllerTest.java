@@ -52,9 +52,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRe
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-/**
- * Created by Magnus Ekstrand on 03/02/16.
- */
+/** Created by Magnus Ekstrand on 03/02/16. */
 @ExtendWith(MockitoExtension.class)
 class ConsentControllerTest {
 
@@ -66,17 +64,13 @@ class ConsentControllerTest {
 
   private static final int DAYS = 30;
 
-  @Mock
-  LogService logServiceMock;
+  @Mock LogService logServiceMock;
 
-  @Mock
-  private UserService userServiceMock;
+  @Mock private UserService userServiceMock;
 
-  @Mock
-  private ConsentService consentServiceMock;
+  @Mock private ConsentService consentServiceMock;
 
-  @InjectMocks
-  ConsentController testee = new ConsentController();
+  @InjectMocks ConsentController testee = new ConsentController();
 
   @BeforeEach
   void before() {

@@ -49,8 +49,7 @@ class HsaIntygProxyServiceHealthCareProviderClientTest {
 
   private static final String HSA_ID = "hsaId";
 
-  @Mock
-  private RestClient restClient;
+  @Mock private RestClient restClient;
 
   @InjectMocks
   private HsaIntygProxyServiceHealthCareProviderClient hsaIntygProxyServiceHealthCareProviderClient;

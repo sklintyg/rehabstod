@@ -309,13 +309,13 @@ public class CertificateServiceImpl implements CertificateService {
 
     if (c.getUnAnsweredComplement() > 0
         && containsIgnoreCase(
-        String.format("Komplettering (%d)", c.getUnAnsweredComplement()), searchText)) {
+            String.format("Komplettering (%d)", c.getUnAnsweredComplement()), searchText)) {
       return true;
     }
 
     if (c.getUnAnsweredOther() > 0
         && containsIgnoreCase(
-        String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()), searchText)) {
+            String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()), searchText)) {
       return true;
     }
 

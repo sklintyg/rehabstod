@@ -54,11 +54,9 @@ class GetPersonIntygProxyServiceClientTest {
   private final RestClient.RequestBodySpec requestBodySpec = mock(RestClient.RequestBodySpec.class);
   private final RestClient.ResponseSpec responseSpec = mock(RestClient.ResponseSpec.class);
 
-  @Mock
-  private RestClient restClient;
+  @Mock private RestClient restClient;
 
-  @InjectMocks
-  private GetPersonIntygProxyServiceClient getPersonIntygProxyServiceClient;
+  @InjectMocks private GetPersonIntygProxyServiceClient getPersonIntygProxyServiceClient;
 
   @BeforeEach
   void setUp() {

@@ -40,11 +40,9 @@ class GetHealthCareProviderServiceTest {
   private static final String HSA_ID = "HSA_ID";
   private static final String ORG_NO = "ORG_NO";
 
-  @Mock
-  HsaIntygProxyServiceHealthCareProviderClient hsaIntygProxyServiceHealthCareProviderClient;
+  @Mock HsaIntygProxyServiceHealthCareProviderClient hsaIntygProxyServiceHealthCareProviderClient;
 
-  @InjectMocks
-  private GetHealthCareProviderService getHealthCareProviderService;
+  @InjectMocks private GetHealthCareProviderService getHealthCareProviderService;
 
   @Test
   void shouldThrowErrorIfRequestHasBothParametersAsNull() {

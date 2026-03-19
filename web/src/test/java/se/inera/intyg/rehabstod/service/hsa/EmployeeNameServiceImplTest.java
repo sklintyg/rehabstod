@@ -36,11 +36,9 @@ import se.inera.intyg.rehabstod.integration.hsatk.services.legacy.HsaEmployeeSer
 @ExtendWith(MockitoExtension.class)
 class EmployeeNameServiceImplTest {
 
-  @Mock
-  private HsaEmployeeService hsaEmployeeService;
+  @Mock private HsaEmployeeService hsaEmployeeService;
 
-  @InjectMocks
-  private EmployeeNameServiceImpl employeeNameService;
+  @InjectMocks private EmployeeNameServiceImpl employeeNameService;
 
   @Test
   void shallReturnNameIfEmployeeExists() {

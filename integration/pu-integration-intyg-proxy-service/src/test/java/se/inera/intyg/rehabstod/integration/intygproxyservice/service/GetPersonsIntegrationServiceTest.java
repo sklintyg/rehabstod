@@ -47,10 +47,8 @@ class GetPersonsIntegrationServiceTest {
   private static final String PERSON_ID_1 = "191212121212";
   private static final String PERSON_ID_2 = "191212121213";
   private static final String PERSON_ID_3 = "191212121214";
-  @Mock
-  GetPersonsIntygProxyServiceClient getPersonsIntygProxyServiceClient;
-  @InjectMocks
-  GetPersonsIntegrationService getPersonsIntegrationService;
+  @Mock GetPersonsIntygProxyServiceClient getPersonsIntygProxyServiceClient;
+  @InjectMocks GetPersonsIntegrationService getPersonsIntegrationService;
 
   @Test
   void shallReturnEmptyMapIfPersonIdsIsNull() {

@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.integration.intygproxyservice.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -35,19 +34,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.rehabstod.integration.hsatk.model.CredentialInformation;
-import se.inera.intyg.rehabstod.integration.hsatk.model.HealthCareUnit;
 import se.inera.intyg.rehabstod.integration.hsatk.model.Unit;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.UserAuthorizationInfo;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
-import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
-import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.GetHealthCareUnitRequestDTO;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.services.authorization.GetCredentialInformationForPersonService;
-import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organization.GetActiveHealthCareUnitMemberHsaIdService;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organization.GetCareUnitService;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organization.GetHealthCareUnitService;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organization.GetUnitService;
@@ -57,58 +51,20 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organizat
 @ExtendWith(MockitoExtension.class)
 class HsaLegacyIntegrationOrganizationServiceTest {
 
-  public static final String CARE_PROVIDER_HSA_ID = "careProviderHsaId";
   private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
 
-  @Mock
-  private GetHealthCareUnitService getHealthCareUnitService;
+  @Mock private GetHealthCareUnitService getHealthCareUnitService;
 
-  @Mock
-  private GetActiveHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;
+  @Mock private GetUnitService getUnitService;
 
-  @Mock
-  private GetUnitService getUnitService;
+  @Mock private GetCareUnitService getCareUnitService;
 
-  @Mock
-  private GetCareUnitService getCareUnitService;
+  @Mock private GetCredentialInformationForPersonService getCredentialInformationForPersonService;
 
-  @Mock
-  private GetCredentialInformationForPersonService getCredentialInformationForPersonService;
-
-  @Mock
-  private GetUserAuthorizationInfoService getUserAuthorizationInfoService;
+  @Mock private GetUserAuthorizationInfoService getUserAuthorizationInfoService;
 
   @InjectMocks
   private HsaLegacyIntegrationOrganizationService hsaLegacyIntegrationOrganizationService;
-
-  @Nested
-  class VardgivareOfvardenhet {
-
-    @Test
-    void shouldReturnHealthCareProviderHsaIdWhenCareUnitHsaIdIsProvided() {
-      final var healthCareUnit = new HealthCareUnit();
-      healthCareUnit.setHealthCareProviderHsaId(CARE_PROVIDER_HSA_ID);
-
-      when(getHealthCareUnitService.get(
-          GetHealthCareUnitRequestDTO.builder().hsaId(CARE_UNIT_HSA_ID).build()))
-          .thenReturn(healthCareUnit);
-
-      final var actualResult =
-          hsaLegacyIntegrationOrganizationService.getVardgivareOfVardenhet(CARE_UNIT_HSA_ID);
-      assertEquals(CARE_PROVIDER_HSA_ID, actualResult);
-    }
-
-    @Test
-    void shouldReturnNull() {
-      when(getHealthCareUnitService.get(
-          GetHealthCareUnitRequestDTO.builder().hsaId(CARE_UNIT_HSA_ID).build()))
-          .thenReturn(new HealthCareUnit());
-
-      final var actualResult =
-          hsaLegacyIntegrationOrganizationService.getVardgivareOfVardenhet(CARE_UNIT_HSA_ID);
-      assertNull(actualResult);
-    }
-  }
 
   @Nested
   class GetVardenhet {
@@ -130,66 +86,6 @@ class HsaLegacyIntegrationOrganizationServiceTest {
       assertThrows(
           WebServiceException.class,
           () -> hsaLegacyIntegrationOrganizationService.getVardenhet(CARE_UNIT_HSA_ID));
-    }
-  }
-
-  @Nested
-  class GetHsaIdForAktivaUnderenheter {
-
-    private static final String CARE_UNIT_ID = "careUnitId";
-    private static final String ACTIVE_CARE_UNIT_HSA_ID_1 = "careUnitId1";
-    private static final String ACTIVE_CARE_UNIT_HSA_ID_2 = "careUnitId2";
-
-    @Test
-    void shouldReturnListOfHsaIdsForActiveSubUnits() {
-      final var expectedResult = List.of(ACTIVE_CARE_UNIT_HSA_ID_1, ACTIVE_CARE_UNIT_HSA_ID_2);
-      when(getHealthCareUnitMemberHsaIdService.get(
-          GetHealthCareUnitMembersRequestDTO.builder().hsaId(CARE_UNIT_ID).build()))
-          .thenReturn(expectedResult);
-      final var result =
-          hsaLegacyIntegrationOrganizationService.getHsaIdForAktivaUnderenheter(CARE_UNIT_ID);
-      assertEquals(expectedResult, result);
-    }
-  }
-
-  @Nested
-  class GetParentUnit {
-
-    private static final String CARE_UNIT_ID = "careUnitId";
-
-    @Test
-    void shouldThrowHsaServiceCallExceptionIfUnitIsNull() {
-      when(getHealthCareUnitService.get(
-          GetHealthCareUnitRequestDTO.builder().hsaId(CARE_UNIT_ID).build()))
-          .thenReturn(null);
-
-      assertThrows(
-          HsaServiceCallException.class,
-          () -> hsaLegacyIntegrationOrganizationService.getParentUnit(CARE_UNIT_ID));
-    }
-
-    @Test
-    void shouldThrowHsaServiceCallException() {
-      when(getHealthCareUnitService.get(
-          GetHealthCareUnitRequestDTO.builder().hsaId(CARE_UNIT_ID).build()))
-          .thenThrow(IllegalStateException.class);
-
-      assertThrows(
-          HsaServiceCallException.class,
-          () -> hsaLegacyIntegrationOrganizationService.getParentUnit(CARE_UNIT_ID));
-    }
-
-    @Test
-    void shouldReturnParentId() throws HsaServiceCallException {
-      final var unit = new HealthCareUnit();
-      unit.setHealthCareUnitHsaId(CARE_UNIT_ID);
-      when(getHealthCareUnitService.get(
-          GetHealthCareUnitRequestDTO.builder().hsaId(CARE_UNIT_ID).build()))
-          .thenReturn(unit);
-
-      final var result = hsaLegacyIntegrationOrganizationService.getParentUnit(CARE_UNIT_ID);
-
-      assertEquals(CARE_UNIT_ID, result);
     }
   }
 

@@ -50,14 +50,11 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 @ExtendWith(MockitoExtension.class)
 class PdlLogSickLeavesServiceTest {
 
-  @Mock
-  UserService userService;
+  @Mock UserService userService;
 
-  @Mock
-  LogService logService;
+  @Mock LogService logService;
 
-  @InjectMocks
-  PdlLogSickLeavesServiceImpl pdlLogSickLeavesService;
+  @InjectMocks PdlLogSickLeavesServiceImpl pdlLogSickLeavesService;
 
   RehabstodUser user;
   SelectableVardenhet unit;

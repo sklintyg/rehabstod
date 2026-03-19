@@ -37,8 +37,7 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.authorization.
 public class HsaIntygProxyServiceHospCredentialsForPersonClient {
 
   @Autowired
-  @Qualifier("hsaIntygProxyServiceRestClient")
-  private RestClient ipsRestClient;
+  @Qualifier("hsaIntygProxyServiceRestClient") private RestClient ipsRestClient;
 
   @Value("${integration.intygproxyservice.credentialsforperson.endpoint}")
   private String credentialsForPersonEndpoint;

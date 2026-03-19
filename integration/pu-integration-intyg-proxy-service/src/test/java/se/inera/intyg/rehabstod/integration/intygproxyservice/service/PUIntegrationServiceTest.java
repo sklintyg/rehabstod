@@ -39,12 +39,9 @@ import se.inera.intyg.schemas.contract.Personnummer;
 @ExtendWith(MockitoExtension.class)
 class PUIntegrationServiceTest {
 
-  @Mock
-  GetPersonIntegrationService getPersonIntegrationService;
-  @Mock
-  GetPersonsIntegrationService getPersonsIntegrationService;
-  @InjectMocks
-  PUIntegrationService puIntegrationService;
+  @Mock GetPersonIntegrationService getPersonIntegrationService;
+  @Mock GetPersonsIntegrationService getPersonsIntegrationService;
+  @InjectMocks PUIntegrationService puIntegrationService;
 
   @Nested
   class GetPersonTests {

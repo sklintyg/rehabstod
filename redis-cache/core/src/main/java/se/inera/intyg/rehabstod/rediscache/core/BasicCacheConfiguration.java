@@ -76,8 +76,7 @@ public class BasicCacheConfiguration {
   @Value("${redis.cluster.read.timeout:PT1M}")
   String redisClusterReadTimeout;
 
-  @Resource
-  private Environment environment;
+  @Resource private Environment environment;
 
   @Bean
   public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {

@@ -32,8 +32,7 @@ public class EmployeeNameServiceImpl implements EmployeeNameService {
 
   public static final String EMPLOYEE_NAME_CACHE_NAME = "employeeName";
 
-  @Autowired
-  private HsaEmployeeService employeeService;
+  @Autowired private HsaEmployeeService employeeService;
 
   @Override
   @PrometheusTimeMethod

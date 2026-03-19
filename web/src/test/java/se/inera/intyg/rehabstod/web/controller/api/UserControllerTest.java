@@ -45,38 +45,28 @@ import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 
-/**
- * Created by marced on 01/02/16.
- */
+/** Created by marced on 01/02/16. */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class UserControllerTest {
 
   private static final String HSA_ID = "abcdefghijkl";
 
-  @Mock
-  RehabstodUser rehabUserMock;
+  @Mock RehabstodUser rehabUserMock;
 
-  @Mock
-  UserService userService;
+  @Mock UserService userService;
 
-  @Mock
-  RehabstodUnitChangeService rehabstodUnitChangeService;
+  @Mock RehabstodUnitChangeService rehabstodUnitChangeService;
 
-  @Mock
-  private CommonAuthoritiesResolver commonAuthoritiesResolver;
+  @Mock private CommonAuthoritiesResolver commonAuthoritiesResolver;
 
-  @Mock
-  private AnvandarPreferenceRepository anvandarPreferenceRepository;
+  @Mock private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
-  @Mock
-  private UserPreferencesService userPreferencesService;
+  @Mock private UserPreferencesService userPreferencesService;
 
-  @Mock
-  private Environment environment;
+  @Mock private Environment environment;
 
-  @InjectMocks
-  private UserController userController = new UserController();
+  @InjectMocks private UserController userController = new UserController();
 
   @BeforeEach
   void before() {

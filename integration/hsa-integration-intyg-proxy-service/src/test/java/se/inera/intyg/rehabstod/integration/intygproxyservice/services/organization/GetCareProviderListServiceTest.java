@@ -59,13 +59,10 @@ class GetCareProviderListServiceTest {
   private Commission commissionA;
   private Commission commissionB;
 
-  @Mock
-  GetCareUnitListService getCareUnitListService;
-  @Mock
-  CareProviderConverter careProviderConverter;
+  @Mock GetCareUnitListService getCareUnitListService;
+  @Mock CareProviderConverter careProviderConverter;
 
-  @InjectMocks
-  GetCareProviderListService getCareProviderListService;
+  @InjectMocks GetCareProviderListService getCareProviderListService;
 
   @Nested
   class CommissionsWithUnits {

@@ -46,8 +46,7 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.H
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceHealthCareUnitClientTest {
 
-  @Mock
-  private RestClient restClient;
+  @Mock private RestClient restClient;
 
   @InjectMocks
   private HsaIntygProxyServiceHealthCareUnitClient hsaIntygProxyServiceHealthCareUnitClient;

@@ -28,7 +28,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.client.employee.HsaIntygProxyServiceEmployeeClient;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.employee.EmployeeDTO;
@@ -39,11 +38,9 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.services.employee.
 @ExtendWith(MockitoExtension.class)
 class GetEmployeeServiceTest {
 
-  @Mock
-  private HsaIntygProxyServiceEmployeeClient employeeClient;
+  @Mock private HsaIntygProxyServiceEmployeeClient employeeClient;
 
-  @InjectMocks
-  private GetEmployeeService getEmployeeService;
+  @InjectMocks private GetEmployeeService getEmployeeService;
 
   private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
   private static final String PERSON_HSA_ID = "personHsaId";
@@ -65,7 +62,7 @@ class GetEmployeeServiceTest {
   }
 
   @Test
-  void shouldReturnListOfPersonalInformation() throws HsaServiceCallException {
+  void shouldReturnListOfPersonalInformation() {
     final var request = GetEmployeeRequestDTO.builder().personId(PERSONAL_IDENTITY_NUMBER).build();
     final var expectedResult = List.of(new PersonInformation());
     when(employeeClient.getEmployee(request))

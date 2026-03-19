@@ -53,8 +53,7 @@ class HsaIntygProxyServiceHospCertificationPersonClientTest {
   public static final String OPERATION = "operation";
   public static final String REASON = "reason";
 
-  @Mock
-  private RestClient restClient;
+  @Mock private RestClient restClient;
 
   @InjectMocks
   private HsaIntygProxyServiceHospCertificationPersonClient hospCertificationPersonClient;

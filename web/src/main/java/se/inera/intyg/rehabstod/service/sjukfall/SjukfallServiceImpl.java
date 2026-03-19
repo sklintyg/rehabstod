@@ -67,9 +67,7 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-/**
- * Created by eriklupander on 2016-02-01.
- */
+/** Created by eriklupander on 2016-02-01. */
 @Service("sjukfallService")
 @RequiredArgsConstructor
 public class SjukfallServiceImpl implements SjukfallService {

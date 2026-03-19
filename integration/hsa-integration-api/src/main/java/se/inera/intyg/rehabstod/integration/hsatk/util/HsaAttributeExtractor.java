@@ -29,9 +29,7 @@ import java.util.stream.Collectors;
 import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation.PaTitle;
 
-/**
- * Helper class for extracting certain HoSP attributes.
- */
+/** Helper class for extracting certain HoSP attributes. */
 public class HsaAttributeExtractor {
 
   public List<String> extractSpecialiseringar(List<PersonInformation> hsaUserTypes) {
@@ -85,9 +83,7 @@ public class HsaAttributeExtractor {
     return new ArrayList<>(lygSet);
   }
 
-  /**
-   * Tries to use title attribute, otherwise resorts to healthcareProfessionalLicenses.
-   */
+  /** Tries to use title attribute, otherwise resorts to healthcareProfessionalLicenses. */
   public String extractTitel(List<PersonInformation> hsaPersonInfo) {
     Set<String> titleSet = new HashSet<>();
     for (PersonInformation pit : hsaPersonInfo) {

@@ -39,11 +39,9 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.services.employee.
 class HsaLegacyIntegrationEmployeeServiceTest {
 
   private static final List<PersonInformation> EXPECTED_RESULT = List.of(new PersonInformation());
-  @Mock
-  private GetEmployeeService getEmployeeService;
+  @Mock private GetEmployeeService getEmployeeService;
 
-  @InjectMocks
-  private HsaLegacyIntegrationEmployeeService integrationEmployeeService;
+  @InjectMocks private HsaLegacyIntegrationEmployeeService integrationEmployeeService;
 
   private static final String HSA_ID = "hsaId";
   private static final GetEmployeeRequestDTO GET_EMPLOYEE_REQUEST_DTO =
@@ -54,7 +52,8 @@ class HsaLegacyIntegrationEmployeeServiceTest {
     when(getEmployeeService.get(GET_EMPLOYEE_REQUEST_DTO)).thenReturn(Collections.emptyList());
 
     assertThrows(
-        WebServiceException.class, () -> integrationEmployeeService.getEmployee(HSA_ID, null));
+        WebServiceException.class,
+        () -> integrationEmployeeService.getEmployee(HSA_ID, null, null));
     assertThrows(
         WebServiceException.class,
         () -> integrationEmployeeService.getEmployee(HSA_ID, null, null));
@@ -64,7 +63,7 @@ class HsaLegacyIntegrationEmployeeServiceTest {
   void shouldReturnListOfPersonInformation() {
     when(getEmployeeService.get(GET_EMPLOYEE_REQUEST_DTO)).thenReturn(EXPECTED_RESULT);
 
-    final var result = integrationEmployeeService.getEmployee(HSA_ID, null);
+    final var result = integrationEmployeeService.getEmployee(HSA_ID, null, null);
 
     assertEquals(EXPECTED_RESULT, result);
   }

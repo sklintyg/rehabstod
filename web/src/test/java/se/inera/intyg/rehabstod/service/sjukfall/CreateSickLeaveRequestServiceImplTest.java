@@ -52,13 +52,10 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDT
 @ExtendWith(MockitoExtension.class)
 class CreateSickLeaveRequestServiceImplTest {
 
-  @Mock
-  private UserService userService;
-  @Mock
-  private PuService puService;
+  @Mock private UserService userService;
+  @Mock private PuService puService;
 
-  @InjectMocks
-  private CreateSickLeaveRequestServiceImpl getSickLeaveRequestService;
+  @InjectMocks private CreateSickLeaveRequestServiceImpl getSickLeaveRequestService;
   private static final String HSA_ID = "hsaId";
   private static final String UNIT_ID_2 = "unitId";
   private static final String UNIT_ID_1 = "anotherUnitId";

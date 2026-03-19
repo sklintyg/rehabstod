@@ -35,8 +35,7 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.authorization.
 public class HsaIntygProxyServiceHospLastUpdateClient {
 
   @Autowired
-  @Qualifier("hsaIntygProxyServiceRestClient")
-  private RestClient ipsRestClient;
+  @Qualifier("hsaIntygProxyServiceRestClient") private RestClient ipsRestClient;
 
   @Value("${integration.intygproxyservice.lastupdate.endpoint}")
   private String lastUpdateEndpoint;

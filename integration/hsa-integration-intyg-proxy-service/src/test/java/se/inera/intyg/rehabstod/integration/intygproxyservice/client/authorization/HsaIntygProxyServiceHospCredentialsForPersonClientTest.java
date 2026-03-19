@@ -49,8 +49,7 @@ class HsaIntygProxyServiceHospCredentialsForPersonClientTest {
 
   private static final GetCredentialsForPersonRequestDTO GET_CREDENTIALS_FOR_PERSON_REQUEST_DTO =
       GetCredentialsForPersonRequestDTO.builder().personId("personId").build();
-  @Mock
-  private RestClient restClient;
+  @Mock private RestClient restClient;
 
   @InjectMocks
   private HsaIntygProxyServiceHospCredentialsForPersonClient credentialsForPersonClient;

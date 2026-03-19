@@ -49,8 +49,7 @@ class RehabstodAuthoritiesResolverTest {
       "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
   private final Integer defaultMaxAliasesForCollections = 300;
 
-  @Mock
-  private HsaPersonService hsaPersonService;
+  @Mock private HsaPersonService hsaPersonService;
 
   @Spy
   private SecurityConfigurationLoader configurationLoader =

@@ -40,8 +40,7 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organizat
 @ExtendWith(MockitoExtension.class)
 class GetActiveHealthCareUnitMemberHsaIdServiceTest {
 
-  @Mock
-  private GetHealthCareUnitMembersService getHealthCareUnitMembersService;
+  @Mock private GetHealthCareUnitMembersService getHealthCareUnitMembersService;
 
   @InjectMocks
   private GetActiveHealthCareUnitMemberHsaIdService getHealthCareUnitMemberHsaIdService;

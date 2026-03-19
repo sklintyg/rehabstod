@@ -37,8 +37,7 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.G
 public class HsaIntygProxyServiceHealthCareUnitMembersClient {
 
   @Autowired
-  @Qualifier("hsaIntygProxyServiceRestClient")
-  private RestClient ipsRestClient;
+  @Qualifier("hsaIntygProxyServiceRestClient") private RestClient ipsRestClient;
 
   @Value("${integration.intygproxyservice.healthcareunitmembers.endpoint}")
   private String healthCareUnitMembersEndpoint;

@@ -39,8 +39,7 @@ import se.inera.intyg.rehabstod.security.common.model.Role;
 @Service
 public class RehabstodUnitChangeService {
 
-  @Autowired
-  private CommonAuthoritiesResolver commonAuthoritiesResolver;
+  @Autowired private CommonAuthoritiesResolver commonAuthoritiesResolver;
 
   public boolean changeValdVardenhet(String enhetId, RehabstodUser user) {
     boolean ok = user.changeValdVardenhet(enhetId);

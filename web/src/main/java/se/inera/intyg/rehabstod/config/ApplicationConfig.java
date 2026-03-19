@@ -47,23 +47,21 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
     value = {"classpath:application.properties", "file:${dev.config.file}"})
 @ImportResource({"classpath:META-INF/cxf/cxf.xml"})
 @ComponentScan({
-    "se.inera.intyg.rehabstod.logging",
-    "se.inera.intyg.rehabstod.integration.it",
-    "se.inera.intyg.rehabstod.integration.wc",
-    "se.inera.intyg.rehabstod.sjukfall",
-    "se.inera.intyg.rehabstod.pu.integration.api",
-    "se.inera.intyg.rehabstod.integration.hsatk",
-    "se.inera.intyg.rehabstod.integration.intygproxyservice",
-    "se.inera.intyg.rehabstod.pu.integration.intygproxyservice",
-    "se.inera.intyg.rehabstod.rediscache",
+  "se.inera.intyg.rehabstod.logging",
+  "se.inera.intyg.rehabstod.integration.it",
+  "se.inera.intyg.rehabstod.integration.wc",
+  "se.inera.intyg.rehabstod.sjukfall",
+  "se.inera.intyg.rehabstod.pu.integration.api",
+  "se.inera.intyg.rehabstod.integration.hsatk",
+  "se.inera.intyg.rehabstod.integration.intygproxyservice",
+  "se.inera.intyg.rehabstod.pu.integration.intygproxyservice",
+  "se.inera.intyg.rehabstod.rediscache",
 })
 public class ApplicationConfig implements TransactionManagementConfigurer {
 
-  @Autowired
-  private Bus bus;
+  @Autowired private Bus bus;
 
-  @Autowired
-  private PlatformTransactionManager transactionManager;
+  @Autowired private PlatformTransactionManager transactionManager;
 
   @Bean
   public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {

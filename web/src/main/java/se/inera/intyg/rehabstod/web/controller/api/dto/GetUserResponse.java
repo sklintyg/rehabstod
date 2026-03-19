@@ -27,9 +27,7 @@ import se.inera.intyg.rehabstod.security.common.model.Feature;
 import se.inera.intyg.rehabstod.security.common.model.Role;
 import se.inera.intyg.rehabstod.service.Urval;
 
-/**
- * Reponse dto for the getUser api.
- */
+/** Reponse dto for the getUser api. */
 public class GetUserResponse {
 
   private String hsaId;

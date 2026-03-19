@@ -37,7 +37,7 @@ public interface PUService {
    *
    * @param personId a Personnummer
    * @return a PersonSvar object with a non-null Person object and status FOUND, otherwise a null
-   * Person object and status NOT_FOUND or ERROR.
+   *     Person object and status NOT_FOUND or ERROR.
    */
   PersonSvar getPerson(Personnummer personId);
 
@@ -56,6 +56,5 @@ public interface PUService {
   Map<Personnummer, PersonSvar> getPersons(List<Personnummer> personIds);
 
   @VisibleForTesting
-  default void clearCache() {
-  }
+  default void clearCache() {}
 }

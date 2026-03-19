@@ -54,9 +54,7 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-/**
- * Created by eriklupander on 2017-09-06.
- */
+/** Created by eriklupander on 2017-09-06. */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class PuServiceImplTest {
@@ -72,14 +70,11 @@ class PuServiceImplTest {
   private static final String LAKARE2_HSA_ID = "lakare-2";
   private static final String LAKARE1_NAMN = "Läkare Läkarsson";
 
-  @Mock
-  private PUService puService;
+  @Mock private PUService puService;
 
-  @Mock
-  private UserService userService;
+  @Mock private UserService userService;
 
-  @InjectMocks
-  private PuServiceImpl testee;
+  @InjectMocks private PuServiceImpl testee;
 
   @BeforeEach
   void init() {
@@ -287,7 +282,7 @@ class PuServiceImplTest {
 
   @Test
   void
-  testSekretessmarkeradIsExcludedWhenUserIsLakareAsRehabkoordinatorOnSameUnitButIsNotSigning() {
+      testSekretessmarkeradIsExcludedWhenUserIsLakareAsRehabkoordinatorOnSameUnitButIsNotSigning() {
     RehabstodUser rehabstodUser = buildLakareAsRehabkoordinator(VARDENHET_1);
     when(rehabstodUser.getHsaId()).thenReturn(LAKARE2_HSA_ID);
     when(userService.getUser()).thenReturn(rehabstodUser);

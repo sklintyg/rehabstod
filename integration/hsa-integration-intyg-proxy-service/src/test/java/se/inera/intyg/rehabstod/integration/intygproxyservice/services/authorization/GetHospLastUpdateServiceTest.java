@@ -33,11 +33,9 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.authorization.
 @ExtendWith(MockitoExtension.class)
 class GetHospLastUpdateServiceTest {
 
-  @Mock
-  private HsaIntygProxyServiceHospLastUpdateClient hospLastUpdateClient;
+  @Mock private HsaIntygProxyServiceHospLastUpdateClient hospLastUpdateClient;
 
-  @InjectMocks
-  private GetHospLastUpdateService getHospLastUpdateService;
+  @InjectMocks private GetHospLastUpdateService getHospLastUpdateService;
 
   @Test
   void shouldReturnHospLastUpdate() {

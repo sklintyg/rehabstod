@@ -57,9 +57,7 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-/**
- * Created by eriklupander on 2017-11-01.
- */
+/** Created by eriklupander on 2017-11-01. */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class RiskPredictionServiceImplTest {
@@ -67,14 +65,11 @@ class RiskPredictionServiceImplTest {
   private static final String ENHET_1 = "enhet-1";
   private static final String ENHET_2 = "enhet-2";
 
-  @Mock
-  private SRSIntegrationService srsIntegrationService;
+  @Mock private SRSIntegrationService srsIntegrationService;
 
-  @Mock
-  private UserService userService;
+  @Mock private UserService userService;
 
-  @InjectMocks
-  private RiskPredictionServiceImpl testee;
+  @InjectMocks private RiskPredictionServiceImpl testee;
 
   private RehabstodUser user;
 

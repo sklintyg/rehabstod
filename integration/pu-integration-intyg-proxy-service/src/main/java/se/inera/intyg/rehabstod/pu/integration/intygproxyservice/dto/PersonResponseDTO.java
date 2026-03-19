@@ -35,7 +35,5 @@ public class PersonResponseDTO {
   Status status;
 
   @JsonPOJOBuilder(withPrefix = "")
-  public static class PersonResponseDTOBuilder {
-
-  }
+  public static class PersonResponseDTOBuilder {}
 }

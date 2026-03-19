@@ -72,28 +72,20 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetDoctorsForUnitResponse
 @ExtendWith(MockitoExtension.class)
 class PopulateFiltersServiceTest {
 
-  @Mock
-  UserService userService;
+  @Mock UserService userService;
 
-  @Mock
-  IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+  @Mock IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
 
-  @Mock
-  DiagnosKapitelService diagnosKapitelService;
+  @Mock DiagnosKapitelService diagnosKapitelService;
 
-  @Mock
-  SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+  @Mock SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
-  @Mock
-  PuService puService;
+  @Mock PuService puService;
 
-  @Mock
-  FeatureService featureService;
-  @Mock
-  CertificateService certificateService;
+  @Mock FeatureService featureService;
+  @Mock CertificateService certificateService;
 
-  @InjectMocks
-  PopulateFiltersServiceImpl populateActiveFilters;
+  @InjectMocks PopulateFiltersServiceImpl populateActiveFilters;
 
   static final String HSA_ID = "HSA_ID";
   static final String HSA_ID2 = "HSA_ID2";

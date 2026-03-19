@@ -54,16 +54,13 @@ import se.inera.intyg.rehabstod.security.common.model.RoleResolveResult;
 import se.inera.intyg.rehabstod.security.common.model.Title;
 import se.inera.intyg.rehabstod.security.common.model.TitleCode;
 
-/**
- * Created by Magnus Ekstrand on 20/11/15.
- */
+/** Created by Magnus Ekstrand on 20/11/15. */
 @Service
 public class CommonAuthoritiesResolver {
 
   private static final Logger LOG = LoggerFactory.getLogger(CommonAuthoritiesResolver.class);
 
-  @Autowired
-  private SecurityConfigurationLoader configurationLoader;
+  @Autowired private SecurityConfigurationLoader configurationLoader;
   private Function<String, RequestOrigin> fnRequestOrigin =
       (name) -> getRequestOrigins().stream().filter(isRequestOrigin(name)).findFirst().orElse(null);
   private Function<String, Role> fnRole =

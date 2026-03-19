@@ -46,11 +46,9 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.employee.GetEm
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceEmployeeClientTest {
 
-  @Mock
-  private RestClient restClient;
+  @Mock private RestClient restClient;
 
-  @InjectMocks
-  private HsaIntygProxyServiceEmployeeClient hsaIntygProxyServiceEmployeeClient;
+  @InjectMocks private HsaIntygProxyServiceEmployeeClient hsaIntygProxyServiceEmployeeClient;
 
   private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
 

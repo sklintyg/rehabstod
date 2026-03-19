@@ -33,8 +33,7 @@ import se.inera.intyg.rehabstod.pu.integration.intygproxyservice.dto.PersonsResp
 public class GetPersonsIntygProxyServiceClient {
 
   @Autowired
-  @Qualifier("puIntygProxyServiceRestClient")
-  private RestClient ipsRestClient;
+  @Qualifier("puIntygProxyServiceRestClient") private RestClient ipsRestClient;
 
   @Value("${integration.intygproxyservice.persons.endpoint}")
   private String personsEndpoint;

@@ -35,12 +35,6 @@ public class HsaLegacyIntegrationEmployeeService implements HsaEmployeeService {
   private final GetEmployeeService getEmployeeService;
 
   @Override
-  public List<PersonInformation> getEmployee(String personHsaId, String personalIdentityNumber)
-      throws WebServiceException {
-    return getEmployee(personHsaId, personalIdentityNumber, null);
-  }
-
-  @Override
   public List<PersonInformation> getEmployee(
       String personHsaId, String personalIdentityNumber, String searchBase)
       throws WebServiceException {

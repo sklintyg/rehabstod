@@ -42,10 +42,8 @@ class GetHospCredentialsForPersonServiceTest {
       GetCredentialsForPersonResponseDTO.builder()
           .credentials(new HospCredentialsForPerson())
           .build();
-  @Mock
-  private HsaIntygProxyServiceHospCredentialsForPersonClient credentialsForPersonClient;
-  @InjectMocks
-  private GetHospCredentialsForPersonService getHospCredentialsForPersonService;
+  @Mock private HsaIntygProxyServiceHospCredentialsForPersonClient credentialsForPersonClient;
+  @InjectMocks private GetHospCredentialsForPersonService getHospCredentialsForPersonService;
 
   @Test
   void shouldThrowIfPersonIdIsNull() {

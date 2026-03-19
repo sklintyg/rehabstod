@@ -44,10 +44,8 @@ class GetPersonIntegrationServiceTest {
 
   private static final Personnummer PERSONNUMMER = mock(Personnummer.class);
   private static final String PERSON_ID = "personId";
-  @Mock
-  GetPersonIntygProxyServiceClient getPersonIntygProxyServiceClient;
-  @InjectMocks
-  GetPersonIntegrationService getPersonIntegrationService;
+  @Mock GetPersonIntygProxyServiceClient getPersonIntygProxyServiceClient;
+  @InjectMocks GetPersonIntegrationService getPersonIntegrationService;
 
   @Test
   void shallReturnNotFoundIfPersonIdIsNull() {
@@ -89,7 +87,5 @@ class GetPersonIntegrationServiceTest {
   private record TestScenario(
       PersonRequestDTO personRequestDTO,
       PersonResponseDTO personResponseDTO,
-      PersonSvar expectedResponse) {
-
-  }
+      PersonSvar expectedResponse) {}
 }

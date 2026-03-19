@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.rehabstod.integration.hsatk.services.legacy;
 
-import java.util.List;
-import se.inera.intyg.rehabstod.integration.hsatk.exception.HsaServiceCallException;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.UserAuthorizationInfo;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
@@ -31,17 +29,9 @@ public interface HsaOrganizationsService {
    * at.
    *
    * @return list of vårdgivare containing authorized enheter and mottagningar. If user is not
-   * authorized at all, an empty list will be returned
+   *     authorized at all, an empty list will be returned
    */
   UserAuthorizationInfo getAuthorizedEnheterForHosPerson(String hosPersonHsaId);
-
-  /**
-   * Returns the hsaId of the parent care giver of the specified care unit.
-   *
-   * @param vardenhetHsaId HsaId of the vårdenhet.
-   * @return HsaId of the parent vårdgivare. If no vårdgivare could be found, null is returned.
-   */
-  String getVardgivareOfVardenhet(String vardenhetHsaId);
 
   /**
    * Returns a fully recursively populated Vardenhet for the specified hsaId.
@@ -51,18 +41,6 @@ public interface HsaOrganizationsService {
    */
   Vardenhet getVardenhet(String vardenhetHsaId);
 
-  /**
-   * Returns a shallow representation of a Vardgivare, which does NOT contain any Vardenheter.
-   */
+  /** Returns a shallow representation of a Vardgivare, which does NOT contain any Vardenheter. */
   Vardgivare getVardgivareInfo(String vardgivareHsaId);
-
-  /**
-   * Returns a list of hsaId's for all (any) sub units (mottagningar) on the specified care unit.
-   *
-   * @param vardEnhetHsaId HsaId of the vårdenhet.
-   * @return A list of hsaId's for mottagningar.
-   */
-  List<String> getHsaIdForAktivaUnderenheter(String vardEnhetHsaId);
-
-  String getParentUnit(String hsaId) throws HsaServiceCallException;
 }

@@ -19,14 +19,9 @@
 package se.inera.intyg.rehabstod.integration.hsatk.services.legacy;
 
 import java.util.List;
-import se.inera.intyg.rehabstod.integration.hsatk.exception.HsaServiceCallException;
-import se.inera.intyg.rehabstod.integration.hsatk.model.Commission;
 import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation;
 
 public interface HsaPersonService {
 
   List<PersonInformation> getHsaPersonInfo(String personHsaId);
-
-  List<Commission> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, String unitHsaId)
-      throws HsaServiceCallException;
 }

@@ -23,8 +23,7 @@ import java.util.List;
 
 public final class ConnectionStringUtil {
 
-  private ConnectionStringUtil() {
-  }
+  private ConnectionStringUtil() {}
 
   public static List<String> parsePropertyString(String redisConnectionProperty) {
     return Splitter.on(';').trimResults().omitEmptyStrings().splitToList(redisConnectionProperty);

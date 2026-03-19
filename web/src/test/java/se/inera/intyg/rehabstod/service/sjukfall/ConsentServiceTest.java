@@ -46,14 +46,11 @@ class ConsentServiceTest {
   private static final String MOTTAGNINGS_ID = "VG123-VEA-E1";
   private static final String USER_HSA_ID = "USERHSA";
 
-  @Mock
-  private RehabstodUser rehabstodUserMock;
+  @Mock private RehabstodUser rehabstodUserMock;
 
-  @Mock
-  private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+  @Mock private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
-  @InjectMocks
-  private ConsentServiceImpl testee = new ConsentServiceImpl();
+  @InjectMocks private ConsentServiceImpl testee = new ConsentServiceImpl();
 
   @Test
   void testGiveConsentLoggedInOnCareUnit() {

@@ -23,7 +23,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.rehabstod.integration.hsatk.model.Commission;
 import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.rehabstod.integration.hsatk.services.legacy.HsaPersonService;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
@@ -43,10 +42,5 @@ public class HsaLegacyIntegrationPersonService implements HsaPersonService {
     } catch (Exception e) {
       throw new WebServiceException(e.getMessage());
     }
-  }
-
-  @Override
-  public List<Commission> checkIfPersonHasMIUsOnUnit(String hosPersonHsaId, String unitHsaId) {
-    return null;
   }
 }

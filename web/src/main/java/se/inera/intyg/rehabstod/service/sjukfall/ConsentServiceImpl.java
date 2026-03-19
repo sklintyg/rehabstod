@@ -41,8 +41,7 @@ public class ConsentServiceImpl implements ConsentService {
   private static final Logger LOG =
       LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
-  @Autowired
-  private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+  @Autowired private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
   @Override
   public LocalDateTime giveConsent(
