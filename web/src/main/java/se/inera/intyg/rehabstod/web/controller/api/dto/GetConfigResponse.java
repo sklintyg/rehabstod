@@ -20,8 +20,8 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.List;
 import lombok.Data;
-import se.inera.intyg.infra.driftbannerdto.Banner;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.web.dto.driftbanner.Banner;
 
 /** Created by marced on 2016-01-18. */
 @Data

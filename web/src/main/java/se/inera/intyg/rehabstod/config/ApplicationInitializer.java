@@ -35,8 +35,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
-import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
-import se.inera.intyg.infra.monitoring.logging.LogbackConfiguratorContextListener;
 import se.inera.intyg.rehabstod.auth.RSSecurityHeadersFilter;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
@@ -50,6 +48,7 @@ import se.inera.intyg.rehabstod.integration.sparrtjanst.stub.SparrtjanstStubConf
 import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.srs.stub.SRSIntegrationStubConfiguration;
+import se.inera.intyg.rehabstod.logging.LogbackConfiguratorContextListener;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfig;
 import se.inera.intyg.rehabstod.security.filter.RequestContextHolderUpdateFilter;
 import se.inera.intyg.rehabstod.security.filter.SessionTimeoutFilter;
@@ -66,7 +65,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
     appContext.register(
         WebSecurityConfig.class,
         ApplicationConfig.class,
-        CacheConfigurationFromInfra.class,
+        BasicCacheConfig.class,
         ServiceConfig.class,
         IaConfiguration.class,
         JobConfig.class,
@@ -85,10 +84,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         JmsConfig.class,
         SecurityConfig.class,
         SjukfallConfig.class,
-        EmployeeNameCacheConfig.class,
-        InfraConfig.class,
-        PersistenceConfig.class,
-        MonitoringConfiguration.class);
+        PersistenceConfig.class);
 
     servletContext.addListener(new ContextLoaderListener(appContext));
 

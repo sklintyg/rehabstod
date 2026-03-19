@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@ImportResource("classpath:ia-stub-context.xml")
+@ComponentScan("se.inera.intyg.rehabstod.integration.ia.stub")
 @Profile({"dev", "ia-stub"})
 public class IaStubConfiguration {}

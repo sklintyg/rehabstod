@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -36,7 +35,6 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
-import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.rehabstod.security.filter.PrincipalUpdatedFilter;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.filters.PdlConsentGivenAssuranceFilter;
@@ -47,15 +45,18 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 @PropertySource(
     ignoreResourceNotFound = true,
     value = {"classpath:application.properties", "file:${dev.config.file}"})
-@Import(MonitoringConfiguration.class)
 @ImportResource({"classpath:META-INF/cxf/cxf.xml"})
 @ComponentScan({
-  "se.inera.intyg.infra.integration.intygproxyservice",
   "se.inera.intyg.rehabstod.logging",
-  "se.inera.intyg.infra.pu.integration.intygproxyservice",
   "se.inera.intyg.rehabstod.integration.it",
   "se.inera.intyg.rehabstod.integration.wc",
-  "se.inera.intyg.rehabstod.sjukfall"
+  "se.inera.intyg.rehabstod.sjukfall",
+  "se.inera.intyg.rehabstod.pu.integration.api",
+  "se.inera.intyg.rehabstod.integration.hsatk",
+  "se.inera.intyg.rehabstod.integration.intygproxyservice",
+  "se.inera.intyg.rehabstod.pu.integration.intygproxyservice",
+  "se.inera.intyg.rehabstod.rediscache",
+  "se.inera.intyg.rehabstod.dynamiclink"
 })
 public class ApplicationConfig implements TransactionManagementConfigurer {
 

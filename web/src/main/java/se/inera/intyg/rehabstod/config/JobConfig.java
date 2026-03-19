@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.config;
 
 import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.provider.redis.spring.RedisLockProvider;
+import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -31,6 +32,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @EnableAsync
 @EnableScheduling
+@EnableSchedulerLock(defaultLockAtMostFor = "PT10M")
 @ComponentScan({"se.inera.intyg.rehabstod.jobs"})
 public class JobConfig {
 

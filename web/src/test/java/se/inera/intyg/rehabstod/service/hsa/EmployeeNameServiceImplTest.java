@@ -30,8 +30,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
-import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaEmployeeService;
+import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.rehabstod.integration.hsatk.services.legacy.HsaEmployeeService;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeNameServiceImplTest {

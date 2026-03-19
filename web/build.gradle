@@ -48,6 +48,11 @@ dependencies {
     implementation project(":rehabstod-srs-integration")
     implementation project(":rehabstod-wc-integration")
     implementation project(":rehabstod-logging")
+    implementation project(":rehabstod-hsa-integration-api")
+    implementation project(":rehabstod-pu-integration-api")
+    implementation project(":rehabstod-pu-integration-intyg-proxy-service")
+    implementation project(":rehabstod-hsa-integration-intyg-proxy-service")
+    implementation project(':common-redis-cache-core')
 
     implementation "se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:${intygHealthcondRehabilitationSchemasVersion}"
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
@@ -56,6 +61,8 @@ dependencies {
     implementation "se.inera.intyg.infra:certificate:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:common-redis-cache-core:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:driftbanner-dto:${intygInfraVersion}"
+    implementation "redis.clients:jedis"
+    implementation "org.springframework.data:spring-data-redis"
     implementation "se.inera.intyg.infra:dynamiclink:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:hsa-integration-api:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:pu-integration-api:${intygInfraVersion}"
@@ -75,6 +82,7 @@ dependencies {
     implementation "com.google.guava:guava"
     implementation "io.prometheus:simpleclient_servlet"
     implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring"
+    implementation "net.javacrumbs.shedlock:shedlock-spring"
     implementation "jakarta.ws.rs:jakarta.ws.rs-api"
     implementation "org.apache.activemq:activemq-spring"
     implementation "org.apache.commons:commons-lang3"

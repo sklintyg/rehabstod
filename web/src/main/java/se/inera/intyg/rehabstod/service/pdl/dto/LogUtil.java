@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.pdl.dto;
 
-import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 
 /**

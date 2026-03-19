@@ -22,9 +22,9 @@ import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
+import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.rehabstod.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.rehabstod.security.common.model.Role;
 

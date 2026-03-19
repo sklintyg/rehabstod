@@ -32,8 +32,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
-import se.inera.intyg.infra.dynamiclink.service.DynamicLinkService;
-import se.inera.intyg.infra.integration.ia.services.IABannerService;
+import se.inera.intyg.rehabstod.dynamiclink.service.DynamicLinkService;
+import se.inera.intyg.rehabstod.integration.ia.services.IABannerService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 
 @ExtendWith(MockitoExtension.class)
