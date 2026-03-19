@@ -24,7 +24,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.ViewResolver;
@@ -49,7 +48,6 @@ import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
   "se.inera.intyg.rehabstod.logging",
   "se.inera.intyg.rehabstod.web.controller.api",
 })
-@ImportResource({"classpath:META-INF/cxf/cxf.xml"})
 public class WebConfig implements WebMvcConfigurer {
 
   private static final int SECONDS_IN_HOUR = 3600;

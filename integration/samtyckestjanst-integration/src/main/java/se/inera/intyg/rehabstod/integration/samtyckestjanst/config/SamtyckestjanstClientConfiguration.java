@@ -25,21 +25,18 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsent.v2.rivtabp21.RegisterExtendedConsentResponderInterface;
 
 // CHECKSTYLE:ON LineLength
 
-/**
- * Declares and bootstraps the Samtyckestjänst client for {@link CheckConsentResponderInterface} and
- * {@link RegisterExtendedConsentResponderInterface}
- *
- * <p>Created by magnusekstrand on 2019-04-12.
- */
 @Configuration
+@Profile("!rhs-samtyckestjanst-stub")
 public class SamtyckestjanstClientConfiguration {
 
   private static final String DEFAULT_RECEIVE_TIMEOUT = "30000";
@@ -57,6 +54,8 @@ public class SamtyckestjanstClientConfiguration {
   @Value("${samtyckestjanst.registerextendedconsent.endpoint.url}")
   private String registerConsentUrl;
 
+  @Autowired private SamtyckestjanstTlsConfig tlsConfig;
+
   @Bean
   public CheckConsentResponderInterface checkConsentWebServiceClient() {
     JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
@@ -65,7 +64,7 @@ public class SamtyckestjanstClientConfiguration {
     CheckConsentResponderInterface checkConsentResponderInterface =
         (CheckConsentResponderInterface) proxyFactoryBean.create();
     Client client = ClientProxy.getClient(checkConsentResponderInterface);
-    applyTimeouts(client);
+    applyConduitConfig(client);
     return checkConsentResponderInterface;
   }
 
@@ -77,21 +76,40 @@ public class SamtyckestjanstClientConfiguration {
     RegisterExtendedConsentResponderInterface registerExtendedConsentResponderInterface =
         (RegisterExtendedConsentResponderInterface) proxyFactoryBean.create();
     Client client = ClientProxy.getClient(registerExtendedConsentResponderInterface);
-    applyTimeouts(client);
+    applyConduitConfig(client);
     return registerExtendedConsentResponderInterface;
   }
 
-  private void applyTimeouts(Client client) {
+  private void applyConduitConfig(Client client) {
+    if (client == null) {
+      return;
+    }
+    HTTPConduit conduit = (HTTPConduit) client.getConduit();
+    applyTimeouts(conduit);
+    applyTls(conduit);
+    applyHttpClientPolicy(conduit);
+  }
+
+  private void applyTimeouts(HTTPConduit conduit) {
     Long connTimeout = parseTimeout(connectionTimeout);
     Long recTimeout = parseTimeout(receiveTimeout);
+    HTTPClientPolicy policy =
+        conduit.getClient() != null ? conduit.getClient() : new HTTPClientPolicy();
+    policy.setConnectionTimeout(connTimeout);
+    policy.setReceiveTimeout(recTimeout);
+    conduit.setClient(policy);
+  }
 
-    if (client != null) {
-      HTTPConduit conduit = (HTTPConduit) client.getConduit();
-      HTTPClientPolicy policy = new HTTPClientPolicy();
-      policy.setConnectionTimeout(connTimeout);
-      policy.setReceiveTimeout(recTimeout);
-      conduit.setClient(policy);
-    }
+  private void applyHttpClientPolicy(HTTPConduit conduit) {
+    HTTPClientPolicy policy =
+        conduit.getClient() != null ? conduit.getClient() : new HTTPClientPolicy();
+    policy.setAllowChunking(false);
+    policy.setAutoRedirect(true);
+    conduit.setClient(policy);
+  }
+
+  private void applyTls(HTTPConduit conduit) {
+    tlsConfig.configure(conduit);
   }
 
   private Long parseTimeout(String timeout) {

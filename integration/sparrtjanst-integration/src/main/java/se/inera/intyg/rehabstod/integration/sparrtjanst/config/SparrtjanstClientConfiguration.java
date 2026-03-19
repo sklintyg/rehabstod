@@ -25,19 +25,17 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
 
 // CHECKSTYLE:ON LineLength
 
-/**
- * Declares and bootstraps the Spärrtjänst client for {@link CheckBlocksResponderInterface}
- *
- * <p>Created by magnusekstrand on 2019-04-12.
- */
 @Configuration
+@Profile("!rhs-sparrtjanst-stub")
 public class SparrtjanstClientConfiguration {
 
   private static final String DEFAULT_RECEIVE_TIMEOUT = "30000";
@@ -52,6 +50,8 @@ public class SparrtjanstClientConfiguration {
   @Value("${sparrtjanst.checkblocks.endpoint.url}")
   private String checkBlocksUrl;
 
+  @Autowired private SparrtjanstTlsConfig tlsConfig;
+
   @Bean
   public CheckBlocksResponderInterface checkBlocksWebServiceClient() {
     JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
@@ -60,21 +60,40 @@ public class SparrtjanstClientConfiguration {
     CheckBlocksResponderInterface checkBlocksResponderInterface =
         (CheckBlocksResponderInterface) proxyFactoryBean.create();
     Client client = ClientProxy.getClient(checkBlocksResponderInterface);
-    applyTimeouts(client);
+    applyConduitConfig(client);
     return checkBlocksResponderInterface;
   }
 
-  private void applyTimeouts(Client client) {
+  private void applyConduitConfig(Client client) {
+    if (client == null) {
+      return;
+    }
+    HTTPConduit conduit = (HTTPConduit) client.getConduit();
+    applyTimeouts(conduit);
+    applyTls(conduit);
+    applyHttpClientPolicy(conduit);
+  }
+
+  private void applyTimeouts(HTTPConduit conduit) {
     Long connTimeout = parseTimeout(connectionTimeout);
     Long recTimeout = parseTimeout(receiveTimeout);
+    HTTPClientPolicy policy =
+        conduit.getClient() != null ? conduit.getClient() : new HTTPClientPolicy();
+    policy.setConnectionTimeout(connTimeout);
+    policy.setReceiveTimeout(recTimeout);
+    conduit.setClient(policy);
+  }
 
-    if (client != null) {
-      HTTPConduit conduit = (HTTPConduit) client.getConduit();
-      HTTPClientPolicy policy = new HTTPClientPolicy();
-      policy.setConnectionTimeout(connTimeout);
-      policy.setReceiveTimeout(recTimeout);
-      conduit.setClient(policy);
-    }
+  private void applyHttpClientPolicy(HTTPConduit conduit) {
+    HTTPClientPolicy policy =
+        conduit.getClient() != null ? conduit.getClient() : new HTTPClientPolicy();
+    policy.setAllowChunking(false);
+    policy.setAutoRedirect(true);
+    conduit.setClient(policy);
+  }
+
+  private void applyTls(HTTPConduit conduit) {
+    tlsConfig.configure(conduit);
   }
 
   private Long parseTimeout(String timeout) {

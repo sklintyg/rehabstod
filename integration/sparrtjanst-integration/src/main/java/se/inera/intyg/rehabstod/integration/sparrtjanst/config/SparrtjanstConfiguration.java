@@ -21,16 +21,13 @@ package se.inera.intyg.rehabstod.integration.sparrtjanst.config;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportResource;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.stub.SparrtjanstStubConfiguration;
 
-/** Java config entry for sparrtjanst Created by marced on 2018-10-01. */
 @Configuration
 @ComponentScan({
   "se.inera.intyg.rehabstod.integration.sparrtjanst.client",
   "se.inera.intyg.rehabstod.integration.sparrtjanst.service"
 })
-@ImportResource("classpath:sparrtjanst-services-config.xml")
 @Import(SparrtjanstStubConfiguration.class)
 public class SparrtjanstConfiguration {
 
