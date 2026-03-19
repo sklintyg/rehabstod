@@ -84,7 +84,6 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         JmsConfig.class,
         SecurityConfig.class,
         SjukfallConfig.class,
-        InfraConfig.class,
         PersistenceConfig.class);
 
     servletContext.addListener(new ContextLoaderListener(appContext));

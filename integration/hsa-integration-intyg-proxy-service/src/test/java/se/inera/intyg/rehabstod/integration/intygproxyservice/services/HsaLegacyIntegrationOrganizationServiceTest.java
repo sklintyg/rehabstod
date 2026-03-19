@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -43,7 +43,6 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.authorization.
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.services.authorization.GetCredentialInformationForPersonService;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organization.GetCareUnitService;
-import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organization.GetHealthCareUnitService;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organization.GetUnitService;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organization.GetUserAuthorizationInfoService;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organization.HsaLegacyIntegrationOrganizationService;
@@ -52,8 +51,6 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organizat
 class HsaLegacyIntegrationOrganizationServiceTest {
 
   private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
-
-  @Mock private GetHealthCareUnitService getHealthCareUnitService;
 
   @Mock private GetUnitService getUnitService;
 
