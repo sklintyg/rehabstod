@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -36,7 +36,7 @@ public interface PUService {
    *
    * @param personId a Personnummer
    * @return a PersonSvar object with a non-null Person object and status FOUND, otherwise a null
-   *     Person object and status NOT_FOUND or ERROR.
+   * Person object and status NOT_FOUND or ERROR.
    */
   PersonSvar getPerson(Personnummer personId);
 

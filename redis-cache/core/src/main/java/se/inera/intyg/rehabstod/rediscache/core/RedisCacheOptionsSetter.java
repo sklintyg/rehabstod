@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,7 +25,8 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 
 public class RedisCacheOptionsSetter {
 
-  @Autowired private CacheFactory redisCacheFactory;
+  @Autowired
+  private CacheFactory redisCacheFactory;
 
   public Cache createCache(String cacheName, String expiryTimeInSeconds) {
     try {

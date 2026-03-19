@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -68,11 +68,14 @@ class CareUnitConverterTest {
   private static final LocalDateTime ACTIVE_END_DATE =
       LocalDateTime.now(ZoneId.systemDefault()).plusYears(1L);
 
-  @Mock private UnitAddressConverter unitAddressConverter;
+  @Mock
+  private UnitAddressConverter unitAddressConverter;
 
-  @Mock private CareUnitMemberConverter careUnitMemberConverter;
+  @Mock
+  private CareUnitMemberConverter careUnitMemberConverter;
 
-  @InjectMocks private CareUnitConverter converter;
+  @InjectMocks
+  private CareUnitConverter converter;
 
   @Nested
   class WithMembers {
@@ -82,7 +85,7 @@ class CareUnitConverterTest {
       CONVERTED_MEMBER.setNamn("NAMN");
       CONVERTED_MEMBER.setId("ID");
       when(careUnitMemberConverter.convert(
-              any(HealthCareUnitMember.class), anyString(), any(AgandeForm.class)))
+          any(HealthCareUnitMember.class), anyString(), any(AgandeForm.class)))
           .thenReturn(CONVERTED_MEMBER);
     }
 

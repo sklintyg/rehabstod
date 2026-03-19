@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -47,13 +47,17 @@ class GetCareUnitServiceTest {
 
   private static final String ID = "ID";
 
-  @Mock GetUnitService getUnitService;
+  @Mock
+  GetUnitService getUnitService;
 
-  @Mock GetHealthCareUnitMembersService getHealthCareUnitMembersService;
+  @Mock
+  GetHealthCareUnitMembersService getHealthCareUnitMembersService;
 
-  @Mock CareUnitConverter careUnitConverter;
+  @Mock
+  CareUnitConverter careUnitConverter;
 
-  @InjectMocks GetCareUnitService getCareUnitService;
+  @InjectMocks
+  GetCareUnitService getCareUnitService;
 
   private Commission c1;
   private Unit unit;

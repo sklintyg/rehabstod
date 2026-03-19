@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -45,13 +45,17 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organizat
 @ExtendWith(MockitoExtension.class)
 class GetUserAuthorizationInfoServiceTest {
 
-  @Mock private GetCareProviderListService getCareProviderListService;
+  @Mock
+  private GetCareProviderListService getCareProviderListService;
 
-  @Mock private UserCredentialListConverter userCredentialListConverter;
+  @Mock
+  private UserCredentialListConverter userCredentialListConverter;
 
-  @Mock private CommissionNameMapConverter commissionNameMapConverter;
+  @Mock
+  private CommissionNameMapConverter commissionNameMapConverter;
 
-  @InjectMocks GetUserAuthorizationInfoService getUserAuthorizationInfoService;
+  @InjectMocks
+  GetUserAuthorizationInfoService getUserAuthorizationInfoService;
 
   private Commission active;
   private List<CredentialInformation> credentials;

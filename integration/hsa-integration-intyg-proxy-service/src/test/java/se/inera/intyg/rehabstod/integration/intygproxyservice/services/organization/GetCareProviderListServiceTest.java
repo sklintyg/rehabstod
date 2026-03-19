@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -59,10 +59,13 @@ class GetCareProviderListServiceTest {
   private Commission commissionA;
   private Commission commissionB;
 
-  @Mock GetCareUnitListService getCareUnitListService;
-  @Mock CareProviderConverter careProviderConverter;
+  @Mock
+  GetCareUnitListService getCareUnitListService;
+  @Mock
+  CareProviderConverter careProviderConverter;
 
-  @InjectMocks GetCareProviderListService getCareProviderListService;
+  @InjectMocks
+  GetCareProviderListService getCareProviderListService;
 
   @Nested
   class CommissionsWithUnits {

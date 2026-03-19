@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -50,9 +50,11 @@ class HsaIntygProxyServiceUnitClientTest {
   private static final Unit UNIT = new Unit();
   private static final String HSA_ID = "hsaId";
 
-  @Mock private RestClient restClient;
+  @Mock
+  private RestClient restClient;
 
-  @InjectMocks private HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
+  @InjectMocks
+  private HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
 
   private RequestBodyUriSpec requestBodyUriSpec;
   private ResponseSpec responseSpec;

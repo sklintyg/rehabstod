@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -41,9 +41,11 @@ class GetCareUnitListServiceTest {
 
   private static final Vardenhet EXPECTED_UNIT = new Vardenhet();
 
-  @Mock private GetCareUnitService getCareUnitService;
+  @Mock
+  private GetCareUnitService getCareUnitService;
 
-  @InjectMocks private GetCareUnitListService getCareUnitListService;
+  @InjectMocks
+  private GetCareUnitListService getCareUnitListService;
 
   private Commission active;
   private Commission inactive;

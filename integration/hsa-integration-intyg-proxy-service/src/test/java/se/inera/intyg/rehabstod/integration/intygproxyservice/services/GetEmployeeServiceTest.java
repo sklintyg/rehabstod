@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -38,9 +38,11 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.services.employee.
 @ExtendWith(MockitoExtension.class)
 class GetEmployeeServiceTest {
 
-  @Mock private HsaIntygProxyServiceEmployeeClient employeeClient;
+  @Mock
+  private HsaIntygProxyServiceEmployeeClient employeeClient;
 
-  @InjectMocks private GetEmployeeService getEmployeeService;
+  @InjectMocks
+  private GetEmployeeService getEmployeeService;
 
   private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
   private static final String PERSON_HSA_ID = "personHsaId";

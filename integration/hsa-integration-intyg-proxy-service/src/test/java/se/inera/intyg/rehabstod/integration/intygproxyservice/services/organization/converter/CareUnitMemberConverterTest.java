@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -47,9 +47,11 @@ class CareUnitMemberConverterTest {
   private static final String PARENT_ID = "PARENT_ID";
   private static final AgandeForm PARENT_AGANDE_FORM = AgandeForm.OFFENTLIG;
 
-  @Mock private UnitAddressConverter unitAddressConverter;
+  @Mock
+  private UnitAddressConverter unitAddressConverter;
 
-  @InjectMocks private CareUnitMemberConverter converter;
+  @InjectMocks
+  private CareUnitMemberConverter converter;
 
   @Test
   void shouldConvertParentId() {

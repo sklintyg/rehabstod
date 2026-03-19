@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,7 +25,8 @@ public class OrganizationUtil {
 
   public static final String DEFAULT_ARBETSPLATSKOD = "0000000";
 
-  private OrganizationUtil() {}
+  private OrganizationUtil() {
+  }
 
   public static boolean isActive(LocalDateTime fromDate, LocalDateTime toDate) {
     final var now = LocalDateTime.now();

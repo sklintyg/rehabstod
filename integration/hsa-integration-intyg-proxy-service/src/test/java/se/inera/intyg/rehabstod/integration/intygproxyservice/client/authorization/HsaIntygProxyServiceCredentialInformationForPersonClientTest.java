@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -51,7 +51,8 @@ class HsaIntygProxyServiceCredentialInformationForPersonClientTest {
   private static final List<CredentialInformation> CREDENTIAL_INFORMATIONS =
       List.of(new CredentialInformation());
 
-  @Mock private RestClient restClient;
+  @Mock
+  private RestClient restClient;
 
   @InjectMocks
   private HsaIntygProxyServiceCredentialInformationForPersonClient

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -37,7 +37,8 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.authorization.
 public class HsaIntygProxyServiceCredentialInformationForPersonClient {
 
   @Autowired
-  @Qualifier("hsaIntygProxyServiceRestClient") private RestClient ipsRestClient;
+  @Qualifier("hsaIntygProxyServiceRestClient")
+  private RestClient ipsRestClient;
 
   @Value("${integration.intygproxyservice.credentialinformationforperson.endpoint}")
   private String credentialInformationForPerson;
