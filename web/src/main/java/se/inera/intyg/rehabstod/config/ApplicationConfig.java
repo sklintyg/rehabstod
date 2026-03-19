@@ -18,13 +18,16 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import java.util.List;
-import org.apache.cxf.bus.spring.SpringBus;
+import jakarta.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Arrays;
+import org.apache.cxf.Bus;
 import org.apache.cxf.ext.logging.LoggingFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -41,6 +44,7 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 @PropertySource(
     ignoreResourceNotFound = true,
     value = {"classpath:application.properties", "file:${dev.config.file}"})
+@ImportResource({"classpath:META-INF/cxf/cxf.xml"})
 @ComponentScan({
   "se.inera.intyg.rehabstod.logging",
   "se.inera.intyg.rehabstod.integration.it",
@@ -55,6 +59,8 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 })
 public class ApplicationConfig implements TransactionManagementConfigurer {
 
+  @Autowired private Bus bus;
+
   @Autowired private PlatformTransactionManager transactionManager;
 
   @Bean
@@ -62,10 +68,9 @@ public class ApplicationConfig implements TransactionManagementConfigurer {
     return new PropertySourcesPlaceholderConfigurer();
   }
 
-  @Bean(name = "cxf")
-  public SpringBus springBus() {
-    SpringBus bus = new SpringBus();
-    bus.setFeatures(List.of(loggingFeature()));
+  @PostConstruct
+  public Bus init() {
+    bus.setFeatures(new ArrayList<>(Arrays.asList(loggingFeature())));
     return bus;
   }
 
