@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.pu.integration.api.services;
 
-import com.google.common.annotations.VisibleForTesting;
 import java.util.List;
 import java.util.Map;
 import se.inera.intyg.rehabstod.pu.integration.api.model.PersonSvar;
@@ -54,7 +53,4 @@ public interface PUService {
    * @return a map with PersonSvar if call to PU-service was successful, otherwise an empty map.
    */
   Map<Personnummer, PersonSvar> getPersons(List<Personnummer> personIds);
-
-  @VisibleForTesting
-  default void clearCache() {}
 }
