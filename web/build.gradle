@@ -82,7 +82,6 @@ dependencies {
     implementation "io.prometheus:simpleclient_servlet"
     implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring"
     implementation "net.javacrumbs.shedlock:shedlock-spring"
-    implementation "net.javacrumbs.shedlock:shedlock-spring"
     implementation "org.apache.activemq:activemq-spring"
     implementation "org.apache.commons:commons-lang3"
     implementation "org.apache.cxf:cxf-rt-features-logging"
