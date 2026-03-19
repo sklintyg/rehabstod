@@ -39,11 +39,9 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.services.employee.
 class HsaLegacyIntegrationEmployeeServiceTest {
 
   private static final List<PersonInformation> EXPECTED_RESULT = List.of(new PersonInformation());
-  @Mock
-  private GetEmployeeService getEmployeeService;
+  @Mock private GetEmployeeService getEmployeeService;
 
-  @InjectMocks
-  private HsaLegacyIntegrationEmployeeService integrationEmployeeService;
+  @InjectMocks private HsaLegacyIntegrationEmployeeService integrationEmployeeService;
 
   private static final String HSA_ID = "hsaId";
   private static final GetEmployeeRequestDTO GET_EMPLOYEE_REQUEST_DTO =

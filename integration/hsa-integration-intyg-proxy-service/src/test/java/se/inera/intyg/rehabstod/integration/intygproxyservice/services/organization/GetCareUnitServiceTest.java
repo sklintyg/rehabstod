@@ -47,17 +47,13 @@ class GetCareUnitServiceTest {
 
   private static final String ID = "ID";
 
-  @Mock
-  GetUnitService getUnitService;
+  @Mock GetUnitService getUnitService;
 
-  @Mock
-  GetHealthCareUnitMembersService getHealthCareUnitMembersService;
+  @Mock GetHealthCareUnitMembersService getHealthCareUnitMembersService;
 
-  @Mock
-  CareUnitConverter careUnitConverter;
+  @Mock CareUnitConverter careUnitConverter;
 
-  @InjectMocks
-  GetCareUnitService getCareUnitService;
+  @InjectMocks GetCareUnitService getCareUnitService;
 
   private Commission c1;
   private Unit unit;

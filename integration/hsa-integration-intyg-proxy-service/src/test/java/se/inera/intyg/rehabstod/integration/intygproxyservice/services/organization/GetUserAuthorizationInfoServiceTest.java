@@ -45,17 +45,13 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.services.organizat
 @ExtendWith(MockitoExtension.class)
 class GetUserAuthorizationInfoServiceTest {
 
-  @Mock
-  private GetCareProviderListService getCareProviderListService;
+  @Mock private GetCareProviderListService getCareProviderListService;
 
-  @Mock
-  private UserCredentialListConverter userCredentialListConverter;
+  @Mock private UserCredentialListConverter userCredentialListConverter;
 
-  @Mock
-  private CommissionNameMapConverter commissionNameMapConverter;
+  @Mock private CommissionNameMapConverter commissionNameMapConverter;
 
-  @InjectMocks
-  GetUserAuthorizationInfoService getUserAuthorizationInfoService;
+  @InjectMocks GetUserAuthorizationInfoService getUserAuthorizationInfoService;
 
   private Commission active;
   private List<CredentialInformation> credentials;

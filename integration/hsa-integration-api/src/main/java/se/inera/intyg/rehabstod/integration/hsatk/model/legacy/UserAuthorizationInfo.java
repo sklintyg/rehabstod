@@ -23,9 +23,7 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/**
- * Composite class encapsulating response data from GetAuthorizationsForPerson.
- */
+/** Composite class encapsulating response data from GetAuthorizationsForPerson. */
 @AllArgsConstructor
 @Getter
 public class UserAuthorizationInfo {

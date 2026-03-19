@@ -50,11 +50,9 @@ class HsaIntygProxyServiceUnitClientTest {
   private static final Unit UNIT = new Unit();
   private static final String HSA_ID = "hsaId";
 
-  @Mock
-  private RestClient restClient;
+  @Mock private RestClient restClient;
 
-  @InjectMocks
-  private HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
+  @InjectMocks private HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
 
   private RequestBodyUriSpec requestBodyUriSpec;
   private ResponseSpec responseSpec;

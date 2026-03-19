@@ -37,10 +37,8 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.G
 class GetUnitServiceTest {
 
   private static final String HSA_ID = "hsaId";
-  @Mock
-  HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
-  @InjectMocks
-  private GetUnitService getUnitService;
+  @Mock HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
+  @InjectMocks private GetUnitService getUnitService;
 
   @Test
   void shouldValidateRequest() {

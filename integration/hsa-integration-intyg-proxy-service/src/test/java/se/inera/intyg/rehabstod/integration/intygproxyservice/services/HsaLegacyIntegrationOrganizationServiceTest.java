@@ -52,18 +52,13 @@ class HsaLegacyIntegrationOrganizationServiceTest {
 
   private static final String CARE_UNIT_HSA_ID = "careUnitHsaId";
 
+  @Mock private GetUnitService getUnitService;
 
-  @Mock
-  private GetUnitService getUnitService;
+  @Mock private GetCareUnitService getCareUnitService;
 
-  @Mock
-  private GetCareUnitService getCareUnitService;
+  @Mock private GetCredentialInformationForPersonService getCredentialInformationForPersonService;
 
-  @Mock
-  private GetCredentialInformationForPersonService getCredentialInformationForPersonService;
-
-  @Mock
-  private GetUserAuthorizationInfoService getUserAuthorizationInfoService;
+  @Mock private GetUserAuthorizationInfoService getUserAuthorizationInfoService;
 
   @InjectMocks
   private HsaLegacyIntegrationOrganizationService hsaLegacyIntegrationOrganizationService;

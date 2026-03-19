@@ -25,8 +25,7 @@ public class OrganizationUtil {
 
   public static final String DEFAULT_ARBETSPLATSKOD = "0000000";
 
-  private OrganizationUtil() {
-  }
+  private OrganizationUtil() {}
 
   public static boolean isActive(LocalDateTime fromDate, LocalDateTime toDate) {
     final var now = LocalDateTime.now();

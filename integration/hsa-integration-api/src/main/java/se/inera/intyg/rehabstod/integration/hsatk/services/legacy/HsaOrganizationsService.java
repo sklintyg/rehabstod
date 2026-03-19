@@ -29,7 +29,7 @@ public interface HsaOrganizationsService {
    * at.
    *
    * @return list of vårdgivare containing authorized enheter and mottagningar. If user is not
-   * authorized at all, an empty list will be returned
+   *     authorized at all, an empty list will be returned
    */
   UserAuthorizationInfo getAuthorizedEnheterForHosPerson(String hosPersonHsaId);
 
@@ -41,8 +41,6 @@ public interface HsaOrganizationsService {
    */
   Vardenhet getVardenhet(String vardenhetHsaId);
 
-  /**
-   * Returns a shallow representation of a Vardgivare, which does NOT contain any Vardenheter.
-   */
+  /** Returns a shallow representation of a Vardgivare, which does NOT contain any Vardenheter. */
   Vardgivare getVardgivareInfo(String vardgivareHsaId);
 }

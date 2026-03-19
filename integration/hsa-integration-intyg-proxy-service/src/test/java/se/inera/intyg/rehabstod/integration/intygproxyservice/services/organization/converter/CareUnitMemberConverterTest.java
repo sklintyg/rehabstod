@@ -47,11 +47,9 @@ class CareUnitMemberConverterTest {
   private static final String PARENT_ID = "PARENT_ID";
   private static final AgandeForm PARENT_AGANDE_FORM = AgandeForm.OFFENTLIG;
 
-  @Mock
-  private UnitAddressConverter unitAddressConverter;
+  @Mock private UnitAddressConverter unitAddressConverter;
 
-  @InjectMocks
-  private CareUnitMemberConverter converter;
+  @InjectMocks private CareUnitMemberConverter converter;
 
   @Test
   void shouldConvertParentId() {

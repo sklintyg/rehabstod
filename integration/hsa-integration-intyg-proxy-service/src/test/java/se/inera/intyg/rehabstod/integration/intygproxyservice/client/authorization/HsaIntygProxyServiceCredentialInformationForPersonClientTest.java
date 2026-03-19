@@ -51,8 +51,7 @@ class HsaIntygProxyServiceCredentialInformationForPersonClientTest {
   private static final List<CredentialInformation> CREDENTIAL_INFORMATIONS =
       List.of(new CredentialInformation());
 
-  @Mock
-  private RestClient restClient;
+  @Mock private RestClient restClient;
 
   @InjectMocks
   private HsaIntygProxyServiceCredentialInformationForPersonClient

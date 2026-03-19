@@ -48,10 +48,8 @@ import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.G
 class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
 
   private static final String HSA_ID = "hsaId";
-  @Mock
-  private RestClient restClient;
-  @InjectMocks
-  private HsaIntygProxyServiceHealthCareUnitMembersClient healthCareUnitMembersClient;
+  @Mock private RestClient restClient;
+  @InjectMocks private HsaIntygProxyServiceHealthCareUnitMembersClient healthCareUnitMembersClient;
 
   private RequestBodyUriSpec requestBodyUriSpec;
   private ResponseSpec responseSpec;

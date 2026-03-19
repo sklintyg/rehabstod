@@ -25,8 +25,7 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 
 public class RedisCacheOptionsSetter {
 
-  @Autowired
-  private CacheFactory redisCacheFactory;
+  @Autowired private CacheFactory redisCacheFactory;
 
   public Cache createCache(String cacheName, String expiryTimeInSeconds) {
     try {
