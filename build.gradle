@@ -7,8 +7,6 @@ plugins {
 }
 
 ext {
-    intygInfraVersion = System.properties['infraVersion'] ?: '4.1.0-SNAPSHOT'
-
     blockingSchemaVersion = "4.0.1.4"
     consentSchemaVersion = "2.0.1.3"
     intygClinicalprocessSchemasVersion = "1.1.0.1"

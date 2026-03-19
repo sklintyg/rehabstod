@@ -1,6 +1,7 @@
 dependencies {
     implementation project(":rehabstod-common")
     implementation project(":rehabstod-logging")
+    implementation project(":common-redis-cache-core")
 
     implementation "com.google.guava:guava"
     implementation "org.apache.cxf:cxf-rt-frontend-jaxws"
@@ -8,7 +9,6 @@ dependencies {
     implementation "codes.rafael.jaxb2_commons:jaxb2-basics"
     implementation "org.springframework:spring-webmvc"
     implementation "org.springframework.data:spring-data-redis"
-    implementation "se.inera.intyg.infra:common-redis-cache-core:${intygInfraVersion}"
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
     implementation "se.riv.informationsecurity.authorization.consent:informationsecurity-authorization-consent-schemas:${consentSchemaVersion}"
 

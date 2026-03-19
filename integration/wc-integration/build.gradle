@@ -8,7 +8,6 @@ dependencies {
     implementation "org.springframework.data:spring-data-redis"
     implementation "org.springframework:spring-web"
     implementation "se.inera.intyg.clinicalprocess.healthcond.certificate:intyg-clinicalprocess-healthcond-certificate-schemas:${intygClinicalprocessSchemasVersion}"
-    implementation "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
 
     annotationProcessor 'org.projectlombok:lombok'
 
