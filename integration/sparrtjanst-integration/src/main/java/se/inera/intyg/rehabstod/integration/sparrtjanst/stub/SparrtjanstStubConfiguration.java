@@ -18,16 +18,29 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.stub;
 
+import org.apache.cxf.Bus;
+import org.apache.cxf.jaxws.EndpointImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
 @ComponentScan("se.inera.intyg.rehabstod.integration.sparrtjanst.stub")
-@ImportResource("classpath:sparrtjanst-stub-context.xml")
 @Profile("rhs-sparrtjanst-stub")
 public class SparrtjanstStubConfiguration {
 
   public static final String CACHE_NAME = "sparrtjanstStubCache";
+
+  @Autowired private Bus bus;
+
+  @Autowired private SparrtjanstIntegrationStub sparrtjanstIntegrationStub;
+
+  @Bean
+  public EndpointImpl sparrtjanstResponder() {
+    EndpointImpl endpoint = new EndpointImpl(bus, sparrtjanstIntegrationStub);
+    endpoint.publish("/stubs/informationsecurity/authorization/blocking/CheckBlocks/4/rivtabp21");
+    return endpoint;
+  }
 }

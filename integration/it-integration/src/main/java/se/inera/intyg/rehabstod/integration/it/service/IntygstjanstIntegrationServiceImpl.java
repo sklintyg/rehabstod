@@ -29,7 +29,6 @@ import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesfo
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.integration.it.exception.IntygstjanstIntegrationException;
-import se.inera.intyg.rehabstod.monitoring.annotation.PrometheusTimeMethod;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 // CHECKSTYLE:ON LineLength
@@ -44,7 +43,6 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
   @Autowired private IntygstjanstClientService intygstjanstClientService;
 
   @Override
-  @PrometheusTimeMethod
   public List<IntygsData> getAllIntygsDataForPatient(String patientId) {
     verifyMandatoryParameter("patientId", patientId);
 

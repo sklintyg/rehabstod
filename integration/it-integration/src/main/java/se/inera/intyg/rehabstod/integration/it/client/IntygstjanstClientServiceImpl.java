@@ -28,7 +28,6 @@ import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesfo
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonType;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
-import se.inera.intyg.rehabstod.monitoring.annotation.PrometheusTimeMethod;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 
 // CHECKSTYLE:ON LineLength
@@ -43,7 +42,6 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
   private String logicalAddress;
 
   @Override
-  @PrometheusTimeMethod
   @PerformanceLogging(
       eventAction = "get-sick-leave-for-patient",
       eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
