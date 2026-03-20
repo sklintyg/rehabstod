@@ -18,16 +18,38 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
+import org.apache.cxf.Bus;
+import org.apache.cxf.jaxws.EndpointImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
 @ComponentScan("se.inera.intyg.rehabstod.integration.samtyckestjanst.stub")
-@ImportResource("classpath:samtyckestjanst-stub-context.xml")
 @Profile("rhs-samtyckestjanst-stub")
 public class SamtyckestjanstStubConfiguration {
 
   public static final String CACHE_NAME = "samtyckestjanstStubCache";
+
+  @Autowired private Bus bus;
+
+  @Autowired private CheckConsentStub checkConsentStub;
+
+  @Autowired private RegisterExtendedConsentStub registerExtendedConsentStub;
+
+  @Bean
+  public EndpointImpl checkConsentResponder() {
+    EndpointImpl endpoint = new EndpointImpl(bus, checkConsentStub);
+    endpoint.publish("/stubs/informationsecurity/authorization/consent/CheckConsent/2/rivtabp21");
+    return endpoint;
+  }
+
+  @Bean
+  public EndpointImpl registerExtendedConsentResponder() {
+    EndpointImpl endpoint = new EndpointImpl(bus, registerExtendedConsentStub);
+    endpoint.publish("/stubs/informationsecurity/authorization/consent/RegisterExtendedConsent/2/rivtabp21");
+    return endpoint;
+  }
 }
