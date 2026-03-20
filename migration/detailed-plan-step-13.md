@@ -9,16 +9,18 @@
 | 13.3 | Create `RehabstodApplication.java` | ⬜ TODO |
 | 13.4 | Remove `@EnableWebMvc` from `WebConfig` | ⬜ TODO |
 | 13.5 | Collapse dual-context into single Spring Boot context | ⬜ TODO |
-| 13.6 | Convert 12 filter registrations to `FilterRegistrationBean` beans | ⬜ TODO |
+| 13.6 | Convert filter registrations: 7 manual `FilterRegistrationBean` beans, 3 auto-managed, 1 dropped | ⬜ TODO |
 | 13.7 | Register `CXFServlet` as `ServletRegistrationBean` | ⬜ TODO |
 | 13.8 | Register `HttpSessionEventPublisher` as `@Bean` | ⬜ TODO |
 | 13.9 | Replace custom Logback setup with Spring Boot ECS structured logging | ⬜ TODO |
 | 13.10 | Remove `web.xml` | ⬜ TODO |
 | 13.11 | Remove `tomcat-gretty.xml` and Gretty config | ⬜ TODO |
 | 13.12 | Migrate embedded Tomcat settings to `application.properties` | ⬜ TODO |
-| 13.13 | Delete `ApplicationInitializer.java` | ⬜ TODO |
+| 13.13 | Delete legacy files (`BasicCacheConfiguration.java`, `basic-cache-config.xml`, `ApplicationInitializer.java`) | ⬜ TODO |
 | 13.14 | Update `ApplicationConfig` — remove `@ImportResource` for CXF | ⬜ TODO |
-| 13.15 | Verify build, tests, startup, endpoints | ⬜ TODO |
+| 13.15 | Simplify `BasicCacheConfig` → rename to `RedisConfig`, remove `caching-enabled` profile gate | ⬜ TODO |
+| 13.16 | Rename and clean up configuration classes (`TlsConfig`, `IaConfig`, delete `SjukfallConfig`) | ⬜ TODO |
+| 13.17 | Verify build, tests, startup, endpoints | ⬜ TODO |
 
 ---
 
@@ -89,9 +91,10 @@ Registered programmatically in `ApplicationInitializer.onStartup()` — the orde
 | 11 | `hiddenHttpMethodFilter` | `HiddenHttpMethodFilter` | `/*` | false | — |
 | 12 | `securityHeadersFilter` | `RSSecurityHeadersFilter` | `/*` | **true** | — |
 
-> **Note:** Filters #2 (`springSessionRepositoryFilter`) and #6 (`springSecurityFilterChain`) are
-> auto-managed by Spring Boot / Spring Security / Spring Session. They must **not** be registered
-> manually — Spring Boot handles them automatically. See §13.6 for details.
+> **Note:** Filters #1 (`characterEncodingFilter`), #2 (`springSessionRepositoryFilter`), and #6 (`springSecurityFilterChain`) are
+> auto-managed by Spring Boot / Spring Security / Spring Session — they must **not** be registered
+> manually. Filter #11 (`hiddenHttpMethodFilter`) is **dropped entirely** — this SPA has no use for
+> the `_method` override and Spring Boot 3.x defaults it off. See §13.6 for details.
 
 ---
 
@@ -219,63 +222,21 @@ package se.inera.intyg.rehabstod;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
 import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
-import se.inera.intyg.rehabstod.config.ApplicationConfig;
-import se.inera.intyg.rehabstod.config.BasicCacheConfig;
-import se.inera.intyg.rehabstod.config.IaConfiguration;
-import se.inera.intyg.rehabstod.config.JmsConfig;
-import se.inera.intyg.rehabstod.config.JobConfig;
-import se.inera.intyg.rehabstod.config.SecurityConfig;
-import se.inera.intyg.rehabstod.config.ServiceConfig;
-import se.inera.intyg.rehabstod.config.SjukfallConfig;
-import se.inera.intyg.rehabstod.config.WebSecurityConfig;
-import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
-import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
-import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstRestIntegrationConfiguration;
-import se.inera.intyg.rehabstod.integration.samtyckestjanst.config.SamtyckestjanstClientConfiguration;
-import se.inera.intyg.rehabstod.integration.samtyckestjanst.config.SamtyckestjanstConfiguration;
-import se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstStubConfiguration;
-import se.inera.intyg.rehabstod.integration.sparrtjanst.config.SparrtjanstClientConfiguration;
-import se.inera.intyg.rehabstod.integration.sparrtjanst.config.SparrtjanstConfiguration;
-import se.inera.intyg.rehabstod.integration.sparrtjanst.stub.SparrtjanstStubConfiguration;
-import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationClientConfiguration;
-import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationConfiguration;
-import se.inera.intyg.rehabstod.integration.srs.stub.SRSIntegrationStubConfiguration;
-import se.inera.intyg.rehabstod.persistence.config.PersistenceConfig;
-import org.springframework.context.annotation.Import;
 
 @SpringBootApplication(exclude = {
     DataSourceAutoConfiguration.class,
     HibernateJpaAutoConfiguration.class,
     JpaRepositoriesAutoConfiguration.class,
     JmsAutoConfiguration.class,
-    ActiveMQAutoConfiguration.class
-})
-@Import({
-    ApplicationConfig.class,
-    BasicCacheConfig.class,
-    ServiceConfig.class,
-    IaConfiguration.class,
-    JobConfig.class,
-    IntygstjanstIntegrationConfiguration.class,
-    IntygstjanstRestIntegrationConfiguration.class,
-    IntygstjanstIntegrationClientConfiguration.class,
-    SamtyckestjanstConfiguration.class,
-    SamtyckestjanstClientConfiguration.class,
-    SamtyckestjanstStubConfiguration.class,
-    SparrtjanstConfiguration.class,
-    SparrtjanstClientConfiguration.class,
-    SparrtjanstStubConfiguration.class,
-    SRSIntegrationConfiguration.class,
-    SRSIntegrationClientConfiguration.class,
-    SRSIntegrationStubConfiguration.class,
-    JmsConfig.class,
-    SecurityConfig.class,
-    SjukfallConfig.class,
-    PersistenceConfig.class
+    ActiveMQAutoConfiguration.class,
+    RedisAutoConfiguration.class,
+    RedisRepositoriesAutoConfiguration.class
 })
 public class RehabstodApplication {
 
@@ -288,35 +249,50 @@ public class RehabstodApplication {
 ### Key Design Decisions
 
 **1. `@SpringBootApplication` base package:**
-The class is placed in `se.inera.intyg.rehabstod`, which is the root package. The
-`@SpringBootApplication` annotation implies `@ComponentScan` for `se.inera.intyg.rehabstod`
-and all sub-packages. This covers **all** modules (`web`, `common`, `persistence`,
-`integration.*`, `logging`, `redis-cache`).
+The class is placed in `se.inera.intyg.rehabstod` — the root package shared by every module.
+`@SpringBootApplication` implies `@ComponentScan("se.inera.intyg.rehabstod")`, which
+transitively covers all sub-packages across **all** modules: `web`, `common`, `persistence`,
+`integration.*`, `logging`, `redis-cache`.
 
-**2. Explicit `@Import` vs relying on `@ComponentScan`:**
-We use **explicit `@Import`** for all configuration classes previously registered in
-`ApplicationInitializer` for two reasons:
-- It guarantees the same set of configuration classes is loaded — no surprises from auto-scanning
-  picking up unexpected `@Configuration` classes.
-- The `@SpringBootApplication` base-package component scan will pick up `@Component`,
-  `@Service`, `@Repository`, `@RestController` beans, but configuration classes from
-  `integration/*` submodules are in packages that *may* overlap with the component-scan
-  packages already defined in `ApplicationConfig`, `WebConfig`, and `ServiceConfig`.
-  Explicit `@Import` makes the loading deterministic.
+Every `@Configuration`, `@Service`, `@Component`, `@Repository`, and `@RestController` class
+across all modules lives under this root. Spring Boot finds and registers them all automatically.
 
-**3. Auto-configuration exclusions:**
-JPA, JMS, and data-source auto-configurations are excluded because this step does **not**
-migrate those concerns (Steps 14–15). The existing manual `PersistenceConfigBase` and
-`JmsConfig` beans must continue to be used as-is.
+**2. No explicit `@Import` required:**
+The old `ApplicationInitializer` had to call `appContext.register(WebSecurityConfig.class, ApplicationConfig.class, ...)` because `AnnotationConfigWebApplicationContext` does not scan — it only loads what you explicitly register. In Spring Boot, `@ComponentScan` replaces this entirely.
 
-**4. `WebSecurityConfig` not in `@Import`:**
-`WebSecurityConfig` is annotated with `@Configuration` and `@EnableWebSecurity`. It lives in
-`se.inera.intyg.rehabstod.config`, which is under the `@SpringBootApplication` base package.
-Spring Boot's component scan will automatically pick it up — no explicit `@Import` needed.
-However, if it is NOT picked up (e.g., due to conditional loading), add it to the `@Import` list.
+Every configuration class that was manually registered in `ApplicationInitializer`
+(`ApplicationConfig`, `BasicCacheConfig`, `ServiceConfig`, integration configs, etc.) already
+lives in a package under `se.inera.intyg.rehabstod.*`. They are all found by the component
+scan. Using `@Import` to re-list them would cause **redundant processing** (Spring deduplicates
+them, but it adds confusion and import sprawl). `@Import` is reserved for classes that are
+**outside** the scan root — which is not the case here.
 
-> **Reference:** The [intygstjanst Spring Boot migration](https://github.com/sklintyg/intygstjanst)
-> uses the same `@SpringBootApplication` + `@Import` pattern with CXF `ServletRegistrationBean`.
+Profile-conditional configs work correctly without `@Import`: `@Profile("rhs-srs-stub")` on
+`SRSIntegrationStubConfiguration`, `@Profile("!rhs-srs-stub")` on
+`SRSIntegrationClientConfiguration`, etc. — the component scan finds all of them; Spring
+evaluates the `@Profile` condition at context refresh and activates only the matching ones.
+
+**3. Auto-configuration exclusions (transitional):**
+
+These exclusions exist because the corresponding infrastructure is still managed by hand-rolled
+config classes from the pre-Spring Boot era. They are **explicitly temporary** — each one is
+removed in the step that properly migrates that domain to Spring Boot auto-configuration.
+
+| Exclusion | Reason | Removed in |
+|---|---|---|
+| `DataSourceAutoConfiguration` | `PersistenceConfigBase` declares `DataSource` manually | Step 14 |
+| `HibernateJpaAutoConfiguration` | `PersistenceConfigBase` declares `EntityManagerFactory` manually | Step 14 |
+| `JpaRepositoriesAutoConfiguration` | `PersistenceConfig` has `@EnableJpaRepositories` | Step 14 |
+| `JmsAutoConfiguration` | `JmsConfig` declares `ConnectionFactory` and `JmsTemplate` manually | Step 15 |
+| `ActiveMQAutoConfiguration` | Same — manual `ConnectionFactory` bean conflicts | Step 15 |
+| `RedisAutoConfiguration` | `RedisConfig` declares `JedisConnectionFactory` manually (always active after Step 13.15 removes the profile gate) | Step 17 |
+| `RedisRepositoriesAutoConfiguration` | No Spring Data Redis repositories used; avoids repo scanning overhead | Step 17 |
+
+A fully migrated application (after Step 17) will have an empty `exclude` list.
+
+> **Note:** CXF + Spring Boot coexistence has been validated in the
+> [intygstjanst migration](https://github.com/sklintyg/intygstjanst) (Step 10 — Spring Boot
+> Bootstrap), using the same `ServletRegistrationBean<CXFServlet>` pattern.
 
 ---
 
@@ -428,11 +404,11 @@ No file changes in this sub-step — this is an architectural consequence of cre
 
 ---
 
-## Sub-step 13.6 — Convert 12 filter registrations to `FilterRegistrationBean` beans
+## Sub-step 13.6 — Convert filter registrations to `FilterRegistrationBean` beans
 
 ### Which Filters to Register Manually
 
-Of the 12 filters in `ApplicationInitializer`, several are **auto-managed by Spring Boot** and
+Of the 12 original filters in `ApplicationInitializer`, several are **auto-managed by Spring Boot** and
 must **NOT** be re-registered:
 
 | # | Filter | Manual registration needed? | Reason |
@@ -961,24 +937,66 @@ the port is set via `server.port` property or `-Dserver.port=...` command-line a
 
 ---
 
-## Sub-step 13.13 — Delete `ApplicationInitializer.java`
+## Sub-step 13.13 — Delete legacy files
 
-### Pre-deletion Checklist
+### 13.13a — Delete `BasicCacheConfiguration.java` and `basic-cache-config.xml`
+
+> ⚠️ **Critical — must happen before the Spring Boot context starts.**
+
+The `redis-cache/core` module contains two classes that are no longer needed and **will cause
+a bean conflict** in Spring Boot if left in place:
+
+**`BasicCacheConfiguration.java`** (`se.inera.intyg.rehabstod.rediscache.core`) is annotated
+`@Configuration @EnableCaching`. Because it lives under `se.inera.intyg.rehabstod.*`,
+`@SpringBootApplication`'s component scan will pick it up *in addition to* `BasicCacheConfig`
+in the `web` module. Both classes declare beans named `jedisConnectionFactory`, `cacheManager`,
+and `rediscache` — a direct bean conflict that will prevent the application from starting.
+
+`BasicCacheConfiguration` is already dead code: it is only referenced from `basic-cache-config.xml`,
+and that XML file has never been loaded in the Java-config setup (`ApplicationInitializer` does
+not import it, nor does any `@ImportResource` reference it). It has been superseded by
+`BasicCacheConfig.java` (web module) since Step 7.
+
+| File | Action | Reason |
+|------|--------|--------|
+| `redis-cache/core/src/main/java/se/inera/intyg/rehabstod/rediscache/core/BasicCacheConfiguration.java` | **Delete** | Duplicate of `BasicCacheConfig`; would cause bean conflict via component scan |
+| `redis-cache/core/src/main/resources/basic-cache-config.xml` | **Delete** | Legacy Spring XML; never loaded in current Java-config setup |
+
+The remaining classes in `redis-cache/core` — `CacheFactory`, `RedisCacheOptionsSetter`,
+`ConnectionStringUtil` — are plain Java classes (no `@Configuration`). They are **not**
+auto-picked-up by the component scan, cause no conflicts, and are still actively used:
+
+- `CacheFactory` is instantiated directly in `BasicCacheConfig.RedisCacheConfig.cacheManager()`
+- `RedisCacheOptionsSetter` is declared as a `@Bean` in `BasicCacheConfig` and injected into
+  `IntygProxyServiceHsaCacheConfiguration` (integration module)
+- `ConnectionStringUtil` is used inside `BasicCacheConfig`'s connection string parsing
+
+> **Step 17 follow-up:** Once Redis configuration is fully migrated in Step 17, the entire
+> `redis-cache` module should be dissolved — move `CacheFactory`, `RedisCacheOptionsSetter`,
+> and `ConnectionStringUtil` into `web/src/main/java/se/inera/intyg/rehabstod/config/cache/`
+> (updating all imports), remove `redis-cache` from `settings.gradle` and all `build.gradle`
+> dependency declarations, and delete the module directory.
+
+---
+
+### 13.13b — Delete `ApplicationInitializer.java`
+
+#### Pre-deletion Checklist
 
 Before deleting, verify that **every responsibility** of `ApplicationInitializer` has been migrated:
 
 | Responsibility | Migrated to | Sub-step |
 |---|---|---|
 | `LogbackConfiguratorContextListener` registration | Spring Boot ECS structured logging properties | 13.9 |
-| Root `AnnotationConfigWebApplicationContext` + 22 config classes | `@SpringBootApplication` + `@Import` | 13.3 |
+| Root `AnnotationConfigWebApplicationContext` + 22 config classes | `@SpringBootApplication` component scan (no `@Import` needed) | 13.3 |
 | `ContextLoaderListener` | Spring Boot internal | 13.3 |
 | `DispatcherServlet` + `WebConfig` context | Spring Boot auto-config | 13.4, 13.5 |
-| 12 filter registrations | `FilterConfig.java` + Spring Boot auto-config | 13.6 |
+| 12 filter registrations → 7 manual beans + 3 auto-managed + 1 dropped | `FilterConfig.java` + Spring Boot auto-config | 13.6 |
 | `CXFServlet` at `/services/*` | `ServletRegistrationBean` | 13.7 |
 | `HttpSessionEventPublisher` listener | `@Bean` | 13.8 |
 | `RequestContextListener` | Spring Boot `RequestContextFilter` (auto) | 13.8 |
 
-### Files Deleted
+#### Files Deleted
 
 | File | Notes |
 |------|-------|
@@ -1057,7 +1075,104 @@ property resolution order.
 
 ---
 
-## Sub-step 13.15 — Verify build, tests, startup, endpoints
+## Sub-step 13.15 — Simplify and rename `BasicCacheConfig` → `RedisConfig`
+
+### Current
+
+`BasicCacheConfig.RedisCacheConfig` is guarded by `@Profile({"caching-enabled", "prod", "qa"})`.
+When none of those profiles are active, `BasicCacheConfig.NoOpConfig` kicks in via
+`@Conditional(NoCachingCondition.class)` to provide a `NoOpCacheManager`.
+
+This dual-config pattern exists because caching was originally an optional feature toggled
+per environment. In the Spring Boot world all environments (including local dev) use a Redis
+container, so the profile gate is no longer needed — cache configuration should always load.
+
+The class is also renamed to `RedisConfig` to reflect its actual responsibility (Redis
+connection and cache management), consistent with the config naming convention used for
+`TlsConfig`, `JmsConfig`, etc.
+
+### Target
+
+**Rename:** `BasicCacheConfig.java` → `RedisConfig.java`
+(same package: `se.inera.intyg.rehabstod.config`)
+
+```java
+// Before
+@Configuration
+@Profile({"caching-enabled", "prod", "qa"})
+static class RedisCacheConfig { ... }
+
+@Configuration
+@Conditional(NoCachingCondition.class)
+static class NoOpConfig {
+    @Bean
+    public CacheManager cacheManager() {
+        return new NoOpCacheManager();
+    }
+}
+```
+
+```java
+// After — rename outer class, remove @Profile and NoOpConfig entirely
+@Configuration
+@EnableCaching
+public class RedisConfig {
+    @Configuration
+    static class RedisCacheConfig { ... } // @Profile removed
+    // NoOpConfig: deleted
+}
+```
+
+### Files Deleted / Renamed
+
+| Action | File | Reason |
+|--------|------|--------|
+| Rename | `BasicCacheConfig.java` → `RedisConfig.java` | Clearer name; reflects Redis responsibility |
+| Delete | `NoCachingCondition.java` | No longer needed once `NoOpConfig` is removed |
+
+### Impact
+
+- `caching-enabled` profile no longer has any effect on cache configuration. Remove it from:
+  - `README.md` (dev profile example on line 24)
+  - `web/build.gradle` bootRun profile list (line 27)
+  - Any environment-specific property files or Docker run scripts that reference it
+- Local development requires a Redis instance to be running (e.g. via `docker compose up redis`).
+- The `RedisAutoConfiguration` / `RedisRepositoriesAutoConfiguration` exclusions in
+  `RehabstodApplication` remain — we still use a manual `JedisConnectionFactory`.
+
+---
+
+## Sub-step 13.16 — Rename and clean up configuration classes
+
+As part of the Spring Boot migration, several config classes in `web/config/` are renamed to
+reflect their actual responsibility and to follow a consistent `*Config` naming pattern.
+
+### Renames
+
+| Old file | New file | Change |
+|----------|----------|--------|
+| `SecurityConfig.java` | `TlsConfig.java` | Name was misleading — the class only configures a TLS-trusting `RestTemplate`. `WebSecurityConfig` is the real security config. Also remove redundant `@ComponentScan({"se.inera.intyg.rehabstod.security.authorities"})` — `@SpringBootApplication` root scan already covers this package. |
+| `IaConfiguration.java` | `IaConfig.java` | Rename to align with `*Config` convention. Verify whether `@Import(IaStubConfiguration.class)` is still needed — if `IaStubConfiguration` is in the component scan path it is redundant; remove if so. |
+
+### Deletions
+
+| File | Reason |
+|------|--------|
+| `SjukfallConfig.java` | Empty `@Configuration` class with no beans; provides no value. |
+
+### No-Change
+
+`ApplicationConfig`, `JobConfig`, `JmsConfig`, `ServiceConfig`, `WebConfig`, `WebSecurityConfig`
+keep their names — they are already clear.
+
+> **Integration module naming (not in Step 13 scope):** The `integration/hsa-integration-intyg-proxy-service`
+> module has `IntygProxyServiceConfiguration` and `IntygProxyServiceHsaCacheConfiguration`.
+> Consolidating or renaming these (e.g. `HsaConfig`) is a separate cleanup within that module's
+> scope and does not affect the web module bootstrap.
+
+---
+
+## Sub-step 13.17 — Verify build, tests, startup, endpoints
 
 ### Build Verification
 

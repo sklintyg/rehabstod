@@ -278,11 +278,13 @@ step only changes the application entry point and build packaging.
 
 - Add `org.springframework.boot` plugin to root `build.gradle` (`apply false`) and `web/build.gradle` (apply + `bootJar`).
 - Remove `org.gretty` plugin and `war` plugin from `web/build.gradle`. Remove `web/tomcat-gretty.xml`.
-- Remove `web/src/main/webapp/WEB-INF/web.xml` — the `MetricsServlet` it registers is replaced by Actuator in Step 16; executable JARs
-  do not use `web.xml`.
+- Remove `web/src/main/webapp/WEB-INF/web.xml` — the `MetricsServlet` it registers is temporarily moved to a `ServletRegistrationBean` in this step, then replaced by Actuator in Step 16; executable JARs do not use `web.xml`.
 - Create `RehabstodApplication.java` with `@SpringBootApplication`.
 - Add `spring-boot-starter-web` starter.
-- Convert the 12 `ApplicationInitializer` filter registrations to `FilterRegistrationBean` beans (preserving exact order — see §3.1).
+- Convert `ApplicationInitializer` filter registrations to `FilterRegistrationBean` beans:
+  - **3 auto-managed by Spring Boot** (no manual registration needed): `characterEncodingFilter`, `springSessionRepositoryFilter`, `springSecurityFilterChain`
+  - **`hiddenHttpMethodFilter` — drop entirely**: Spring Boot 3.x defaults this filter off; this SPA does not use the `_method` form parameter override
+  - **7 manual `FilterRegistrationBean` beans** (preserving exact order via `setOrder()` — see §3.1): `requestContextHolderUpdateFilter`, `mdcServletFilter`, `sessionTimeoutFilter`, `mdcUserServletFilter`, `principalUpdatedFilter`, `unitSelectedAssuranceFilter`, `pdlConsentGivenAssuranceFilter`, `securityHeadersFilter`
 - Register `CXFServlet` as a `ServletRegistrationBean` at `/services/*`.
 - Keep `HttpSessionEventPublisher` as a `@Bean`.
 - Remove `@EnableWebMvc` from `WebConfig`; retain all `WebMvcConfigurer` settings as-is.
@@ -290,7 +292,14 @@ step only changes the application entry point and build packaging.
   or explicit `@Import` in the main application class. Key classes to verify:
   `SRSIntegrationConfiguration`, `SRSIntegrationClientConfiguration`, `SRSIntegrationStubConfiguration`,
   `SamtyckestjanstConfiguration`, `SparrtjanstConfiguration`, `IntygstjanstIntegrationConfiguration`, etc.
-- **Do not change** JPA, JMS, Redis, or metrics config in this step.
+- **Do not change** JPA, JMS, or Redis config in this step.
+- **Logging:** Replace `LogbackConfiguratorContextListener` and the `logback-spring-base.xml` / ECS encoder library with Spring Boot native structured logging. Remove `co.elastic.logging:logback-ecs-encoder` from `web/build.gradle`. Delete `devops/dev/config/logback-spring.xml`, `logback-spring-base.xml`, `UserConverter`, and `SessionConverter`. Add to `application.properties`:
+  ```properties
+  logging.structured.format.console=ecs
+  logging.structured.ecs.service.name=rehabstod
+  logging.structured.ecs.service.environment=${spring.profiles.active:default}
+  ```
+  Add `logging.structured.format.console=` override in `application-dev.properties` for plain-text dev output.
 
 > **Note:** CXF + Spring Boot coexistence has been validated in the
 > [intygstjanst migration](https://github.com/sklintyg/intygstjanst) (Step 10 — Spring Boot Bootstrap). Use that implementation as a
@@ -310,7 +319,7 @@ makes failures easy to attribute.
 
 - Add `spring-boot-starter-data-jpa` (or confirm it is already pulled transitively).
 - Remove `PersistenceConfig` and `PersistenceConfigBase` (manual `DataSource`, `EntityManagerFactory`, `TransactionManager`,
-  `SpringLiquibase` beans). Remove `PersistenceConfigDev` (H2 profile).
+  `SpringLiquibase` beans). Remove `PersistenceConfigDev` (H2 test profile, lives in `src/test/java`).
 - Add `@EntityScan("se.inera.intyg.rehabstod.persistence")` and `@EnableJpaRepositories` to the main application class.
 - Move all DB/Hibernate/Liquibase properties to `application.properties` under `spring.datasource.*`, `spring.jpa.*`, and
   `spring.liquibase.*` keys (see §3.4.1 for the property mapping).
@@ -354,38 +363,32 @@ makes failures easy to attribute.
 
 - Add `spring-boot-starter-data-redis`. Decide at this point whether to keep Jedis (add Jedis dependency, exclude Lettuce) or switch to
   Lettuce (Spring Boot default). Keeping Jedis is lower risk initially.
-- Remove the manual `JedisConnectionFactory` bean from `JobConfig` and the `@ImportResource("classpath:basic-cache-config.xml")` from
-  `CacheConfigurationFromInfra`. Remove `common-redis-cache-core` dependency (already done in Step 11 for integration modules).
-- Adapt `EmployeeNameCacheConfig` to use `RedisCacheConfiguration` directly.
+- Remove the manual `JedisConnectionFactory` bean from `BasicCacheConfig` (the local replacement for the former infra `basic-cache-config.xml`). Let Spring Boot auto-configure the connection factory, and adapt `BasicCacheConfig.RedisCacheConfig` to consume the auto-configured `RedisConnectionFactory` instead of declaring its own.
 - Keep `@EnableRedisHttpSession` in `WebSecurityConfig` — Spring Session Data Redis continues to work.
 - **Fix ShedLock prefix:** Change the `RedisLockProvider` prefix in `JobConfig` from `"webcert"` to `"rehabstod"`.
 - Move Redis properties to `application.properties` under `spring.data.redis.*`.
+- **Dissolve `redis-cache` module:** Move `CacheFactory`, `RedisCacheOptionsSetter`, and `ConnectionStringUtil` into
+  `web/src/main/java/se/inera/intyg/rehabstod/config/cache/` (updating all imports in `BasicCacheConfig` and
+  `IntygProxyServiceHsaCacheConfiguration`). Remove `redis-cache` from `settings.gradle` and all `build.gradle`
+  dependency declarations, and delete the module directory. Note: `BasicCacheConfiguration.java` and
+  `basic-cache-config.xml` are already deleted in Step 13.
 
-**Verify:** `./gradlew bootRun` — Redis session store works (login persists across requests). Employee name cache populates under
-`caching-enabled` profile. ShedLock acquires locks with the `rehabstod` prefix.
+**Verify:** `./gradlew bootRun` — Redis session store works (login persists across requests). Employee name cache populates. ShedLock acquires locks with the `rehabstod` prefix.
 
 ---
 
-## Step 18 — Spring Boot ECS structured logging + Dockerfile update
+## Step 18 — Dockerfile update
 
 **Scope:**
 
-- **Logging:** Remove `co.elastic.logging:logback-ecs-encoder` from `logging/build.gradle`. Remove `logback-spring-base.xml` and
-  `LogbackConfiguratorContextListener`. Add to `application.properties`:
-  ```properties
-  logging.structured.format.console=ecs
-  logging.structured.ecs.service.name=rehabstod
-  logging.structured.ecs.service.environment=${spring.profiles.active:default}
-  ```
-  Evaluate `UserConverter` and `SessionConverter` — replace with MDC fields in the ECS structured output or retain for custom patterns.
 - **Dockerfile:** Replace the WAR/Catalina deployment with a Spring Boot JAR image:
   ```dockerfile
   COPY web/build/libs/*.jar app.jar
   ENTRYPOINT ["java", "-jar", "/app.jar"]
   ```
+- Remove stale build-arg labels that reference `infra_version` and `common_version` if no longer relevant.
 
-**Verify:** Docker image builds and runs. ECS-formatted JSON logs appear on stdout. Application starts from the container. All endpoints
-respond.
+**Verify:** Docker image builds and runs. Application starts from the container. All endpoints respond.
 
 ---
 
@@ -405,12 +408,12 @@ respond.
 | **10** | Convert all XML config to Java | 2 — Pre-Boot Cleanup | ❌ No |
 | **11** | Remove all `se.inera.intyg.infra` deps from all build files | 2 — Pre-Boot Cleanup | ❌ No |
 | **12** | Resolve static resources and view resolvers | 2 — Pre-Boot Cleanup | ❌ No |
-| **13** | **Spring Boot bootstrap** | 3 — Spring Boot Switch | ❌ No |
+| **13** | **Spring Boot bootstrap** + ECS logging migration | 3 — Spring Boot Switch | ❌ No |
 | **14** | JPA auto-configuration | 4 — Auto-Config | ❌ No |
 | **15** | JMS auto-configuration | 4 — Auto-Config | ❌ No |
 | **16** | Actuator + Micrometer (metrics) | 4 — Auto-Config | ❌ No |
 | **17** | Redis auto-configuration + ShedLock prefix fix | 4 — Auto-Config | ❌ No |
-| **18** | Spring Boot ECS logging + Dockerfile | 4 — Auto-Config | ❌ No |
+| **18** | Dockerfile WAR → JAR | 4 — Auto-Config | ❌ No |
 
 Steps 1–12 do not break the running WAR/Tomcat/Gretty application. Step 13 is the actual runtime switch.
 Steps 14–18 each swap one infrastructure concern using Spring Boot auto-configuration.
@@ -421,7 +424,7 @@ Steps 14–18 each swap one infrastructure concern using Spring Boot auto-config
 
 **Step 13 (Spring Boot bootstrap)** is the highest-risk step overall due to:
 - SAML 2.0 session management interacting with embedded Tomcat and Spring Session Redis.
-- Filter order changes (12 filters must be re-registered in exactly the right order via `FilterRegistrationBean.setOrder()`).
+- Filter order changes (7 custom filters must be re-registered in exactly the right order via `FilterRegistrationBean.setOrder()`).
 - `@EnableWebMvc` removal potentially changing MVC behaviour (content negotiation, message converters).
 - CXF JAXWS compatibility with Spring Boot auto-configuration.
 
