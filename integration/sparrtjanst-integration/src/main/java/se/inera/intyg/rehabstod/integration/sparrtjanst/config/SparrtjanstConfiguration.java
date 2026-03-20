@@ -26,7 +26,8 @@ import se.inera.intyg.rehabstod.integration.sparrtjanst.stub.SparrtjanstStubConf
 @Configuration
 @ComponentScan({
   "se.inera.intyg.rehabstod.integration.sparrtjanst.client",
-  "se.inera.intyg.rehabstod.integration.sparrtjanst.service"
+  "se.inera.intyg.rehabstod.integration.sparrtjanst.service",
+  "se.inera.intyg.rehabstod.integration.sparrtjanst.config"
 })
 @Import(SparrtjanstStubConfiguration.class)
 public class SparrtjanstConfiguration {
