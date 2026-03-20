@@ -29,22 +29,23 @@ import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesfo
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.integration.it.exception.IntygstjanstIntegrationException;
-import se.inera.intyg.rehabstod.monitoring.annotation.PrometheusTimeMethod;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 // CHECKSTYLE:ON LineLength
 
-/** Created by eriklupander on 2016-02-01. */
+/**
+ * Created by eriklupander on 2016-02-01.
+ */
 @Service
 public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrationService {
 
   private static final Logger LOG =
       LoggerFactory.getLogger(IntygstjanstIntegrationServiceImpl.class);
 
-  @Autowired private IntygstjanstClientService intygstjanstClientService;
+  @Autowired
+  private IntygstjanstClientService intygstjanstClientService;
 
   @Override
-  @PrometheusTimeMethod
   public List<IntygsData> getAllIntygsDataForPatient(String patientId) {
     verifyMandatoryParameter("patientId", patientId);
 
@@ -63,7 +64,7 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
 
     if (responseType.getResult().getResultCode()
         != se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1
-            .ResultCodeEnum.OK) {
+        .ResultCodeEnum.OK) {
       LOG.error(
           errorMessage,
           responseType.getResult().getResultCode(),

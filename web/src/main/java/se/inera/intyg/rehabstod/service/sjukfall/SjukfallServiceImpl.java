@@ -41,7 +41,6 @@ import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationSe
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.service.SparrtjanstIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
-import se.inera.intyg.rehabstod.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.pu.integration.api.model.PersonSvar;
 import se.inera.intyg.rehabstod.pu.integration.api.model.PersonSvar.Status;
 import se.inera.intyg.rehabstod.service.Urval;
@@ -67,7 +66,9 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-/** Created by eriklupander on 2016-02-01. */
+/**
+ * Created by eriklupander on 2016-02-01.
+ */
 @Service("sjukfallService")
 @RequiredArgsConstructor
 public class SjukfallServiceImpl implements SjukfallService {
@@ -103,7 +104,6 @@ public class SjukfallServiceImpl implements SjukfallService {
   private final LogService logService;
 
   @Override
-  @PrometheusTimeMethod
   // CHECKSTYLE:OFF ParameterNumber
   public SjukfallPatientResponse getByPatient(
       String currentVardgivarId,

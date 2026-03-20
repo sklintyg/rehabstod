@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.logging.LogMarkers;
 import se.inera.intyg.rehabstod.logging.MdcCloseableMap;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
-import se.inera.intyg.rehabstod.monitoring.annotation.PrometheusTimeMethod;
 
 @Service("webMonitoringLogService")
 public class MonitoringLogServiceImpl implements MonitoringLogService {
@@ -34,7 +33,6 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
   private static final Logger LOG = LoggerFactory.getLogger(MonitoringLogService.class);
 
   @Override
-  @PrometheusTimeMethod
   public void logUserLogin(
       String userHsaId,
       String role,
@@ -45,7 +43,7 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
         MdcCloseableMap.builder()
             .put(MdcLogConstants.EVENT_TYPE, toEventType(MonitoringEvent.USER_LOGIN))
             .put(MdcLogConstants.USER_ID, userHsaId)
-            .put(MdcLogConstants.USER_ROLES, Arrays.toString(new String[] {role}))
+            .put(MdcLogConstants.USER_ROLES, Arrays.toString(new String[]{role}))
             .put(MdcLogConstants.EVENT_AUTHENTICATION_SCHEME, authenticationScheme)
             .build()) {
       logEvent(MonitoringEvent.USER_LOGIN, userHsaId, role, roleTypeName, authenticationScheme);
@@ -53,7 +51,6 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
   }
 
   @Override
-  @PrometheusTimeMethod
   public void logUserLogout(String userHsaId, String authenticationScheme) {
     try (MdcCloseableMap mdc =
         MdcCloseableMap.builder()
@@ -66,7 +63,6 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
   }
 
   @Override
-  @PrometheusTimeMethod
   public void logUserSessionExpired(String userHsaId, String authScheme) {
     try (MdcCloseableMap mdc =
         MdcCloseableMap.builder()
@@ -79,7 +75,6 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
   }
 
   @Override
-  @PrometheusTimeMethod
   public void logMissingMedarbetarUppdrag(String userHsaId) {
     try (MdcCloseableMap mdc =
         MdcCloseableMap.builder()
@@ -91,7 +86,6 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
   }
 
   @Override
-  @PrometheusTimeMethod
   public void logMissingMedarbetarUppdrag(String userHsaId, String enhetsId) {
     try (MdcCloseableMap mdc =
         MdcCloseableMap.builder()
@@ -104,7 +98,6 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
   }
 
   @Override
-  @PrometheusTimeMethod
   public void logUserViewedSjukfall(String userHsaId, int numberOfSjukfall, String vardEnhet) {
     try (MdcCloseableMap mdc =
         MdcCloseableMap.builder()
