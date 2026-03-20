@@ -18,10 +18,12 @@
  */
 package se.inera.intyg.rehabstod.integration.wc.stub;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /** Created by marced on 2019-05-20. */
 @Component
+@Profile("rhs-wc-stub")
 public class WcStubStore {
 
   private boolean active = true;

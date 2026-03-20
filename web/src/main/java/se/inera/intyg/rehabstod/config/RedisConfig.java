@@ -24,14 +24,10 @@ import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.support.NoOpCacheManager;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
@@ -47,16 +43,11 @@ import org.springframework.util.StringUtils;
 import se.inera.intyg.rehabstod.rediscache.core.CacheFactory;
 import se.inera.intyg.rehabstod.rediscache.core.RedisCacheOptionsSetter;
 
-/**
- * Local replacement for infra's basic-cache-config.xml + BasicCacheConfiguration. Provides
- * JedisConnectionFactory, RedisCacheManager, and RedisTemplate.
- */
 @Configuration
 @EnableCaching
-public class BasicCacheConfig {
+public class RedisConfig {
 
   @Configuration
-  @Profile({"caching-enabled", "prod", "qa"})
   static class RedisCacheConfig {
 
     @Value("${redis.host}")
@@ -203,15 +194,6 @@ public class BasicCacheConfig {
 
     private static List<String> parseConnectionString(String value) {
       return Arrays.stream(value.split(";")).map(String::trim).filter(s -> !s.isEmpty()).toList();
-    }
-  }
-
-  @Configuration
-  @Conditional(NoCachingCondition.class)
-  static class NoOpConfig {
-    @Bean
-    public CacheManager cacheManager() {
-      return new NoOpCacheManager();
     }
   }
 }

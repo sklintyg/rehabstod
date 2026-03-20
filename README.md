@@ -21,7 +21,7 @@ dokumentation [devops/develop README-filen](https://github.com/sklintyg/devops/t
 För att ta bort stubbad intygstjänst och köra mot en riktig (lokal) sådan så gå in i
 /web/build.gradle och plocka bort "rhs-it-stub" ur gretty-konfigurationen, dvs:
 
-    '-Dspring.profiles.active=dev,rhs-srs-stub,caching-enabled',   // rhs-it-stub,
+    '-Dspring.profiles.active=dev,rhs-srs-stub',   // rhs-it-stub,
 
 ### Testa Visa intyg lokalt
 

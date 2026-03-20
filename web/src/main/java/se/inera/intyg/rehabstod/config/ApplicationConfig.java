@@ -20,13 +20,12 @@ package se.inera.intyg.rehabstod.config;
 
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
+import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -38,10 +37,6 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource(
-    ignoreResourceNotFound = true,
-    value = {"classpath:application.properties", "file:${dev.config.file}"})
-@ImportResource({"classpath:META-INF/cxf/cxf.xml"})
 @ComponentScan({
   "se.inera.intyg.rehabstod.logging",
   "se.inera.intyg.rehabstod.integration.it",
@@ -59,13 +54,24 @@ public class ApplicationConfig implements TransactionManagementConfigurer {
   @Autowired private PlatformTransactionManager transactionManager;
 
   @Bean
-  public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
-    return new PropertySourcesPlaceholderConfigurer();
+  public ServletRegistrationBean<io.prometheus.client.servlet.jakarta.exporter.MetricsServlet>
+      metricsServletRegistration() {
+    return new ServletRegistrationBean<>(
+        new io.prometheus.client.servlet.jakarta.exporter.MetricsServlet(), "/metrics");
   }
 
   @Bean(name = Bus.DEFAULT_BUS_ID)
   public SpringBus springBus() {
     return new SpringBus();
+  }
+
+  @Bean
+  public ServletRegistrationBean<CXFServlet> cxfServletRegistration() {
+    ServletRegistrationBean<CXFServlet> registration =
+        new ServletRegistrationBean<>(new CXFServlet(), "/services/*");
+    registration.setName("services");
+    registration.setLoadOnStartup(1);
+    return registration;
   }
 
   @Bean

@@ -18,17 +18,10 @@
  */
 package se.inera.intyg.rehabstod.integration.ia.cache;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class IaCacheConfiguration {
 
   public static final String CACHE_KEY = "BANNER";
-
-  @Bean("iaRestTemplate")
-  public RestTemplate restTemplate() {
-    return new RestTemplate();
-  }
 }

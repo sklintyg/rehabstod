@@ -30,15 +30,12 @@ import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
 import org.apache.hc.core5.ssl.TrustStrategy;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
-/** Created by eriklupander on 2016-05-18. */
 @Configuration
-@ComponentScan({"se.inera.intyg.rehabstod.security.authorities"})
-public class SecurityConfig {
+public class TlsConfig {
 
   private static final int RESTTEMPLATE_TIMEOUT_MS = 10000;
 

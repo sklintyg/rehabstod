@@ -4,23 +4,23 @@
 
 | Sub-step | Description | Status |
 |----------|-------------|--------|
-| 13.1 | Add Spring Boot plugin to Gradle build files | ⬜ TODO |
-| 13.2 | Switch `web` module from WAR to Spring Boot JAR | ⬜ TODO |
-| 13.3 | Create `RehabstodApplication.java` | ⬜ TODO |
-| 13.4 | Remove `@EnableWebMvc` from `WebConfig` | ⬜ TODO |
-| 13.5 | Collapse dual-context into single Spring Boot context | ⬜ TODO |
-| 13.6 | Convert filter registrations: 7 manual `FilterRegistrationBean` beans, 3 auto-managed, 1 dropped | ⬜ TODO |
-| 13.7 | Register `CXFServlet` as `ServletRegistrationBean` | ⬜ TODO |
-| 13.8 | Register `HttpSessionEventPublisher` as `@Bean` | ⬜ TODO |
-| 13.9 | Replace custom Logback setup with Spring Boot ECS structured logging | ⬜ TODO |
-| 13.10 | Remove `web.xml` | ⬜ TODO |
-| 13.11 | Remove `tomcat-gretty.xml` and Gretty config | ⬜ TODO |
-| 13.12 | Migrate embedded Tomcat settings to `application.properties` | ⬜ TODO |
-| 13.13 | Delete legacy files (`BasicCacheConfiguration.java`, `basic-cache-config.xml`, `ApplicationInitializer.java`) | ⬜ TODO |
-| 13.14 | Update `ApplicationConfig` — remove `@ImportResource` for CXF | ⬜ TODO |
-| 13.15 | Simplify `BasicCacheConfig` → rename to `RedisConfig`, remove `caching-enabled` profile gate | ⬜ TODO |
-| 13.16 | Rename and clean up configuration classes (`TlsConfig`, `IaConfig`, delete `SjukfallConfig`) | ⬜ TODO |
-| 13.17 | Verify build, tests, startup, endpoints | ⬜ TODO |
+| 13.1 | Add Spring Boot plugin to Gradle build files | ✅ DONE |
+| 13.2 | Switch `web` module from WAR to Spring Boot JAR | ✅ DONE |
+| 13.3 | Create `RehabstodApplication.java` | ✅ DONE |
+| 13.4 | Remove `@EnableWebMvc` from `WebConfig` | ✅ DONE |
+| 13.5 | Collapse dual-context into single Spring Boot context | ✅ DONE |
+| 13.6 | Convert filter registrations: 7 manual `FilterRegistrationBean` beans, 3 auto-managed, 1 dropped | ✅ DONE |
+| 13.7 | Register `CXFServlet` as `ServletRegistrationBean` | ✅ DONE |
+| 13.8 | Register `HttpSessionEventPublisher` as `@Bean` | ✅ DONE |
+| 13.9 | Replace custom Logback setup with Spring Boot ECS structured logging | ✅ DONE |
+| 13.10 | Remove `web.xml` | ✅ DONE |
+| 13.11 | Remove `tomcat-gretty.xml` and Gretty config | ✅ DONE |
+| 13.12 | Migrate embedded Tomcat settings to `application.properties` | ✅ DONE |
+| 13.13 | Delete legacy files (`BasicCacheConfiguration.java`, `basic-cache-config.xml`, `ApplicationInitializer.java`) | ✅ DONE |
+| 13.14 | Update `ApplicationConfig` — remove `@ImportResource` for CXF | ✅ DONE |
+| 13.15 | Simplify `BasicCacheConfig` → rename to `RedisConfig`, remove `caching-enabled` profile gate | ✅ DONE |
+| 13.16 | Rename and clean up configuration classes (`TlsConfig`, `IaConfig`, delete `SjukfallConfig`) | ✅ DONE |
+| 13.17 | Verify build, tests, startup, endpoints | ✅ DONE |
 
 ---
 
