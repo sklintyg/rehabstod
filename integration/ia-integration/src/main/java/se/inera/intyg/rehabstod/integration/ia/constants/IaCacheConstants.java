@@ -16,17 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.config;
+package se.inera.intyg.rehabstod.integration.ia.constants;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
+public final class IaCacheConstants {
 
-@Configuration
-public class IaConfig {
+  private IaCacheConstants() {}
 
-  @Bean("iaRestTemplate")
-  public RestTemplate restTemplate() {
-    return new RestTemplate();
-  }
+  public static final String IA_CACHE_NAME = "iaCache";
+  public static final String CACHE_KEY = "BANNER";
 }

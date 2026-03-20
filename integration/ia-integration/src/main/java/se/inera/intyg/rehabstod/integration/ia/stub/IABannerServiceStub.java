@@ -16,31 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.jobs;
+package se.inera.intyg.rehabstod.integration.ia.stub;
 
+import java.util.Collections;
 import java.util.List;
-import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+import se.inera.intyg.rehabstod.integration.ia.constants.IaCacheConstants;
 import se.inera.intyg.rehabstod.integration.ia.model.Application;
 import se.inera.intyg.rehabstod.integration.ia.model.Banner;
 import se.inera.intyg.rehabstod.integration.ia.services.IABannerService;
 
-/** Load banners from IntygsAdmin. */
-@Component
-public class RSBannerJob {
+@Service
+@Profile("ia-stub")
+public class IABannerServiceStub implements IABannerService {
 
-  private static final Logger LOG = LoggerFactory.getLogger(RSBannerJob.class);
+  @Override
+  @Cacheable(value = IaCacheConstants.IA_CACHE_NAME, key = "'" + IaCacheConstants.CACHE_KEY + "'")
+  public List<Banner> getCurrentBanners() {
+    return Collections.emptyList();
+  }
 
-  @Autowired private IABannerService iaBannerService;
-
-  @Scheduled(cron = "${intygsadmin.cron}")
-  @SchedulerLock(name = "BannerJob.run", lockAtLeastFor = "PT30S", lockAtMostFor = "PT10M")
-  public void run() {
-    List<Banner> banners = iaBannerService.loadBanners(Application.REHABSTOD);
-    LOG.debug("Loaded banners from IA, found {} banners", banners.size());
+  @Override
+  public List<Banner> loadBanners(Application application) {
+    return getCurrentBanners();
   }
 }

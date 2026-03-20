@@ -13,7 +13,7 @@ dependencyResolutionManagement {
 
 rootProject.name = 'rehabstod'
 
-include ':web', ':common', ':persistence', ':logging', ':integration/it-integration', ':integration/srs-integration', ':integration/samtyckestjanst-integration', ':integration/sparrtjanst-integration', ':integration/wc-integration', ':integration/pu-integration-intyg-proxy-service', ':integration/hsa-integration-intyg-proxy-service', ':integration/hsa-integration-api', ':common-redis-cache-core', ':integration/pu-integration-api'
+include ':web', ':common', ':persistence', ':logging', ':integration/it-integration', ':integration/srs-integration', ':integration/samtyckestjanst-integration', ':integration/sparrtjanst-integration', ':integration/wc-integration', ':integration/pu-integration-intyg-proxy-service', ':integration/hsa-integration-intyg-proxy-service', ':integration/hsa-integration-api', ':integration/pu-integration-api', ':integration/ia-integration'
 
 project(':web').name = 'rehabstod-web'
 project(':common').name = 'rehabstod-common'
@@ -28,4 +28,4 @@ project(':integration/pu-integration-api').name = 'rehabstod-pu-integration-api'
 project(':integration/pu-integration-intyg-proxy-service').name = 'rehabstod-pu-integration-intyg-proxy-service'
 project(':integration/hsa-integration-intyg-proxy-service').name = 'rehabstod-hsa-integration-intyg-proxy-service'
 project(':integration/hsa-integration-api').name = 'rehabstod-hsa-integration-api'
-project(':common-redis-cache-core').projectDir = "$rootDir/redis-cache/core" as File
+project(':integration/ia-integration').name = 'rehabstod-ia-integration'

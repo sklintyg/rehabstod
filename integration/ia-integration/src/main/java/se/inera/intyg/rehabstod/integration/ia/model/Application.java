@@ -16,17 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.config;
+package se.inera.intyg.rehabstod.integration.ia.model;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
-
-@Configuration
-public class IaConfig {
-
-  @Bean("iaRestTemplate")
-  public RestTemplate restTemplate() {
-    return new RestTemplate();
-  }
+public enum Application {
+  WEBCERT,
+  REHABSTOD,
+  INTYGSSTATISTIK,
+  MINA_INTYG
 }

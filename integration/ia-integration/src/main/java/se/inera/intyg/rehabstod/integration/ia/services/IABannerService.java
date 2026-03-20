@@ -16,17 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.config;
+package se.inera.intyg.rehabstod.integration.ia.services;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
+import java.util.List;
+import se.inera.intyg.rehabstod.integration.ia.model.Application;
+import se.inera.intyg.rehabstod.integration.ia.model.Banner;
 
-@Configuration
-public class IaConfig {
+public interface IABannerService {
 
-  @Bean("iaRestTemplate")
-  public RestTemplate restTemplate() {
-    return new RestTemplate();
-  }
+  List<Banner> getCurrentBanners();
+
+  List<Banner> loadBanners(Application application);
 }
