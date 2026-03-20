@@ -20,22 +20,16 @@ package se.inera.intyg.rehabstod.config;
 
 import java.util.List;
 import java.util.Properties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
-import org.springframework.web.servlet.view.InternalResourceView;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 
 @EnableWebMvc
@@ -49,47 +43,6 @@ import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
   "se.inera.intyg.rehabstod.web.controller.api",
 })
 public class WebConfig implements WebMvcConfigurer {
-
-  private static final int SECONDS_IN_HOUR = 3600;
-  private static final int HOURS_IN_DAY = 24;
-  private static final int DAYS_TO_CACHE = 15;
-
-  @Bean
-  public ViewResolver viewResolver() {
-    InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-    viewResolver.setOrder(0);
-    viewResolver.setViewClass(InternalResourceView.class);
-    viewResolver.setPrefix("/");
-    viewResolver.setSuffix(".html");
-    return viewResolver;
-  }
-
-  @Bean
-  public ViewResolver jspViewResolver() {
-    InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-    viewResolver.setOrder(1);
-    viewResolver.setViewClass(JstlView.class);
-    viewResolver.setPrefix("/");
-    viewResolver.setSuffix(".jsp");
-    return viewResolver;
-  }
-
-  @Override
-  public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    int cachePeriodInDays = SECONDS_IN_HOUR * HOURS_IN_DAY * DAYS_TO_CACHE;
-    registry.addResourceHandler("/index.html").addResourceLocations("/");
-    registry
-        .addResourceHandler("/favicon.ico")
-        .addResourceLocations("/")
-        .setCachePeriod(cachePeriodInDays);
-    registry
-        .addResourceHandler("/robots.txt")
-        .addResourceLocations("/")
-        .setCachePeriod(cachePeriodInDays);
-    registry.addResourceHandler("/bower_components/**").addResourceLocations("/bower_components/");
-    registry.addResourceHandler("/app/**").addResourceLocations("/app/");
-    registry.addResourceHandler("/components/**").addResourceLocations("/components/");
-  }
 
   @Override
   public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
