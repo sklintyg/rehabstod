@@ -22,9 +22,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.util.List;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
+import org.apache.cxf.configuration.security.FiltersType;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -35,22 +37,22 @@ import org.springframework.stereotype.Component;
 @Profile("!rhs-sparrtjanst-stub")
 public class SparrtjanstTlsConfig {
 
-  @Value("${ntjp.ws.certificate.file:}")
+  @Value("${ntjp.ws.certificate.file}")
   private Resource certFile;
 
-  @Value("${ntjp.ws.certificate.password:}")
+  @Value("${ntjp.ws.certificate.password}")
   private String certPassword;
 
-  @Value("${ntjp.ws.certificate.type:JKS}")
+  @Value("${ntjp.ws.certificate.type:PKCS12}")
   private String certType;
 
-  @Value("${ntjp.ws.key.manager.password:}")
+  @Value("${ntjp.ws.key.manager.password}")
   private String keyManagerPassword;
 
-  @Value("${ntjp.ws.truststore.file:}")
+  @Value("${ntjp.ws.truststore.file}")
   private Resource truststoreFile;
 
-  @Value("${ntjp.ws.truststore.password:}")
+  @Value("${ntjp.ws.truststore.password}")
   private String truststorePassword;
 
   @Value("${ntjp.ws.truststore.type:JKS}")
@@ -58,7 +60,7 @@ public class SparrtjanstTlsConfig {
 
   public void configure(HTTPConduit conduit) {
     if (certFile == null || !certFile.exists()) {
-      return;
+      throw new IllegalArgumentException("cert file or cert password not provided");
     }
     try {
       TLSClientParameters tlsParams = new TLSClientParameters();
@@ -81,6 +83,19 @@ public class SparrtjanstTlsConfig {
           TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
       tmf.init(trustStore);
       tlsParams.setTrustManagers(tmf.getTrustManagers());
+
+      final var cipherFilter = new FiltersType();
+      cipherFilter
+          .getInclude()
+          .addAll(
+              List.of(
+                  ".*_EXPORT_.*",
+                  ".*_EXPORT1024_.*",
+                  ".*_WITH_DES_.*",
+                  ".*_WITH_AES_.*",
+                  ".*_WITH_NULL_.*"));
+      cipherFilter.getExclude().add(".*_DH_anon_.*");
+      tlsParams.setCipherSuitesFilter(cipherFilter);
 
       conduit.setTlsClientParameters(tlsParams);
     } catch (GeneralSecurityException | IOException e) {
