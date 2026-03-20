@@ -18,11 +18,8 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import jakarta.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Arrays;
 import org.apache.cxf.Bus;
-import org.apache.cxf.ext.logging.LoggingFeature;
+import org.apache.cxf.bus.spring.SpringBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -59,8 +56,6 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 })
 public class ApplicationConfig implements TransactionManagementConfigurer {
 
-  @Autowired private Bus bus;
-
   @Autowired private PlatformTransactionManager transactionManager;
 
   @Bean
@@ -68,10 +63,9 @@ public class ApplicationConfig implements TransactionManagementConfigurer {
     return new PropertySourcesPlaceholderConfigurer();
   }
 
-  @PostConstruct
-  public Bus init() {
-    bus.setFeatures(new ArrayList<>(Arrays.asList(loggingFeature())));
-    return bus;
+  @Bean(name = Bus.DEFAULT_BUS_ID)
+  public SpringBus springBus() {
+    return new SpringBus();
   }
 
   @Bean
@@ -100,13 +94,6 @@ public class ApplicationConfig implements TransactionManagementConfigurer {
   @Bean
   public DiagnosFactory diagnosFactory() {
     return new DiagnosFactory();
-  }
-
-  @Bean
-  public LoggingFeature loggingFeature() {
-    LoggingFeature loggingFeature = new LoggingFeature();
-    loggingFeature.setPrettyLogging(true);
-    return loggingFeature;
   }
 
   @Override
