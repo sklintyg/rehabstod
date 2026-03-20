@@ -24,12 +24,12 @@ public class HsaIntygProxyServiceConstants {
     throw new IllegalStateException("Utility class!");
   }
 
-  public static final String EMPLOYEE_CACHE_NAME = "rehabStodHsaIntygProxyServiceEmployeeCache";
+  public static final String EMPLOYEE_CACHE_NAME = "rehabstodHsaIntygProxyServiceEmployeeCache";
   public static final String HEALTH_CARE_UNIT_CACHE_NAME =
-      "rehabStodHsaIntygProxyServiceHealthCareUnitCache";
+      "rehabstodHsaIntygProxyServiceHealthCareUnitCache";
   public static final String HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME =
-      "rehabStodHsaIntygProxyServiceHealthCareUnitMembersCache";
+      "rehabstodHsaIntygProxyServiceHealthCareUnitMembersCache";
   public static final String UNIT_CACHE_NAME = "hsaIntygProxyServiceUnitCache";
   public static final String HEALTH_CARE_PROVIDER_CACHE_NAME =
-      "rehabStodHsaIntygProxyServiceHealthCareProviderCache";
+      "rehabstodHsaIntygProxyServiceHealthCareProviderCache";
 }

@@ -32,14 +32,11 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 
 // CHECKSTYLE:ON LineLength
 
-/**
- * Created by eriklupander on 2016-01-29.
- */
+/** Created by eriklupander on 2016-01-29. */
 @Service
 public class IntygstjanstClientServiceImpl implements IntygstjanstClientService {
 
-  @Autowired
-  private ListSickLeavesForPersonResponderInterface personService;
+  @Autowired private ListSickLeavesForPersonResponderInterface personService;
 
   @Value("${it.service.logicalAddress}")
   private String logicalAddress;

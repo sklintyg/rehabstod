@@ -49,7 +49,8 @@ public class SamtyckestjanstStubConfiguration {
   @Bean
   public EndpointImpl registerExtendedConsentResponder() {
     EndpointImpl endpoint = new EndpointImpl(bus, registerExtendedConsentStub);
-    endpoint.publish("/stubs/informationsecurity/authorization/consent/RegisterExtendedConsent/2/rivtabp21");
+    endpoint.publish(
+        "/stubs/informationsecurity/authorization/consent/RegisterExtendedConsent/2/rivtabp21");
     return endpoint;
   }
 }

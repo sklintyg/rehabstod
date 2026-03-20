@@ -43,7 +43,7 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
         MdcCloseableMap.builder()
             .put(MdcLogConstants.EVENT_TYPE, toEventType(MonitoringEvent.USER_LOGIN))
             .put(MdcLogConstants.USER_ID, userHsaId)
-            .put(MdcLogConstants.USER_ROLES, Arrays.toString(new String[]{role}))
+            .put(MdcLogConstants.USER_ROLES, Arrays.toString(new String[] {role}))
             .put(MdcLogConstants.EVENT_AUTHENTICATION_SCHEME, authenticationScheme)
             .build()) {
       logEvent(MonitoringEvent.USER_LOGIN, userHsaId, role, roleTypeName, authenticationScheme);
