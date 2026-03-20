@@ -26,7 +26,8 @@ import se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.Samtyckestjanst
 @Configuration
 @ComponentScan({
   "se.inera.intyg.rehabstod.integration.samtyckestjanst.client",
-  "se.inera.intyg.rehabstod.integration.samtyckestjanst.service"
+  "se.inera.intyg.rehabstod.integration.samtyckestjanst.service",
+  "se.inera.intyg.rehabstod.integration.samtyckestjanst.config",
 })
 @Import(SamtyckestjanstStubConfiguration.class)
 public class SamtyckestjanstConfiguration {
