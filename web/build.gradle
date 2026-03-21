@@ -1,11 +1,11 @@
 apply plugin: 'org.cyclonedx.bom'
 apply plugin: 'org.springframework.boot'
 
-springBoot {
-    mainClass = 'se.inera.intyg.rehabstod.RehabstodApplication'
-}
-
 def applicationDir = "${rootProject.projectDir}/devops/dev"
+
+tasks.named('bootJar') {
+    archiveFileName.set('app.jar')
+}
 
 dependencies {
     implementation project(":rehabstod-ia-integration")

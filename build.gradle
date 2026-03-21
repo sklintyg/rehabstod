@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.com.diffplug.spotless)
     alias(libs.plugins.org.cyclonedx.bom)
     alias(libs.plugins.org.sonarqube)
-    alias(libs.plugins.org.springframework.boot) apply false
+    alias(libs.plugins.org.springframework.boot)
 }
 
 ext {
@@ -20,6 +20,11 @@ ext {
 }
 
 apply from: 'gradle/configureIntygBom.gradle'
+
+springBoot {
+    mainClass = 'se.inera.intyg.rehabstod.RehabstodApplication'
+}
+
 
 allprojects {
     apply plugin: 'java'
