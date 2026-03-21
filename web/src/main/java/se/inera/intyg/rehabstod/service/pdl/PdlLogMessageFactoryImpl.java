@@ -39,9 +39,7 @@ import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
 import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
-/**
- * Created by eriklupander on 2016-03-03.
- */
+/** Created by eriklupander on 2016-03-03. */
 @Service
 public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 

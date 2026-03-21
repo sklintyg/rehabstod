@@ -41,10 +41,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.ConsentService;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -52,9 +52,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRe
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-/**
- * Created by Magnus Ekstrand on 03/02/16.
- */
+/** Created by Magnus Ekstrand on 03/02/16. */
 @ExtendWith(MockitoExtension.class)
 class ConsentControllerTest {
 
@@ -66,17 +64,13 @@ class ConsentControllerTest {
 
   private static final int DAYS = 30;
 
-  @Mock
-  LogService logServiceMock;
+  @Mock LogService logServiceMock;
 
-  @Mock
-  private UserService userServiceMock;
+  @Mock private UserService userServiceMock;
 
-  @Mock
-  private ConsentService consentServiceMock;
+  @Mock private ConsentService consentServiceMock;
 
-  @InjectMocks
-  ConsentController testee = new ConsentController();
+  @InjectMocks ConsentController testee = new ConsentController();
 
   @BeforeEach
   void before() {

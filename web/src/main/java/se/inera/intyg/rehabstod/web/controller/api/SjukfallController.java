@@ -39,10 +39,10 @@ import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
@@ -58,9 +58,7 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-/**
- * Created by Magnus Ekstrand on 03/02/16.
- */
+/** Created by Magnus Ekstrand on 03/02/16. */
 @RestController
 @RequestMapping("/api/sjukfall")
 public class SjukfallController {
@@ -143,9 +141,7 @@ public class SjukfallController {
     return buildSjukfallPatientResponse(response.isSrsError(), response);
   }
 
-  /**
-   * Register a 'vardgivare' to be included in the calculation of the patient sjukfall view.
-   */
+  /** Register a 'vardgivare' to be included in the calculation of the patient sjukfall view. */
   @PostMapping(
       value = "/patient/addVardgivare",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -175,9 +171,7 @@ public class SjukfallController {
     }
   }
 
-  /**
-   * Register a 'vardenhet' to be included in the calculation of the patient sjukfall view.
-   */
+  /** Register a 'vardenhet' to be included in the calculation of the patient sjukfall view. */
   @PostMapping(
       value = "/patient/addVardenhet",
       consumes = MediaType.APPLICATION_JSON_VALUE,

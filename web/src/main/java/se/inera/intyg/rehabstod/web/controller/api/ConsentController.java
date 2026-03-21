@@ -33,10 +33,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.ConsentService;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -52,18 +52,13 @@ public class ConsentController {
 
   public static final int MAX_DAYS_FOR_CONSENT = 365;
 
-  @Autowired
-  private ConsentService consentService;
+  @Autowired private ConsentService consentService;
 
-  @Autowired
-  private UserService userService;
+  @Autowired private UserService userService;
 
-  @Autowired
-  private LogService logService;
+  @Autowired private LogService logService;
 
-  /**
-   * Register a consent for a patient.
-   */
+  /** Register a consent for a patient. */
   @RequestMapping(
       value = "",
       method = RequestMethod.POST,

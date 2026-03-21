@@ -35,9 +35,7 @@ import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
-/**
- * Created by marced on 22/02/16.
- */
+/** Created by marced on 22/02/16. */
 class PDLActivityEntryStoreImplTest {
   // CHECKSTYLE:OFF MagicNumber
 

@@ -41,9 +41,7 @@ import se.inera.intyg.rehabstod.service.pdl.dto.LogUtil;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
-/**
- * Created by eriklupander on 2016-03-03.
- */
+/** Created by eriklupander on 2016-03-03. */
 class PdlLogMessageFactoryImplTest {
 
   private PdlLogMessageFactoryImpl testee = new PdlLogMessageFactoryImpl();
