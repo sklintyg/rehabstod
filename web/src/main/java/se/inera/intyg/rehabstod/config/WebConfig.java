@@ -25,14 +25,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
-import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 
-@EnableWebMvc
 @Configuration
 @EnableAspectJAutoProxy
 @ComponentScan({
@@ -43,11 +39,6 @@ import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
   "se.inera.intyg.rehabstod.web.controller.api",
 })
 public class WebConfig implements WebMvcConfigurer {
-
-  @Override
-  public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-    configurer.enable();
-  }
 
   @Override
   public void extendMessageConverters(final List<HttpMessageConverter<?>> converters) {

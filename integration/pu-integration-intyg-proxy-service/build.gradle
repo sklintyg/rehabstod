@@ -1,5 +1,6 @@
 dependencies {
     implementation project(':rehabstod-pu-integration-api')
+    implementation project(":rehabstod-logging")
 
     implementation "com.fasterxml.jackson.core:jackson-databind"
     implementation "org.springframework:spring-web"
@@ -12,8 +13,4 @@ dependencies {
 
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
-}
-
-testing.suites {
-    test { useJUnitJupiter() }
 }

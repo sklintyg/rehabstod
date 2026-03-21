@@ -32,6 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersResponseDTO;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 
 @Service
 public class HsaIntygProxyServiceHealthCareUnitMembersClient {
@@ -42,6 +44,9 @@ public class HsaIntygProxyServiceHealthCareUnitMembersClient {
   @Value("${integration.intygproxyservice.healthcareunitmembers.endpoint}")
   private String healthCareUnitMembersEndpoint;
 
+  @PerformanceLogging(
+      eventAction = "get-health-care-unit-members",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
   public GetHealthCareUnitMembersResponseDTO get(
       GetHealthCareUnitMembersRequestDTO getHealthCareUnitMembersRequestDTO) {
     return ipsRestClient

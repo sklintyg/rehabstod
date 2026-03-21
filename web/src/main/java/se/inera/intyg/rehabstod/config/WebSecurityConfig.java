@@ -61,10 +61,10 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.NullRequestCache;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.util.ResourceUtils;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import se.inera.intyg.rehabstod.auth.CsrfCookieFilter;
 import se.inera.intyg.rehabstod.auth.CustomAuthenticationFailureHandler;
 import se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService;
@@ -117,11 +117,6 @@ public class WebSecurityConfig {
 
   @Value("${saml.keystore.password}")
   private String keyStorePassword;
-
-  @Bean(name = "mvcHandlerMappingIntrospector")
-  public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
-    return new HandlerMappingIntrospector();
-  }
 
   @Bean
   public RelyingPartyRegistrationRepository relyingPartyRegistrationRepository()
@@ -278,6 +273,11 @@ public class WebSecurityConfig {
           logoutRequest.getSessionIndexes().add(sessionIndex);
         });
     return logoutRequestResolver;
+  }
+
+  @Bean
+  public HttpSessionEventPublisher httpSessionEventPublisher() {
+    return new HttpSessionEventPublisher();
   }
 
   public static class MySessionIndex extends XSStringImpl implements SessionIndex {

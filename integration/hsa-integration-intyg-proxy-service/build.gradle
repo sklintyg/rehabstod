@@ -1,6 +1,5 @@
 dependencies {
     implementation project(':rehabstod-hsa-integration-api')
-    implementation project(':common-redis-cache-core')
     implementation project(':rehabstod-logging')
 
     compileOnly 'org.projectlombok:lombok'
@@ -14,8 +13,4 @@ dependencies {
 
     testImplementation "org.springframework:spring-test"
     testImplementation "org.mockito:mockito-junit-jupiter"
-}
-
-testing.suites {
-    test { useJUnitJupiter() }
 }

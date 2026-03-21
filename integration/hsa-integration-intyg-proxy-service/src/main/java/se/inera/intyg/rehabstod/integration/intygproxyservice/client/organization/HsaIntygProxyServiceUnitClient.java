@@ -32,6 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.GetUnitResponseDTO;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 
 @Service
 public class HsaIntygProxyServiceUnitClient {
@@ -42,6 +44,7 @@ public class HsaIntygProxyServiceUnitClient {
   @Value("${integration.intygproxyservice.unit.endpoint}")
   private String unitEndpoint;
 
+  @PerformanceLogging(eventAction = "get-unit", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
   public GetUnitResponseDTO getUnit(GetUnitRequestDTO getUnitRequestDTO) {
     return ipsRestClient
         .post()

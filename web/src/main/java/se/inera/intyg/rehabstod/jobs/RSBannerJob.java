@@ -25,9 +25,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import se.inera.intyg.rehabstod.integration.ia.model.Application;
+import se.inera.intyg.rehabstod.integration.ia.model.Banner;
 import se.inera.intyg.rehabstod.integration.ia.services.IABannerService;
-import se.inera.intyg.rehabstod.web.dto.driftbanner.Application;
-import se.inera.intyg.rehabstod.web.dto.driftbanner.Banner;
 
 /** Load banners from IntygsAdmin. */
 @Component

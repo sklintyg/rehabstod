@@ -1,45 +1,14 @@
 apply plugin: 'org.cyclonedx.bom'
-apply plugin: 'org.gretty'
-apply plugin: 'war'
+apply plugin: 'org.springframework.boot'
 
-def buildDirectory = project.layout.buildDirectory.get().asFile
+def applicationDir = "${rootProject.projectDir}/devops/dev"
 
-gretty {
-    def instance = System.properties['instance'] ?: '0'
-    def useHttpPort = 8030 + (instance as Integer)
-    def useInternalHttpPort = 8130 + (instance as Integer)
-    def applicationDir = "${rootProject.projectDir}/devops/dev"
-
-    servletContainer = 'tomcat10'
-    contextPath = '/'
-
-    integrationTestTask = null
-    scanInterval = 0
-    debugPort = 8830 + (instance as Integer)
-    portPropertiesFileName = "gretty_ports_${instance}.properties"
-    debugSuspend = false
-    fastReload = true
-    inplaceMode = 'hard'
-    enableNaming = true
-    serverConfigFile = "tomcat-gretty.xml"
-
-    jvmArgs = ["-Dcatalina.base=${buildDirectory}/catalina.base",
-               "-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-srs-stub,caching-enabled,rhs-security-test,ia-stub,testability",
-               "-Dlogback.file=${applicationDir}/config/logback-spring.xml",
-               "-Djava.awt.headless=true",
-               "-Dfile.encoding=UTF-8",
-               "-Dapplication.dir=${applicationDir}",
-               "-Ddev.config.file=${applicationDir}/config/application-dev.properties",
-               "-Ddev.http.port=${useHttpPort}",
-               "-Ddev.http.port.internal=${useInternalHttpPort}"
-    ]
-}
-
-test {
-    environment "catalina.base", "${buildDirectory}/catalina.base"
+tasks.named('bootJar') {
+    archiveFileName.set('app.jar')
 }
 
 dependencies {
+    implementation project(":rehabstod-ia-integration")
     implementation project(":rehabstod-common")
     implementation project(":rehabstod-it-integration")
     implementation project(":rehabstod-persistence")
@@ -52,7 +21,6 @@ dependencies {
     implementation project(":rehabstod-pu-integration-api")
     implementation project(":rehabstod-pu-integration-intyg-proxy-service")
     implementation project(":rehabstod-hsa-integration-intyg-proxy-service")
-    implementation project(':common-redis-cache-core')
 
     implementation "se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:${intygHealthcondRehabilitationSchemasVersion}"
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
@@ -62,10 +30,9 @@ dependencies {
     implementation "org.springframework.data:spring-data-redis"
 
     implementation "ch.qos.logback:logback-classic"
-    implementation "co.elastic.logging:logback-ecs-encoder"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     implementation "com.google.guava:guava"
-    implementation "io.prometheus:simpleclient_servlet"
+    implementation "io.prometheus:simpleclient_servlet_jakarta"
     implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring"
     implementation "net.javacrumbs.shedlock:shedlock-spring"
     implementation "org.apache.activemq:activemq-spring"
@@ -83,7 +50,7 @@ dependencies {
     implementation "org.springframework.security:spring-security-web"
     implementation "org.springframework.session:spring-session-data-redis"
     implementation "org.springframework:spring-jms"
-    implementation "org.springframework:spring-webmvc"
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
     compileOnly "jakarta.jms:jakarta.jms-api"
     compileOnly "jakarta.persistence:jakarta.persistence-api"
@@ -98,6 +65,27 @@ dependencies {
     testImplementation "org.mockito:mockito-junit-jupiter"
     testImplementation "org.hamcrest:hamcrest"
     testImplementation "org.springframework:spring-test"
+}
 
-    testRuntimeOnly "jakarta.servlet:jakarta.servlet-api"
+bootRun {
+    systemProperty("application.dir", applicationDir)
+    systemProperty("spring.profiles.active", "dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,ia-stub,testability")
+    systemProperty("spring.config.additional-location", "file:${applicationDir}/config/")
+}
+
+tasks.register("appRunDebug") {
+    println("######## Running in Debug mode ########")
+    doFirst {
+        bootRun.configure {
+            jvmArgs = [
+                    "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8830"
+            ]
+        }
+    }
+    finalizedBy("bootRun")
+}
+
+tasks.register("appRun") {
+    println("######## Running in normal mode ########")
+    finalizedBy("bootRun")
 }

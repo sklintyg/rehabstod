@@ -32,6 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.employee.GetEmployeeResponseDTO;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 
 @Service
 public class HsaIntygProxyServiceEmployeeClient {
@@ -42,6 +44,7 @@ public class HsaIntygProxyServiceEmployeeClient {
   @Value("${integration.intygproxyservice.employee.endpoint}")
   private String employeeEndpoint;
 
+  @PerformanceLogging(eventAction = "get-employee", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
   public GetEmployeeResponseDTO getEmployee(GetEmployeeRequestDTO getEmployeeRequestDTO) {
     return ipsRestClient
         .post()

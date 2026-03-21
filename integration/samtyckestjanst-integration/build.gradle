@@ -1,7 +1,6 @@
 dependencies {
     implementation project(":rehabstod-common")
     implementation project(":rehabstod-logging")
-    implementation project(":common-redis-cache-core")
 
     implementation "com.google.guava:guava"
     implementation "org.apache.cxf:cxf-rt-frontend-jaxws"

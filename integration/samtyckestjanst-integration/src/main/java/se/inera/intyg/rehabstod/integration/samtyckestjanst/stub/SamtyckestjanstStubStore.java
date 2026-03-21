@@ -26,12 +26,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 /** Simple embedded redis cache store for consents. Created by Magnus Ekstrand on 2018-10-10. */
 @Component
+@Profile("rhs-samtyckestjanst-stub")
 public class SamtyckestjanstStubStore {
 
   // inject the actual template

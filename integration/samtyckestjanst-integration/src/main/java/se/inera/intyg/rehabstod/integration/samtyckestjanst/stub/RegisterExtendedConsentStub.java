@@ -23,6 +23,7 @@ import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsent.v2.rivtabp21.RegisterExtendedConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsentResponder.v2.RegisterExtendedConsentResponseType;
@@ -32,6 +33,7 @@ import se.riv.informationsecurity.authorization.consent.v2.ResultCodeType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultType;
 
 @Component
+@Profile("rhs-samtyckestjanst-stub")
 public class RegisterExtendedConsentStub implements RegisterExtendedConsentResponderInterface {
 
   @Autowired private SamtyckestjanstStubStore store;
