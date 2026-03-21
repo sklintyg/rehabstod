@@ -16,14 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.logging.logmessages;
+package se.inera.intyg.rehabstod.common.logmessages;
 
-public enum ActivityPurpose {
-  CARE_TREATMENT("Vård och behandling");
+public enum ActivityType {
+  READ("Läsa"),
+  CREATE("Skriva"),
+  UPDATE("Skriva"),
+  SIGN("Signera"),
+  DELETE("Radera"),
+  PRINT("Utskrift"),
+  REVOKE("Radera"),
+  SEND("Utskrift"),
+  EMERGENCY_ACCESS("Nödöppning");
 
   private final String type;
 
-  ActivityPurpose(String type) {
+  ActivityType(String type) {
     this.type = type;
   }
 

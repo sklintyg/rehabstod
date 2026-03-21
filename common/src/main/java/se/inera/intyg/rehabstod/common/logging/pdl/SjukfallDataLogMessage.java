@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.logging;
+package se.inera.intyg.rehabstod.common.logging.pdl;
 
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityPurpose;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.PdlLogMessage;
+import se.inera.intyg.rehabstod.common.logmessages.ActivityPurpose;
+import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.common.logmessages.PdlLogMessage;
 
 /** Created by eriklupander on 2016-02-19. */
 public abstract class SjukfallDataLogMessage {
