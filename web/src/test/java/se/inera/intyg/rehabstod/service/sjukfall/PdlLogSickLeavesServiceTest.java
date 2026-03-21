@@ -38,8 +38,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
@@ -50,11 +50,14 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 @ExtendWith(MockitoExtension.class)
 class PdlLogSickLeavesServiceTest {
 
-  @Mock UserService userService;
+  @Mock
+  UserService userService;
 
-  @Mock LogService logService;
+  @Mock
+  LogService logService;
 
-  @InjectMocks PdlLogSickLeavesServiceImpl pdlLogSickLeavesService;
+  @InjectMocks
+  PdlLogSickLeavesServiceImpl pdlLogSickLeavesService;
 
   RehabstodUser user;
   SelectableVardenhet unit;

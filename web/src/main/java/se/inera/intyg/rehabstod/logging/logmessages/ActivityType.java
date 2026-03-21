@@ -16,28 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.common.util;
+package se.inera.intyg.rehabstod.logging.logmessages;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+public enum ActivityType {
+  READ("Läsa"),
+  CREATE("Skriva"),
+  UPDATE("Skriva"),
+  SIGN("Signera"),
+  DELETE("Radera"),
+  PRINT("Utskrift"),
+  REVOKE("Radera"),
+  SEND("Utskrift"),
+  EMERGENCY_ACCESS("Nödöppning");
 
-/**
- * Formats {@link java.time.LocalDateTime} and {@link java.time.LocalDate} into yyyy-MM-dd format.
- *
- * <p>Created by eriklupander on 2016-09-02.
- */
-public final class YearMonthDateFormatter {
+  private final String type;
 
-  private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-  private YearMonthDateFormatter() {}
-
-  public static String print(LocalDate local) {
-    return local.format(dateTimeFormatter);
+  ActivityType(String type) {
+    this.type = type;
   }
 
-  public static String print(LocalDateTime local) {
-    return local.format(dateTimeFormatter);
+  public String getType() {
+    return type;
   }
 }

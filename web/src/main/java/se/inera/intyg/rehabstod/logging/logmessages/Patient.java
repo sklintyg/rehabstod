@@ -16,23 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.common.util;
+package se.inera.intyg.rehabstod.logging.logmessages;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.io.Serializable;
 
-/**
- * Formats {@link java.time.LocalDateTime} into HH:mm format.
- *
- * <p>Created by eriklupander on 2016-09-02.
- */
-public final class HourMinuteFormatter {
+public class Patient implements Serializable {
 
-  private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+  private static final long serialVersionUID = -3089443403583678480L;
 
-  private HourMinuteFormatter() {}
+  private String patientId;
+  private String patientNamn;
 
-  public static String print(LocalDateTime localDateTime) {
-    return localDateTime.format(dateTimeFormatter);
+  public Patient() {
+    // Needed for deserialization
+  }
+
+  public Patient(String patientId) {
+    this.patientId = patientId;
+  }
+
+  public Patient(String patientId, String patientNamn) {
+    this.patientId = patientId;
+    this.patientNamn = patientNamn;
+  }
+
+  public String getPatientId() {
+    return patientId;
+  }
+
+  public String getPatientNamn() {
+    return patientNamn;
   }
 }

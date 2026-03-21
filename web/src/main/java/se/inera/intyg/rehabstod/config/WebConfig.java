@@ -28,16 +28,15 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
-import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 
 @Configuration
 @EnableAspectJAutoProxy
 @ComponentScan({
-  "se.inera.intyg.rehabstod.web",
-  "se.inera.intyg.rehabstod.integration.wc.stub.api",
-  "se.inera.intyg.rehabstod.integration.srs.stub.api",
-  "se.inera.intyg.rehabstod.logging",
-  "se.inera.intyg.rehabstod.web.controller.api",
+    "se.inera.intyg.rehabstod.web",
+    "se.inera.intyg.rehabstod.integration.wc.stub.api",
+    "se.inera.intyg.rehabstod.integration.srs.stub.api",
+    "se.inera.intyg.rehabstod.logging",
+    "se.inera.intyg.rehabstod.web.controller.api",
 })
 public class WebConfig implements WebMvcConfigurer {
 

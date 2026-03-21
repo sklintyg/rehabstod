@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.common.logmessages;
+package se.inera.intyg.rehabstod.logging.logmessages;
 
 public enum ResourceType {
   RESOURCE_TYPE_INTYG("Intyg"),

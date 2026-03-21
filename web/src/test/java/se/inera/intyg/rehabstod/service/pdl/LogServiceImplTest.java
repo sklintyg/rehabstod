@@ -37,22 +37,28 @@ import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.support.destination.DestinationResolutionException;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 
-/** Created by eriklupander on 2016-03-03. */
+/**
+ * Created by eriklupander on 2016-03-03.
+ */
 @ExtendWith(MockitoExtension.class)
 class LogServiceImplTest {
 
-  @Mock private JmsTemplate template = mock(JmsTemplate.class);
+  @Mock
+  private JmsTemplate template = mock(JmsTemplate.class);
 
-  @Mock private UserService userService;
+  @Mock
+  private UserService userService;
 
-  @Spy private PdlLogMessageFactoryImpl pdlLogMessageFactory;
+  @Spy
+  private PdlLogMessageFactoryImpl pdlLogMessageFactory;
 
-  @InjectMocks private LogServiceImpl testee;
+  @InjectMocks
+  private LogServiceImpl testee;
 
   @Test
   void testSendPdlReadMessage() {

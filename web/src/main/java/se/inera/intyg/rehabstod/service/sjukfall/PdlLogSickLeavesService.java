@@ -19,8 +19,8 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.util.List;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 public interface PdlLogSickLeavesService {

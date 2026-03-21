@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.common.logmessages;
+package se.inera.intyg.rehabstod.logging.logmessages;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -187,7 +187,9 @@ public class PdlLogMessage implements Serializable {
     this.userAssignment = userAssignment;
   }
 
-  /** Returns a copy (new instance) of this, optionally omitting the resourceList. */
+  /**
+   * Returns a copy (new instance) of this, optionally omitting the resourceList.
+   */
   public PdlLogMessage copy(boolean includeResourceList) {
     PdlLogMessage msg = new PdlLogMessage(this.activityType, this.purpose);
     msg.setActivityArgs(this.activityArgs);

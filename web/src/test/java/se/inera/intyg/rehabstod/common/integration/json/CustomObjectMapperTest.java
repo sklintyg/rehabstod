@@ -24,8 +24,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
+import se.inera.intyg.rehabstod.config.CustomObjectMapper;
 
-/** Created by eriklupander on 2016-02-01. */
 class CustomObjectMapperTest {
 
   private static final int YEAR = 2016;

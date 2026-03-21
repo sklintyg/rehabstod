@@ -16,18 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.common.logging.pdl;
+package se.inera.intyg.rehabstod.logging;
 
-import se.inera.intyg.rehabstod.common.logmessages.ActivityPurpose;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.PdlLogMessage;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityPurpose;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.PdlLogMessage;
 
-/** Created by eriklupander on 2016-02-19. */
+/**
+ * Created by eriklupander on 2016-02-19.
+ */
 public abstract class SjukfallDataLogMessage {
 
   private static final long serialVersionUID = -4683928451142580674L;
 
-  private SjukfallDataLogMessage() {}
+  private SjukfallDataLogMessage() {
+  }
 
   /**
    * Creates a PdlLogMessage object injected with ActivityType.READ and

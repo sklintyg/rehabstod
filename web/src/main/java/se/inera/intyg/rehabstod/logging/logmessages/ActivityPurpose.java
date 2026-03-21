@@ -16,13 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.monitoring.annotation;
+package se.inera.intyg.rehabstod.logging.logmessages;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public enum ActivityPurpose {
+  CARE_TREATMENT("Vård och behandling");
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface PrometheusTimeMethod {}
+  private final String type;
+
+  ActivityPurpose(String type) {
+    this.type = type;
+  }
+
+  public String getType() {
+    return type;
+  }
+}

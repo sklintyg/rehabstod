@@ -40,8 +40,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
 import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationFilterService;
@@ -54,21 +54,31 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDT
 @ExtendWith(MockitoExtension.class)
 class GetActiveSickLeavesResponseServiceTest {
 
-  @Mock private UserService userService;
-  @Mock private MonitoringLogService monitoringLogService;
-  @Mock private PdlLogSickLeavesService pdlLogSickLeavesService;
+  @Mock
+  private UserService userService;
+  @Mock
+  private MonitoringLogService monitoringLogService;
+  @Mock
+  private PdlLogSickLeavesService pdlLogSickLeavesService;
 
-  @Mock private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+  @Mock
+  private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
-  @Mock private RiskPredictionService riskPredictionService;
+  @Mock
+  private RiskPredictionService riskPredictionService;
 
-  @Mock private UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
+  @Mock
+  private UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
 
-  @Mock private UnansweredCommunicationFilterService unansweredCommunicationFilterService;
-  @Mock private CreateSickLeaveRequestService createSickLeaveRequestService;
-  @Mock private GetActiveSickLeavesService getActiveSickLeavesService;
+  @Mock
+  private UnansweredCommunicationFilterService unansweredCommunicationFilterService;
+  @Mock
+  private CreateSickLeaveRequestService createSickLeaveRequestService;
+  @Mock
+  private GetActiveSickLeavesService getActiveSickLeavesService;
 
-  @InjectMocks private GetActiveSickLeavesResponseServiceImpl getActiveSickLeavesResponseService;
+  @InjectMocks
+  private GetActiveSickLeavesResponseServiceImpl getActiveSickLeavesResponseService;
   private se.inera.intyg.rehabstod.web.model.SjukfallEnhet sickLeave;
   static RehabstodUser user;
   static final String HSA_ID = "HSA_ID";

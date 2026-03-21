@@ -48,8 +48,8 @@ import org.mockito.quality.Strictness;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
@@ -92,7 +92,9 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-/** Created by Magnus Ekstrand on 2016-02-24. */
+/**
+ * Created by Magnus Ekstrand on 2016-02-24.
+ */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class SjukfallServiceTest {
@@ -130,43 +132,62 @@ class SjukfallServiceTest {
   private final IntygParametrar parameters =
       new IntygParametrar(intygsGlapp, MAX_DAGAR_SEDAN_AVSLUT, activeDate);
 
-  @Mock private IntygstjanstIntegrationServiceImpl integrationService;
+  @Mock
+  private IntygstjanstIntegrationServiceImpl integrationService;
 
-  @Mock private StatisticsCalculator statisticsCalculator;
+  @Mock
+  private StatisticsCalculator statisticsCalculator;
 
-  @Mock private MonitoringLogService monitoringLogService;
+  @Mock
+  private MonitoringLogService monitoringLogService;
 
-  @Spy private SjukfallEngineService sjukfallEngine;
+  @Spy
+  private SjukfallEngineService sjukfallEngine;
 
-  @Spy private SjukfallEngineMapperTest sjukfallEngineMapper;
+  @Spy
+  private SjukfallEngineMapperTest sjukfallEngineMapper;
 
-  @Spy private IntygstjanstMapper intygstjanstMapper;
+  @Spy
+  private IntygstjanstMapper intygstjanstMapper;
 
-  @Mock private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+  @Mock
+  private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
-  @Mock private EmployeeNameService employeeNameService;
+  @Mock
+  private EmployeeNameService employeeNameService;
 
-  @Mock private PuService puService;
+  @Mock
+  private PuService puService;
 
-  @Mock private RiskPredictionService riskPredictionService;
+  @Mock
+  private RiskPredictionService riskPredictionService;
 
-  @Mock private UserPreferencesService userPreferencesService;
+  @Mock
+  private UserPreferencesService userPreferencesService;
 
-  @Spy private SparrtjanstIntegrationServiceImplTest sparrtjanstIntegrationService;
+  @Spy
+  private SparrtjanstIntegrationServiceImplTest sparrtjanstIntegrationService;
 
-  @Mock private HsaOrganizationsService hsaOrganizationsService;
+  @Mock
+  private HsaOrganizationsService hsaOrganizationsService;
 
-  @Mock private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+  @Mock
+  private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
-  @Mock private UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
+  @Mock
+  private UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
 
-  @Mock private UserService userService;
+  @Mock
+  private UserService userService;
 
-  @Mock private LogService logService;
+  @Mock
+  private LogService logService;
 
-  @Mock private PatientIdEncryption patientIdEncryption;
+  @Mock
+  private PatientIdEncryption patientIdEncryption;
 
-  @InjectMocks private SjukfallServiceImpl testee;
+  @InjectMocks
+  private SjukfallServiceImpl testee;
 
   @BeforeEach
   void init() {
@@ -216,7 +237,7 @@ class SjukfallServiceTest {
   @Test
   void testGetByPatient_medSamtyckeForVardgivare() {
     when(samtyckestjanstIntegrationService.checkForConsent(
-            patientId1, lakareId1, vgId1, enhetsId11))
+        patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     List<String> vgHsaId = new ArrayList<>();
@@ -255,7 +276,7 @@ class SjukfallServiceTest {
   @Test
   void testGetByPatientNoConsentPDLLoggingIfNoConsent() {
     when(samtyckestjanstIntegrationService.checkForConsent(
-            patientId1, lakareId1, vgId1, enhetsId11))
+        patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(false);
 
     testee.getByPatient(
@@ -277,7 +298,7 @@ class SjukfallServiceTest {
   @Test
   void testGetByPatientConsentPDLLoggingIfConsentExists() {
     when(samtyckestjanstIntegrationService.checkForConsent(
-            patientId1, lakareId1, vgId1, enhetsId11))
+        patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     testee.getByPatient(
@@ -304,7 +325,7 @@ class SjukfallServiceTest {
   @Test
   void testGetByPatientConsentPDLLoggingOnlyOnceIfActivityAlreadyLogged() {
     when(samtyckestjanstIntegrationService.checkForConsent(
-            patientId1, lakareId1, vgId1, enhetsId11))
+        patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     testee.getByPatient(
@@ -613,7 +634,7 @@ class SjukfallServiceTest {
 
     when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
     when(samtyckestjanstIntegrationService.checkForConsent(
-            patientId1, lakareId1, vgId1, enhetsId11))
+        patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     List<String> vgHsaId = new ArrayList<>();
@@ -679,7 +700,7 @@ class SjukfallServiceTest {
 
     when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
     when(samtyckestjanstIntegrationService.checkForConsent(
-            patientId1, lakareId1, vgId1, enhetsId11))
+        patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     List<String> vgHsaId = new ArrayList<>();
@@ -704,13 +725,13 @@ class SjukfallServiceTest {
 
     assertTrue(
         metaData.getKraverSamtycke().stream()
-                .filter(md -> md.getItemId().equals(vgId2) && md.isBidrarTillAktivtSjukfall())
-                .count()
+            .filter(md -> md.getItemId().equals(vgId2) && md.isBidrarTillAktivtSjukfall())
+            .count()
             > 0);
     assertTrue(
         metaData.getKraverSamtycke().stream()
-                .filter(md -> md.getItemId().equals(vgId3) && !md.isBidrarTillAktivtSjukfall())
-                .count()
+            .filter(md -> md.getItemId().equals(vgId3) && !md.isBidrarTillAktivtSjukfall())
+            .count()
             > 0);
   }
 

@@ -31,17 +31,19 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityPurpose;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.PdlLogMessage;
-import se.inera.intyg.rehabstod.common.logmessages.PdlResource;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityPurpose;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.PdlLogMessage;
+import se.inera.intyg.rehabstod.logging.logmessages.PdlResource;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.security.common.model.Role;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUtil;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
-/** Created by eriklupander on 2016-03-03. */
+/**
+ * Created by eriklupander on 2016-03-03.
+ */
 class PdlLogMessageFactoryImplTest {
 
   private PdlLogMessageFactoryImpl testee = new PdlLogMessageFactoryImpl();

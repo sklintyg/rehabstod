@@ -36,10 +36,10 @@ import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
-import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.PdlLogMessage;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.config.CustomObjectMapper;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.PdlLogMessage;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogPatient;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUtil;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -59,11 +59,14 @@ public class LogServiceImpl implements LogService {
   private static final Logger LOG = LoggerFactory.getLogger(LogServiceImpl.class);
 
   @Autowired(required = false)
-  @Qualifier("jmsPDLLogTemplate") private JmsTemplate jmsTemplate;
+  @Qualifier("jmsPDLLogTemplate")
+  private JmsTemplate jmsTemplate;
 
-  @Autowired PdlLogMessageFactory pdlLogMessageFactory;
+  @Autowired
+  PdlLogMessageFactory pdlLogMessageFactory;
 
-  @Autowired private UserService userService;
+  @Autowired
+  private UserService userService;
 
   @PostConstruct
   public void checkJmsTemplate() {
@@ -112,9 +115,9 @@ public class LogServiceImpl implements LogService {
     RehabstodUser user = userService.getUser();
     LogPatient logPatient =
         new LogPatient.Builder(
-                personnummer.getPersonnummer(),
-                user.getValdVardenhet().getId(),
-                user.getValdVardgivare().getId())
+            personnummer.getPersonnummer(),
+            user.getValdVardenhet().getId(),
+            user.getValdVardgivare().getId())
             .enhetsNamn(user.getValdVardenhet().getNamn())
             .vardgivareNamn(user.getValdVardgivare().getNamn())
             .build();
@@ -138,9 +141,9 @@ public class LogServiceImpl implements LogService {
     var rehabstodUser = userService.getUser();
     var logPatient =
         new LogPatient.Builder(
-                personId.getPersonnummer(),
-                rehabstodUser.getValdVardenhet().getId(),
-                rehabstodUser.getValdVardgivare().getId())
+            personId.getPersonnummer(),
+            rehabstodUser.getValdVardenhet().getId(),
+            rehabstodUser.getValdVardgivare().getId())
             .enhetsNamn(rehabstodUser.getValdVardenhet().getNamn())
             .vardgivareNamn(rehabstodUser.getValdVardgivare().getNamn())
             .build();

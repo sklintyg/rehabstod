@@ -16,35 +16,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.common.logmessages;
+package se.inera.intyg.rehabstod.logging.logmessages;
 
 import java.io.Serializable;
 
-public class Patient implements Serializable {
+/**
+ * Defines a single PDL logged "resource", e.g. which patient on which care unit that was logged and
+ * what type of information that was logged about the patient.
+ */
+public class PdlResource implements Serializable {
 
-  private static final long serialVersionUID = -3089443403583678480L;
+  private Patient patient;
+  private String resourceType;
+  private Enhet resourceOwner;
 
-  private String patientId;
-  private String patientNamn;
-
-  public Patient() {
-    // Needed for deserialization
+  public Patient getPatient() {
+    return patient;
   }
 
-  public Patient(String patientId) {
-    this.patientId = patientId;
+  public void setPatient(Patient patient) {
+    this.patient = patient;
   }
 
-  public Patient(String patientId, String patientNamn) {
-    this.patientId = patientId;
-    this.patientNamn = patientNamn;
+  public String getResourceType() {
+    return resourceType;
   }
 
-  public String getPatientId() {
-    return patientId;
+  public void setResourceType(String resourceType) {
+    this.resourceType = resourceType;
   }
 
-  public String getPatientNamn() {
-    return patientNamn;
+  public Enhet getResourceOwner() {
+    return resourceOwner;
+  }
+
+  public void setResourceOwner(Enhet resourceOwner) {
+    this.resourceOwner = resourceOwner;
   }
 }
