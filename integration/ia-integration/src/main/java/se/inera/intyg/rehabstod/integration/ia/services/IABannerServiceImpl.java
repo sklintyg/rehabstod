@@ -35,6 +35,8 @@ import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.rehabstod.integration.ia.constants.IaCacheConstants;
 import se.inera.intyg.rehabstod.integration.ia.model.Application;
 import se.inera.intyg.rehabstod.integration.ia.model.Banner;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 
 @Service
 @Profile("!ia-stub")
@@ -59,6 +61,7 @@ public class IABannerServiceImpl implements IABannerService {
 
   @Override
   @CachePut(value = IaCacheConstants.IA_CACHE_NAME, key = "'" + IaCacheConstants.CACHE_KEY + "'")
+  @PerformanceLogging(eventAction = "load-banners", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
   public List<Banner> loadBanners(Application application) {
     String url = iaUrl + "/actuator/banner/" + application.toString();
     LOG.debug("Loading banner from {}", url);

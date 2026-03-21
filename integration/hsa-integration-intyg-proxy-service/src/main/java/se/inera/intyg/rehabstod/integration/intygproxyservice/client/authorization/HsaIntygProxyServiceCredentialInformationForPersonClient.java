@@ -32,6 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.authorization.GetCredentialInformationResponseDTO;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 
 @Service
 public class HsaIntygProxyServiceCredentialInformationForPersonClient {
@@ -42,6 +44,9 @@ public class HsaIntygProxyServiceCredentialInformationForPersonClient {
   @Value("${integration.intygproxyservice.credentialinformationforperson.endpoint}")
   private String credentialInformationForPerson;
 
+  @PerformanceLogging(
+      eventAction = "get-credential-information-for-person",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
   public GetCredentialInformationResponseDTO get(
       GetCredentialInformationRequestDTO getCredentialInformationRequestDTO) {
     return ipsRestClient
