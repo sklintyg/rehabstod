@@ -95,7 +95,8 @@ public class RedisConfig {
     }
 
     @Bean(name = "rediscache")
-    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<Object, Object> redisTemplate(
+        RedisConnectionFactory redisConnectionFactory) {
       RedisTemplate<Object, Object> template = new RedisTemplate<>();
       template.setConnectionFactory(redisConnectionFactory);
       template.setKeySerializer(new StringRedisSerializer());
