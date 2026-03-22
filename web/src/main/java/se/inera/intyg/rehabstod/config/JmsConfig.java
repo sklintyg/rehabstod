@@ -19,50 +19,26 @@
 package se.inera.intyg.rehabstod.config;
 
 import jakarta.jms.ConnectionFactory;
-import org.apache.activemq.ActiveMQConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.jms.core.JmsTemplate;
 
 /** Created by eriklupander on 2016-02-18. */
 @Configuration
 public class JmsConfig {
 
-  @Value("${activemq.broker.url}")
-  private String activeMqBrokerUrl;
-
-  @Value("${activemq.broker.username}")
-  private String activeMqBrokerUsername;
-
-  @Value("${activemq.broker.password}")
-  private String activeMqBrokerPassword;
+  @Autowired private ConnectionFactory connectionFactory;
 
   @Value("${pdl.logging.queue.name}")
   private String loggingQueueName;
 
   @Bean
-  public JmsTransactionManager jmsTransactionManager() {
-    return new JmsTransactionManager(connectionFactory());
-  }
-
-  @Bean
-  public ConnectionFactory connectionFactory() {
-    return new ActiveMQConnectionFactory(
-        activeMqBrokerUsername, activeMqBrokerPassword, activeMqBrokerUrl);
-  }
-
-  @Bean
-  public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
-    return new JmsTemplate(connectionFactory);
-  }
-
-  @Bean
   public JmsTemplate jmsPDLLogTemplate() {
     JmsTemplate jmsTemplate = new JmsTemplate();
     jmsTemplate.setDefaultDestinationName(loggingQueueName);
-    jmsTemplate.setConnectionFactory(connectionFactory());
+    jmsTemplate.setConnectionFactory(connectionFactory);
     jmsTemplate.setSessionTransacted(true);
     return jmsTemplate;
   }

@@ -46,19 +46,11 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
   "se.inera.intyg.rehabstod.integration.hsatk",
   "se.inera.intyg.rehabstod.integration.intygproxyservice",
   "se.inera.intyg.rehabstod.pu.integration.intygproxyservice",
-  "se.inera.intyg.rehabstod.rediscache",
   "se.inera.intyg.rehabstod.dynamiclink"
 })
 public class ApplicationConfig implements TransactionManagementConfigurer {
 
   @Autowired private PlatformTransactionManager transactionManager;
-
-  @Bean
-  public ServletRegistrationBean<io.prometheus.client.servlet.jakarta.exporter.MetricsServlet>
-      metricsServletRegistration() {
-    return new ServletRegistrationBean<>(
-        new io.prometheus.client.servlet.jakarta.exporter.MetricsServlet(), "/metrics");
-  }
 
   @Bean(name = Bus.DEFAULT_BUS_ID)
   public SpringBus springBus() {

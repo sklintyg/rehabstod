@@ -377,18 +377,10 @@ makes failures easy to attribute.
 
 ---
 
-## Step 18 — Dockerfile update
+## ~~Step 18 — Dockerfile update~~ ✅ DONE
 
-**Scope:**
-
-- **Dockerfile:** Replace the WAR/Catalina deployment with a Spring Boot JAR image:
-  ```dockerfile
-  COPY web/build/libs/*.jar app.jar
-  ENTRYPOINT ["java", "-jar", "/app.jar"]
-  ```
-- Remove stale build-arg labels that reference `infra_version` and `common_version` if no longer relevant.
-
-**Verify:** Docker image builds and runs. Application starts from the container. All endpoints respond.
+Completed as part of Step 13. The Dockerfile already copies `app.jar` to `/deployments/` and
+the Spring Boot JAR launcher is used. No further changes needed.
 
 ---
 

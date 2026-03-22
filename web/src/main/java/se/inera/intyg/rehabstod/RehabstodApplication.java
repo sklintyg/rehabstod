@@ -20,24 +20,8 @@ package se.inera.intyg.rehabstod;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
-import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 
-@SpringBootApplication(
-    exclude = {
-      DataSourceAutoConfiguration.class,
-      HibernateJpaAutoConfiguration.class,
-      JpaRepositoriesAutoConfiguration.class,
-      JmsAutoConfiguration.class,
-      ActiveMQAutoConfiguration.class,
-      RedisAutoConfiguration.class,
-      RedisRepositoriesAutoConfiguration.class
-    })
+@SpringBootApplication
 public class RehabstodApplication {
 
   public static void main(String[] args) {
