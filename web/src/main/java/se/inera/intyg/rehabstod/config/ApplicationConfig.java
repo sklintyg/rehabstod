@@ -21,15 +21,12 @@ package se.inera.intyg.rehabstod.config;
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.transport.servlet.CXFServlet;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 import se.inera.intyg.rehabstod.security.filter.PrincipalUpdatedFilter;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.filters.PdlConsentGivenAssuranceFilter;
@@ -48,9 +45,7 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
   "se.inera.intyg.rehabstod.pu.integration.intygproxyservice",
   "se.inera.intyg.rehabstod.dynamiclink"
 })
-public class ApplicationConfig implements TransactionManagementConfigurer {
-
-  @Autowired private PlatformTransactionManager transactionManager;
+public class ApplicationConfig {
 
   @Bean(name = Bus.DEFAULT_BUS_ID)
   public SpringBus springBus() {
@@ -92,10 +87,5 @@ public class ApplicationConfig implements TransactionManagementConfigurer {
   @Bean
   public DiagnosFactory diagnosFactory() {
     return new DiagnosFactory();
-  }
-
-  @Override
-  public PlatformTransactionManager annotationDrivenTransactionManager() {
-    return transactionManager;
   }
 }
