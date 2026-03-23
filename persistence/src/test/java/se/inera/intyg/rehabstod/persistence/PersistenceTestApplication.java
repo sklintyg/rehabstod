@@ -16,19 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.persistence.config;
+package se.inera.intyg.rehabstod.persistence;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@Configuration
-@PropertySource("classpath:config/test.properties")
-public class PersistenceConfigTest {
-
-  @Bean
-  public PropertySourcesPlaceholderConfigurer propertyConfigInTest() {
-    return new PropertySourcesPlaceholderConfigurer();
-  }
-}
+/** Minimal bootstrap for @DataJpaTest in the persistence module. */
+@SpringBootApplication
+public class PersistenceTestApplication {}

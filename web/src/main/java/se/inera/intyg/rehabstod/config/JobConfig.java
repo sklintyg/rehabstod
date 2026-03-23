@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -39,10 +39,10 @@ public class JobConfig {
   private static final int POOL_SIZE = 10;
   private static final int LOCK_AT_MOST_MINUTES = 10;
 
-  @Autowired private JedisConnectionFactory jedisConnectionFactory;
+  @Autowired private RedisConnectionFactory redisConnectionFactory;
 
   @Bean
   public LockProvider lockProvider() {
-    return new RedisLockProvider(jedisConnectionFactory, "webcert");
+    return new RedisLockProvider(redisConnectionFactory, "rehabstod");
   }
 }

@@ -24,23 +24,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
-import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigTest;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 
 /** Created by eriklupander on 2015-08-05. */
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(
-    loader = AnnotationConfigContextLoader.class,
-    classes = {PersistenceConfigTest.class, PersistenceConfigDev.class})
-@ActiveProfiles({"h2"})
+@DataJpaTest
+@TestPropertySource("classpath:config/test.properties")
 @Transactional
 class AnvandarPreferenceRepositoryTest {
 
