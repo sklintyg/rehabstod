@@ -157,6 +157,8 @@ public class WebSecurityConfig {
                 request
                     .requestMatchers("/metrics")
                     .permitAll()
+                    .requestMatchers("/actuator/health/**")
+                    .permitAll()
                     .requestMatchers("/api/testability/**")
                     .permitAll()
                     .requestMatchers("/services/**")
