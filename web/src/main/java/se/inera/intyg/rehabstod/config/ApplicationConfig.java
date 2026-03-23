@@ -25,7 +25,6 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import se.inera.intyg.rehabstod.security.filter.PrincipalUpdatedFilter;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
@@ -59,14 +58,6 @@ public class ApplicationConfig {
     registration.setName("services");
     registration.setLoadOnStartup(1);
     return registration;
-  }
-
-  @Bean
-  public ResourceBundleMessageSource messageSource() {
-    ResourceBundleMessageSource source = new ResourceBundleMessageSource();
-    source.setBasename("version");
-    source.setUseCodeAsDefaultMessage(true);
-    return source;
   }
 
   @Bean
