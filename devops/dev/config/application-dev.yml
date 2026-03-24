@@ -1,3 +1,51 @@
+app:
+  domain-name: rs.localtest.me
+  security:
+    hash-salt: salt
+    aes-encryption-key: "McQfTjWmZq4t7w!z%C*F-JaNdRgUkXp2"
+  pdl:
+    logging-queue-name: dev.logging.queue
+  cache:
+    default-expiry-seconds: 60
+  saml:
+    keystore:
+      alias: localhost
+      file: "file:///${application.dir}/certifikat/localhost.p12"
+      password: password
+    idp-metadata-location: "file:${application.dir}/config/idp-inera.xml"
+  ntjp:
+    base-url: "http://localhost:8030/services/stubs"
+    certificate:
+      password: dummy
+    key-manager-password: dummy
+    truststore:
+      password: dummy
+  resources:
+    features-configuration-file: "file:///${application.dir}/config/features.yaml"
+  integration:
+    intygstjanst:
+      scheme: http
+      base-url: localhost
+      port: 8180
+      host-url: "http://localhost:8180"
+      logical-address: ""
+    webcert:
+      scheme: http
+      base-url: localhost
+      port: 8120
+      launch-url-template: "https://wc.localtest.me/webcert/web/user/launch/certificate/{id}?origin=rs"
+      siths-idp-url: /saml2/authenticate/siths
+    srs:
+      logical-address: ""
+    sparrtjanst:
+      logical-address: SPARRTJANSTDEV
+    samtyckestjanst:
+      logical-address: SAMTYCKESTJANSTDEV
+    intygsadmin:
+      url: "http://localhost:8170"
+    intyg-proxy-service:
+      base-url: "http://localhost:18020"
+
 server:
   port: 8030
 

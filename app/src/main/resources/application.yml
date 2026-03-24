@@ -1,6 +1,112 @@
 application:
   dir: /deployments
 
+app:
+  domain-name: ""
+  security:
+    hash-salt: "${HASH_SALT:}"
+    aes-encryption-key: "${AES_ENCRYPTION_KEY:}"
+  pdl:
+    system-id: SE5565594230-BD5
+    system-name: "Rehabstöd"
+    logging-queue-name: ""
+  saml:
+    base-url: "https://${app.domain-name}"
+    idp-metadata-location: ""
+    login-success-url: "${app.saml.base-url}/"
+    login-success-url-always-use: true
+    logout-success-url: "${app.saml.base-url}/"
+    sp:
+      entity-id: "${app.saml.base-url}/saml2/service-provider-metadata/siths"
+      assertion-consumer-service-location: "${app.saml.base-url}/login/saml2/sso/siths"
+      single-logout-service-location: "${app.saml.base-url}/logout/saml2/slo"
+      single-logout-service-response-location: "${app.saml.base-url}/logout/saml2/slo"
+    keystore:
+      type: PKCS12
+      file: ""
+      alias: ""
+      password: "${SAML_KEYSTORE_PASSWORD:}"
+  ntjp:
+    base-url: ""
+    certificate:
+      file: "file://${application.dir}/certifikat/ntjp.certificate.jks"
+      type: JKS
+      password: "${NTJP_CERTIFICATE_PASSWORD:}"
+    key-manager-password: "${NTJP_KEY_MANAGER_PASSWORD:}"
+    truststore:
+      file: "file://${application.dir}/certifikat/ntjp.truststore.jks"
+      type: JKS
+      password: "${NTJP_TRUSTSTORE_PASSWORD:}"
+  cache:
+    default-expiry-seconds: 86400
+    employee-name-expiry-seconds: 86400
+    intygsadmin-expiry-seconds: 86400
+    hsa-employee-expiry-seconds: 60
+    hsa-health-care-unit-expiry-seconds: 60
+    hsa-health-care-unit-members-expiry-seconds: 60
+    hsa-unit-expiry-seconds: 60
+    hsa-health-care-provider-expiry-seconds: 60
+  resources:
+    authorities-configuration-file: "classpath:authorities.yaml"
+    dynamic-links-file: "classpath:/links/rehabstod.links.json"
+    features-configuration-file: ""
+    diagnoskapitel-file: "classpath:/diagnoskoder/diagnoskapitel.txt"
+    diagnosgrupper-file: "classpath:/diagnoskoder/diagnosgrupper.txt"
+    diagnoskod-ksh97p-file: "classpath:/diagnoskoder/KSH97P_KOD.ANS"
+    diagnosis-code-icd10se-file: "classpath:/diagnoskoder/icd10se/icd-10-se.tsv"
+    max-aliases-for-collections: 500
+  integration:
+    intygstjanst:
+      scheme: http
+      base-url: ""
+      port: 8081
+      host-url: ""
+      logical-address: ""
+      list-sick-leaves-for-person-url: "${app.integration.intygstjanst.host-url}/inera-certificate/list-sick-leaves-for-person/v1.0"
+      service:
+        connection-timeout: 15000
+        receive-timeout: 60000
+      rest:
+        connection-request-timeout: 15000
+        connection-timeout: 15000
+    webcert:
+      scheme: http
+      base-url: ""
+      port: 8081
+      launch-url-template: ""
+      siths-idp-url: ""
+      get-additions-max-age-days: 90
+    srs:
+      logical-address: ""
+      get-risk-prediction-url: ""
+      get-diagnosis-codes-url: ""
+      connection-timeout: 5000
+      receive-timeout: 5000
+    sparrtjanst:
+      logical-address: ""
+      check-blocks-url: "${app.ntjp.base-url}/informationsecurity/authorization/blocking/CheckBlocks/4/rivtabp21"
+      connection-timeout: 10000
+      receive-timeout: 30000
+    samtyckestjanst:
+      logical-address: ""
+      check-consent-url: "${app.ntjp.base-url}/informationsecurity/authorization/consent/CheckConsent/2/rivtabp21"
+      register-extended-consent-url: "${app.ntjp.base-url}/informationsecurity/authorization/consent/RegisterExtendedConsent/2/rivtabp21"
+      connection-timeout: 10000
+      receive-timeout: 30000
+    intygsadmin:
+      url: ""
+      cron: "0 * * * * ?"
+      cache-expiry-seconds: 86400
+    intyg-proxy-service:
+      base-url: ""
+      credential-information-for-person-endpoint: /api/v1/credentialinformation
+      employee-endpoint: /api/v2/employee
+      health-care-unit-endpoint: /api/v2/healthcareunit
+      health-care-unit-members-endpoint: /api/v2/healthcareunitmembers
+      unit-endpoint: /api/v1/unit
+      person-endpoint: /api/v1/person
+      persons-endpoint: /api/v1/persons
+
 logging:
   structured:
     format:
@@ -48,149 +154,215 @@ management:
 
 redis:
   cache:
-    default_entry_expiry_time_in_seconds: 86400
+    default_entry_expiry_time_in_seconds: "${app.cache.default-expiry-seconds}"
 
 employee:
   name:
     cache:
-      expiry: 86400
+      expiry: "${app.cache.employee-name-expiry-seconds}"
 
 intygsadmin:
   cache:
-    expiry: 86400
-  cron: "0 * * * * ?"
+    expiry: "${app.cache.intygsadmin-expiry-seconds}"
+  cron: "${app.integration.intygsadmin.cron}"
+  url: "${app.integration.intygsadmin.url}"
 
 pdlLogging:
-  systemId: SE5565594230-BD5
-  systemName: "Rehabstöd"
+  systemId: "${app.pdl.system-id}"
+  systemName: "${app.pdl.system-name}"
 
 ntjp:
   ws:
     certificate:
-      file: "file://${application.dir}/certifikat/ntjp.certificate.jks"
-      type: JKS
+      file: "${app.ntjp.certificate.file}"
+      type: "${app.ntjp.certificate.type}"
     truststore:
-      file: "file://${application.dir}/certifikat/ntjp.truststore.jks"
-      type: JKS
+      file: "${app.ntjp.truststore.file}"
+      type: "${app.ntjp.truststore.type}"
+  base:
+    url: "${app.ntjp.base-url}"
 
 integration:
   intygproxyservice:
     credentialinformationforperson:
-      endpoint: /api/v1/credentialinformation
+      endpoint: "${app.integration.intyg-proxy-service.credential-information-for-person-endpoint}"
     employee:
-      endpoint: /api/v2/employee
+      endpoint: "${app.integration.intyg-proxy-service.employee-endpoint}"
     healthcareunit:
-      endpoint: /api/v2/healthcareunit
+      endpoint: "${app.integration.intyg-proxy-service.health-care-unit-endpoint}"
     healthcareunitmembers:
-      endpoint: /api/v2/healthcareunitmembers
+      endpoint: "${app.integration.intyg-proxy-service.health-care-unit-members-endpoint}"
     unit:
-      endpoint: /api/v1/unit
+      endpoint: "${app.integration.intyg-proxy-service.unit-endpoint}"
     person:
-      endpoint: /api/v1/person
+      endpoint: "${app.integration.intyg-proxy-service.person-endpoint}"
     persons:
-      endpoint: /api/v1/persons
+      endpoint: "${app.integration.intyg-proxy-service.persons-endpoint}"
+    baseurl: "${app.integration.intyg-proxy-service.base-url}"
   intygstjanst:
-    scheme: http
-    port: 8081
+    scheme: "${app.integration.intygstjanst.scheme}"
+    port: "${app.integration.intygstjanst.port}"
+    baseurl: "${app.integration.intygstjanst.base-url}"
   webcert:
-    scheme: http
-    port: 8081
+    scheme: "${app.integration.webcert.scheme}"
+    port: "${app.integration.webcert.port}"
+    baseurl: "${app.integration.webcert.base-url}"
 
 it:
   listsickleavesforperson:
-    url: "${intygstjanst.host.url}/inera-certificate/list-sick-leaves-for-person/v1.0"
+    url: "${app.integration.intygstjanst.list-sick-leaves-for-person-url}"
   service:
     connection:
-      timeout: 15000
+      timeout: "${app.integration.intygstjanst.service.connection-timeout}"
     receive:
-      timeout: 60000
+      timeout: "${app.integration.intygstjanst.service.receive-timeout}"
+    logicalAddress: "${app.integration.intygstjanst.logical-address}"
   rest:
     connection:
       request:
-        timeout: 15000
-      timeout: 15000
+        timeout: "${app.integration.intygstjanst.rest.connection-request-timeout}"
+      timeout: "${app.integration.intygstjanst.rest.connection-timeout}"
 
 wc:
   getadditions:
     max:
       age:
-        days: 90
+        days: "${app.integration.webcert.get-additions-max-age-days}"
 
 srs:
   getriskpredictionforcertificate:
     service:
-      url: "${srs.host.url}/get-risk-prediction-for-certificate/v1.0"
+      url: "${app.integration.srs.get-risk-prediction-url}"
   getdiagnosiscodes:
     service:
-      url: "${srs.host.url}/diagnosiscodes/v1.0"
+      url: "${app.integration.srs.get-diagnosis-codes-url}"
   service:
     connection:
-      timeout: 5000
+      timeout: "${app.integration.srs.connection-timeout}"
     receive:
-      timeout: 5000
+      timeout: "${app.integration.srs.receive-timeout}"
+    logicalAddress: "${app.integration.srs.logical-address}"
 
 sparrtjanst:
   checkblocks:
     endpoint:
-      url: "${ntjp.base.url}/informationsecurity/authorization/blocking/CheckBlocks/4/rivtabp21"
+      url: "${app.integration.sparrtjanst.check-blocks-url}"
   service:
     connection:
-      timeout: 10000
+      timeout: "${app.integration.sparrtjanst.connection-timeout}"
     receive:
-      timeout: 30000
+      timeout: "${app.integration.sparrtjanst.receive-timeout}"
+    logicalAddress: "${app.integration.sparrtjanst.logical-address}"
 
 samtyckestjanst:
   checkconsent:
     endpoint:
-      url: "${ntjp.base.url}/informationsecurity/authorization/consent/CheckConsent/2/rivtabp21"
+      url: "${app.integration.samtyckestjanst.check-consent-url}"
   registerextendedconsent:
     endpoint:
-      url: "${ntjp.base.url}/informationsecurity/authorization/consent/RegisterExtendedConsent/2/rivtabp21"
+      url: "${app.integration.samtyckestjanst.register-extended-consent-url}"
   service:
     connection:
-      timeout: 10000
+      timeout: "${app.integration.samtyckestjanst.connection-timeout}"
     receive:
-      timeout: 30000
+      timeout: "${app.integration.samtyckestjanst.receive-timeout}"
+    logicalAddress: "${app.integration.samtyckestjanst.logical-address}"
 
 authorities:
   configuration:
-    file: "classpath:authorities.yaml"
+    file: "${app.resources.authorities-configuration-file}"
 
 dynamic:
   links:
-    file: "classpath:/links/rehabstod.links.json"
+    file: "${app.resources.dynamic-links-file}"
 
 rhs:
   diagnoskapitel:
-    file: "classpath:/diagnoskoder/diagnoskapitel.txt"
+    file: "${app.resources.diagnoskapitel-file}"
   diagnosgrupper:
-    file: "classpath:/diagnoskoder/diagnosgrupper.txt"
+    file: "${app.resources.diagnosgrupper-file}"
   diagnoskod:
     ksh97p_kod:
-      file: "classpath:/diagnoskoder/KSH97P_KOD.ANS"
+      file: "${app.resources.diagnoskod-ksh97p-file}"
   diagnosisCode:
     icd10se:
-      file: "classpath:/diagnoskoder/icd10se/icd-10-se.tsv"
+      file: "${app.resources.diagnosis-code-icd10se-file}"
+
+max:
+  aliases:
+    for:
+      collections: "${app.resources.max-aliases-for-collections}"
+
+hash:
+  salt: "${app.security.hash-salt}"
+
+aes:
+  encryption:
+    key: "${app.security.aes-encryption-key}"
+
+pdl:
+  logging:
+    queue:
+      name: "${app.pdl.logging-queue-name}"
+
+webcert:
+  launch:
+    url:
+      template: "${app.integration.webcert.launch-url-template}"
+
+siths:
+  idp:
+    url: "${app.integration.webcert.siths-idp-url}"
+
+hsa:
+  intygproxyservice:
+    getemployee:
+      cache:
+        expiry: "${app.cache.hsa-employee-expiry-seconds}"
+    gethealthcareunit:
+      cache:
+        expiry: "${app.cache.hsa-health-care-unit-expiry-seconds}"
+    gethealthcareunitmembers:
+      cache:
+        expiry: "${app.cache.hsa-health-care-unit-members-expiry-seconds}"
+    getunit:
+      cache:
+        expiry: "${app.cache.hsa-unit-expiry-seconds}"
+    gethealthcareprovider:
+      cache:
+        expiry: "${app.cache.hsa-health-care-provider-expiry-seconds}"
+
+rehabstod:
+  domain:
+    name: "${app.domain-name}"
 
 saml:
-  baseurl: "https://${rehabstod.domain.name}"
+  baseurl: "${app.saml.base-url}"
   login:
     success:
-      url: "${saml.baseurl}/"
-  login.success.url.always.use: true
+      url: "${app.saml.login-success-url}"
+  login.success.url.always.use: "${app.saml.login-success-url-always-use}"
   logout:
     success:
-      url: "${saml.baseurl}/"
+      url: "${app.saml.logout-success-url}"
   sp:
     assertion:
       consumer:
         service:
-          location: "${saml.baseurl}/login/saml2/sso/siths"
+          location: "${app.saml.sp.assertion-consumer-service-location}"
     entity:
-      id: "${saml.baseurl}/saml2/service-provider-metadata/siths"
+      id: "${app.saml.sp.entity-id}"
     single:
       logout:
         service:
-          location: "${saml.baseurl}/logout/saml2/slo"
+          location: "${app.saml.sp.single-logout-service-location}"
           response:
-            location: "${saml.baseurl}/logout/saml2/slo"
+            location: "${app.saml.sp.single-logout-service-response-location}"
+  keystore:
+    type: "${app.saml.keystore.type}"
+    file: "${app.saml.keystore.file}"
+    alias: "${app.saml.keystore.alias}"
+    password: "${app.saml.keystore.password}"
+  idp:
+    metadata:
+      location: "${app.saml.idp-metadata-location}"
