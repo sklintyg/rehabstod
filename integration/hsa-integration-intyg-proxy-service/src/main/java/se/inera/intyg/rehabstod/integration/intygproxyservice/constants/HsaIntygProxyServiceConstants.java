@@ -29,7 +29,7 @@ public class HsaIntygProxyServiceConstants {
       "rehabstodHsaIntygProxyServiceHealthCareUnitCache";
   public static final String HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME =
       "rehabstodHsaIntygProxyServiceHealthCareUnitMembersCache";
-  public static final String UNIT_CACHE_NAME = "hsaIntygProxyServiceUnitCache";
+  public static final String UNIT_CACHE_NAME = "rehabstodHsaIntygProxyServiceUnitCache";
   public static final String HEALTH_CARE_PROVIDER_CACHE_NAME =
       "rehabstodHsaIntygProxyServiceHealthCareProviderCache";
 }
