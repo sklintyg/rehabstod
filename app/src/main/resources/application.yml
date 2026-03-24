@@ -1,0 +1,196 @@
+application:
+  dir: /deployments
+
+logging:
+  structured:
+    format:
+      console: ecs
+    ecs:
+      service:
+        name: rehabstod
+        environment: "${spring.profiles.active:default}"
+
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.actuate.autoconfigure.metrics.jdbc.DataSourcePoolMetricsAutoConfiguration
+  datasource:
+    url: "jdbc:mysql://${DB_SERVER}:${DB_PORT}/${DB_NAME}?useSSL=false&serverTimezone=Europe/Stockholm&allowPublicKeyRetrieval=true"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 3
+      connection-timeout: 3000
+      idle-timeout: 15000
+      auto-commit: false
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        id:
+          new_generator_mappings: false
+  liquibase:
+    change-log: classpath:changelog/changelog.xml
+  data:
+    redis:
+      timeout: 60s
+
+management:
+  server:
+    port: 8082
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+redis:
+  cache:
+    default_entry_expiry_time_in_seconds: 86400
+
+employee:
+  name:
+    cache:
+      expiry: 86400
+
+intygsadmin:
+  cache:
+    expiry: 86400
+  cron: "0 * * * * ?"
+
+pdlLogging:
+  systemId: SE5565594230-BD5
+  systemName: "Rehabstöd"
+
+ntjp:
+  ws:
+    certificate:
+      file: "file://${application.dir}/certifikat/ntjp.certificate.jks"
+      type: JKS
+    truststore:
+      file: "file://${application.dir}/certifikat/ntjp.truststore.jks"
+      type: JKS
+
+integration:
+  intygproxyservice:
+    credentialinformationforperson:
+      endpoint: /api/v1/credentialinformation
+    employee:
+      endpoint: /api/v2/employee
+    healthcareunit:
+      endpoint: /api/v2/healthcareunit
+    healthcareunitmembers:
+      endpoint: /api/v2/healthcareunitmembers
+    unit:
+      endpoint: /api/v1/unit
+    person:
+      endpoint: /api/v1/person
+    persons:
+      endpoint: /api/v1/persons
+  intygstjanst:
+    scheme: http
+    port: 8081
+  webcert:
+    scheme: http
+    port: 8081
+
+it:
+  listsickleavesforperson:
+    url: "${intygstjanst.host.url}/inera-certificate/list-sick-leaves-for-person/v1.0"
+  service:
+    connection:
+      timeout: 15000
+    receive:
+      timeout: 60000
+  rest:
+    connection:
+      request:
+        timeout: 15000
+      timeout: 15000
+
+wc:
+  getadditions:
+    max:
+      age:
+        days: 90
+
+srs:
+  getriskpredictionforcertificate:
+    service:
+      url: "${srs.host.url}/get-risk-prediction-for-certificate/v1.0"
+  getdiagnosiscodes:
+    service:
+      url: "${srs.host.url}/diagnosiscodes/v1.0"
+  service:
+    connection:
+      timeout: 5000
+    receive:
+      timeout: 5000
+
+sparrtjanst:
+  checkblocks:
+    endpoint:
+      url: "${ntjp.base.url}/informationsecurity/authorization/blocking/CheckBlocks/4/rivtabp21"
+  service:
+    connection:
+      timeout: 10000
+    receive:
+      timeout: 30000
+
+samtyckestjanst:
+  checkconsent:
+    endpoint:
+      url: "${ntjp.base.url}/informationsecurity/authorization/consent/CheckConsent/2/rivtabp21"
+  registerextendedconsent:
+    endpoint:
+      url: "${ntjp.base.url}/informationsecurity/authorization/consent/RegisterExtendedConsent/2/rivtabp21"
+  service:
+    connection:
+      timeout: 10000
+    receive:
+      timeout: 30000
+
+authorities:
+  configuration:
+    file: "classpath:authorities.yaml"
+
+dynamic:
+  links:
+    file: "classpath:/links/rehabstod.links.json"
+
+rhs:
+  diagnoskapitel:
+    file: "classpath:/diagnoskoder/diagnoskapitel.txt"
+  diagnosgrupper:
+    file: "classpath:/diagnoskoder/diagnosgrupper.txt"
+  diagnoskod:
+    ksh97p_kod:
+      file: "classpath:/diagnoskoder/KSH97P_KOD.ANS"
+  diagnosisCode:
+    icd10se:
+      file: "classpath:/diagnoskoder/icd10se/icd-10-se.tsv"
+
+saml:
+  baseurl: "https://${rehabstod.domain.name}"
+  login:
+    success:
+      url: "${saml.baseurl}/"
+  login.success.url.always.use: true
+  logout:
+    success:
+      url: "${saml.baseurl}/"
+  sp:
+    assertion:
+      consumer:
+        service:
+          location: "${saml.baseurl}/login/saml2/sso/siths"
+    entity:
+      id: "${saml.baseurl}/saml2/service-provider-metadata/siths"
+    single:
+      logout:
+        service:
+          location: "${saml.baseurl}/logout/saml2/slo"
+          response:
+            location: "${saml.baseurl}/logout/saml2/slo"
