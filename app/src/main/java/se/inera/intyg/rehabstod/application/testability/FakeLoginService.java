@@ -1,0 +1,77 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package se.inera.intyg.rehabstod.application.testability;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
+import org.springframework.security.authentication.event.LogoutSuccessEvent;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.stereotype.Service;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserDetailsService;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.fake.FakeAuthenticationToken;
+
+@Service
+@RequiredArgsConstructor
+public class FakeLoginService {
+
+  private final ApplicationEventPublisher applicationEventPublisher;
+  private final RehabstodUserDetailsService rehabstodUserDetailsService;
+
+  public void login(String hsaId, String enhetId, HttpServletRequest request) {
+    final var oldSession = request.getSession(false);
+    Optional.ofNullable(oldSession).ifPresent(HttpSession::invalidate);
+
+    final var fakeAuthenticationToken =
+        new FakeAuthenticationToken(
+            rehabstodUserDetailsService.buildUserPrincipal(
+                hsaId, enhetId, "urn:inera:rehabstod:siths:fake"));
+
+    final var context = SecurityContextHolder.createEmptyContext();
+    context.setAuthentication(fakeAuthenticationToken);
+    SecurityContextHolder.setContext(context);
+
+    final var newSession = request.getSession(true);
+    newSession.setAttribute(
+        HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+
+    applicationEventPublisher.publishEvent(
+        new InteractiveAuthenticationSuccessEvent(fakeAuthenticationToken, this.getClass()));
+  }
+
+  public void logout(HttpSession session) {
+    if (session == null) {
+      return;
+    }
+
+    session.invalidate();
+
+    final var authentication = SecurityContextHolder.getContext().getAuthentication();
+    SecurityContextHolder.getContext().setAuthentication(null);
+    SecurityContextHolder.clearContext();
+
+    if (authentication != null) {
+      applicationEventPublisher.publishEvent(new LogoutSuccessEvent(authentication));
+    }
+  }
+}

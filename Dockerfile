@@ -21,4 +21,4 @@ LABEL se.inera.from_image=${from_image}         \
 
 ENV APP_NAME=${artifact}
 
-COPY /web/build/libs/app.jar /deployments
+COPY /app/build/libs/app.jar /deployments

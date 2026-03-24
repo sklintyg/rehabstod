@@ -13,12 +13,12 @@ dependencyResolutionManagement {
 
 rootProject.name = 'rehabstod'
 
-include ':web', ':common', ':persistence', ':logging', ':integration/it-integration', ':integration/srs-integration', ':integration/samtyckestjanst-integration', ':integration/sparrtjanst-integration', ':integration/wc-integration', ':integration/pu-integration-intyg-proxy-service', ':integration/hsa-integration-intyg-proxy-service', ':integration/hsa-integration-api', ':integration/pu-integration-api', ':integration/ia-integration'
+include ':app', ':common', ':logging', ':integration/it-integration', ':integration/srs-integration', ':integration/samtyckestjanst-integration', ':integration/sparrtjanst-integration', ':integration/wc-integration', ':integration/pu-integration-intyg-proxy-service', ':integration/hsa-integration-intyg-proxy-service', ':integration/hsa-integration-api', ':integration/pu-integration-api', ':integration/ia-integration'
 
-project(':web').name = 'rehabstod-web'
+project(':app').projectDir = "$rootDir/app" as File
 project(':common').name = 'rehabstod-common'
-project(':persistence').name = 'rehabstod-persistence'
 project(':logging').name = 'rehabstod-logging'
+
 project(':integration/it-integration').name = 'rehabstod-it-integration'
 project(':integration/samtyckestjanst-integration').name = 'rehabstod-samtyckestjanst-integration'
 project(':integration/sparrtjanst-integration').name = 'rehabstod-sparrtjanst-integration'
