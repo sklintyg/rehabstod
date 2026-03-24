@@ -16,17 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod;
+package se.inera.intyg.rehabstod.integration.sparrtjanst.config.properties;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@SpringBootApplication
-@ConfigurationPropertiesScan
-public class RehabstodApplication {
-
-  public static void main(String[] args) {
-    SpringApplication.run(RehabstodApplication.class, args);
-  }
-}
+@ConfigurationProperties(prefix = "app.integration.sparrtjanst")
+public record SparrtjanstProperties(
+    String logicalAddress,
+    String checkBlocksUrl,
+    int connectionTimeout,
+    int receiveTimeout) {}

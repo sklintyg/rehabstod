@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod;
+package se.inera.intyg.rehabstod.integration.sparrtjanst.config.properties;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@SpringBootApplication
-@ConfigurationPropertiesScan
-public class RehabstodApplication {
+@ConfigurationProperties(prefix = "app.ntjp")
+public record NtjpProperties(
+    String baseUrl,
+    Certificate certificate,
+    String keyManagerPassword,
+    Truststore truststore) {
 
-  public static void main(String[] args) {
-    SpringApplication.run(RehabstodApplication.class, args);
-  }
+  public record Certificate(String file, String type, String password) {}
+
+  public record Truststore(String file, String type, String password) {}
 }

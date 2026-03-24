@@ -1,4 +1,6 @@
 dependencies {
+    compileOnly 'org.springframework.boot:spring-boot'
+
     implementation project(":rehabstod-common")
     implementation project(":rehabstod-wc-integration")
     implementation project(":rehabstod-logging")

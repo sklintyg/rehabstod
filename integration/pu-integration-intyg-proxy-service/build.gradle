@@ -1,4 +1,6 @@
 dependencies {
+    compileOnly 'org.springframework.boot:spring-boot'
+
     implementation project(':rehabstod-pu-integration-api')
     implementation project(":rehabstod-logging")
 

@@ -16,17 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod;
+package se.inera.intyg.rehabstod.integration.it.config.properties;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@SpringBootApplication
-@ConfigurationPropertiesScan
-public class RehabstodApplication {
+@ConfigurationProperties(prefix = "app.integration.intygstjanst")
+public record IntygstjanstProperties(
+    String scheme,
+    String baseUrl,
+    int port,
+    String hostUrl,
+    String logicalAddress,
+    String listSickLeavesForPersonUrl,
+    ServiceTimeouts service,
+    RestTimeouts rest) {
 
-  public static void main(String[] args) {
-    SpringApplication.run(RehabstodApplication.class, args);
-  }
+  public record ServiceTimeouts(int connectionTimeout, int receiveTimeout) {}
+
+  public record RestTimeouts(int connectionRequestTimeout, int connectionTimeout) {}
 }

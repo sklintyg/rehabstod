@@ -28,8 +28,8 @@ dependencies {
     implementation "redis.clients:jedis"
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-    implementation "org.liquibase:liquibase-core"
     implementation "ch.qos.logback:logback-classic"
+    implementation "codes.rafael.jaxb2_commons:jaxb2-basics"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     implementation "com.google.guava:guava"
     implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring"
@@ -38,13 +38,14 @@ dependencies {
     implementation "org.apache.cxf:cxf-rt-features-logging"
     implementation "org.apache.cxf:cxf-rt-frontend-jaxws"
     implementation "org.apache.cxf:cxf-rt-transports-http"
-    implementation "org.yaml:snakeyaml"
+    implementation "org.liquibase:liquibase-core"
     implementation "org.apache.httpcomponents.client5:httpclient5"
     implementation "org.apache.poi:poi-ooxml"
-    implementation "codes.rafael.jaxb2_commons:jaxb2-basics"
+    implementation "org.yaml:snakeyaml"
     implementation 'org.springframework.boot:spring-boot-starter-activemq'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.security:spring-security-saml2-service-provider'
     implementation "org.springframework.security:spring-security-config"
     implementation "org.springframework.security:spring-security-web"
