@@ -36,13 +36,13 @@ public record AppProperties(
     @NotNull @Valid Resources resources,
     @NotNull @Valid Integration integration) {
 
-  public record Security(String hashSalt, String aesEncryptionKey) {}
+  public record Security(@NotBlank String hashSalt, @NotBlank String aesEncryptionKey) {}
 
-  public record Pdl(String systemId, String systemName, String loggingQueueName) {}
+  public record Pdl(@NotBlank String systemId, String systemName, @NotBlank String loggingQueueName) {}
 
   public record Saml(
       String baseUrl,
-      String idpMetadataLocation,
+      @NotBlank String idpMetadataLocation,
       String loginSuccessUrl,
       boolean loginSuccessUrlAlwaysUse,
       String logoutSuccessUrl,
@@ -55,18 +55,18 @@ public record AppProperties(
         String singleLogoutServiceLocation,
         String singleLogoutServiceResponseLocation) {}
 
-    public record Keystore(String type, String file, String alias, String password) {}
+    public record Keystore(@NotBlank String type, @NotBlank String file, @NotBlank String alias, @NotBlank String password) {}
   }
 
   public record Ntjp(
       String baseUrl,
       @NotNull @Valid NtjpCertificate certificate,
-      String keyManagerPassword,
+      @NotBlank String keyManagerPassword,
       @NotNull @Valid NtjpTruststore truststore) {
 
-    public record NtjpCertificate(String file, String type, String password) {}
+    public record NtjpCertificate(String file, String type, @NotBlank String password) {}
 
-    public record NtjpTruststore(String file, String type, String password) {}
+    public record NtjpTruststore(String file, String type, @NotBlank String password) {}
   }
 
   public record Cache(
