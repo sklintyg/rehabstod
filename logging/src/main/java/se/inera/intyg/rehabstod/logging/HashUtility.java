@@ -23,14 +23,17 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
 import java.nio.charset.StandardCharsets;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import se.inera.intyg.rehabstod.logging.config.SecurityProperties;
 
 @Component
 public class HashUtility {
 
-  @Value("${hash.salt}")
-  private String salt;
+  private final String salt;
+
+  public HashUtility(SecurityProperties securityProperties) {
+    this.salt = securityProperties.hashSalt();
+  }
 
   public static final String EMPTY = "EMPTY";
   private static final HashFunction hf = Hashing.sha256();

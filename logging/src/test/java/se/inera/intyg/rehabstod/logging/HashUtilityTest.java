@@ -20,17 +20,11 @@ package se.inera.intyg.rehabstod.logging;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
+import se.inera.intyg.rehabstod.logging.config.SecurityProperties;
 
 class HashUtilityTest {
-  private final HashUtility hashUtility = new HashUtility();
-
-  @BeforeEach
-  void setUp() {
-    ReflectionTestUtils.setField(hashUtility, "salt", "salt");
-  }
+  private final HashUtility hashUtility = new HashUtility(new SecurityProperties("salt", null));
 
   @Test
   void shouldReturnHashedValue() {
