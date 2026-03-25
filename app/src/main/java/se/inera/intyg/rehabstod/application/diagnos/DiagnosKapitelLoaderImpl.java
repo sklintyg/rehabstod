@@ -29,7 +29,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 
 /** Created by marced on 08/02/16. */
 @Component

@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
-import se.inera.intyg.rehabstod.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 
 class PatientIdeEncryptionTest {
 

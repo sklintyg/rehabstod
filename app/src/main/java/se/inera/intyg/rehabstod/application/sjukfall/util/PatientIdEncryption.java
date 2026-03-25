@@ -26,7 +26,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.rehabstod.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 
 @Component
 public class PatientIdEncryption {

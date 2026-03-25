@@ -37,7 +37,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.application.api.model.PatientData;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
 import se.inera.intyg.rehabstod.application.sjukfall.komplettering.UnansweredQAsInfoDecoratorImpl;
-import se.inera.intyg.rehabstod.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;

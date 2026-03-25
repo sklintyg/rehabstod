@@ -35,7 +35,7 @@ import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.common.logmessages.PdlLogMessage;
 import se.inera.intyg.rehabstod.common.logmessages.PdlResource;
 import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Role;

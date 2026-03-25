@@ -29,7 +29,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
-import se.inera.intyg.rehabstod.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.security.authorities.AuthoritiesConfiguration;
 import se.inera.intyg.rehabstod.infrastructure.security.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.infrastructure.security.authorities.FeaturesConfiguration;

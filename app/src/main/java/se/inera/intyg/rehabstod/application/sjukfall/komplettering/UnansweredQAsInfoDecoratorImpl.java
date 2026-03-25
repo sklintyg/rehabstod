@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.application.sjukfall.komplettering;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
-import se.inera.intyg.rehabstod.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 

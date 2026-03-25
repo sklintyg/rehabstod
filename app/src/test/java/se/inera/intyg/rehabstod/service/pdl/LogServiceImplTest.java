@@ -40,7 +40,7 @@ import org.springframework.jms.support.destination.DestinationResolutionExceptio
 import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.logging.pdl.LogServiceImpl;
 import se.inera.intyg.rehabstod.logging.pdl.PdlLogMessageFactoryImpl;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;

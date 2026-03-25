@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.api.model.LUCertificate;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;

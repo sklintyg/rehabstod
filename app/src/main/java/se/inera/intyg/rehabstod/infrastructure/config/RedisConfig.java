@@ -28,7 +28,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import se.inera.intyg.rehabstod.application.hsa.EmployeeNameServiceImpl;
-import se.inera.intyg.rehabstod.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.integration.ia.constants.IaCacheConstants;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants;
 

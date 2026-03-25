@@ -34,8 +34,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.rehabstod.application.diagnos.DiagnosGruppLoaderImpl;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosGrupp;
-import se.inera.intyg.rehabstod.config.properties.AppProperties;
-import se.inera.intyg.rehabstod.config.properties.AppProperties.Resources;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties.Resources;
 
 /** Created by eriklupander on 2016-04-14. */
 @ExtendWith(SpringExtension.class)

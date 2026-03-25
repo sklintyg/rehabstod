@@ -63,7 +63,7 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.util.ResourceUtils;
-import se.inera.intyg.rehabstod.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.CsrfCookieFilter;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.CustomAuthenticationFailureHandler;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserDetailsService;

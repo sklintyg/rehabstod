@@ -69,7 +69,7 @@ import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
-import se.inera.intyg.rehabstod.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
