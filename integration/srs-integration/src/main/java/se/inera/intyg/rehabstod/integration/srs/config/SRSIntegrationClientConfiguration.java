@@ -25,12 +25,12 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateResponderInterface;
+import se.inera.intyg.rehabstod.integration.srs.config.properties.SrsProperties;
 
 // CHECKSTYLE:ON LineLength
 
@@ -50,20 +50,17 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertifi
 @Profile("!rhs-srs-stub")
 public class SRSIntegrationClientConfiguration {
 
-  private static final String DEFAULT_RECEIVE_TIMEOUT = "60000";
-  private static final String DEFAULT_CONNECTION_TIMEOUT = "15000";
+  private final String receiveTimeout;
+  private final String connectionTimeout;
+  private final String srsWsUrl;
+  private final String srsGetDiagnosisCodesWsUrl;
 
-  @Value("${srs.service.receive.timeout}")
-  private String receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
-
-  @Value("${srs.service.connection.timeout}")
-  private String connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
-
-  @Value("${srs.getriskpredictionforcertificate.service.url}")
-  private String srsWsUrl;
-
-  @Value("${srs.getdiagnosiscodes.service.url}")
-  private String srsGetDiagnosisCodesWsUrl;
+  public SRSIntegrationClientConfiguration(SrsProperties props) {
+    this.receiveTimeout = String.valueOf(props.receiveTimeout());
+    this.connectionTimeout = String.valueOf(props.connectionTimeout());
+    this.srsWsUrl = props.getRiskPredictionUrl();
+    this.srsGetDiagnosisCodesWsUrl = props.getDiagnosisCodesUrl();
+  }
 
   @Bean
   public GetRiskPredictionForCertificateResponderInterface

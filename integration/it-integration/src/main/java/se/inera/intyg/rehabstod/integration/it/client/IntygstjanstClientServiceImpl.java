@@ -20,12 +20,11 @@ package se.inera.intyg.rehabstod.integration.it.client;
 
 // CHECKSTYLE:OFF LineLength
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonType;
+import se.inera.intyg.rehabstod.integration.it.config.properties.IntygstjanstProperties;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
@@ -36,10 +35,14 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 @Service
 public class IntygstjanstClientServiceImpl implements IntygstjanstClientService {
 
-  @Autowired private ListSickLeavesForPersonResponderInterface personService;
+  private final ListSickLeavesForPersonResponderInterface personService;
+  private final String logicalAddress;
 
-  @Value("${it.service.logicalAddress}")
-  private String logicalAddress;
+  public IntygstjanstClientServiceImpl(
+      ListSickLeavesForPersonResponderInterface personService, IntygstjanstProperties props) {
+    this.personService = personService;
+    this.logicalAddress = props.logicalAddress();
+  }
 
   @Override
   @PerformanceLogging(

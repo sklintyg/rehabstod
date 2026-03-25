@@ -24,9 +24,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.rehabstod.integration.samtyckestjanst.config.properties.SamtyckestjanstProperties;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.exception.SamtyckestjanstIntegrationException;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.util.SamtyckestjanstUtil;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
@@ -52,12 +51,18 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
   private static final ScopeType SCOPE_TYPE = ScopeType.NATIONAL_LEVEL;
   private static final AssertionTypeType ASSERTION_TYPE = AssertionTypeType.CONSENT;
 
-  @Autowired private CheckConsentResponderInterface checkConsentservice;
+  private final CheckConsentResponderInterface checkConsentservice;
+  private final RegisterExtendedConsentResponderInterface registerExtendedConsentService;
+  private final String logicalAddress;
 
-  @Autowired private RegisterExtendedConsentResponderInterface registerExtendedConsentService;
-
-  @Value("${samtyckestjanst.service.logicalAddress}")
-  private String logicalAddress;
+  public SamtyckestjanstClientServiceImpl(
+      CheckConsentResponderInterface checkConsentservice,
+      RegisterExtendedConsentResponderInterface registerExtendedConsentService,
+      SamtyckestjanstProperties props) {
+    this.checkConsentservice = checkConsentservice;
+    this.registerExtendedConsentService = registerExtendedConsentService;
+    this.logicalAddress = props.logicalAddress();
+  }
 
   /**
    * @see SamtyckestjanstClientService#checkConsent(String, String, String, String) checkConsent

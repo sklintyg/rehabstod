@@ -23,10 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.exception.SparrtjanstIntegrationException;
+import se.inera.intyg.rehabstod.integration.sparrtjanst.config.properties.SparrtjanstProperties;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.util.SparrtjanstUtil;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
@@ -44,10 +43,14 @@ public class SparrtjanstClientServiceImpl implements SparrtjanstClientService {
   private static final Logger LOG =
       LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
-  @Autowired private CheckBlocksResponderInterface service;
+  private final CheckBlocksResponderInterface service;
+  private final String logicalAddress;
 
-  @Value("${sparrtjanst.service.logicalAddress}")
-  private String logicalAddress;
+  public SparrtjanstClientServiceImpl(
+      CheckBlocksResponderInterface service, SparrtjanstProperties props) {
+    this.service = service;
+    this.logicalAddress = props.logicalAddress();
+  }
 
   @Override
   @PerformanceLogging(

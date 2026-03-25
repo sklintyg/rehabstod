@@ -28,10 +28,10 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import se.inera.intyg.rehabstod.integration.wc.config.properties.WebcertProperties;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
@@ -43,15 +43,7 @@ public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
   private static final Logger LOG = LoggerFactory.getLogger(WcRestIntegrationServiceImpl.class);
 
   private final RestClient wcRestClient;
-
-  @Value("${integration.webcert.scheme}")
-  private String scheme;
-
-  @Value("${integration.webcert.baseurl}")
-  private String baseUrl;
-
-  @Value("${integration.webcert.port}")
-  private int port;
+  private final WebcertProperties props;
 
   @Override
   @PerformanceLogging(
@@ -64,7 +56,7 @@ public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
     try {
       return wcRestClient
           .post()
-          .uri(uriBuilder -> uriBuilder.scheme(scheme).host(baseUrl).port(port).path(url).build())
+          .uri(uriBuilder -> uriBuilder.scheme(props.scheme()).host(props.baseUrl()).port(props.port()).path(url).build())
           .body(request)
           .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
           .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))

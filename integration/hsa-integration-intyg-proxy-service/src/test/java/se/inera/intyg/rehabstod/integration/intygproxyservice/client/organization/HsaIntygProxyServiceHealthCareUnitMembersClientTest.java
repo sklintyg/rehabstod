@@ -31,16 +31,15 @@ import static se.inera.intyg.rehabstod.integration.intygproxyservice.configurati
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
 import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.RequestBodyUriSpec;
 import org.springframework.web.client.RestClient.ResponseSpec;
 import se.inera.intyg.rehabstod.integration.hsatk.model.HealthCareUnitMembers;
+import se.inera.intyg.rehabstod.integration.intygproxyservice.config.properties.HsaIntygProxyServiceProperties;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersResponseDTO;
 
@@ -49,7 +48,7 @@ class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
 
   private static final String HSA_ID = "hsaId";
   @Mock private RestClient restClient;
-  @InjectMocks private HsaIntygProxyServiceHealthCareUnitMembersClient healthCareUnitMembersClient;
+  private HsaIntygProxyServiceHealthCareUnitMembersClient healthCareUnitMembersClient;
 
   private RequestBodyUriSpec requestBodyUriSpec;
   private ResponseSpec responseSpec;
@@ -57,7 +56,8 @@ class HsaIntygProxyServiceHealthCareUnitMembersClientTest {
   @BeforeEach
   void setUp() {
     final var uri = "/api/from/configuration";
-    ReflectionTestUtils.setField(healthCareUnitMembersClient, "healthCareUnitMembersEndpoint", uri);
+    healthCareUnitMembersClient = new HsaIntygProxyServiceHealthCareUnitMembersClient(
+        restClient, new HsaIntygProxyServiceProperties(null, null, null, null, uri, null));
 
     requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
     responseSpec = mock(RestClient.ResponseSpec.class);

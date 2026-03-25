@@ -39,14 +39,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
 import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
+import se.inera.intyg.rehabstod.integration.wc.config.properties.WebcertProperties;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
@@ -70,13 +69,12 @@ class WcRestIntegrationServiceImplTest {
 
   @Mock private RestClient.ResponseSpec responseSpec;
 
-  @InjectMocks private WcRestIntegrationServiceImpl service;
+  private WcRestIntegrationServiceImpl service;
 
   @BeforeEach
   void setUp() {
-    ReflectionTestUtils.setField(service, "scheme", SCHEME);
-    ReflectionTestUtils.setField(service, "baseUrl", BASE_URL);
-    ReflectionTestUtils.setField(service, "port", PORT);
+    service = new WcRestIntegrationServiceImpl(
+        wcRestClient, new WebcertProperties(SCHEME, BASE_URL, PORT, null, null, 90));
 
     MDC.put(MdcLogConstants.TRACE_ID_KEY, TRACE_ID);
     MDC.put(MdcLogConstants.SESSION_ID_KEY, SESSION_ID);

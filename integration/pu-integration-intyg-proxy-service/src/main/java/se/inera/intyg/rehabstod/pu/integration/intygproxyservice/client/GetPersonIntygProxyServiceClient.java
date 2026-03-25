@@ -19,14 +19,13 @@
 package se.inera.intyg.rehabstod.pu.integration.intygproxyservice.client;
 
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.pu.integration.intygproxyservice.config.properties.PuIntygProxyServiceProperties;
 import se.inera.intyg.rehabstod.pu.integration.intygproxyservice.configuration.PURestClientConfig;
 import se.inera.intyg.rehabstod.pu.integration.intygproxyservice.dto.PersonRequestDTO;
 import se.inera.intyg.rehabstod.pu.integration.intygproxyservice.dto.PersonResponseDTO;
@@ -34,11 +33,15 @@ import se.inera.intyg.rehabstod.pu.integration.intygproxyservice.dto.PersonRespo
 @Service
 public class GetPersonIntygProxyServiceClient {
 
-  @Autowired
-  @Qualifier("puIntygProxyServiceRestClient") private RestClient ipsRestClient;
+  private final RestClient ipsRestClient;
+  private final String personEndpoint;
 
-  @Value("${integration.intygproxyservice.person.endpoint}")
-  private String personEndpoint;
+  public GetPersonIntygProxyServiceClient(
+      @Qualifier("puIntygProxyServiceRestClient") RestClient ipsRestClient,
+      PuIntygProxyServiceProperties props) {
+    this.ipsRestClient = ipsRestClient;
+    this.personEndpoint = props.personEndpoint();
+  }
 
   @PerformanceLogging(eventAction = "get-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
   public PersonResponseDTO get(PersonRequestDTO request) {

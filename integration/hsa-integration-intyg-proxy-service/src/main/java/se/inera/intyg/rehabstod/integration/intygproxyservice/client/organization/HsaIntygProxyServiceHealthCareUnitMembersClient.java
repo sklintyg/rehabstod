@@ -24,12 +24,11 @@ import static se.inera.intyg.rehabstod.integration.intygproxyservice.configurati
 import static se.inera.intyg.rehabstod.integration.intygproxyservice.configuration.HsaRestClientConfig.TRACE_ID_KEY;
 
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import se.inera.intyg.rehabstod.integration.intygproxyservice.config.properties.HsaIntygProxyServiceProperties;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersResponseDTO;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
@@ -38,11 +37,15 @@ import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 @Service
 public class HsaIntygProxyServiceHealthCareUnitMembersClient {
 
-  @Autowired
-  @Qualifier("hsaIntygProxyServiceRestClient") private RestClient ipsRestClient;
+  private final RestClient ipsRestClient;
+  private final String healthCareUnitMembersEndpoint;
 
-  @Value("${integration.intygproxyservice.healthcareunitmembers.endpoint}")
-  private String healthCareUnitMembersEndpoint;
+  public HsaIntygProxyServiceHealthCareUnitMembersClient(
+      @Qualifier("hsaIntygProxyServiceRestClient") RestClient ipsRestClient,
+      HsaIntygProxyServiceProperties props) {
+    this.ipsRestClient = ipsRestClient;
+    this.healthCareUnitMembersEndpoint = props.healthCareUnitMembersEndpoint();
+  }
 
   @PerformanceLogging(
       eventAction = "get-health-care-unit-members",

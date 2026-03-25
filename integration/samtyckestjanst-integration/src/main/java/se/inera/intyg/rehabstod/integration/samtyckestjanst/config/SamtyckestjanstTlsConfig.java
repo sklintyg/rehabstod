@@ -28,35 +28,34 @@ import javax.net.ssl.TrustManagerFactory;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.configuration.security.FiltersType;
 import org.apache.cxf.transport.http.HTTPConduit;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import se.inera.intyg.rehabstod.integration.samtyckestjanst.config.properties.NtjpProperties;
 
 @Component
 @Profile("!rhs-samtyckestjanst-stub")
 public class SamtyckestjanstTlsConfig {
 
-  @Value("${ntjp.ws.certificate.file}")
-  private Resource certFile;
+  private final Resource certFile;
+  private final String certPassword;
+  private final String certType;
+  private final String keyManagerPassword;
+  private final Resource truststoreFile;
+  private final String truststorePassword;
+  private final String truststoreType;
 
-  @Value("${ntjp.ws.certificate.password}")
-  private String certPassword;
-
-  @Value("${ntjp.ws.certificate.type:PKCS12}")
-  private String certType;
-
-  @Value("${ntjp.ws.key.manager.password}")
-  private String keyManagerPassword;
-
-  @Value("${ntjp.ws.truststore.file}")
-  private Resource truststoreFile;
-
-  @Value("${ntjp.ws.truststore.password}")
-  private String truststorePassword;
-
-  @Value("${ntjp.ws.truststore.type:JKS}")
-  private String truststoreType;
+  public SamtyckestjanstTlsConfig(NtjpProperties ntjpProperties) {
+    final var loader = new DefaultResourceLoader();
+    this.certFile = loader.getResource(ntjpProperties.certificate().file());
+    this.certPassword = ntjpProperties.certificate().password();
+    this.certType = ntjpProperties.certificate().type();
+    this.keyManagerPassword = ntjpProperties.keyManagerPassword();
+    this.truststoreFile = loader.getResource(ntjpProperties.truststore().file());
+    this.truststorePassword = ntjpProperties.truststore().password();
+    this.truststoreType = ntjpProperties.truststore().type();
+  }
 
   public void configure(HTTPConduit conduit) {
     if (certFile == null || !certFile.exists()) {

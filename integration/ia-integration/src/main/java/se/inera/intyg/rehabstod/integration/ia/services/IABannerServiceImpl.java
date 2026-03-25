@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import se.inera.intyg.rehabstod.integration.ia.config.properties.IntygsadminProperties;
 import se.inera.intyg.rehabstod.integration.ia.constants.IaCacheConstants;
 import se.inera.intyg.rehabstod.integration.ia.model.Application;
 import se.inera.intyg.rehabstod.integration.ia.model.Banner;
@@ -46,11 +46,12 @@ public class IABannerServiceImpl implements IABannerService {
 
   @Qualifier("iaRestTemplate") private final RestTemplate restTemplate;
 
-  @Value("${intygsadmin.url}")
-  private String iaUrl;
+  private final String iaUrl;
 
-  public IABannerServiceImpl(@Qualifier("iaRestTemplate") RestTemplate restTemplate) {
+  public IABannerServiceImpl(
+      @Qualifier("iaRestTemplate") RestTemplate restTemplate, IntygsadminProperties props) {
     this.restTemplate = restTemplate;
+    this.iaUrl = props.url();
   }
 
   @Override

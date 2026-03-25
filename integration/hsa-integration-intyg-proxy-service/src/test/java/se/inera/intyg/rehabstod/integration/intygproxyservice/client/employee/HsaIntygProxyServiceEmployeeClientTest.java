@@ -31,15 +31,14 @@ import static se.inera.intyg.rehabstod.integration.intygproxyservice.configurati
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
 import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.RequestBodyUriSpec;
 import org.springframework.web.client.RestClient.ResponseSpec;
+import se.inera.intyg.rehabstod.integration.intygproxyservice.config.properties.HsaIntygProxyServiceProperties;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.employee.GetEmployeeResponseDTO;
 
@@ -48,7 +47,7 @@ class HsaIntygProxyServiceEmployeeClientTest {
 
   @Mock private RestClient restClient;
 
-  @InjectMocks private HsaIntygProxyServiceEmployeeClient hsaIntygProxyServiceEmployeeClient;
+  private HsaIntygProxyServiceEmployeeClient hsaIntygProxyServiceEmployeeClient;
 
   private static final String PERSONAL_IDENTITY_NUMBER = "personalIdentityNumber";
 
@@ -58,7 +57,8 @@ class HsaIntygProxyServiceEmployeeClientTest {
   @BeforeEach
   void setUp() {
     final var uri = "/api/from/configuration";
-    ReflectionTestUtils.setField(hsaIntygProxyServiceEmployeeClient, "employeeEndpoint", uri);
+    hsaIntygProxyServiceEmployeeClient = new HsaIntygProxyServiceEmployeeClient(
+        restClient, new HsaIntygProxyServiceProperties(null, null, uri, null, null, null));
 
     requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
     responseSpec = mock(RestClient.ResponseSpec.class);

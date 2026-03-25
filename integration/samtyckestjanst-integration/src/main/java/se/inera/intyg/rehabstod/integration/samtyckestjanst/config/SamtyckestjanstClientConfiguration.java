@@ -25,11 +25,10 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import se.inera.intyg.rehabstod.integration.samtyckestjanst.config.properties.SamtyckestjanstProperties;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsent.v2.rivtabp21.RegisterExtendedConsentResponderInterface;
 
@@ -39,22 +38,20 @@ import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsent.
 @Profile("!rhs-samtyckestjanst-stub")
 public class SamtyckestjanstClientConfiguration {
 
-  private static final String DEFAULT_RECEIVE_TIMEOUT = "30000";
-  private static final String DEFAULT_CONNECTION_TIMEOUT = "10000";
+  private final SamtyckestjanstTlsConfig tlsConfig;
+  private final String receiveTimeout;
+  private final String connectionTimeout;
+  private final String checkConsentUrl;
+  private final String registerConsentUrl;
 
-  @Value("${samtyckestjanst.service.receive.timeout}")
-  private String receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
-
-  @Value("${samtyckestjanst.service.connection.timeout}")
-  private String connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
-
-  @Value("${samtyckestjanst.checkconsent.endpoint.url}")
-  private String checkConsentUrl;
-
-  @Value("${samtyckestjanst.registerextendedconsent.endpoint.url}")
-  private String registerConsentUrl;
-
-  @Autowired private SamtyckestjanstTlsConfig tlsConfig;
+  public SamtyckestjanstClientConfiguration(
+      SamtyckestjanstTlsConfig tlsConfig, SamtyckestjanstProperties props) {
+    this.tlsConfig = tlsConfig;
+    this.receiveTimeout = String.valueOf(props.receiveTimeout());
+    this.connectionTimeout = String.valueOf(props.connectionTimeout());
+    this.checkConsentUrl = props.checkConsentUrl();
+    this.registerConsentUrl = props.registerExtendedConsentUrl();
+  }
 
   @Bean
   public CheckConsentResponderInterface checkConsentWebServiceClient() {

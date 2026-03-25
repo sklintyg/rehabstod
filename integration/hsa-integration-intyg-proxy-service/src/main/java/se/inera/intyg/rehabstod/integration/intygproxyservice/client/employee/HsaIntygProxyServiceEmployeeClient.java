@@ -24,12 +24,11 @@ import static se.inera.intyg.rehabstod.integration.intygproxyservice.configurati
 import static se.inera.intyg.rehabstod.integration.intygproxyservice.configuration.HsaRestClientConfig.TRACE_ID_KEY;
 
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import se.inera.intyg.rehabstod.integration.intygproxyservice.config.properties.HsaIntygProxyServiceProperties;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.employee.GetEmployeeResponseDTO;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
@@ -38,11 +37,15 @@ import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 @Service
 public class HsaIntygProxyServiceEmployeeClient {
 
-  @Autowired
-  @Qualifier("hsaIntygProxyServiceRestClient") private RestClient ipsRestClient;
+  private final RestClient ipsRestClient;
+  private final String employeeEndpoint;
 
-  @Value("${integration.intygproxyservice.employee.endpoint}")
-  private String employeeEndpoint;
+  public HsaIntygProxyServiceEmployeeClient(
+      @Qualifier("hsaIntygProxyServiceRestClient") RestClient ipsRestClient,
+      HsaIntygProxyServiceProperties props) {
+    this.ipsRestClient = ipsRestClient;
+    this.employeeEndpoint = props.employeeEndpoint();
+  }
 
   @PerformanceLogging(eventAction = "get-employee", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
   public GetEmployeeResponseDTO getEmployee(GetEmployeeRequestDTO getEmployeeRequestDTO) {

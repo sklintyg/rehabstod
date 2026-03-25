@@ -25,12 +25,12 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponderInterface;
+import se.inera.intyg.rehabstod.integration.it.config.properties.IntygstjanstProperties;
 
 // CHECKSTYLE:ON LineLength
 
@@ -49,17 +49,15 @@ import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesfo
 @Profile("!rhs-it-stub")
 public class IntygstjanstIntegrationClientConfiguration {
 
-  private static final String DEFAULT_RECEIVE_TIMEOUT = "60000";
-  private static final String DEFAULT_CONNECTION_TIMEOUT = "15000";
+  private final String receiveTimeout;
+  private final String connectionTimeout;
+  private final String listSickleavesForPersonUrl;
 
-  @Value("${it.service.receive.timeout}")
-  private String receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
-
-  @Value("${it.service.connection.timeout}")
-  private String connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
-
-  @Value("${it.listsickleavesforperson.url}")
-  private String listSickleavesForPersonUrl;
+  public IntygstjanstIntegrationClientConfiguration(IntygstjanstProperties props) {
+    this.receiveTimeout = String.valueOf(props.service().receiveTimeout());
+    this.connectionTimeout = String.valueOf(props.service().connectionTimeout());
+    this.listSickleavesForPersonUrl = props.listSickLeavesForPersonUrl();
+  }
 
   @Bean
   public ListSickLeavesForPersonResponderInterface listSickLeavesForPersonWebServiceClient() {

@@ -18,26 +18,26 @@
  */
 package se.inera.intyg.rehabstod.integration.it.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
+import se.inera.intyg.rehabstod.integration.it.config.properties.IntygstjanstProperties;
 
 @Configuration
 public class IntygstjanstRestIntegrationConfiguration {
 
-  @Value("${it.rest.connection.request.timeout}")
-  private int requestTimeout;
+  private final IntygstjanstProperties props;
 
-  @Value("${it.rest.connection.timeout}")
-  private int connectionTimeout;
+  public IntygstjanstRestIntegrationConfiguration(IntygstjanstProperties props) {
+    this.props = props;
+  }
 
   @Bean
   public RestTemplate itRestTemplate() {
     final var httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-    httpRequestFactory.setConnectionRequestTimeout(requestTimeout);
-    httpRequestFactory.setConnectTimeout(connectionTimeout);
+    httpRequestFactory.setConnectionRequestTimeout(props.rest().connectionRequestTimeout());
+    httpRequestFactory.setConnectTimeout(props.rest().connectionTimeout());
 
     return new RestTemplate(httpRequestFactory);
   }

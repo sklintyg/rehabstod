@@ -18,10 +18,10 @@
  */
 package se.inera.intyg.rehabstod.integration.intygproxyservice.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
+import se.inera.intyg.rehabstod.integration.intygproxyservice.config.properties.HsaIntygProxyServiceProperties;
 
 @Configuration
 public class HsaRestClientConfig {
@@ -32,11 +32,14 @@ public class HsaRestClientConfig {
   public static final String SESSION_ID_KEY = "session.id";
   public static final String TRACE_ID_KEY = "trace.id";
 
-  @Value("${integration.intygproxyservice.baseurl}")
-  private String intygProxyServiceBaseUrl;
+  private final HsaIntygProxyServiceProperties props;
+
+  public HsaRestClientConfig(HsaIntygProxyServiceProperties props) {
+    this.props = props;
+  }
 
   @Bean(name = "hsaIntygProxyServiceRestClient")
   public RestClient ipsRestClient() {
-    return RestClient.create(intygProxyServiceBaseUrl);
+    return RestClient.create(props.baseUrl());
   }
 }

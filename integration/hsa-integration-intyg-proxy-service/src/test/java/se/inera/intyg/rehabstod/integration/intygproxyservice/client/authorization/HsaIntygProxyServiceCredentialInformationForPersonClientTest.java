@@ -32,16 +32,15 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
 import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.RequestBodyUriSpec;
 import org.springframework.web.client.RestClient.ResponseSpec;
 import se.inera.intyg.rehabstod.integration.hsatk.model.CredentialInformation;
+import se.inera.intyg.rehabstod.integration.intygproxyservice.config.properties.HsaIntygProxyServiceProperties;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.dto.authorization.GetCredentialInformationResponseDTO;
 
@@ -53,7 +52,6 @@ class HsaIntygProxyServiceCredentialInformationForPersonClientTest {
 
   @Mock private RestClient restClient;
 
-  @InjectMocks
   private HsaIntygProxyServiceCredentialInformationForPersonClient
       credentialInformationForPersonClient;
 
@@ -63,8 +61,8 @@ class HsaIntygProxyServiceCredentialInformationForPersonClientTest {
   @BeforeEach
   void setUp() {
     final var uri = "/api/from/configuration";
-    ReflectionTestUtils.setField(
-        credentialInformationForPersonClient, "credentialInformationForPerson", uri);
+    credentialInformationForPersonClient = new HsaIntygProxyServiceCredentialInformationForPersonClient(
+        restClient, new HsaIntygProxyServiceProperties(null, uri, null, null, null, null));
 
     requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
     responseSpec = mock(RestClient.ResponseSpec.class);

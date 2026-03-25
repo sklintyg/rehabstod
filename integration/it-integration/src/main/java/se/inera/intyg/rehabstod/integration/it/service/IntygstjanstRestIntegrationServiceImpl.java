@@ -31,7 +31,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -39,6 +38,7 @@ import org.springframework.web.client.RestClient;
 import se.inera.intyg.rehabstod.common.model.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.rehabstod.common.model.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.rehabstod.common.model.certificate.dto.TypedCertificateRequest;
+import se.inera.intyg.rehabstod.integration.it.config.properties.IntygstjanstProperties;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.GetRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
@@ -58,15 +58,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
       LoggerFactory.getLogger(IntygstjanstRestIntegrationServiceImpl.class);
 
   private final RestClient itRestClient;
-
-  @Value("${integration.intygstjanst.scheme}")
-  private String scheme;
-
-  @Value("${integration.intygstjanst.baseurl}")
-  private String baseUrl;
-
-  @Value("${integration.intygstjanst.port}")
-  private int port;
+  private final IntygstjanstProperties props;
 
   @Override
   @PerformanceLogging(
@@ -88,7 +80,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     return buildListResponseFromArray(
         itRestClient
             .post()
-            .uri(uriBuilder -> uriBuilder.scheme(scheme).host(baseUrl).port(port).path(url).build())
+            .uri(uriBuilder -> uriBuilder.scheme(props.scheme()).host(props.baseUrl()).port(props.port()).path(url).build())
             .body(requestObject)
             .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
             .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
@@ -125,7 +117,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     return buildListResponseFromArray(
         itRestClient
             .post()
-            .uri(uriBuilder -> uriBuilder.scheme(scheme).host(baseUrl).port(port).path(url).build())
+            .uri(uriBuilder -> uriBuilder.scheme(props.scheme()).host(props.baseUrl()).port(props.port()).path(url).build())
             .body(requestObject)
             .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
             .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
@@ -165,7 +157,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     return buildListResponseFromArray(
         itRestClient
             .post()
-            .uri(uriBuilder -> uriBuilder.scheme(scheme).host(baseUrl).port(port).path(url).build())
+            .uri(uriBuilder -> uriBuilder.scheme(props.scheme()).host(props.baseUrl()).port(props.port()).path(url).build())
             .body(requestObject)
             .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
             .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
@@ -187,7 +179,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     return buildListResponseFromArray(
         itRestClient
             .post()
-            .uri(uriBuilder -> uriBuilder.scheme(scheme).host(baseUrl).port(port).path(url).build())
+            .uri(uriBuilder -> uriBuilder.scheme(props.scheme()).host(props.baseUrl()).port(props.port()).path(url).build())
             .body(requestObject)
             .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
             .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
@@ -207,7 +199,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
     return itRestClient
         .post()
-        .uri(uriBuilder -> uriBuilder.scheme(scheme).host(baseUrl).port(port).path(url).build())
+        .uri(uriBuilder -> uriBuilder.scheme(props.scheme()).host(props.baseUrl()).port(props.port()).path(url).build())
         .body(request)
         .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
         .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
@@ -227,7 +219,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
     return itRestClient
         .post()
-        .uri(uriBuilder -> uriBuilder.scheme(scheme).host(baseUrl).port(port).path(url).build())
+        .uri(uriBuilder -> uriBuilder.scheme(props.scheme()).host(props.baseUrl()).port(props.port()).path(url).build())
         .body(request)
         .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
         .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
@@ -247,7 +239,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
     return itRestClient
         .post()
-        .uri(uriBuilder -> uriBuilder.scheme(scheme).host(baseUrl).port(port).path(url).build())
+        .uri(uriBuilder -> uriBuilder.scheme(props.scheme()).host(props.baseUrl()).port(props.port()).path(url).build())
         .body(request)
         .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
         .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
@@ -268,7 +260,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
     return itRestClient
         .post()
-        .uri(uriBuilder -> uriBuilder.scheme(scheme).host(baseUrl).port(port).path(url).build())
+        .uri(uriBuilder -> uriBuilder.scheme(props.scheme()).host(props.baseUrl()).port(props.port()).path(url).build())
         .body(request)
         .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
         .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))

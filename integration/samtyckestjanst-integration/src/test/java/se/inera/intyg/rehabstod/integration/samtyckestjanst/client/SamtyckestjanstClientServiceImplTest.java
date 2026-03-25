@@ -35,10 +35,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
+import se.inera.intyg.rehabstod.integration.samtyckestjanst.config.properties.SamtyckestjanstProperties;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentType;
@@ -68,11 +67,14 @@ class SamtyckestjanstClientServiceImplTest {
 
   @Mock private RegisterExtendedConsentResponderInterface registerExtendedConsentService;
 
-  @InjectMocks private SamtyckestjanstClientServiceImpl testee;
+  private SamtyckestjanstClientServiceImpl testee;
 
   @BeforeEach
   void setUp() throws Exception {
-    ReflectionTestUtils.setField(testee, "logicalAddress", LOGICAL_ADDRESS);
+    testee = new SamtyckestjanstClientServiceImpl(
+        checkConsentService,
+        registerExtendedConsentService,
+        new SamtyckestjanstProperties(LOGICAL_ADDRESS, "http://checkconsent", "http://register", 10000, 30000));
   }
 
   @Test

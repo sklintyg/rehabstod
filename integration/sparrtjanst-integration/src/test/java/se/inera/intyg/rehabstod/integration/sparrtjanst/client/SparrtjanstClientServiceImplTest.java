@@ -26,13 +26,13 @@ import static org.mockito.Mockito.verify;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
+import se.inera.intyg.rehabstod.integration.sparrtjanst.config.properties.SparrtjanstProperties;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.util.SparrtjanstUtil;
 import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
@@ -52,11 +52,16 @@ class SparrtjanstClientServiceImplTest {
 
   @Mock private CheckBlocksResponderInterface service;
 
-  @InjectMocks private SparrtjanstClientServiceImpl testee;
+  private SparrtjanstClientServiceImpl testee;
+
+  @BeforeEach
+  void setUp() {
+    testee = new SparrtjanstClientServiceImpl(
+        service, new SparrtjanstProperties(LOGICAL_ADDRESS, "http://sparrtjanst", 10000, 30000));
+  }
 
   @Test
   void getCheckBlocks() throws Exception {
-    ReflectionTestUtils.setField(testee, "logicalAddress", LOGICAL_ADDRESS);
     ArgumentCaptor<CheckBlocksType> requestCapture = ArgumentCaptor.forClass(CheckBlocksType.class);
 
     List<IntygData> intygLista = new ArrayList<>();
@@ -88,8 +93,6 @@ class SparrtjanstClientServiceImplTest {
 
   @Test
   void getCheckBlocksThrowsExceptionForInvalidPatientId() throws Exception {
-    ReflectionTestUtils.setField(testee, "logicalAddress", LOGICAL_ADDRESS);
-
     List<IntygData> intygLista = new ArrayList<>();
     assertThrows(
         IllegalArgumentException.class,

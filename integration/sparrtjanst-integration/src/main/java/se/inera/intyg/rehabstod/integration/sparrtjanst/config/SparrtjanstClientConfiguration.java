@@ -25,11 +25,10 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import se.inera.intyg.rehabstod.integration.sparrtjanst.config.properties.SparrtjanstProperties;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
 
 // CHECKSTYLE:ON LineLength
@@ -38,19 +37,18 @@ import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp2
 @Profile("!rhs-sparrtjanst-stub")
 public class SparrtjanstClientConfiguration {
 
-  private static final String DEFAULT_RECEIVE_TIMEOUT = "30000";
-  private static final String DEFAULT_CONNECTION_TIMEOUT = "10000";
+  private final SparrtjanstTlsConfig tlsConfig;
+  private final String receiveTimeout;
+  private final String connectionTimeout;
+  private final String checkBlocksUrl;
 
-  @Value("${sparrtjanst.service.receive.timeout}")
-  private String receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
-
-  @Value("${sparrtjanst.service.connection.timeout}")
-  private String connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
-
-  @Value("${sparrtjanst.checkblocks.endpoint.url}")
-  private String checkBlocksUrl;
-
-  @Autowired private SparrtjanstTlsConfig tlsConfig;
+  public SparrtjanstClientConfiguration(
+      SparrtjanstTlsConfig tlsConfig, SparrtjanstProperties props) {
+    this.tlsConfig = tlsConfig;
+    this.receiveTimeout = String.valueOf(props.receiveTimeout());
+    this.connectionTimeout = String.valueOf(props.connectionTimeout());
+    this.checkBlocksUrl = props.checkBlocksUrl();
+  }
 
   @Bean
   public CheckBlocksResponderInterface checkBlocksWebServiceClient() {
