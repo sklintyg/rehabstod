@@ -36,11 +36,11 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.rehabstod.application.Urval;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Role;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 
 /**
  * @author marced on 01/03/16.

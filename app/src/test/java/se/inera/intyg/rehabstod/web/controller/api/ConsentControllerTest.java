@@ -46,10 +46,10 @@ import se.inera.intyg.rehabstod.application.sjukfall.ConsentService;
 import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.logging.pdl.LogService;
 import se.inera.intyg.schemas.contract.Personnummer;
 

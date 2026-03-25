@@ -38,15 +38,28 @@ import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties.R
 
 /** Created by eriklupander on 2016-04-14. */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {DiagnosKoderLoaderImpl.class, IcdCodeConverter.class, DiagnosKoderLoaderImplTest.TestConfig.class})
+@ContextConfiguration(
+    classes = {
+      DiagnosKoderLoaderImpl.class,
+      IcdCodeConverter.class,
+      DiagnosKoderLoaderImplTest.TestConfig.class
+    })
 class DiagnosKoderLoaderImplTest {
 
   @TestConfiguration
   static class TestConfig {
     @Bean
     public AppProperties appProperties() {
-      return new AppProperties(null, null, null, null, null, null,
-          new Resources(null, null, null, null, null, "placeholder-ksh97p", "placeholder-icd10se", 500), null);
+      return new AppProperties(
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          new Resources(
+              null, null, null, null, null, "placeholder-ksh97p", "placeholder-icd10se", 500),
+          null);
     }
   }
 

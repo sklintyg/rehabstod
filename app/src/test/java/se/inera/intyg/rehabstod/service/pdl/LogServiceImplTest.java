@@ -29,9 +29,9 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
@@ -53,11 +53,18 @@ class LogServiceImplTest {
 
   @Mock private UserService userService;
 
-  @Spy private PdlLogMessageFactoryImpl pdlLogMessageFactory =
+  @Spy
+  private PdlLogMessageFactoryImpl pdlLogMessageFactory =
       new PdlLogMessageFactoryImpl(
-          new AppProperties(null, null,
+          new AppProperties(
+              null,
+              null,
               new AppProperties.Pdl("test-system-id", "test-system-name", null),
-              null, null, null, null, null));
+              null,
+              null,
+              null,
+              null,
+              null));
 
   @InjectMocks private LogServiceImpl testee;
 

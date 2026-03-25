@@ -21,11 +21,11 @@ package se.inera.intyg.rehabstod.application.api.dto;
 import java.util.List;
 import java.util.Map;
 import se.inera.intyg.rehabstod.application.Urval;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.SelectableVardenhet;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Feature;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Role;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 
 /** Reponse dto for the getUser api. */
 public class GetUserResponse {

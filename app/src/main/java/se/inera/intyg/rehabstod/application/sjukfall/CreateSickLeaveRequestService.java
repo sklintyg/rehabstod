@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.application.sjukfall;
 
 import se.inera.intyg.rehabstod.application.api.dto.SickLeavesFilterRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
 
 public interface CreateSickLeaveRequestService {
 

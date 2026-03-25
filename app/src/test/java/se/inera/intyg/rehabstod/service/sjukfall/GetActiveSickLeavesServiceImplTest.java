@@ -36,9 +36,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.application.sjukfall.GetActiveSickLeavesServiceImpl;
 import se.inera.intyg.rehabstod.application.sjukfall.mappers.SjukfallEngineMapper;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
-import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesResponseDTO;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.sjukfall.dto.SjukfallEnhet;
 
 @ExtendWith(MockitoExtension.class)

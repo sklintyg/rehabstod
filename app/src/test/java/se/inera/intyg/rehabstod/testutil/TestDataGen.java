@@ -35,12 +35,12 @@ import se.inera.intyg.rehabstod.application.api.model.LangdIntervall;
 import se.inera.intyg.rehabstod.application.api.model.Patient;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.api.model.Sortering;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.SelectableVardenhet;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Role;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 
 /**
  * Helper base class, provides data setup for tests.

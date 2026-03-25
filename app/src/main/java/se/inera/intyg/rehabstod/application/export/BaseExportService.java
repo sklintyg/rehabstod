@@ -27,10 +27,10 @@ import se.inera.intyg.rehabstod.application.api.model.Diagnos;
 import se.inera.intyg.rehabstod.application.api.model.LangdIntervall;
 import se.inera.intyg.rehabstod.application.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
+import se.inera.intyg.rehabstod.infrastructure.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Feature;
-import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 
 /** Created by eriklupander on 2016-02-26. */
 public abstract class BaseExportService {

@@ -22,8 +22,8 @@ import java.util.List;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
 import se.inera.intyg.rehabstod.common.model.certificate.dto.DiagnosedCertificate;
+import se.inera.intyg.rehabstod.infrastructure.integration.pu.api.model.PersonSvar;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.pu.integration.api.model.PersonSvar;
 import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
 
 public interface PuService {

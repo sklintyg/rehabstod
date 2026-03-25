@@ -34,7 +34,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
 import se.inera.intyg.rehabstod.application.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.infrastructure.dynamiclink.service.DynamicLinkService;
-import se.inera.intyg.rehabstod.integration.ia.services.IABannerService;
+import se.inera.intyg.rehabstod.infrastructure.integration.ia.services.IABannerService;
 
 @ExtendWith(MockitoExtension.class)
 class ConfigControllerTest {

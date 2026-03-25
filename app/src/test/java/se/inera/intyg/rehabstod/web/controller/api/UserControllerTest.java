@@ -38,13 +38,13 @@ import se.inera.intyg.rehabstod.application.api.UserController;
 import se.inera.intyg.rehabstod.application.api.dto.ChangeSelectedUnitRequest;
 import se.inera.intyg.rehabstod.application.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.application.user.UserService;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.rehabstod.infrastructure.repository.AnvandarPreferenceRepository;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.infrastructure.security.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.infrastructure.security.authorities.CommonAuthoritiesResolver;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
 
 /** Created by marced on 01/02/16. */
 @ExtendWith(MockitoExtension.class)

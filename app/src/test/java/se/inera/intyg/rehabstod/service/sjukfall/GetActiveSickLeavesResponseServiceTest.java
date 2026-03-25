@@ -52,8 +52,8 @@ import se.inera.intyg.rehabstod.application.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.logging.MonitoringLogService;
 
 @ExtendWith(MockitoExtension.class)

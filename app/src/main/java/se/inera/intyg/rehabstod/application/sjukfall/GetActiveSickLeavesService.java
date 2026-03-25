@@ -20,7 +20,7 @@ package se.inera.intyg.rehabstod.application.sjukfall;
 
 import java.util.List;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
 
 public interface GetActiveSickLeavesService {
 

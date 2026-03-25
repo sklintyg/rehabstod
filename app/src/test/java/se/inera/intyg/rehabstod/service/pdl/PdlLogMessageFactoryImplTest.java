@@ -47,9 +47,15 @@ import se.inera.intyg.rehabstod.testutil.TestDataGen;
 class PdlLogMessageFactoryImplTest {
 
   private static final AppProperties APP_PROPERTIES =
-      new AppProperties(null, null,
+      new AppProperties(
+          null,
+          null,
           new AppProperties.Pdl("test-system-id", "test-system-name", null),
-          null, null, null, null, null);
+          null,
+          null,
+          null,
+          null,
+          null);
 
   private PdlLogMessageFactoryImpl testee = new PdlLogMessageFactoryImpl(APP_PROPERTIES);
 

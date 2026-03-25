@@ -44,10 +44,10 @@ import se.inera.intyg.rehabstod.application.api.model.Patient;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.communication.UnansweredCommunicationDecoratorServiceImpl;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
-import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
-import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
-import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
-import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
+import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.WcRestIntegrationService;
+import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationRequest;
+import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationResponse;
+import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredQAs;
 
 @ExtendWith(MockitoExtension.class)
 class UnansweredCommunicationDecoratorServiceTest {

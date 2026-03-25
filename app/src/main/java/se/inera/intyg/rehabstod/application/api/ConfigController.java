@@ -27,7 +27,7 @@ import se.inera.intyg.rehabstod.application.api.dto.GetConfigResponse;
 import se.inera.intyg.rehabstod.application.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.infrastructure.dynamiclink.model.DynamicLink;
 import se.inera.intyg.rehabstod.infrastructure.dynamiclink.service.DynamicLinkService;
-import se.inera.intyg.rehabstod.integration.ia.services.IABannerService;
+import se.inera.intyg.rehabstod.infrastructure.integration.ia.services.IABannerService;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 
@@ -36,7 +36,8 @@ import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 @RequestMapping("/api/config")
 public class ConfigController {
 
-  protected static final String WEBCERT_LAUNCH_URL_TEMPLATE = "app.integration.webcert.launch-url-template";
+  protected static final String WEBCERT_LAUNCH_URL_TEMPLATE =
+      "app.integration.webcert.launch-url-template";
   protected static final String PROJECT_VERSION_PROPERTY = "project.version";
   protected static final String SITHS_IDP_URL = "app.integration.webcert.siths-idp-url";
 

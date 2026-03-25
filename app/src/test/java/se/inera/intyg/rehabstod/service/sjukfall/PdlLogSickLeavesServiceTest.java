@@ -41,11 +41,11 @@ import se.inera.intyg.rehabstod.application.sjukfall.PdlLogSickLeavesServiceImpl
 import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.SelectableVardenhet;
+import se.inera.intyg.rehabstod.infrastructure.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
-import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.logging.pdl.LogService;
 
 @ExtendWith(MockitoExtension.class)

@@ -23,8 +23,8 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.api.util.ControllerUtil;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.application.user.UserService;
-import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.CreateRekoStatusRequestDTO;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 
 @Service
@@ -61,7 +61,7 @@ public class CreateRekoStatusServiceImpl implements CreateRekoStatusService {
   }
 
   private RekoStatusDTO convertResponse(
-      se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO response) {
+      se.inera.intyg.rehabstod.infrastructure.integration.it.dto.RekoStatusDTO response) {
     return new RekoStatusDTO(
         new RekoStatusTypeDTO(response.getStatus().getId(), response.getStatus().getName()));
   }

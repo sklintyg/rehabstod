@@ -39,7 +39,7 @@ import se.inera.intyg.rehabstod.application.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.application.sjukfall.SjukfallServiceException;
 import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
-import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 
 /**

@@ -40,10 +40,10 @@ import se.inera.intyg.rehabstod.application.sjukfall.dto.UnansweredCommunication
 import se.inera.intyg.rehabstod.application.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.application.user.FeatureService;
 import se.inera.intyg.rehabstod.application.user.UserService;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.PopulateFiltersRequestDTO;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
-import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 
 @Service

@@ -103,8 +103,10 @@ public class WebSecurityConfig {
         new FileInputStream(ResourceUtils.getFile(appProperties.saml().keystore().file())),
         appProperties.saml().keystore().password().toCharArray());
     final var appPrivateKey =
-        (PrivateKey) keyStore.getKey(appProperties.saml().keystore().alias(),
-            appProperties.saml().keystore().password().toCharArray());
+        (PrivateKey)
+            keyStore.getKey(
+                appProperties.saml().keystore().alias(),
+                appProperties.saml().keystore().password().toCharArray());
     final var appCertificate =
         (X509Certificate) keyStore.getCertificate(appProperties.saml().keystore().alias());
 
@@ -112,9 +114,11 @@ public class WebSecurityConfig {
         RelyingPartyRegistrations.fromMetadataLocation(appProperties.saml().idpMetadataLocation())
             .registrationId(RELYING_PARTY_REGISTRATION_ID)
             .entityId(appProperties.saml().sp().entityId())
-            .assertionConsumerServiceLocation(appProperties.saml().sp().assertionConsumerServiceLocation())
+            .assertionConsumerServiceLocation(
+                appProperties.saml().sp().assertionConsumerServiceLocation())
             .singleLogoutServiceLocation(appProperties.saml().sp().singleLogoutServiceLocation())
-            .singleLogoutServiceResponseLocation(appProperties.saml().sp().singleLogoutServiceResponseLocation())
+            .singleLogoutServiceResponseLocation(
+                appProperties.saml().sp().singleLogoutServiceResponseLocation())
             .signingX509Credentials(
                 signing -> signing.add(Saml2X509Credential.signing(appPrivateKey, appCertificate)))
             .build();
@@ -154,7 +158,9 @@ public class WebSecurityConfig {
                     .authenticationManager(
                         new ProviderManager(getOpenSaml4AuthenticationProvider()))
                     .failureHandler(customAuthenticationFailureHandler)
-                    .defaultSuccessUrl(appProperties.saml().loginSuccessUrl(), appProperties.saml().loginSuccessUrlAlwaysUse()))
+                    .defaultSuccessUrl(
+                        appProperties.saml().loginSuccessUrl(),
+                        appProperties.saml().loginSuccessUrlAlwaysUse()))
         .saml2Logout(
             saml2 ->
                 saml2.logoutRequest(logout -> logout.logoutRequestResolver(logoutRequestResolver)))

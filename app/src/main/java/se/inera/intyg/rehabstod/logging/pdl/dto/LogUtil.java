@@ -19,9 +19,9 @@
 package se.inera.intyg.rehabstod.logging.pdl.dto;
 
 import se.inera.intyg.rehabstod.application.api.model.PatientData;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
 
 /**
  * @author Magnus Ekstrand on 2018-11-14.

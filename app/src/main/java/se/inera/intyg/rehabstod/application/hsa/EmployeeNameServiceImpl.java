@@ -23,8 +23,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation;
-import se.inera.intyg.rehabstod.integration.hsatk.services.legacy.HsaEmployeeService;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.services.legacy.HsaEmployeeService;
 
 @Service
 public class EmployeeNameServiceImpl implements EmployeeNameService {

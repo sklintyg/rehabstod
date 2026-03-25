@@ -38,7 +38,8 @@ public record AppProperties(
 
   public record Security(@NotBlank String hashSalt, @NotBlank String aesEncryptionKey) {}
 
-  public record Pdl(@NotBlank String systemId, String systemName, @NotBlank String loggingQueueName) {}
+  public record Pdl(
+      @NotBlank String systemId, String systemName, @NotBlank String loggingQueueName) {}
 
   public record Saml(
       String baseUrl,
@@ -55,7 +56,11 @@ public record AppProperties(
         String singleLogoutServiceLocation,
         String singleLogoutServiceResponseLocation) {}
 
-    public record Keystore(@NotBlank String type, @NotBlank String file, @NotBlank String alias, @NotBlank String password) {}
+    public record Keystore(
+        @NotBlank String type,
+        @NotBlank String file,
+        @NotBlank String alias,
+        @NotBlank String password) {}
   }
 
   public record Ntjp(
@@ -129,10 +134,7 @@ public record AppProperties(
         int receiveTimeout) {}
 
     public record SparrtjanstIntegration(
-        String logicalAddress,
-        String checkBlocksUrl,
-        int connectionTimeout,
-        int receiveTimeout) {}
+        String logicalAddress, String checkBlocksUrl, int connectionTimeout, int receiveTimeout) {}
 
     public record SamtyckestjanstIntegration(
         String logicalAddress,

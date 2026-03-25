@@ -57,12 +57,12 @@ import se.inera.intyg.rehabstod.common.model.certificate.builder.SickLeaveCertif
 import se.inera.intyg.rehabstod.common.model.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.rehabstod.common.model.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.rehabstod.common.model.certificate.dto.SickLeaveCertificate.WorkCapacity;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.SelectableVardenhet;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.services.legacy.HsaOrganizationsService;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
-import se.inera.intyg.rehabstod.integration.hsatk.services.legacy.HsaOrganizationsService;
-import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.logging.pdl.LogService;
 
 @ExtendWith(MockitoExtension.class)

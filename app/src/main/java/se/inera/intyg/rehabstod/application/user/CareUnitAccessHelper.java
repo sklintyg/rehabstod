@@ -20,11 +20,11 @@ package se.inera.intyg.rehabstod.application.user;
 
 import java.util.HashSet;
 import java.util.Set;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.SelectableVardenhet;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.IntygUser;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 
 /**
  * Helper class for checking whether a {@link IntygUser} has access to a given vardenhet/mottagning.
@@ -39,10 +39,8 @@ public final class CareUnitAccessHelper {
   private CareUnitAccessHelper() {}
 
   /**
-   * Since the WebCertUser#getValdVardenhet may either return a {@link
-   * se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet} or a {@link
-   * se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning}, this method can be used to
-   * determine if:
+   * Since the WebCertUser#getValdVardenhet may either return a {@link Vardenhet} or a {@link
+   * Mottagning}, this method can be used to determine if:
    *
    * <ul>
    *   <li>If the selectedVardenhet is a Vardenhet: The supplied enhetsId is for the Vardenhet or

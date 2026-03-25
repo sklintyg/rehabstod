@@ -30,9 +30,9 @@ import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.application.pu.PuService;
 import se.inera.intyg.rehabstod.application.user.UserService;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeaveLengthInterval;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeaveLengthInterval;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 
 @Service
 public class CreateSickLeaveRequestServiceImpl implements CreateSickLeaveRequestService {

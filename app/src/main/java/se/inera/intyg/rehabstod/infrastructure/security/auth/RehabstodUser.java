@@ -30,15 +30,15 @@ import java.util.Objects;
 import java.util.Set;
 import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticatedPrincipal;
 import se.inera.intyg.rehabstod.application.Urval;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.AbstractVardenhet;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.IntygUser;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Role;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.AbstractVardenhet;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 
 /**
  * @author pebe on 2015-08-11.

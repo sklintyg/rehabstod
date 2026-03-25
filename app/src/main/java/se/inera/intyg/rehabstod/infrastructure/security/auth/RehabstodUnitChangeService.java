@@ -22,11 +22,11 @@ import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.infrastructure.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Role;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
 
 /**
  * This is a helper class that manages user vardenhet changes, basically implementing the

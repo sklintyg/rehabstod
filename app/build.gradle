@@ -8,22 +8,14 @@ tasks.named('bootJar') {
 }
 
 dependencies {
-    implementation project(":rehabstod-ia-integration")
     implementation project(":rehabstod-common")
-    implementation project(":rehabstod-it-integration")
-    implementation project(":rehabstod-samtyckestjanst-integration")
-    implementation project(":rehabstod-sparrtjanst-integration")
-    implementation project(":rehabstod-srs-integration")
-    implementation project(":rehabstod-wc-integration")
     implementation project(":rehabstod-logging")
-    implementation project(":rehabstod-hsa-integration-api")
-    implementation project(":rehabstod-pu-integration-api")
-    implementation project(":rehabstod-pu-integration-intyg-proxy-service")
-    implementation project(":rehabstod-hsa-integration-intyg-proxy-service")
 
     implementation "se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:${intygHealthcondRehabilitationSchemasVersion}"
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
     implementation "se.riv.informationsecurity.authorization.consent:informationsecurity-authorization-consent-schemas:${consentSchemaVersion}"
+    implementation "se.riv.informationsecurity.authorization.blocking:informationsecurity-authorization-blocking-schemas:${blockingSchemaVersion}"
+    implementation "se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:${srsSchemasVersion}"
 
     implementation "redis.clients:jedis"
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'

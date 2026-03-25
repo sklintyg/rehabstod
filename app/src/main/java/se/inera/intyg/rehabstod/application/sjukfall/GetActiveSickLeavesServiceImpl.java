@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.sjukfall.mappers.SjukfallEngineMapper;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.logging.SickLeaveLogMessageFactory;
 
 @Service

@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.application.api.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
+import se.inera.intyg.rehabstod.infrastructure.integration.srs.model.RiskSignal;
 
 /**
  * @author Magnus Ekstrand on 2017-09-01.

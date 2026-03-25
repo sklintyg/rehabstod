@@ -40,15 +40,15 @@ import se.inera.intyg.rehabstod.application.pu.PuService;
 import se.inera.intyg.rehabstod.application.sjukfall.CreateSickLeaveRequestServiceImpl;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.SickLeaveLengthInterval;
 import se.inera.intyg.rehabstod.application.user.UserService;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.SelectableVardenhet;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Role;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
 
 @ExtendWith(MockitoExtension.class)
 class CreateSickLeaveRequestServiceImplTest {
@@ -419,7 +419,9 @@ class CreateSickLeaveRequestServiceImplTest {
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult =
-          List.of(new se.inera.intyg.rehabstod.integration.it.dto.SickLeaveLengthInterval(5, 5));
+          List.of(
+              new se.inera.intyg.rehabstod.infrastructure.integration.it.dto
+                  .SickLeaveLengthInterval(5, 5));
       final var response =
           getSickLeaveRequestService.create(
               SickLeavesFilterRequestDTO.builder()

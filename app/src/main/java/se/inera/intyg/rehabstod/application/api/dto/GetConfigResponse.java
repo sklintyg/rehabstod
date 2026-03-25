@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.application.api.dto;
 import java.util.List;
 import lombok.Data;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.integration.ia.model.Banner;
+import se.inera.intyg.rehabstod.infrastructure.integration.ia.model.Banner;
 
 /** Created by marced on 2016-01-18. */
 @Data

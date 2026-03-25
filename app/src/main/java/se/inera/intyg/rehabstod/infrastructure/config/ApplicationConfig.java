@@ -35,13 +35,13 @@ import se.inera.intyg.rehabstod.infrastructure.security.filter.PrincipalUpdatedF
 @EnableTransactionManagement
 @ComponentScan({
   "se.inera.intyg.rehabstod.logging",
-  "se.inera.intyg.rehabstod.integration.it",
-  "se.inera.intyg.rehabstod.integration.wc",
+  "se.inera.intyg.rehabstod.infrastructure.integration.it",
+  "se.inera.intyg.rehabstod.infrastructure.integration.wc",
   "se.inera.intyg.rehabstod.sjukfall",
-  "se.inera.intyg.rehabstod.pu.integration.api",
-  "se.inera.intyg.rehabstod.integration.hsatk",
-  "se.inera.intyg.rehabstod.integration.intygproxyservice",
-  "se.inera.intyg.rehabstod.pu.integration.intygproxyservice",
+  "se.inera.intyg.rehabstod.infrastructure.integration.pu.api",
+  "se.inera.intyg.rehabstod.infrastructure.integration.hsatk",
+  "se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice",
+  "se.inera.intyg.rehabstod.infrastructure.integration.pu.intygproxyservice",
   "se.inera.intyg.rehabstod.dynamiclink"
 })
 public class ApplicationConfig {

@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.rehabstod.application.sjukfall.testability;
 
-import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.TestDataOptionsDTO;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.CreateSickLeaveRequestDTO;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.TestDataOptionsDTO;
 
 public interface TestabilityService {
 

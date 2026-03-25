@@ -38,10 +38,10 @@ import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
 import se.inera.intyg.rehabstod.application.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.application.user.UserService;
+import se.inera.intyg.rehabstod.infrastructure.integration.srs.model.RiskSignal;
+import se.inera.intyg.rehabstod.infrastructure.integration.srs.service.SRSIntegrationService;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Feature;
-import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
-import se.inera.intyg.rehabstod.integration.srs.service.SRSIntegrationService;
 
 /** Created by eriklupander on 2017-11-01. */
 @Slf4j

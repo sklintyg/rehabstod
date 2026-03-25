@@ -32,7 +32,7 @@ import org.springframework.web.context.support.ServletContextAttributeExporter;
   "se.inera.intyg.rehabstod.service",
   "se.inera.intyg.rehabstod.auth",
   "se.inera.intyg.rehabstod.common",
-  "se.inera.intyg.rehabstod.integration.it.service"
+  "se.inera.intyg.rehabstod.infrastructure.integration.it.service"
 })
 @EnableScheduling
 public class ServiceConfig {

@@ -21,8 +21,8 @@ package se.inera.intyg.rehabstod.application.api.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.List;
-import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
-import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.RekoStatusDTO;
+import se.inera.intyg.rehabstod.infrastructure.integration.srs.model.RiskSignal;
 
 /** Created by eriklupander on 2016-02-19. */
 public class SjukfallEnhet {

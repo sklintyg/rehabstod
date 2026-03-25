@@ -37,7 +37,8 @@ class PatientIdeEncryptionTest {
 
   private static PatientIdEncryption createEncryption(String key) {
     return new PatientIdEncryption(
-        new AppProperties(null, new AppProperties.Security(null, key), null, null, null, null, null, null));
+        new AppProperties(
+            null, new AppProperties.Security(null, key), null, null, null, null, null, null));
   }
 
   @Test
