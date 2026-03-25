@@ -35,6 +35,7 @@ import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.common.logmessages.PdlLogMessage;
 import se.inera.intyg.rehabstod.common.logmessages.PdlResource;
 import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Role;
@@ -45,7 +46,12 @@ import se.inera.intyg.rehabstod.testutil.TestDataGen;
 /** Created by eriklupander on 2016-03-03. */
 class PdlLogMessageFactoryImplTest {
 
-  private PdlLogMessageFactoryImpl testee = new PdlLogMessageFactoryImpl();
+  private static final AppProperties APP_PROPERTIES =
+      new AppProperties(null, null,
+          new AppProperties.Pdl("test-system-id", "test-system-name", null),
+          null, null, null, null, null);
+
+  private PdlLogMessageFactoryImpl testee = new PdlLogMessageFactoryImpl(APP_PROPERTIES);
 
   @Test
   void testBuildLogMessage() {

@@ -29,9 +29,9 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
@@ -40,6 +40,7 @@ import org.springframework.jms.support.destination.DestinationResolutionExceptio
 import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.logging.pdl.LogServiceImpl;
 import se.inera.intyg.rehabstod.logging.pdl.PdlLogMessageFactoryImpl;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
@@ -52,7 +53,11 @@ class LogServiceImplTest {
 
   @Mock private UserService userService;
 
-  @Spy private PdlLogMessageFactoryImpl pdlLogMessageFactory;
+  @Spy private PdlLogMessageFactoryImpl pdlLogMessageFactory =
+      new PdlLogMessageFactoryImpl(
+          new AppProperties(null, null,
+              new AppProperties.Pdl("test-system-id", "test-system-name", null),
+              null, null, null, null, null));
 
   @InjectMocks private LogServiceImpl testee;
 

@@ -37,7 +37,7 @@ public class RSBannerJob {
 
   @Autowired private IABannerService iaBannerService;
 
-  @Scheduled(cron = "${intygsadmin.cron}")
+  @Scheduled(cron = "${app.integration.intygsadmin.cron}")
   @SchedulerLock(name = "BannerJob.run", lockAtLeastFor = "PT30S", lockAtMostFor = "PT10M")
   public void run() {
     List<Banner> banners = iaBannerService.loadBanners(Application.REHABSTOD);

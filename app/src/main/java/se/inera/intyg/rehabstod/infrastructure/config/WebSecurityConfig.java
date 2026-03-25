@@ -32,11 +32,9 @@ import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opensaml.core.xml.schema.impl.XSStringImpl;
 import org.opensaml.saml.saml2.core.SessionIndex;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ProviderManager;
@@ -65,6 +63,7 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.util.ResourceUtils;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.CsrfCookieFilter;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.CustomAuthenticationFailureHandler;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserDetailsService;
@@ -76,47 +75,20 @@ import se.inera.intyg.rehabstod.infrastructure.security.common.cookie.IneraCooki
 @EnableWebSecurity
 @EnableRedisHttpSession
 @Slf4j
-@RequiredArgsConstructor
 public class WebSecurityConfig {
 
   private final RehabstodUserDetailsService rehabstodUserDetailsService;
   private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+  private final AppProperties appProperties;
 
-  @Value("${saml.sp.entity.id}")
-  private String samlEntityId;
-
-  @Value("${saml.idp.metadata.location}")
-  private String samlIdpMetadataLocation;
-
-  @Value("${saml.sp.assertion.consumer.service.location}")
-  private String assertionConsumerServiceLocation;
-
-  @Value("${saml.sp.single.logout.service.location}")
-  private String singleLogoutServiceLocation;
-
-  @Value("${saml.sp.single.logout.service.response.location}")
-  private String singleLogoutServiceResponseLocation;
-
-  @Value("${saml.login.success.url}")
-  private String samlLoginSuccessUrl;
-
-  @Value("${saml.login.success.url.always.use}")
-  private boolean samlLoginSuccessUrlAlwaysUse;
-
-  @Value("${saml.logout.success.url}")
-  private String samlLogoutSuccessUrl;
-
-  @Value("${saml.keystore.type:PKCS12}")
-  private String keyStoreType;
-
-  @Value("${saml.keystore.file}")
-  private String keyStorePath;
-
-  @Value("${saml.keystore.alias}")
-  private String keyAlias;
-
-  @Value("${saml.keystore.password}")
-  private String keyStorePassword;
+  public WebSecurityConfig(
+      RehabstodUserDetailsService rehabstodUserDetailsService,
+      CustomAuthenticationFailureHandler customAuthenticationFailureHandler,
+      AppProperties appProperties) {
+    this.rehabstodUserDetailsService = rehabstodUserDetailsService;
+    this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
+    this.appProperties = appProperties;
+  }
 
   @Bean
   public RelyingPartyRegistrationRepository relyingPartyRegistrationRepository()
@@ -126,20 +98,23 @@ public class WebSecurityConfig {
           IOException,
           CertificateException {
 
-    final var keyStore = KeyStore.getInstance(keyStoreType);
+    final var keyStore = KeyStore.getInstance(appProperties.saml().keystore().type());
     keyStore.load(
-        new FileInputStream(ResourceUtils.getFile(keyStorePath)), keyStorePassword.toCharArray());
+        new FileInputStream(ResourceUtils.getFile(appProperties.saml().keystore().file())),
+        appProperties.saml().keystore().password().toCharArray());
     final var appPrivateKey =
-        (PrivateKey) keyStore.getKey(keyAlias, keyStorePassword.toCharArray());
-    final var appCertificate = (X509Certificate) keyStore.getCertificate(keyAlias);
+        (PrivateKey) keyStore.getKey(appProperties.saml().keystore().alias(),
+            appProperties.saml().keystore().password().toCharArray());
+    final var appCertificate =
+        (X509Certificate) keyStore.getCertificate(appProperties.saml().keystore().alias());
 
     final var registration =
-        RelyingPartyRegistrations.fromMetadataLocation(samlIdpMetadataLocation)
+        RelyingPartyRegistrations.fromMetadataLocation(appProperties.saml().idpMetadataLocation())
             .registrationId(RELYING_PARTY_REGISTRATION_ID)
-            .entityId(samlEntityId)
-            .assertionConsumerServiceLocation(assertionConsumerServiceLocation)
-            .singleLogoutServiceLocation(singleLogoutServiceLocation)
-            .singleLogoutServiceResponseLocation(singleLogoutServiceResponseLocation)
+            .entityId(appProperties.saml().sp().entityId())
+            .assertionConsumerServiceLocation(appProperties.saml().sp().assertionConsumerServiceLocation())
+            .singleLogoutServiceLocation(appProperties.saml().sp().singleLogoutServiceLocation())
+            .singleLogoutServiceResponseLocation(appProperties.saml().sp().singleLogoutServiceResponseLocation())
             .signingX509Credentials(
                 signing -> signing.add(Saml2X509Credential.signing(appPrivateKey, appCertificate)))
             .build();
@@ -179,15 +154,15 @@ public class WebSecurityConfig {
                     .authenticationManager(
                         new ProviderManager(getOpenSaml4AuthenticationProvider()))
                     .failureHandler(customAuthenticationFailureHandler)
-                    .defaultSuccessUrl(samlLoginSuccessUrl, samlLoginSuccessUrlAlwaysUse))
+                    .defaultSuccessUrl(appProperties.saml().loginSuccessUrl(), appProperties.saml().loginSuccessUrlAlwaysUse()))
         .saml2Logout(
             saml2 ->
                 saml2.logoutRequest(logout -> logout.logoutRequestResolver(logoutRequestResolver)))
-        .logout(logout -> logout.logoutSuccessUrl(samlLogoutSuccessUrl))
+        .logout(logout -> logout.logoutSuccessUrl(appProperties.saml().logoutSuccessUrl()))
         .requestCache(
             cacheConfigurer ->
                 cacheConfigurer.requestCache(
-                    samlLoginSuccessUrlAlwaysUse
+                    appProperties.saml().loginSuccessUrlAlwaysUse()
                         ? new NullRequestCache()
                         : new HttpSessionRequestCache()))
         .exceptionHandling(

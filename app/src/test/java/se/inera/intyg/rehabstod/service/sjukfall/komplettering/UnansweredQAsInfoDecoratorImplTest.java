@@ -28,15 +28,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.application.api.model.PatientData;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
 import se.inera.intyg.rehabstod.application.sjukfall.komplettering.UnansweredQAsInfoDecoratorImpl;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
@@ -49,7 +50,18 @@ class UnansweredQAsInfoDecoratorImplTest {
 
   @Mock private WcRestIntegrationService wcRestIntegrationService;
 
-  @InjectMocks private UnansweredQAsInfoDecoratorImpl testee;
+  private UnansweredQAsInfoDecoratorImpl testee;
+
+  @BeforeEach
+  void setUp() {
+    final var webcert =
+        new AppProperties.Integration.WebcertIntegration(null, null, 0, null, null, 90);
+    final var integration =
+        new AppProperties.Integration(null, webcert, null, null, null, null, null);
+    final var appProperties =
+        new AppProperties(null, null, null, null, null, null, null, integration);
+    testee = new UnansweredQAsInfoDecoratorImpl(wcRestIntegrationService, appProperties);
+  }
 
   @Test
   void updateSjukfallPatientKompletteringar() {

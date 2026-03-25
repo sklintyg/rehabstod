@@ -19,20 +19,22 @@
 package se.inera.intyg.rehabstod.infrastructure.config;
 
 import jakarta.jms.ConnectionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.core.JmsTemplate;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 
 /** Created by eriklupander on 2016-02-18. */
 @Configuration
 public class JmsConfig {
 
-  @Autowired private ConnectionFactory connectionFactory;
+  private final ConnectionFactory connectionFactory;
+  private final String loggingQueueName;
 
-  @Value("${pdl.logging.queue.name}")
-  private String loggingQueueName;
+  public JmsConfig(ConnectionFactory connectionFactory, AppProperties appProperties) {
+    this.connectionFactory = connectionFactory;
+    this.loggingQueueName = appProperties.pdl().loggingQueueName();
+  }
 
   @Bean
   public JmsTemplate jmsPDLLogTemplate() {

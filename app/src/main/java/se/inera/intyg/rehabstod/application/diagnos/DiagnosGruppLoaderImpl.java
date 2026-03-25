@@ -23,22 +23,25 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosGrupp;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 
 /** Created by marced on 14/03/16. */
 @Component
 public class DiagnosGruppLoaderImpl implements DiagnosGruppLoader {
 
-  @Value("${rhs.diagnosgrupper.file}")
   private String diagnosGruppFile;
 
-  @Autowired ResourceLoader resourceLoader;
+  ResourceLoader resourceLoader;
+
+  public DiagnosGruppLoaderImpl(AppProperties appProperties, ResourceLoader resourceLoader) {
+    this.diagnosGruppFile = appProperties.resources().diagnosgrupperFile();
+    this.resourceLoader = resourceLoader;
+  }
 
   @Override
   public List<DiagnosGrupp> loadDiagnosGrupper() throws IOException {

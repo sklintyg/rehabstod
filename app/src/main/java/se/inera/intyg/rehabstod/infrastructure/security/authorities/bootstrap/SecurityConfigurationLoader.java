@@ -20,7 +20,7 @@ package se.inera.intyg.rehabstod.infrastructure.security.authorities.bootstrap;
 
 import java.io.IOException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -29,6 +29,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.security.authorities.AuthoritiesConfiguration;
 import se.inera.intyg.rehabstod.infrastructure.security.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.infrastructure.security.authorities.FeaturesConfiguration;
@@ -45,20 +46,21 @@ import se.inera.intyg.rehabstod.infrastructure.security.authorities.FeaturesConf
 public class SecurityConfigurationLoader extends YamlPropertiesFactoryBean
     implements InitializingBean {
 
-  @Value("${max.aliases.for.collections:500}")
   private Integer maxAliasesForCollections;
 
-  @Value("${authorities.configuration.file}")
   private String authoritiesConfigurationFile;
 
-  @Value("${features.configuration.file}")
   private String featuresConfigurationFile;
 
   private AuthoritiesConfiguration authoritiesConfiguration;
   private FeaturesConfiguration featuresConfiguration;
 
-  private SecurityConfigurationLoader() {
-    // Uses @Value injected authoritiesConfigurationFile
+  @Autowired
+  public SecurityConfigurationLoader(AppProperties appProperties) {
+    this(
+        appProperties.resources().authoritiesConfigurationFile(),
+        appProperties.resources().featuresConfigurationFile(),
+        appProperties.resources().maxAliasesForCollections());
   }
 
   /**

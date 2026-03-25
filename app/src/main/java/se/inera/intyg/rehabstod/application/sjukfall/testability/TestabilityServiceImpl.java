@@ -20,9 +20,9 @@ package se.inera.intyg.rehabstod.application.sjukfall.testability;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.TestDataOptionsDTO;
@@ -32,12 +32,11 @@ public class TestabilityServiceImpl implements TestabilityService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TestabilityServiceImpl.class);
   private final RestTemplate restTemplate;
+  private final String intygstjanstUrl;
 
-  @Value("${intygstjanst.host.url}")
-  private String intygstjanstUrl;
-
-  public TestabilityServiceImpl(RestTemplate restTemplate) {
+  public TestabilityServiceImpl(RestTemplate restTemplate, AppProperties appProperties) {
     this.restTemplate = restTemplate;
+    this.intygstjanstUrl = appProperties.integration().intygstjanst().hostUrl();
   }
 
   @Override

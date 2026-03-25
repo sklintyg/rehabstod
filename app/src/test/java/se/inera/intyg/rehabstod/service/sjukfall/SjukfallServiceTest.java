@@ -69,6 +69,7 @@ import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
@@ -974,7 +975,11 @@ class SjukfallServiceTest {
 
     public SjukfallEngineMapperTest() {
       ReflectionTestUtils.setField(
-          this, "patientIdEncryption", new PatientIdEncryption("McQfTjWmZq4t7w!z%C*F-JaNdRgUkXp2"));
+          this, "patientIdEncryption",
+          new PatientIdEncryption(
+              new AppProperties(null,
+                  new AppProperties.Security(null, "McQfTjWmZq4t7w!z%C*F-JaNdRgUkXp2"),
+                  null, null, null, null, null, null)));
     }
 
     @Override

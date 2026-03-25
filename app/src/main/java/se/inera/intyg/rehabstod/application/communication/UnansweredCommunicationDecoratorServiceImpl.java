@@ -23,10 +23,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.api.model.LUCertificate;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
@@ -40,12 +40,13 @@ public class UnansweredCommunicationDecoratorServiceImpl
   private static final Logger LOG =
       LoggerFactory.getLogger(UnansweredCommunicationDecoratorServiceImpl.class);
 
-  @Value("${wc.getadditions.max.age.days:90}")
-  private int maxDaysOfUnansweredCommunication;
+  private final int maxDaysOfUnansweredCommunication;
 
   public UnansweredCommunicationDecoratorServiceImpl(
-      WcRestIntegrationService wcRestIntegrationService) {
+      WcRestIntegrationService wcRestIntegrationService, AppProperties appProperties) {
     this.wcRestIntegrationService = wcRestIntegrationService;
+    this.maxDaysOfUnansweredCommunication =
+        appProperties.integration().webcert().getAdditionsMaxAgeDays();
   }
 
   @Override

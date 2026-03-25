@@ -37,13 +37,13 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.application.api.model.LUCertificate;
 import se.inera.intyg.rehabstod.application.api.model.Patient;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.communication.UnansweredCommunicationDecoratorServiceImpl;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
@@ -54,9 +54,21 @@ class UnansweredCommunicationDecoratorServiceTest {
 
   @Mock WcRestIntegrationService wcRestIntegrationService;
 
-  @InjectMocks UnansweredCommunicationDecoratorServiceImpl unansweredCommunicationDecoratorService;
+  UnansweredCommunicationDecoratorServiceImpl unansweredCommunicationDecoratorService;
 
   UnansweredCommunicationResponse response = new UnansweredCommunicationResponse();
+
+  @BeforeEach
+  void initService() {
+    final var webcert =
+        new AppProperties.Integration.WebcertIntegration(null, null, 0, null, null, 90);
+    final var integration =
+        new AppProperties.Integration(null, webcert, null, null, null, null, null);
+    final var appProperties =
+        new AppProperties(null, null, null, null, null, null, null, integration);
+    unansweredCommunicationDecoratorService =
+        new UnansweredCommunicationDecoratorServiceImpl(wcRestIntegrationService, appProperties);
+  }
 
   private static final String CERTIFICATE_ID_0 = "C0";
   private static final String CERTIFICATE_ID_1 = "C1";

@@ -24,22 +24,25 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 
 /** Created by marced on 08/02/16. */
 @Component
 public class DiagnosKapitelLoaderImpl implements DiagnosKapitelLoader {
 
-  @Value("${rhs.diagnoskapitel.file}")
   private String diagnosKapitelFile;
 
-  @Autowired ResourceLoader resourceLoader;
+  ResourceLoader resourceLoader;
+
+  public DiagnosKapitelLoaderImpl(AppProperties appProperties, ResourceLoader resourceLoader) {
+    this.diagnosKapitelFile = appProperties.resources().diagnoskapitelFile();
+    this.resourceLoader = resourceLoader;
+  }
 
   @PostConstruct
   void initialize() {

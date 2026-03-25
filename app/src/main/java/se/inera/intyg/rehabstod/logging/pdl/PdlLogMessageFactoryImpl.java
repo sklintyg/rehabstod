@@ -24,7 +24,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.api.model.LUCertificate;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
@@ -35,6 +34,7 @@ import se.inera.intyg.rehabstod.common.logmessages.Patient;
 import se.inera.intyg.rehabstod.common.logmessages.PdlLogMessage;
 import se.inera.intyg.rehabstod.common.logmessages.PdlResource;
 import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.logging.pdl.dto.LogPatient;
 import se.inera.intyg.rehabstod.logging.pdl.dto.LogUser;
@@ -43,11 +43,13 @@ import se.inera.intyg.rehabstod.logging.pdl.dto.LogUser;
 @Service
 public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 
-  @Value("${pdlLogging.systemId}")
-  private String systemId;
+  private final String systemId;
+  private final String systemName;
 
-  @Value("${pdlLogging.systemName}")
-  private String systemName;
+  public PdlLogMessageFactoryImpl(AppProperties appProperties) {
+    this.systemId = appProperties.pdl().systemId();
+    this.systemName = appProperties.pdl().systemName();
+  }
 
   @Override
   public PdlLogMessage buildLogMessage(

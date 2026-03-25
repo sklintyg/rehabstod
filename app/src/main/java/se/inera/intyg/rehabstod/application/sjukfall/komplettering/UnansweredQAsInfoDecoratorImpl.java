@@ -19,21 +19,24 @@
 package se.inera.intyg.rehabstod.application.sjukfall.komplettering;
 
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 
 @Service
-@RequiredArgsConstructor
 public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorator {
 
-  @Value("${wc.getadditions.max.age.days:90}")
-  private int maxDaysOfUnansweredCommunication;
-
   private final WcRestIntegrationService wcRestIntegrationService;
+  private final int maxDaysOfUnansweredCommunication;
+
+  public UnansweredQAsInfoDecoratorImpl(
+      WcRestIntegrationService wcRestIntegrationService, AppProperties appProperties) {
+    this.wcRestIntegrationService = wcRestIntegrationService;
+    this.maxDaysOfUnansweredCommunication =
+        appProperties.integration().webcert().getAdditionsMaxAgeDays();
+  }
 
   @Override
   public void updateSjukfallPatientWithQAs(

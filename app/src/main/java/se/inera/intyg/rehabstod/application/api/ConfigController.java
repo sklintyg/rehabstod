@@ -36,9 +36,9 @@ import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 @RequestMapping("/api/config")
 public class ConfigController {
 
-  protected static final String WEBCERT_LAUNCH_URL_TEMPLATE = "webcert.launch.url.template";
+  protected static final String WEBCERT_LAUNCH_URL_TEMPLATE = "app.integration.webcert.launch-url-template";
   protected static final String PROJECT_VERSION_PROPERTY = "project.version";
-  protected static final String SITHS_IDP_URL = "siths.idp.url";
+  protected static final String SITHS_IDP_URL = "app.integration.webcert.siths-idp-url";
 
   @Autowired private DiagnosKapitelService diagnosKapitelService;
 

@@ -26,16 +26,29 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.rehabstod.application.diagnos.DiagnosKoderLoaderImpl;
 import se.inera.intyg.rehabstod.application.diagnos.IcdCodeConverter;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.config.properties.AppProperties.Resources;
 
 /** Created by eriklupander on 2016-04-14. */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {DiagnosKoderLoaderImpl.class, IcdCodeConverter.class})
+@ContextConfiguration(classes = {DiagnosKoderLoaderImpl.class, IcdCodeConverter.class, DiagnosKoderLoaderImplTest.TestConfig.class})
 class DiagnosKoderLoaderImplTest {
+
+  @TestConfiguration
+  static class TestConfig {
+    @Bean
+    public AppProperties appProperties() {
+      return new AppProperties(null, null, null, null, null, null,
+          new Resources(null, null, null, null, null, "placeholder-ksh97p", "placeholder-icd10se", 500), null);
+    }
+  }
 
   @Autowired private DiagnosKoderLoaderImpl diagnosKoderLoader;
 

@@ -22,34 +22,36 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKod;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 
 /** Created by martin on 10/02/16. */
 @Component
-@RequiredArgsConstructor
 public class DiagnosKoderLoaderImpl implements DiagnosKoderLoader {
 
   private static final Logger LOG = LoggerFactory.getLogger(DiagnosKoderLoaderImpl.class);
   private final IcdCodeConverter icdCodeConverter;
-
-  @Value("${rhs.diagnoskod.ksh97p_kod.file}")
   private String diagnosKodKS97PKodFile;
-
-  @Value("${rhs.diagnosisCode.icd10se.file}")
   private String diagnosisCodeIcd10SeFile;
+  private final ResourceLoader resourceLoader;
 
-  @Autowired ResourceLoader resourceLoader;
+  public DiagnosKoderLoaderImpl(
+      IcdCodeConverter icdCodeConverter,
+      AppProperties appProperties,
+      ResourceLoader resourceLoader) {
+    this.icdCodeConverter = icdCodeConverter;
+    this.diagnosKodKS97PKodFile = appProperties.resources().diagnoskodKsh97pFile();
+    this.diagnosisCodeIcd10SeFile = appProperties.resources().diagnosisCodeIcd10seFile();
+    this.resourceLoader = resourceLoader;
+  }
 
   @Override
   public Map<String, String> loadDiagnosKoder() throws IOException {

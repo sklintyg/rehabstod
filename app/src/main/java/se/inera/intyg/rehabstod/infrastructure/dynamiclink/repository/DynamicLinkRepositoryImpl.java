@@ -29,11 +29,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.dynamiclink.model.DynamicLink;
 
 /** Created by eriklupander on 2017-05-03. */
@@ -42,12 +41,16 @@ public class DynamicLinkRepositoryImpl implements DynamicLinkRepository {
 
   static final Logger LOG = LoggerFactory.getLogger(DynamicLinkRepositoryImpl.class);
 
-  @Value("${dynamic.links.file}")
   String location;
 
-  @Autowired ResourceLoader resourceLoader;
+  ResourceLoader resourceLoader;
 
   Map<String, DynamicLink> linkMap;
+
+  public DynamicLinkRepositoryImpl(AppProperties appProperties, ResourceLoader resourceLoader) {
+    this.location = appProperties.resources().dynamicLinksFile();
+    this.resourceLoader = resourceLoader;
+  }
 
   @PostConstruct
   void initialize() {

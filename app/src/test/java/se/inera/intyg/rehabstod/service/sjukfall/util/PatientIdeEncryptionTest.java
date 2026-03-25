@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 
 class PatientIdeEncryptionTest {
 
@@ -34,9 +35,14 @@ class PatientIdeEncryptionTest {
   private static final String KEY = "McQfTjWmZq4t7w!z%C*F-JaNdRgUkXp2";
   private static final String INVALID_KEY = "";
 
+  private static PatientIdEncryption createEncryption(String key) {
+    return new PatientIdEncryption(
+        new AppProperties(null, new AppProperties.Security(null, key), null, null, null, null, null, null));
+  }
+
   @Test
   void shallDecryptToOriginalValue() {
-    patientIdEncryption = new PatientIdEncryption(KEY);
+    patientIdEncryption = createEncryption(KEY);
     final var expectedValue = "191212121212";
     final var encryptedValue = patientIdEncryption.encrypt(PATIENT_ID);
     assertEquals(expectedValue, patientIdEncryption.decrypt(encryptedValue));
@@ -44,7 +50,7 @@ class PatientIdeEncryptionTest {
 
   @Test
   void shallDecryptMultiplePatientIds() {
-    patientIdEncryption = new PatientIdEncryption(KEY);
+    patientIdEncryption = createEncryption(KEY);
     final var firstExpectedValue = "191212121212";
     final var firstEncryptedPatientId = patientIdEncryption.encrypt(PATIENT_ID);
     final var secondExpectedValue = "191313131313";
@@ -59,6 +65,6 @@ class PatientIdeEncryptionTest {
 
   @Test
   void shallThrowRuntimeException() {
-    assertThrows(RuntimeException.class, () -> new PatientIdEncryption(INVALID_KEY));
+    assertThrows(RuntimeException.class, () -> createEncryption(INVALID_KEY));
   }
 }

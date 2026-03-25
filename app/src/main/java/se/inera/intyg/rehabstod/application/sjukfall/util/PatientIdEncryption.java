@@ -25,8 +25,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 
 @Component
 public class PatientIdEncryption {
@@ -37,7 +37,8 @@ public class PatientIdEncryption {
   private final IvParameterSpec ivParameterSpec;
   private final SecretKeySpec secretKeySpec;
 
-  public PatientIdEncryption(@Value("${aes.encryption.key}") String key) {
+  public PatientIdEncryption(AppProperties appProperties) {
+    final String key = appProperties.security().aesEncryptionKey();
     try {
       ivParameterSpec = new IvParameterSpec(INIT_VECTOR.getBytes(StandardCharsets.UTF_8));
       secretKeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");

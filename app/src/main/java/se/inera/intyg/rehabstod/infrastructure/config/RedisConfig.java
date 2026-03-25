@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.infrastructure.config;
 
 import java.time.Duration;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +28,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import se.inera.intyg.rehabstod.application.hsa.EmployeeNameServiceImpl;
+import se.inera.intyg.rehabstod.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.integration.ia.constants.IaCacheConstants;
 import se.inera.intyg.rehabstod.integration.intygproxyservice.constants.HsaIntygProxyServiceConstants;
 
@@ -39,58 +39,40 @@ public class RedisConfig {
   @Configuration
   static class RedisCacheConfig {
 
-    @Value("${redis.cache.default_entry_expiry_time_in_seconds}")
-    long defaultEntryExpiry;
+    private final AppProperties appProperties;
 
-    @Value("${employee.name.cache.expiry}")
-    long employeeNameCacheExpiry;
-
-    @Value("${intygsadmin.cache.expiry}")
-    long iaCacheExpiry;
-
-    @Value("${hsa.intygproxyservice.getemployee.cache.expiry:60}")
-    long hsaEmployeeCacheExpiry;
-
-    @Value("${hsa.intygproxyservice.gethealthcareunit.cache.expiry:60}")
-    long hsaHealthCareUnitCacheExpiry;
-
-    @Value("${hsa.intygproxyservice.gethealthcareunitmembers.cache.expiry:60}")
-    long hsaHealthCareUnitMembersCacheExpiry;
-
-    @Value("${hsa.intygproxyservice.getunit.cache.expiry:60}")
-    long hsaUnitCacheExpiry;
-
-    @Value("${hsa.intygproxyservice.gethealthcareprovider.cache.expiry:60}")
-    long hsaHealthCareProviderCacheExpiry;
+    RedisCacheConfig(AppProperties appProperties) {
+      this.appProperties = appProperties;
+    }
 
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
       final var defaultConfig =
           RedisCacheConfiguration.defaultCacheConfig()
-              .entryTtl(Duration.ofSeconds(defaultEntryExpiry));
+              .entryTtl(Duration.ofSeconds(appProperties.cache().defaultExpirySeconds()));
       return RedisCacheManager.builder(redisConnectionFactory)
           .cacheDefaults(defaultConfig)
           .withCacheConfiguration(
               IaCacheConstants.IA_CACHE_NAME,
-              defaultConfig.entryTtl(Duration.ofSeconds(iaCacheExpiry)))
+              defaultConfig.entryTtl(Duration.ofSeconds(appProperties.cache().intygsadminExpirySeconds())))
           .withCacheConfiguration(
               EmployeeNameServiceImpl.EMPLOYEE_NAME_CACHE_NAME,
-              defaultConfig.entryTtl(Duration.ofSeconds(employeeNameCacheExpiry)))
+              defaultConfig.entryTtl(Duration.ofSeconds(appProperties.cache().employeeNameExpirySeconds())))
           .withCacheConfiguration(
               HsaIntygProxyServiceConstants.EMPLOYEE_CACHE_NAME,
-              defaultConfig.entryTtl(Duration.ofSeconds(hsaEmployeeCacheExpiry)))
+              defaultConfig.entryTtl(Duration.ofSeconds(appProperties.cache().hsaEmployeeExpirySeconds())))
           .withCacheConfiguration(
               HsaIntygProxyServiceConstants.HEALTH_CARE_UNIT_CACHE_NAME,
-              defaultConfig.entryTtl(Duration.ofSeconds(hsaHealthCareUnitCacheExpiry)))
+              defaultConfig.entryTtl(Duration.ofSeconds(appProperties.cache().hsaHealthCareUnitExpirySeconds())))
           .withCacheConfiguration(
               HsaIntygProxyServiceConstants.HEALTH_CARE_UNIT_MEMBERS_CACHE_NAME,
-              defaultConfig.entryTtl(Duration.ofSeconds(hsaHealthCareUnitMembersCacheExpiry)))
+              defaultConfig.entryTtl(Duration.ofSeconds(appProperties.cache().hsaHealthCareUnitMembersExpirySeconds())))
           .withCacheConfiguration(
               HsaIntygProxyServiceConstants.UNIT_CACHE_NAME,
-              defaultConfig.entryTtl(Duration.ofSeconds(hsaUnitCacheExpiry)))
+              defaultConfig.entryTtl(Duration.ofSeconds(appProperties.cache().hsaUnitExpirySeconds())))
           .withCacheConfiguration(
               HsaIntygProxyServiceConstants.HEALTH_CARE_PROVIDER_CACHE_NAME,
-              defaultConfig.entryTtl(Duration.ofSeconds(hsaHealthCareProviderCacheExpiry)))
+              defaultConfig.entryTtl(Duration.ofSeconds(appProperties.cache().hsaHealthCareProviderExpirySeconds())))
           .build();
     }
 
