@@ -39,7 +39,7 @@ import se.inera.intyg.rehabstod.application.sjukfall.mappers.SjukfallEngineMappe
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
-import se.inera.intyg.rehabstod.sjukfall.dto.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallEnhet;
 
 @ExtendWith(MockitoExtension.class)
 class GetActiveSickLeavesServiceImplTest {

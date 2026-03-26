@@ -22,10 +22,10 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.sjukfall.dto.Lakare;
-import se.inera.intyg.rehabstod.sjukfall.dto.OccupationTypeDTO;
-import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.Lakare;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineOccupationTypeDTO;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
 
 @Data
 @NoArgsConstructor
@@ -36,6 +36,6 @@ public class PopulateFiltersResponseDTO {
   private List<DiagnosKapitel> diagnosisChapters;
   private int nbrOfSickLeaves;
   private boolean hasOngoingSickLeaves;
-  private List<RekoStatusTypeDTO> rekoStatusTypes;
-  private List<OccupationTypeDTO> occupationTypes;
+  private List<EngineRekoStatusTypeDTO> rekoStatusTypes;
+  private List<EngineOccupationTypeDTO> occupationTypes;
 }

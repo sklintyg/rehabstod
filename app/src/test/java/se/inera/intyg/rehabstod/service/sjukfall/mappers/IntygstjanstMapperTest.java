@@ -25,7 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.rehabstod.application.sjukfall.mappers.IntygstjanstMapper;
-import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Befattning;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;

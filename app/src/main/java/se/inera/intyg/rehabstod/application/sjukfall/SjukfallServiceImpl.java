@@ -44,9 +44,9 @@ import se.inera.intyg.rehabstod.application.sjukfall.mappers.SjukfallEngineMappe
 import se.inera.intyg.rehabstod.application.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.application.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.application.user.UserService;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.services.legacy.HsaOrganizationsService;
@@ -60,13 +60,15 @@ import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.logging.MonitoringLogService;
 import se.inera.intyg.rehabstod.logging.pdl.LogService;
-import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
-import se.inera.intyg.rehabstod.sjukfall.dto.IntygParametrar;
-import se.inera.intyg.rehabstod.sjukfall.services.SjukfallEngineService;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygParametrar;
+import se.inera.intyg.rehabstod.application.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-/** Created by eriklupander on 2016-02-01. */
+/**
+ * Created by eriklupander on 2016-02-01.
+ */
 @Service("sjukfallService")
 @RequiredArgsConstructor
 public class SjukfallServiceImpl implements SjukfallService {
@@ -172,7 +174,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         !Strings.isNullOrEmpty(patientId), "patientId may not be null or empty");
     Preconditions.checkArgument(urval != null, "urval may not be null");
 
-    List<se.inera.intyg.rehabstod.sjukfall.dto.SjukfallPatient> sjukfallList;
+    List<se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatient> sjukfallList;
     Map<String, IntygAccessControlMetaData> intygAccessMetaData = new HashMap<>();
 
     LOG.debug("Calling HSA - fetching information about the current care unit.");
@@ -415,7 +417,7 @@ public class SjukfallServiceImpl implements SjukfallService {
   }
 
   private void updateAccessMetaDataWithContributingStatus(
-      List<se.inera.intyg.rehabstod.sjukfall.dto.SjukfallPatient> sjukfallList,
+      List<se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatient> sjukfallList,
       Map<String, IntygAccessControlMetaData> intygAccessMetaData,
       IntygParametrar parameters) {
     if (sjukfallList.isEmpty()) {
@@ -423,7 +425,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     // Update BidrarTillAktivtSjukfall for all that are part of active sjukfall.
-    final se.inera.intyg.rehabstod.sjukfall.dto.SjukfallPatient aktivtSjukfall =
+    final se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatient aktivtSjukfall =
         sjukfallList.get(0);
 
     if (aktivtSjukfall.getSlut().isAfter(parameters.getAktivtDatum())) {

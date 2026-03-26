@@ -26,8 +26,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import se.inera.intyg.rehabstod.application.api.model.LUCertificate;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 /**
@@ -36,7 +36,8 @@ import se.inera.intyg.schemas.contract.Personnummer;
  */
 public final class PDLActivityStore {
 
-  private PDLActivityStore() {}
+  private PDLActivityStore() {
+  }
 
   /**
    * Should return list of sjukfall (internally identified by patient) not already present in store
@@ -118,7 +119,9 @@ public final class PDLActivityStore {
         .collect(Collectors.toList());
   }
 
-  /** Should return true or false if patient's sjukfall is in store or not. */
+  /**
+   * Should return true or false if patient's sjukfall is in store or not.
+   */
   public static boolean isActivityInStore(
       String enhetsId,
       String patientId,
@@ -148,7 +151,9 @@ public final class PDLActivityStore {
         .anyMatch(storedEvent -> isStoredEvent(storedEvent, patientId, activityType, resourceType));
   }
 
-  /** Should store the specified patient for the vardenhet, activityType and resourceType. */
+  /**
+   * Should store the specified patient for the vardenhet, activityType and resourceType.
+   */
   public static void addActivityToStore(
       String enhetsId,
       String patientId,
@@ -177,7 +182,9 @@ public final class PDLActivityStore {
     }
   }
 
-  /** Should store the specified sjukfall for the vardenhet and activityType. */
+  /**
+   * Should store the specified sjukfall for the vardenhet and activityType.
+   */
   public static void addActivitiesToStore(
       String enhetsId,
       List<SjukfallEnhet> sjukfallToAdd,
@@ -210,7 +217,9 @@ public final class PDLActivityStore {
     }
   }
 
-  /** Should store the specified certificate for the vardenhet and activityType. */
+  /**
+   * Should store the specified certificate for the vardenhet and activityType.
+   */
   public static void addActivitiesToStore(
       List<LUCertificate> luCertificatesToAdd,
       String enhetsId,

@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.client;
 
 import java.util.List;
-import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksResponseType;
 
 /** Created by marced 2018-09-28. */

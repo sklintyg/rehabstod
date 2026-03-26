@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.infrastructure.handlers;
 
-import se.inera.intyg.rehabstod.common.exception.RehabstodErrorCodeEnum;
+import se.inera.intyg.rehabstod.application.exceptions.RehabstodErrorCodeEnum;
 
 public class RehabstodRestExceptionResponse {
 

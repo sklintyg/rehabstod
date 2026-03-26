@@ -22,9 +22,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import se.inera.intyg.rehabstod.common.util.StringUtil;
+import se.inera.intyg.rehabstod.application.util.StringUtil;
 
-/** Created by marced on 08/02/16. */
+/**
+ * Created by marced on 08/02/16.
+ */
 public class DiagnosKategori {
 
   static final Pattern EXTRACT_DIAGNOSKATEGORI_REGEXP = Pattern.compile("^([A-Z]{1})([0-9]{2}).?");
@@ -34,7 +36,8 @@ public class DiagnosKategori {
   private char letter;
   private int number;
 
-  public DiagnosKategori() {}
+  public DiagnosKategori() {
+  }
 
   public DiagnosKategori(char letter, int number) {
     this.letter = letter;

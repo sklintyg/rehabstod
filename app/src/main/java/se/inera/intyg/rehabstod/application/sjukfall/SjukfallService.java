@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.application.sjukfall;
 import java.util.Collection;
 import se.inera.intyg.rehabstod.application.Urval;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatientResponse;
-import se.inera.intyg.rehabstod.sjukfall.dto.IntygParametrar;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygParametrar;
 
 /** Created by eriklupander on 2016-02-01. */
 public interface SjukfallService {

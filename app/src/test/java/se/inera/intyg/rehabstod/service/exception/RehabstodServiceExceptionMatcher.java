@@ -20,10 +20,12 @@ package se.inera.intyg.rehabstod.service.exception;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
-import se.inera.intyg.rehabstod.common.exception.RehabstodErrorCodeEnum;
-import se.inera.intyg.rehabstod.common.exception.RehabstodServiceException;
+import se.inera.intyg.rehabstod.application.exceptions.RehabstodErrorCodeEnum;
+import se.inera.intyg.rehabstod.application.exceptions.RehabstodServiceException;
 
-/** Created by pebe on 2015-08-17. */
+/**
+ * Created by pebe on 2015-08-17.
+ */
 public final class RehabstodServiceExceptionMatcher
     extends TypeSafeMatcher<RehabstodServiceException> {
 

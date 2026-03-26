@@ -24,7 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKapitel;
 
 @Data
 @Builder

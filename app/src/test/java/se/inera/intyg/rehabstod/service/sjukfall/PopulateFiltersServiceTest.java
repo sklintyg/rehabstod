@@ -64,10 +64,10 @@ import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
-import se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKategori;
-import se.inera.intyg.rehabstod.sjukfall.dto.Lakare;
-import se.inera.intyg.rehabstod.sjukfall.dto.OccupationTypeDTO;
-import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKategori;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.Lakare;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineOccupationTypeDTO;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
 
 @ExtendWith(MockitoExtension.class)
 class PopulateFiltersServiceTest {
@@ -110,10 +110,10 @@ class PopulateFiltersServiceTest {
   Vardgivare careGiver;
   DiagnosKategori diagnosisChapterTo = new DiagnosKategori(LETTER_TO, NUMBER_TO);
   DiagnosKategori diagnosisChapterFrom = new DiagnosKategori(LETTER_FROM, NUMBER_FROM);
-  RekoStatusTypeDTO rekoStatus = new RekoStatusTypeDTO("REKO_1", "Ingen");
-  OccupationTypeDTO occupationTypeDTO = new OccupationTypeDTO("OCCUPATION_STUDIER", "Studier");
-  se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKapitel enabledDiagnosisChapter =
-      new se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKapitel(
+  EngineRekoStatusTypeDTO rekoStatus = new EngineRekoStatusTypeDTO("REKO_1", "Ingen");
+  EngineOccupationTypeDTO EngineOccupationTypeDTO = new EngineOccupationTypeDTO("OCCUPATION_STUDIER", "Studier");
+  se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKapitel enabledDiagnosisChapter =
+      new se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKapitel(
           diagnosisChapterTo, diagnosisChapterFrom, DIAGNOSIS_CHAPTER_NAME);
   List<DiagnosKapitel> allDiagnosisChapters = Collections.singletonList(new DiagnosKapitel());
 
@@ -142,7 +142,7 @@ class PopulateFiltersServiceTest {
               TOTAL_NUMBER_OF_SICK_LEAVES,
               HAS_ONGOING_SICK_LEAVES,
               Collections.singletonList(rekoStatus),
-              Collections.singletonList(occupationTypeDTO));
+              Collections.singletonList(EngineOccupationTypeDTO));
       when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any()))
           .thenReturn(response);
 
@@ -459,13 +459,13 @@ class PopulateFiltersServiceTest {
         @Test
         void shouldConvertOccupationTypeId() {
           final var response = populateActiveFilters.populateSickLeaveFilters();
-          assertEquals(occupationTypeDTO.getId(), response.getOccupationTypes().get(0).getId());
+          assertEquals(EngineOccupationTypeDTO.getId(), response.getOccupationTypes().get(0).getId());
         }
 
         @Test
         void shouldConvertOccupationTypeName() {
           final var response = populateActiveFilters.populateSickLeaveFilters();
-          assertEquals(occupationTypeDTO.getName(), response.getOccupationTypes().get(0).getName());
+          assertEquals(EngineOccupationTypeDTO.getName(), response.getOccupationTypes().get(0).getName());
         }
 
         @Nested

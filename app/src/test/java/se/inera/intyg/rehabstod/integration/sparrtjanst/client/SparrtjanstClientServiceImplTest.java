@@ -34,7 +34,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.config.properties.SparrtjanstProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.util.SparrtjanstUtil;
-import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksType;
 

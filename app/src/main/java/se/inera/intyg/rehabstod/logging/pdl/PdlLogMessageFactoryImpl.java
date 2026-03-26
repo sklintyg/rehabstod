@@ -27,19 +27,21 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.api.model.LUCertificate;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataLogMessage;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.Enhet;
-import se.inera.intyg.rehabstod.common.logmessages.Patient;
-import se.inera.intyg.rehabstod.common.logmessages.PdlLogMessage;
-import se.inera.intyg.rehabstod.common.logmessages.PdlResource;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.logging.SjukfallDataLogMessage;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.Enhet;
+import se.inera.intyg.rehabstod.logging.logmessages.Patient;
+import se.inera.intyg.rehabstod.logging.logmessages.PdlLogMessage;
+import se.inera.intyg.rehabstod.logging.logmessages.PdlResource;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.logging.pdl.dto.LogPatient;
 import se.inera.intyg.rehabstod.logging.pdl.dto.LogUser;
 
-/** Created by eriklupander on 2016-03-03. */
+/**
+ * Created by eriklupander on 2016-03-03.
+ */
 @Service
 public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 

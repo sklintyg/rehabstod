@@ -13,7 +13,6 @@ dependencyResolutionManagement {
 
 rootProject.name = 'rehabstod'
 
-include ':app', ':common'
+include ':app'
 
 project(':app').projectDir = "$rootDir/app" as File
-project(':common').name = 'rehabstod-common'

@@ -25,7 +25,7 @@ import se.inera.intyg.rehabstod.application.sjukfall.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.GetRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
-import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
 
 @Service
 public class GetRekoStatusServiceImpl implements GetRekoStatusService {
@@ -56,6 +56,6 @@ public class GetRekoStatusServiceImpl implements GetRekoStatusService {
     }
 
     return new RekoStatusDTO(
-        new RekoStatusTypeDTO(response.getStatus().getId(), response.getStatus().getName()));
+        new EngineRekoStatusTypeDTO(response.getStatus().getId(), response.getStatus().getName()));
   }
 }

@@ -44,7 +44,8 @@ import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.PopulateFilter
 import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
-import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.RekoStatusTypeDTO;
 
 @Service
 public class PopulateFiltersServiceImpl implements PopulateFiltersService {
@@ -110,7 +111,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
   }
 
   private List<OccupationTypeDTO> convertOccupationTypes(
-      List<se.inera.intyg.rehabstod.sjukfall.dto.OccupationTypeDTO> occupationTypeDTOList) {
+      List<se.inera.intyg.rehabstod.application.sjukfall.dto.EngineOccupationTypeDTO> occupationTypeDTOList) {
     if (occupationTypeDTOList == null) {
       return Collections.emptyList();
     }
@@ -121,21 +122,21 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         .collect(Collectors.toList());
   }
 
-  private List<se.inera.intyg.rehabstod.application.sjukfall.dto.RekoStatusTypeDTO>
-      convertRekoStatuses(List<RekoStatusTypeDTO> list) {
+  private List<RekoStatusTypeDTO>
+      convertRekoStatuses(List<EngineRekoStatusTypeDTO> list) {
     if (list == null) {
       return Collections.emptyList();
     }
     return list.stream()
         .map(
             status ->
-                new se.inera.intyg.rehabstod.application.sjukfall.dto.RekoStatusTypeDTO(
+                new RekoStatusTypeDTO(
                     status.getId(), status.getName()))
         .collect(Collectors.toList());
   }
 
   private List<Lakare> convertDoctors(
-      List<se.inera.intyg.rehabstod.sjukfall.dto.Lakare> listToConvert) {
+      List<se.inera.intyg.rehabstod.application.sjukfall.dto.Lakare> listToConvert) {
     if (listToConvert == null) {
       return Collections.emptyList();
     }
@@ -156,7 +157,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
   }
 
   private List<DiagnosKapitel> convertDiagnosisChapters(
-      List<se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKapitel> diagnosisChapters) {
+      List<se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKapitel> diagnosisChapters) {
     if (diagnosisChapters == null) {
       return Collections.emptyList();
     }
@@ -171,7 +172,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
   }
 
   private DiagnosKategori convertDiagnosisCategory(
-      se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKategori diagnosisCategory) {
+      se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKategori diagnosisCategory) {
     return new DiagnosKategori(diagnosisCategory.getLetter(), diagnosisCategory.getNumber());
   }
 

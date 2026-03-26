@@ -21,12 +21,12 @@ package se.inera.intyg.rehabstod.application.sjukfall.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RekoStatusDTO {
 
-  private RekoStatusTypeDTO status;
+  private EngineRekoStatusTypeDTO status;
+
 }

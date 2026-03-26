@@ -29,7 +29,7 @@ import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.exception
 import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.util.SparrtjanstUtil;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
-import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksResponseType;

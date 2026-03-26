@@ -26,21 +26,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
-import se.inera.intyg.rehabstod.common.util.StringUtil;
+import se.inera.intyg.rehabstod.application.util.StringUtil;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.exception.IntygstjanstIntegrationException;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 // CHECKSTYLE:ON LineLength
 
-/** Created by eriklupander on 2016-02-01. */
+/**
+ * Created by eriklupander on 2016-02-01.
+ */
 @Service
 public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrationService {
 
   private static final Logger LOG =
       LoggerFactory.getLogger(IntygstjanstIntegrationServiceImpl.class);
 
-  @Autowired private IntygstjanstClientService intygstjanstClientService;
+  @Autowired
+  private IntygstjanstClientService intygstjanstClientService;
 
   @Override
   public List<IntygsData> getAllIntygsDataForPatient(String patientId) {
@@ -61,7 +64,7 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
 
     if (responseType.getResult().getResultCode()
         != se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1
-            .ResultCodeEnum.OK) {
+        .ResultCodeEnum.OK) {
       LOG.error(
           errorMessage,
           responseType.getResult().getResultCode(),

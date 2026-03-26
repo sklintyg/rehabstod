@@ -23,7 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import se.inera.intyg.rehabstod.sjukfall.dto.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallEnhet;
 
 @Data
 @Builder

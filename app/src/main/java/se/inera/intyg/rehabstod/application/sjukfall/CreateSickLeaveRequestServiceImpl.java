@@ -95,7 +95,7 @@ public class CreateSickLeaveRequestServiceImpl implements CreateSickLeaveRequest
         .collect(Collectors.toList());
   }
 
-  private List<se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKapitel> convertDiagnosisChapters(
+  private List<se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKapitel> convertDiagnosisChapters(
       List<DiagnosKapitel> diagnosisChapters) {
     if (diagnosisChapters == null) {
       return Collections.emptyList();
@@ -103,16 +103,16 @@ public class CreateSickLeaveRequestServiceImpl implements CreateSickLeaveRequest
     return diagnosisChapters.stream()
         .map(
             diagnosisChapter ->
-                new se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKapitel(
+                new se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKapitel(
                     convertDiagnosisCategory(diagnosisChapter.getFrom()),
                     convertDiagnosisCategory(diagnosisChapter.getTo()),
                     diagnosisChapter.getName()))
         .collect(Collectors.toList());
   }
 
-  private se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKategori convertDiagnosisCategory(
+  private se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKategori convertDiagnosisCategory(
       DiagnosKategori diagnosisCategory) {
-    return new se.inera.intyg.rehabstod.sjukfall.dto.DiagnosKategori(
+    return new se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKategori(
         diagnosisCategory.getLetter(), diagnosisCategory.getNumber());
   }
 }

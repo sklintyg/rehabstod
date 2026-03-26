@@ -19,21 +19,23 @@
 package se.inera.intyg.rehabstod.infrastructure.integration.samtyckestjanst.service;
 
 import java.time.LocalDateTime;
-import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
+import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaData;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 
-/** Created by Magnus Ekstrand on 2018-10-10. */
+/**
+ * Created by Magnus Ekstrand on 2018-10-10.
+ */
 public interface SamtyckestjanstIntegrationService {
 
   /**
    * Updates the 'has consent' attribute for each {@link IntygAccessControlMetaData} in
    * intygAccessMetaData map.
    *
-   * @param patientId - The id of the current patient
-   * @param userHsaId - The hsaId of the current user
+   * @param patientId             - The id of the current patient
+   * @param userHsaId             - The hsaId of the current user
    * @param currentVardgivarHsaId - The hsaId of the current vardgivare
-   * @param currentEnhetsId - The hsaId of the current enehet
+   * @param currentEnhetsId       - The hsaId of the current enehet
    */
   boolean checkForConsent(
       String patientId, String userHsaId, String currentVardgivarHsaId, String currentEnhetsId);

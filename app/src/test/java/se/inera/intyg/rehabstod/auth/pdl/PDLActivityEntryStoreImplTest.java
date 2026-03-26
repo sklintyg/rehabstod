@@ -32,12 +32,14 @@ import se.inera.intyg.rehabstod.application.api.model.Diagnos;
 import se.inera.intyg.rehabstod.application.api.model.Lakare;
 import se.inera.intyg.rehabstod.application.api.model.Patient;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.common.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityStore;
 
-/** Created by marced on 22/02/16. */
+/**
+ * Created by marced on 22/02/16.
+ */
 class PDLActivityEntryStoreImplTest {
   // CHECKSTYLE:OFF MagicNumber
 

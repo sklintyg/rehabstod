@@ -20,8 +20,8 @@ package se.inera.intyg.rehabstod.infrastructure.integration.it.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import se.inera.intyg.rehabstod.common.model.certificate.dto.DiagnosedCertificate;
-import se.inera.intyg.rehabstod.common.model.certificate.dto.SickLeaveCertificate;
+import se.inera.intyg.rehabstod.application.certificate.dto.DiagnosedCertificate;
+import se.inera.intyg.rehabstod.application.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.GetRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.PopulateFiltersRequestDTO;
@@ -30,17 +30,19 @@ import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesResponseDTO;
 
-/** Connects to Intygstjanstens REST-api to get specialized certificate data */
+/**
+ * Connects to Intygstjanstens REST-api to get specialized certificate data
+ */
 public interface IntygstjanstRestIntegrationService {
 
   /**
    * List certificates on unit(s) with diagnosis information If no from date is provided it is
    * assumed to be 3 years back in time
    *
-   * @param units List of units the certificates are bound to
+   * @param units            List of units the certificates are bound to
    * @param certificateTypes The specific type of certificates to get
-   * @param fromDate First signing date of selection
-   * @param toDate Last signing date of selection
+   * @param fromDate         First signing date of selection
+   * @param toDate           Last signing date of selection
    * @return List of certificates with diagnosis information
    */
   List<DiagnosedCertificate> getDiagnosedCertificatesForCareUnit(
@@ -54,9 +56,9 @@ public interface IntygstjanstRestIntegrationService {
    * List certificates for person with diagnosis information Date range is assumed to be 3 years
    * back in time from today
    *
-   * @param personId Id of the person to get certificates for
+   * @param personId         Id of the person to get certificates for
    * @param certificateTypes The specific type of certificates to get
-   * @param units List of units the certificates are bound to
+   * @param units            List of units the certificates are bound to
    * @return List of certificates with diagnosis information
    */
   List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(
@@ -66,11 +68,11 @@ public interface IntygstjanstRestIntegrationService {
    * List certificates for person with diagnosis information If no from date is provided it is
    * assumed to be 3 years back in time
    *
-   * @param personId Id of the person to get certificates for
+   * @param personId         Id of the person to get certificates for
    * @param certificateTypes The specific type of certificates to get
-   * @param fromDate First signing date of selection
-   * @param toDate Last signing date of selection
-   * @param units List of units the certificates are bound to
+   * @param fromDate         First signing date of selection
+   * @param toDate           Last signing date of selection
+   * @param units            List of units the certificates are bound to
    * @return List of certificates with diagnosis information
    */
   List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(
@@ -84,10 +86,10 @@ public interface IntygstjanstRestIntegrationService {
    * List certificates for person with sickleave information Date range is assumed to be 3 years
    * back in time from today
    *
-   * @param personId Id of the person to get certificates for
+   * @param personId         Id of the person to get certificates for
    * @param certificateTypes The specific type of certificates to get
-   * @param units List of units the certificates are bound to
-   * @param doctorIds List of doctor ids to filter on
+   * @param units            List of units the certificates are bound to
+   * @param doctorIds        List of doctor ids to filter on
    * @return List of certificates with sickleave information
    */
   List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(
@@ -97,12 +99,12 @@ public interface IntygstjanstRestIntegrationService {
    * List certificates for person with sickleave information If no from date is provided it is
    * assumed to be 3 years back in time
    *
-   * @param personId Id of the person to get certificates for
+   * @param personId         Id of the person to get certificates for
    * @param certificateTypes The specific type of certificates to get
-   * @param fromDate First signing date of selection
-   * @param toDate Last signing date of selection
-   * @param units List of units the certificates are bound to
-   * @param doctorIds List of doctor ids to filter on
+   * @param fromDate         First signing date of selection
+   * @param toDate           Last signing date of selection
+   * @param units            List of units the certificates are bound to
+   * @param doctorIds        List of doctor ids to filter on
    * @return List of certificates with sickleave information
    */
   List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(
@@ -117,7 +119,7 @@ public interface IntygstjanstRestIntegrationService {
    * List doctors that have signed certificates on unit(s) Date range is assumed to be 3 years back
    * in time from today
    *
-   * @param units List of units the certificates are bound to
+   * @param units            List of units the certificates are bound to
    * @param certificateTypes The specific type of certificates to get
    * @return List of certificates with diagnosis information
    */

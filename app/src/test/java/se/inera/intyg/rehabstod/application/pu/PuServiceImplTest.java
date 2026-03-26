@@ -51,7 +51,7 @@ import se.inera.intyg.rehabstod.infrastructure.integration.pu.api.model.PersonSv
 import se.inera.intyg.rehabstod.infrastructure.integration.pu.api.services.PUService;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Role;
-import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 /** Created by eriklupander on 2017-09-06. */

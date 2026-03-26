@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import se.inera.intyg.rehabstod.common.util.StringUtil;
+import se.inera.intyg.rehabstod.application.util.StringUtil;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.HsaSystemRole;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.PersonInformation.PaTitle;
@@ -70,18 +70,23 @@ public class RehabstodUserDetailsService {
 
   public static final String PDL_CONSENT_GIVEN = "user_pdl_consent_given";
 
-  @Autowired private AnvandarPreferenceRepository anvandarPreferenceRepository;
+  @Autowired
+  private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
-  @Autowired private RehabstodUnitChangeService rehabstodUnitChangeService;
+  @Autowired
+  private RehabstodUnitChangeService rehabstodUnitChangeService;
 
   @Autowired(required = false)
   private Optional<UserOrigin> userOrigin;
 
-  @Autowired private HsaOrganizationsService hsaOrganizationsService;
+  @Autowired
+  private HsaOrganizationsService hsaOrganizationsService;
 
-  @Autowired private HsaPersonService hsaPersonService;
+  @Autowired
+  private HsaPersonService hsaPersonService;
 
-  @Autowired private AuthenticationLogger monitoringLogService;
+  @Autowired
+  private AuthenticationLogger monitoringLogService;
 
   @Autowired
   public void setCommonAuthoritiesResolver(CommonAuthoritiesResolver commonAuthoritiesResolver) {

@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import se.inera.intyg.rehabstod.common.exception.RehabstodErrorCodeEnum;
-import se.inera.intyg.rehabstod.common.exception.RehabstodServiceException;
+import se.inera.intyg.rehabstod.application.exceptions.RehabstodErrorCodeEnum;
+import se.inera.intyg.rehabstod.application.exceptions.RehabstodServiceException;
 
 @ControllerAdvice
 public class RehabstodRestExceptionHandler {

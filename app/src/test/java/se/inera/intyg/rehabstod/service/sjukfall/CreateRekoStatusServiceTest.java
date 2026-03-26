@@ -45,7 +45,7 @@ import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.CreateRekoStat
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.sjukfall.dto.RekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
 
 @ExtendWith(MockitoExtension.class)
 class CreateRekoStatusServiceTest {
@@ -80,7 +80,7 @@ class CreateRekoStatusServiceTest {
     when(user.getNamn()).thenReturn(STAFF_NAME);
     when(userService.getUser()).thenReturn(user);
     when(intygstjanstRestIntegrationService.createRekoStatus(any()))
-        .thenReturn(new RekoStatusDTO(new RekoStatusTypeDTO(REKO_ID, REKO_NAME)));
+        .thenReturn(new RekoStatusDTO(new EngineRekoStatusTypeDTO(REKO_ID, REKO_NAME)));
   }
 
   @Nested
