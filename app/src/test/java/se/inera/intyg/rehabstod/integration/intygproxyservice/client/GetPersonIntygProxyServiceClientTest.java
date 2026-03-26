@@ -35,7 +35,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.PuIntygProxyServiceProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.pu.api.model.Person;
 import se.inera.intyg.rehabstod.infrastructure.integration.pu.api.model.PersonSvar.Status;
 import se.inera.intyg.rehabstod.infrastructure.integration.pu.intygproxyservice.client.GetPersonIntygProxyServiceClient;
@@ -53,8 +53,7 @@ class GetPersonIntygProxyServiceClientTest {
   private final RestClient.RequestBodySpec requestBodySpec = mock(RestClient.RequestBodySpec.class);
   private final RestClient.ResponseSpec responseSpec = mock(RestClient.ResponseSpec.class);
 
-  @Mock
-  private RestClient restClient;
+  @Mock private RestClient restClient;
 
   private GetPersonIntygProxyServiceClient getPersonIntygProxyServiceClient;
 
@@ -62,7 +61,24 @@ class GetPersonIntygProxyServiceClientTest {
   void setUp() {
     getPersonIntygProxyServiceClient =
         new GetPersonIntygProxyServiceClient(
-            restClient, new PuIntygProxyServiceProperties(null, ENDPOINT, null));
+            restClient,
+            new AppProperties(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                new AppProperties.Integration(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    new AppProperties.Integration.IntygProxyServiceIntegration(
+                        null, null, null, null, null, null, ENDPOINT, null))));
     MDC.put(TRACE_ID_KEY, TRACE_ID);
     MDC.put(SESSION_ID_KEY, SESSION_ID);
   }

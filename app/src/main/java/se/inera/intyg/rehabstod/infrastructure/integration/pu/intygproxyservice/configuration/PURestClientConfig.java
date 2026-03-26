@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.infrastructure.integration.pu.intygproxyservice
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.PuIntygProxyServiceProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 
 @Configuration
 public class PURestClientConfig {
@@ -32,14 +32,14 @@ public class PURestClientConfig {
   public static final String SESSION_ID_KEY = "session.id";
   public static final String TRACE_ID_KEY = "trace.id";
 
-  private final PuIntygProxyServiceProperties props;
+  private final AppProperties appProperties;
 
-  public PURestClientConfig(PuIntygProxyServiceProperties props) {
-    this.props = props;
+  public PURestClientConfig(AppProperties appProperties) {
+    this.appProperties = appProperties;
   }
 
   @Bean(name = "puIntygProxyServiceRestClient")
   public RestClient ipsRestClient() {
-    return RestClient.create(props.baseUrl());
+    return RestClient.create(appProperties.integration().intygProxyService().baseUrl());
   }
 }

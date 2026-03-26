@@ -38,7 +38,7 @@ import org.springframework.web.client.RestClient;
 import se.inera.intyg.rehabstod.application.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.rehabstod.application.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.rehabstod.application.certificate.dto.TypedCertificateRequest;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.IntygstjanstProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.GetRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.PopulateFiltersRequestDTO;
@@ -58,7 +58,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
       LoggerFactory.getLogger(IntygstjanstRestIntegrationServiceImpl.class);
 
   private final RestClient itRestClient;
-  private final IntygstjanstProperties props;
+  private final AppProperties appProperties;
 
   @Override
   @PerformanceLogging(
@@ -83,9 +83,9 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
             .uri(
                 uriBuilder ->
                     uriBuilder
-                        .scheme(props.scheme())
-                        .host(props.baseUrl())
-                        .port(props.port())
+                        .scheme(appProperties.integration().intygstjanst().scheme())
+                        .host(appProperties.integration().intygstjanst().baseUrl())
+                        .port(appProperties.integration().intygstjanst().port())
                         .path(url)
                         .build())
             .body(requestObject)
@@ -127,9 +127,9 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
             .uri(
                 uriBuilder ->
                     uriBuilder
-                        .scheme(props.scheme())
-                        .host(props.baseUrl())
-                        .port(props.port())
+                        .scheme(appProperties.integration().intygstjanst().scheme())
+                        .host(appProperties.integration().intygstjanst().baseUrl())
+                        .port(appProperties.integration().intygstjanst().port())
                         .path(url)
                         .build())
             .body(requestObject)
@@ -174,9 +174,9 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
             .uri(
                 uriBuilder ->
                     uriBuilder
-                        .scheme(props.scheme())
-                        .host(props.baseUrl())
-                        .port(props.port())
+                        .scheme(appProperties.integration().intygstjanst().scheme())
+                        .host(appProperties.integration().intygstjanst().baseUrl())
+                        .port(appProperties.integration().intygstjanst().port())
                         .path(url)
                         .build())
             .body(requestObject)
@@ -203,9 +203,9 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
             .uri(
                 uriBuilder ->
                     uriBuilder
-                        .scheme(props.scheme())
-                        .host(props.baseUrl())
-                        .port(props.port())
+                        .scheme(appProperties.integration().intygstjanst().scheme())
+                        .host(appProperties.integration().intygstjanst().baseUrl())
+                        .port(appProperties.integration().intygstjanst().port())
                         .path(url)
                         .build())
             .body(requestObject)
@@ -230,9 +230,9 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
         .uri(
             uriBuilder ->
                 uriBuilder
-                    .scheme(props.scheme())
-                    .host(props.baseUrl())
-                    .port(props.port())
+                    .scheme(appProperties.integration().intygstjanst().scheme())
+                    .host(appProperties.integration().intygstjanst().baseUrl())
+                    .port(appProperties.integration().intygstjanst().port())
                     .path(url)
                     .build())
         .body(request)
@@ -257,9 +257,9 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
         .uri(
             uriBuilder ->
                 uriBuilder
-                    .scheme(props.scheme())
-                    .host(props.baseUrl())
-                    .port(props.port())
+                    .scheme(appProperties.integration().intygstjanst().scheme())
+                    .host(appProperties.integration().intygstjanst().baseUrl())
+                    .port(appProperties.integration().intygstjanst().port())
                     .path(url)
                     .build())
         .body(request)
@@ -284,9 +284,9 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
         .uri(
             uriBuilder ->
                 uriBuilder
-                    .scheme(props.scheme())
-                    .host(props.baseUrl())
-                    .port(props.port())
+                    .scheme(appProperties.integration().intygstjanst().scheme())
+                    .host(appProperties.integration().intygstjanst().baseUrl())
+                    .port(appProperties.integration().intygstjanst().port())
                     .path(url)
                     .build())
         .body(request)
@@ -312,9 +312,9 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
         .uri(
             uriBuilder ->
                 uriBuilder
-                    .scheme(props.scheme())
-                    .host(props.baseUrl())
-                    .port(props.port())
+                    .scheme(appProperties.integration().intygstjanst().scheme())
+                    .host(appProperties.integration().intygstjanst().baseUrl())
+                    .port(appProperties.integration().intygstjanst().port())
                     .path(url)
                     .build())
         .body(request)

@@ -37,7 +37,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.SamtyckestjanstProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentType;
@@ -63,11 +63,9 @@ class SamtyckestjanstClientServiceImplTest {
   private static final String VE_HSA_ID = "veHsaId-2.1";
   private static final String LOGICAL_ADDRESS = "123";
 
-  @Mock
-  private CheckConsentResponderInterface checkConsentService;
+  @Mock private CheckConsentResponderInterface checkConsentService;
 
-  @Mock
-  private RegisterExtendedConsentResponderInterface registerExtendedConsentService;
+  @Mock private RegisterExtendedConsentResponderInterface registerExtendedConsentService;
 
   private SamtyckestjanstClientServiceImpl testee;
 
@@ -77,8 +75,23 @@ class SamtyckestjanstClientServiceImplTest {
         new SamtyckestjanstClientServiceImpl(
             checkConsentService,
             registerExtendedConsentService,
-            new SamtyckestjanstProperties(
-                LOGICAL_ADDRESS, "http://checkconsent", "http://register", 10000, 30000));
+            new AppProperties(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                new AppProperties.Integration(
+                    null,
+                    null,
+                    null,
+                    null,
+                    new AppProperties.Integration.SamtyckestjanstIntegration(
+                        LOGICAL_ADDRESS, null, null, 0, 0),
+                    null,
+                    null)));
   }
 
   @Test

@@ -30,13 +30,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponderInterface;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.IntygstjanstProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 
 // CHECKSTYLE:ON LineLength
 
 /**
- * Declares and bootstraps the Intygstjänst client for
- * {@link ListActiveSickLeavesForCareUnitResponderInterface}
+ * Declares and bootstraps the Intygstjänst client for {@link
+ * ListActiveSickLeavesForCareUnitResponderInterface}
  *
  * <p>Somewhat "hackish" use of profiles:
  *
@@ -53,10 +53,13 @@ public class IntygstjanstIntegrationClientConfiguration {
   private final String connectionTimeout;
   private final String listSickleavesForPersonUrl;
 
-  public IntygstjanstIntegrationClientConfiguration(IntygstjanstProperties props) {
-    this.receiveTimeout = String.valueOf(props.service().receiveTimeout());
-    this.connectionTimeout = String.valueOf(props.service().connectionTimeout());
-    this.listSickleavesForPersonUrl = props.listSickLeavesForPersonUrl();
+  public IntygstjanstIntegrationClientConfiguration(AppProperties appProperties) {
+    this.receiveTimeout =
+        String.valueOf(appProperties.integration().intygstjanst().service().receiveTimeout());
+    this.connectionTimeout =
+        String.valueOf(appProperties.integration().intygstjanst().service().connectionTimeout());
+    this.listSickleavesForPersonUrl =
+        appProperties.integration().intygstjanst().listSickLeavesForPersonUrl();
   }
 
   @Bean

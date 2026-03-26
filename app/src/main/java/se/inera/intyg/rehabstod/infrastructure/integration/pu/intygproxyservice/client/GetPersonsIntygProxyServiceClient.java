@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.PuIntygProxyServiceProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.pu.intygproxyservice.configuration.PURestClientConfig;
 import se.inera.intyg.rehabstod.infrastructure.integration.pu.intygproxyservice.dto.PersonsRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.pu.intygproxyservice.dto.PersonsResponseDTO;
@@ -38,9 +38,9 @@ public class GetPersonsIntygProxyServiceClient {
 
   public GetPersonsIntygProxyServiceClient(
       @Qualifier("puIntygProxyServiceRestClient") RestClient ipsRestClient,
-      PuIntygProxyServiceProperties props) {
+      AppProperties appProperties) {
     this.ipsRestClient = ipsRestClient;
-    this.personsEndpoint = props.personsEndpoint();
+    this.personsEndpoint = appProperties.integration().intygProxyService().personsEndpoint();
   }
 
   @PerformanceLogging(eventAction = "get-persons", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)

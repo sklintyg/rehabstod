@@ -24,15 +24,15 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
 import java.nio.charset.StandardCharsets;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.SecurityProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 
 @Component
 public class HashUtility {
 
   private final String salt;
 
-  public HashUtility(SecurityProperties securityProperties) {
-    this.salt = securityProperties.hashSalt();
+  public HashUtility(AppProperties appProperties) {
+    this.salt = appProperties.security().hashSalt();
   }
 
   public static final String EMPTY = "EMPTY";

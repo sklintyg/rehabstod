@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.NtjpProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 
 @Component
 @Profile("!rhs-samtyckestjanst-stub")
@@ -46,15 +46,15 @@ public class SamtyckestjanstTlsConfig {
   private final String truststorePassword;
   private final String truststoreType;
 
-  public SamtyckestjanstTlsConfig(NtjpProperties ntjpProperties) {
+  public SamtyckestjanstTlsConfig(AppProperties appProperties) {
     final var loader = new DefaultResourceLoader();
-    this.certFile = loader.getResource(ntjpProperties.certificate().file());
-    this.certPassword = ntjpProperties.certificate().password();
-    this.certType = ntjpProperties.certificate().type();
-    this.keyManagerPassword = ntjpProperties.keyManagerPassword();
-    this.truststoreFile = loader.getResource(ntjpProperties.truststore().file());
-    this.truststorePassword = ntjpProperties.truststore().password();
-    this.truststoreType = ntjpProperties.truststore().type();
+    this.certFile = loader.getResource(appProperties.ntjp().certificate().file());
+    this.certPassword = appProperties.ntjp().certificate().password();
+    this.certType = appProperties.ntjp().certificate().type();
+    this.keyManagerPassword = appProperties.ntjp().keyManagerPassword();
+    this.truststoreFile = loader.getResource(appProperties.ntjp().truststore().file());
+    this.truststorePassword = appProperties.ntjp().truststore().password();
+    this.truststoreType = appProperties.ntjp().truststore().type();
   }
 
   public void configure(HTTPConduit conduit) {

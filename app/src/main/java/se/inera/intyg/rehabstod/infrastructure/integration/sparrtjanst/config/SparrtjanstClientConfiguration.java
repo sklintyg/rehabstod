@@ -28,7 +28,7 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.SparrtjanstProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
 
 // CHECKSTYLE:ON LineLength
@@ -43,11 +43,13 @@ public class SparrtjanstClientConfiguration {
   private final String checkBlocksUrl;
 
   public SparrtjanstClientConfiguration(
-      SparrtjanstTlsConfig tlsConfig, SparrtjanstProperties props) {
+      SparrtjanstTlsConfig tlsConfig, AppProperties appProperties) {
     this.tlsConfig = tlsConfig;
-    this.receiveTimeout = String.valueOf(props.receiveTimeout());
-    this.connectionTimeout = String.valueOf(props.connectionTimeout());
-    this.checkBlocksUrl = props.checkBlocksUrl();
+    this.receiveTimeout =
+        String.valueOf(appProperties.integration().sparrtjanst().receiveTimeout());
+    this.connectionTimeout =
+        String.valueOf(appProperties.integration().sparrtjanst().connectionTimeout());
+    this.checkBlocksUrl = appProperties.integration().sparrtjanst().checkBlocksUrl();
   }
 
   @Bean

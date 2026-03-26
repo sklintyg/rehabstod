@@ -28,7 +28,7 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.SamtyckestjanstProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsent.v2.rivtabp21.RegisterExtendedConsentResponderInterface;
 
@@ -45,12 +45,15 @@ public class SamtyckestjanstClientConfiguration {
   private final String registerConsentUrl;
 
   public SamtyckestjanstClientConfiguration(
-      SamtyckestjanstTlsConfig tlsConfig, SamtyckestjanstProperties props) {
+      SamtyckestjanstTlsConfig tlsConfig, AppProperties appProperties) {
     this.tlsConfig = tlsConfig;
-    this.receiveTimeout = String.valueOf(props.receiveTimeout());
-    this.connectionTimeout = String.valueOf(props.connectionTimeout());
-    this.checkConsentUrl = props.checkConsentUrl();
-    this.registerConsentUrl = props.registerExtendedConsentUrl();
+    this.receiveTimeout =
+        String.valueOf(appProperties.integration().samtyckestjanst().receiveTimeout());
+    this.connectionTimeout =
+        String.valueOf(appProperties.integration().samtyckestjanst().connectionTimeout());
+    this.checkConsentUrl = appProperties.integration().samtyckestjanst().checkConsentUrl();
+    this.registerConsentUrl =
+        appProperties.integration().samtyckestjanst().registerExtendedConsentUrl();
   }
 
   @Bean

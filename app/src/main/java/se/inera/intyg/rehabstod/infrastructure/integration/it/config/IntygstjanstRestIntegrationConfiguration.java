@@ -22,22 +22,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.IntygstjanstProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 
 @Configuration
 public class IntygstjanstRestIntegrationConfiguration {
 
-  private final IntygstjanstProperties props;
+  private final AppProperties appProperties;
 
-  public IntygstjanstRestIntegrationConfiguration(IntygstjanstProperties props) {
-    this.props = props;
+  public IntygstjanstRestIntegrationConfiguration(AppProperties appProperties) {
+    this.appProperties = appProperties;
   }
 
   @Bean
   public RestTemplate itRestTemplate() {
     final var httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-    httpRequestFactory.setConnectionRequestTimeout(props.rest().connectionRequestTimeout());
-    httpRequestFactory.setConnectTimeout(props.rest().connectionTimeout());
+    httpRequestFactory.setConnectionRequestTimeout(
+        appProperties.integration().intygstjanst().rest().connectionRequestTimeout());
+    httpRequestFactory.setConnectTimeout(
+        appProperties.integration().intygstjanst().rest().connectionTimeout());
 
     return new RestTemplate(httpRequestFactory);
   }

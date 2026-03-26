@@ -31,7 +31,7 @@ import org.slf4j.MDC;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.WebcertProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationResponse;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
@@ -43,7 +43,7 @@ public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
   private static final Logger LOG = LoggerFactory.getLogger(WcRestIntegrationServiceImpl.class);
 
   private final RestClient wcRestClient;
-  private final WebcertProperties props;
+  private final AppProperties appProperties;
 
   @Override
   @PerformanceLogging(
@@ -59,9 +59,9 @@ public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
           .uri(
               uriBuilder ->
                   uriBuilder
-                      .scheme(props.scheme())
-                      .host(props.baseUrl())
-                      .port(props.port())
+                      .scheme(appProperties.integration().webcert().scheme())
+                      .host(appProperties.integration().webcert().baseUrl())
+                      .port(appProperties.integration().webcert().port())
                       .path(url)
                       .build())
           .body(request)

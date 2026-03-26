@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.HsaIntygProxyServiceProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto.organization.GetHealthCareUnitMembersResponseDTO;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
@@ -42,9 +42,10 @@ public class HsaIntygProxyServiceHealthCareUnitMembersClient {
 
   public HsaIntygProxyServiceHealthCareUnitMembersClient(
       @Qualifier("hsaIntygProxyServiceRestClient") RestClient ipsRestClient,
-      HsaIntygProxyServiceProperties props) {
+      AppProperties appProperties) {
     this.ipsRestClient = ipsRestClient;
-    this.healthCareUnitMembersEndpoint = props.healthCareUnitMembersEndpoint();
+    this.healthCareUnitMembersEndpoint =
+        appProperties.integration().intygProxyService().healthCareUnitMembersEndpoint();
   }
 
   @PerformanceLogging(

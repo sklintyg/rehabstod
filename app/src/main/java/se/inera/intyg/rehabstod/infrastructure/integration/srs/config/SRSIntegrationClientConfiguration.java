@@ -30,13 +30,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateResponderInterface;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.SrsProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 
 // CHECKSTYLE:ON LineLength
 
 /**
- * Declares and bootstraps the Intygstjänst client for
- * {@link GetRiskPredictionForCertificateResponderInterface}
+ * Declares and bootstraps the Intygstjänst client for {@link
+ * GetRiskPredictionForCertificateResponderInterface}
  *
  * <p>Somewhat "hackish" use of profiles:
  *
@@ -55,23 +55,23 @@ public class SRSIntegrationClientConfiguration {
   private final String srsWsUrl;
   private final String srsGetDiagnosisCodesWsUrl;
 
-  public SRSIntegrationClientConfiguration(SrsProperties props) {
-    this.receiveTimeout = String.valueOf(props.receiveTimeout());
-    this.connectionTimeout = String.valueOf(props.connectionTimeout());
-    this.srsWsUrl = props.getRiskPredictionUrl();
-    this.srsGetDiagnosisCodesWsUrl = props.getDiagnosisCodesUrl();
+  public SRSIntegrationClientConfiguration(AppProperties appProperties) {
+    this.receiveTimeout = String.valueOf(appProperties.integration().srs().receiveTimeout());
+    this.connectionTimeout = String.valueOf(appProperties.integration().srs().connectionTimeout());
+    this.srsWsUrl = appProperties.integration().srs().getRiskPredictionUrl();
+    this.srsGetDiagnosisCodesWsUrl = appProperties.integration().srs().getDiagnosisCodesUrl();
   }
 
   @Bean
   public GetRiskPredictionForCertificateResponderInterface
-  getRiskPredictionForCertificateWebServiceClient() {
+      getRiskPredictionForCertificateWebServiceClient() {
     // CHECKSTYLE:OFF LineLength
     JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
     proxyFactoryBean.setAddress(srsWsUrl);
     proxyFactoryBean.setServiceClass(GetRiskPredictionForCertificateResponderInterface.class);
     GetRiskPredictionForCertificateResponderInterface
         getRiskPredictionForCertificateResponderInterface =
-        (GetRiskPredictionForCertificateResponderInterface) proxyFactoryBean.create();
+            (GetRiskPredictionForCertificateResponderInterface) proxyFactoryBean.create();
     Client client = ClientProxy.getClient(getRiskPredictionForCertificateResponderInterface);
     applyTimeouts(client);
     return getRiskPredictionForCertificateResponderInterface;

@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.HsaIntygProxyServiceProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto.organization.GetUnitResponseDTO;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
@@ -42,9 +42,9 @@ public class HsaIntygProxyServiceUnitClient {
 
   public HsaIntygProxyServiceUnitClient(
       @Qualifier("hsaIntygProxyServiceRestClient") RestClient ipsRestClient,
-      HsaIntygProxyServiceProperties props) {
+      AppProperties appProperties) {
     this.ipsRestClient = ipsRestClient;
-    this.unitEndpoint = props.unitEndpoint();
+    this.unitEndpoint = appProperties.integration().intygProxyService().unitEndpoint();
   }
 
   @PerformanceLogging(eventAction = "get-unit", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
