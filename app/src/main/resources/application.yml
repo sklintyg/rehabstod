@@ -95,7 +95,7 @@ logging:
     ecs:
       service:
         name: rehabstod
-        environment: "${spring.profiles.active:default}"
+        environment: "${spring.profiles.active}"
   level:
     org.springframework.context.support.PostProcessorRegistrationDelegate: ERROR
 
