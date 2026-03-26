@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.rehabstod.infrastructure.integration.wc.service;
 
-import static se.inera.intyg.rehabstod.infrastructure.logging.MdcHelper.LOG_SESSION_ID_HEADER;
-import static se.inera.intyg.rehabstod.infrastructure.logging.MdcHelper.LOG_TRACE_ID_HEADER;
-import static se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants.EVENT_TYPE_ACCESSED;
-import static se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants.SESSION_ID_KEY;
-import static se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants.TRACE_ID_KEY;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcHelper.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcHelper.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants.EVENT_TYPE_ACCESSED;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants.SESSION_ID_KEY;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants.TRACE_ID_KEY;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

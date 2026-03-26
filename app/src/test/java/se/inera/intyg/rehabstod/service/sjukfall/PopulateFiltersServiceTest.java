@@ -42,12 +42,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.application.Urval;
-import se.inera.intyg.rehabstod.application.api.dto.GetDoctorsForUnitResponse;
 import se.inera.intyg.rehabstod.application.certificate.CertificateService;
+import se.inera.intyg.rehabstod.application.certificate.dto.GetDoctorsForUnitResponse;
 import se.inera.intyg.rehabstod.application.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.application.filter.PopulateFiltersServiceImpl;
-import se.inera.intyg.rehabstod.application.pu.PuService;
+import se.inera.intyg.rehabstod.application.sickleave.SickLeavePersonFilterService;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineOccupationTypeDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
@@ -80,7 +80,7 @@ class PopulateFiltersServiceTest {
 
   @Mock SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
-  @Mock PuService puService;
+  @Mock SickLeavePersonFilterService sickLeavePersonFilterService;
 
   @Mock FeatureService featureService;
   @Mock CertificateService certificateService;
@@ -323,7 +323,8 @@ class PopulateFiltersServiceTest {
 
         @Test
         void shouldCreateRequestWithProtectedPersonFilterIdNull() {
-          when(puService.shouldFilterSickLeavesOnProtectedPerson(any())).thenReturn(true);
+          when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(any()))
+              .thenReturn(true);
 
           final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
           populateActiveFilters.populateSickLeaveFilters();
@@ -335,7 +336,8 @@ class PopulateFiltersServiceTest {
 
         @Test
         void shouldCreateRequestWithProtectedPersonFilterIdAsHsaId() {
-          when(puService.shouldFilterSickLeavesOnProtectedPerson(any())).thenReturn(false);
+          when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(any()))
+              .thenReturn(false);
           when(user.getHsaId()).thenReturn(HSA_ID);
 
           final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
@@ -585,7 +587,7 @@ class PopulateFiltersServiceTest {
     @Test
     void shouldReturnAllDoctorsForUnit() {
       when(diagnosKapitelService.getDiagnosKapitelList()).thenReturn(Collections.emptyList());
-      final var doctor = new se.inera.intyg.rehabstod.application.api.model.Lakare();
+      final var doctor = new se.inera.intyg.rehabstod.application.certificate.model.Lakare();
       when(certificateService.getDoctorsForUnit())
           .thenReturn(new GetDoctorsForUnitResponse(List.of(doctor)));
       final var expectedResponse =

@@ -34,19 +34,19 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.api.dto.SickLeavesFilterRequestDTO;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.application.pu.PuService;
-import se.inera.intyg.rehabstod.application.sjukfall.GetActiveSickLeavesResponseService;
-import se.inera.intyg.rehabstod.application.sjukfall.GetSickLeaveSummaryServiceImpl;
+import se.inera.intyg.rehabstod.application.sickleave.GetActiveSickLeavesResponseService;
+import se.inera.intyg.rehabstod.application.sickleave.GetSickLeaveSummaryServiceImpl;
+import se.inera.intyg.rehabstod.application.sickleave.SickLeavePersonFilterService;
+import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeavesFilterRequestDTO;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sickleave.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.GetActiveSickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.SickLeaveSummary;
-import se.inera.intyg.rehabstod.application.sjukfall.statistics.StatisticsCalculator;
 
 @ExtendWith(MockitoExtension.class)
 class GetSickLeaveSummaryServiceTest {
 
-  @Mock PuService puService;
+  @Mock SickLeavePersonFilterService sickLeavePersonFilterService;
   @Mock StatisticsCalculator statisticsCalculator;
   @Mock GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
   @InjectMocks GetSickLeaveSummaryServiceImpl getSickLeaveSummaryService;
@@ -87,7 +87,7 @@ class GetSickLeaveSummaryServiceTest {
   @Test
   void shouldFilterForSekretess() {
     getSickLeaveSummaryService.get();
-    verify(puService).filterSekretessForSummary(sickLeaves);
+    verify(sickLeavePersonFilterService).filterSekretessForSummary(sickLeaves);
   }
 
   @Test

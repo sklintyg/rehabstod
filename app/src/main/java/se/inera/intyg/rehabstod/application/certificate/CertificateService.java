@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.rehabstod.application.certificate;
 
-import se.inera.intyg.rehabstod.application.api.dto.GetAGCertificatesForPersonResponse;
-import se.inera.intyg.rehabstod.application.api.dto.GetDoctorsForUnitResponse;
-import se.inera.intyg.rehabstod.application.api.dto.GetLUCertificatesForCareUnitRequest;
-import se.inera.intyg.rehabstod.application.api.dto.GetLUCertificatesForCareUnitResponse;
-import se.inera.intyg.rehabstod.application.api.dto.GetLUCertificatesForPersonResponse;
+import se.inera.intyg.rehabstod.application.certificate.dto.GetAGCertificatesForPersonResponse;
+import se.inera.intyg.rehabstod.application.certificate.dto.GetDoctorsForUnitResponse;
+import se.inera.intyg.rehabstod.application.certificate.dto.GetLUCertificatesForCareUnitRequest;
+import se.inera.intyg.rehabstod.application.certificate.dto.GetLUCertificatesForCareUnitResponse;
+import se.inera.intyg.rehabstod.application.certificate.dto.GetLUCertificatesForPersonResponse;
 
 /** Provides front end with specialized certificate data. Data is collected from intygstjansten */
 public interface CertificateService {

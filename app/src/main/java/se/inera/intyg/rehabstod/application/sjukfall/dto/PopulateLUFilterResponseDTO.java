@@ -23,7 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import se.inera.intyg.rehabstod.application.api.model.Lakare;
+import se.inera.intyg.rehabstod.application.certificate.model.Lakare;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKapitel;
 
 @Data

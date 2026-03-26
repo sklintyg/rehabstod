@@ -22,6 +22,8 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcCloseableMap;
+import se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants;
 
 @Service("webMonitoringLogService")
 public class MonitoringLogServiceImpl implements MonitoringLogService {
@@ -40,7 +42,7 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
         MdcCloseableMap.builder()
             .put(MdcLogConstants.EVENT_TYPE, toEventType(MonitoringEvent.USER_LOGIN))
             .put(MdcLogConstants.USER_ID, userHsaId)
-            .put(MdcLogConstants.USER_ROLES, Arrays.toString(new String[]{role}))
+            .put(MdcLogConstants.USER_ROLES, Arrays.toString(new String[] {role}))
             .put(MdcLogConstants.EVENT_AUTHENTICATION_SCHEME, authenticationScheme)
             .build()) {
       logEvent(MonitoringEvent.USER_LOGIN, userHsaId, role, roleTypeName, authenticationScheme);

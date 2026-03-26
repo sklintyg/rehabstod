@@ -42,28 +42,28 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.application.Urval;
-import se.inera.intyg.rehabstod.application.api.dto.GetLUCertificatesForCareUnitRequest;
-import se.inera.intyg.rehabstod.application.api.model.Diagnos;
 import se.inera.intyg.rehabstod.application.certificate.CertificateServiceImpl;
 import se.inera.intyg.rehabstod.application.certificate.builder.DiagnosedCertificateBuilder;
 import se.inera.intyg.rehabstod.application.certificate.builder.SickLeaveCertificateBuilder;
 import se.inera.intyg.rehabstod.application.certificate.dto.DiagnosedCertificate;
-import se.inera.intyg.rehabstod.application.certificate.dto.SickLeaveCertificate;
-import se.inera.intyg.rehabstod.application.certificate.dto.SickLeaveCertificate.WorkCapacity;
+import se.inera.intyg.rehabstod.application.certificate.dto.GetLUCertificatesForCareUnitRequest;
+import se.inera.intyg.rehabstod.application.certificate.model.Diagnos;
 import se.inera.intyg.rehabstod.application.communication.UnansweredCommunicationDecoratorService;
 import se.inera.intyg.rehabstod.application.diagnos.DiagnosFactory;
-import se.inera.intyg.rehabstod.application.hsa.EmployeeNameService;
-import se.inera.intyg.rehabstod.application.pu.PuService;
+import se.inera.intyg.rehabstod.application.employee.EmployeeNameService;
+import se.inera.intyg.rehabstod.application.sickleave.SickLeavePersonFilterService;
+import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeaveCertificate;
+import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeaveCertificate.WorkCapacity;
 import se.inera.intyg.rehabstod.application.sjukfall.komplettering.UnansweredQAsInfoDecorator;
-import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.application.user.UserService;
+import se.inera.intyg.rehabstod.application.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.logging.pdl.LogService;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 
 @ExtendWith(MockitoExtension.class)
 class CertificateServiceImplTest {
@@ -95,38 +95,27 @@ class CertificateServiceImplTest {
   private static final int REDUCTION_2 = 75;
   private static final int REDUCTION_3 = 50;
 
-  @Mock
-  UnansweredQAsInfoDecorator unAnsweredQAsInfoDecorator;
+  @Mock UnansweredQAsInfoDecorator unAnsweredQAsInfoDecorator;
 
-  @Mock
-  IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+  @Mock IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
 
-  @Mock
-  UserService userService;
+  @Mock UserService userService;
 
-  @Mock
-  RehabstodUser user;
+  @Mock RehabstodUser user;
 
-  @Mock
-  LogService logService;
+  @Mock LogService logService;
 
-  @Mock
-  DiagnosFactory diagnosFactory;
+  @Mock DiagnosFactory diagnosFactory;
 
-  @Mock
-  HsaOrganizationsService hsaOrganizationsService;
+  @Mock HsaOrganizationsService hsaOrganizationsService;
 
-  @Mock
-  PuService puService;
+  @Mock SickLeavePersonFilterService sickLeavePersonFilterService;
 
-  @Mock
-  EmployeeNameService employeeNameService;
+  @Mock EmployeeNameService employeeNameService;
 
-  @Mock
-  UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
+  @Mock UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
 
-  @Mock
-  PatientIdEncryption patientIdEncryption;
+  @Mock PatientIdEncryption patientIdEncryption;
 
   CertificateServiceImpl service;
 
@@ -140,7 +129,7 @@ class CertificateServiceImplTest {
             userService,
             diagnosFactory,
             hsaOrganizationsService,
-            puService,
+            sickLeavePersonFilterService,
             employeeNameService,
             unansweredCommunicationDecoratorService,
             patientIdEncryption);
@@ -162,7 +151,7 @@ class CertificateServiceImplTest {
 
     var diagnosedCertificateList = buildDiagnosedCertificateList();
     when(intygstjanstRestIntegrationService.getDiagnosedCertificatesForCareUnit(
-        argumentCapture.capture(), any(List.class), any(), any(), any()))
+            argumentCapture.capture(), any(List.class), any(), any(), any()))
         .thenReturn(diagnosedCertificateList);
 
     when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
@@ -203,7 +192,7 @@ class CertificateServiceImplTest {
 
     var diagnosedCertificateList = buildDiagnosedCertificateList();
     when(intygstjanstRestIntegrationService.getDiagnosedCertificatesForCareUnit(
-        argumentCapture.capture(), any(List.class), any(), any(), any()))
+            argumentCapture.capture(), any(List.class), any(), any(), any()))
         .thenReturn(diagnosedCertificateList);
 
     when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
@@ -232,7 +221,7 @@ class CertificateServiceImplTest {
 
     var diagnosedCertificateList = buildDiagnosedCertificateList();
     when(intygstjanstRestIntegrationService.getDiagnosedCertificatesForCareUnit(
-        any(), any(List.class), any(), any(), any()))
+            any(), any(List.class), any(), any(), any()))
         .thenReturn(diagnosedCertificateList);
 
     when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
@@ -263,7 +252,7 @@ class CertificateServiceImplTest {
 
     var diagnosedCertificateList = buildDiagnosedCertificateList();
     when(intygstjanstRestIntegrationService.getDiagnosedCertificatesForPerson(
-        anyString(), any(List.class), argumentCapture.capture()))
+            anyString(), any(List.class), argumentCapture.capture()))
         .thenReturn(diagnosedCertificateList);
 
     when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
@@ -304,7 +293,7 @@ class CertificateServiceImplTest {
 
     var diagnosedCertificateList = buildDiagnosedCertificateList();
     when(intygstjanstRestIntegrationService.getDiagnosedCertificatesForPerson(
-        anyString(), any(List.class), any()))
+            anyString(), any(List.class), any()))
         .thenReturn(diagnosedCertificateList);
 
     when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
@@ -334,7 +323,7 @@ class CertificateServiceImplTest {
 
     var diagnosedCertificateList = buildDiagnosedCertificateList();
     when(intygstjanstRestIntegrationService.getDiagnosedCertificatesForPerson(
-        anyString(), any(List.class), any()))
+            anyString(), any(List.class), any()))
         .thenReturn(diagnosedCertificateList);
 
     when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
@@ -367,7 +356,7 @@ class CertificateServiceImplTest {
 
     var sickLeaveCertificateList = buildSickLeaveCertificateList();
     when(intygstjanstRestIntegrationService.getSickLeaveCertificatesForPerson(
-        anyString(), anyList(), argumentCapture.capture(), eq(List.of())))
+            anyString(), anyList(), argumentCapture.capture(), eq(List.of())))
         .thenReturn(sickLeaveCertificateList);
 
     when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
@@ -417,7 +406,7 @@ class CertificateServiceImplTest {
 
     final var sickLeaveCertificateList = buildSickLeaveCertificateList();
     when(intygstjanstRestIntegrationService.getSickLeaveCertificatesForPerson(
-        anyString(), anyList(), anyList(), argumentCapture.capture()))
+            anyString(), anyList(), anyList(), argumentCapture.capture()))
         .thenReturn(sickLeaveCertificateList);
     when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
         .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));

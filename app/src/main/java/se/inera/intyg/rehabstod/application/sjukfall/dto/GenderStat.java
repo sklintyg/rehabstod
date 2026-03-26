@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.application.sjukfall.dto;
 
-import se.inera.intyg.rehabstod.application.api.model.Gender;
+import se.inera.intyg.rehabstod.application.sickleave.statistics.model.Gender;
 
 /** Created by marced on 15/03/16. */
 public class GenderStat {

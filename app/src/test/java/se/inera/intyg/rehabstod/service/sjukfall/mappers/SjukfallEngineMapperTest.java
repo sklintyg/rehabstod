@@ -37,16 +37,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.api.model.Diagnos;
-import se.inera.intyg.rehabstod.application.api.model.PatientData;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
 import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaData;
+import se.inera.intyg.rehabstod.application.certificate.model.Diagnos;
 import se.inera.intyg.rehabstod.application.diagnos.DiagnosFactory;
+import se.inera.intyg.rehabstod.application.patient.model.PatientData;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallPatient;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.mappers.SjukfallEngineMapper;
-import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
+import se.inera.intyg.rehabstod.application.util.PatientIdEncryption;
 
 /**
  * @author Magnus Ekstrand on 2017-09-22.

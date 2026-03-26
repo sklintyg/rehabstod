@@ -26,9 +26,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.rehabstod.infrastructure.logging.pdl.dto.LogUser;
 
-/**
- * Created by eriklupander on 2017-01-31.
- */
+/** Created by eriklupander on 2017-01-31. */
 class LogUserTest {
 
   @Test

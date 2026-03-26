@@ -24,7 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.inera.intyg.rehabstod.application.sjukfall.engine.SjukfallLangdCalculator;
-import se.inera.intyg.rehabstod.application.sjukfall.util.SysselsattningMapper;
+import se.inera.intyg.rehabstod.application.util.SysselsattningMapper;
 
 public class SjukfallIntyg extends IntygData {
 

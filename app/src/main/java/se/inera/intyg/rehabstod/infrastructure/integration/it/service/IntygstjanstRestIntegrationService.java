@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.infrastructure.integration.it.service;
 import java.time.LocalDate;
 import java.util.List;
 import se.inera.intyg.rehabstod.application.certificate.dto.DiagnosedCertificate;
-import se.inera.intyg.rehabstod.application.certificate.dto.SickLeaveCertificate;
+import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeaveCertificate;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.GetRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.PopulateFiltersRequestDTO;

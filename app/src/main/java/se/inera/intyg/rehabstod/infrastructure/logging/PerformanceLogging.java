@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.infrastructure.logging;
 
-import static se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants.EVENT_CATEGORY_API;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants.EVENT_CATEGORY_API;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

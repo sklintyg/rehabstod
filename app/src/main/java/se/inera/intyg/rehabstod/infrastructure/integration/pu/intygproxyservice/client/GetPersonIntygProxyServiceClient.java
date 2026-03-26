@@ -27,8 +27,8 @@ import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.pu.intygproxyservice.configuration.PURestClientConfig;
 import se.inera.intyg.rehabstod.infrastructure.integration.pu.intygproxyservice.dto.PersonRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.pu.intygproxyservice.dto.PersonResponseDTO;
-import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants;
 
 @Service
 public class GetPersonIntygProxyServiceClient {

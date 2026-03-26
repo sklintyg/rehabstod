@@ -26,10 +26,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.rehabstod.application.api.dto.PrintSjukfallRequest;
-import se.inera.intyg.rehabstod.application.api.model.Diagnos;
-import se.inera.intyg.rehabstod.application.api.model.LangdIntervall;
-import se.inera.intyg.rehabstod.application.api.model.Sortering;
+import se.inera.intyg.rehabstod.application.certificate.model.Diagnos;
+import se.inera.intyg.rehabstod.application.sickleave.dto.PrintSjukfallRequest;
+import se.inera.intyg.rehabstod.application.sickleave.model.LangdIntervall;
+import se.inera.intyg.rehabstod.application.sickleave.model.Sortering;
 
 class BaseExportServiceTest {
 

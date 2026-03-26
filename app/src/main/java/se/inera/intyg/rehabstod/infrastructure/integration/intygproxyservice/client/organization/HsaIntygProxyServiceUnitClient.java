@@ -31,8 +31,8 @@ import org.springframework.web.client.RestClient;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto.organization.GetUnitResponseDTO;
-import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants;
 
 @Service
 public class HsaIntygProxyServiceUnitClient {

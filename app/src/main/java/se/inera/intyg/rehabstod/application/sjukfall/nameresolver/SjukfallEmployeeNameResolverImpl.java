@@ -23,10 +23,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.rehabstod.application.api.model.Lakare;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
-import se.inera.intyg.rehabstod.application.hsa.EmployeeNameService;
+import se.inera.intyg.rehabstod.application.certificate.model.Lakare;
+import se.inera.intyg.rehabstod.application.employee.EmployeeNameService;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallPatient;
 
 /** Created by eriklupander on 2017-02-23. */
 @Service

@@ -18,10 +18,10 @@
  */
 package se.inera.intyg.rehabstod.infrastructure.integration.it.service;
 
-import static se.inera.intyg.rehabstod.infrastructure.logging.MdcHelper.LOG_SESSION_ID_HEADER;
-import static se.inera.intyg.rehabstod.infrastructure.logging.MdcHelper.LOG_TRACE_ID_HEADER;
-import static se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants.SESSION_ID_KEY;
-import static se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants.TRACE_ID_KEY;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcHelper.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcHelper.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants.SESSION_ID_KEY;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants.TRACE_ID_KEY;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,8 +36,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import se.inera.intyg.rehabstod.application.certificate.dto.DiagnosedCertificate;
-import se.inera.intyg.rehabstod.application.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.rehabstod.application.certificate.dto.TypedCertificateRequest;
+import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeaveCertificate;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.GetRekoStatusRequestDTO;
@@ -46,8 +46,8 @@ import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.PopulateFilter
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesResponseDTO;
-import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants;
 
 @Profile("!rhs-it-stub")
 @Service

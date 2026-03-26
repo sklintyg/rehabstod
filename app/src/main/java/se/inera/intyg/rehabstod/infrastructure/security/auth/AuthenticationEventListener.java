@@ -30,8 +30,8 @@ import org.springframework.security.authentication.event.LogoutSuccessEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.infrastructure.logging.MonitoringLogService;
+import se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants;
 
 @Component
 @Slf4j

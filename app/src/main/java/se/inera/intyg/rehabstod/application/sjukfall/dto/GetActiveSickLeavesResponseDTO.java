@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.application.sjukfall.dto;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 
 @Data
 @AllArgsConstructor

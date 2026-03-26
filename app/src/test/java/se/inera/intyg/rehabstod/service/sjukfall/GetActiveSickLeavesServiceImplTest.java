@@ -34,7 +34,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.sjukfall.GetActiveSickLeavesServiceImpl;
+import se.inera.intyg.rehabstod.application.sickleave.GetActiveSickLeavesServiceImpl;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
@@ -60,7 +60,8 @@ class GetActiveSickLeavesServiceImplTest {
 
   @Test
   void shouldReturnActiveSickLeaves() {
-    final var expectedResult = new se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet();
+    final var expectedResult =
+        new se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet();
     when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
             response.getContent().get(0),
             request.getMaxDaysSinceSickLeaveCompleted(),

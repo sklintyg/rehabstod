@@ -18,9 +18,7 @@
  */
 package se.inera.intyg.rehabstod.infrastructure.logging;
 
-/**
- * Created by eriklupander on 2016-05-18.
- */
+/** Created by eriklupander on 2016-05-18. */
 public interface AuthenticationLogger {
 
   void logUserLogin(

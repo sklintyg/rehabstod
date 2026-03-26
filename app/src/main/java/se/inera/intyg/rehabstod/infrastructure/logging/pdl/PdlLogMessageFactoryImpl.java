@@ -25,11 +25,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.rehabstod.application.api.model.LUCertificate;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.certificate.model.LUCertificate;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
-import se.inera.intyg.rehabstod.infrastructure.logging.SjukfallDataLogMessage;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.Enhet;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.Patient;
@@ -38,10 +36,9 @@ import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.PdlResource;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.infrastructure.logging.pdl.dto.LogPatient;
 import se.inera.intyg.rehabstod.infrastructure.logging.pdl.dto.LogUser;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
 
-/**
- * Created by eriklupander on 2016-03-03.
- */
+/** Created by eriklupander on 2016-03-03. */
 @Service
 public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 

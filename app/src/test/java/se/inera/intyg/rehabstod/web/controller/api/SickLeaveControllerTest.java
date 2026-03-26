@@ -36,16 +36,16 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.api.SickLeaveController;
-import se.inera.intyg.rehabstod.application.api.dto.SickLeavePrintRequestDTO;
-import se.inera.intyg.rehabstod.application.api.dto.SickLeavesFilterRequestDTO;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.filter.PopulateFiltersService;
-import se.inera.intyg.rehabstod.application.sjukfall.GetActiveSickLeavesResponseService;
-import se.inera.intyg.rehabstod.application.sjukfall.GetSickLeaveSummaryService;
-import se.inera.intyg.rehabstod.application.sjukfall.PdlLogSickLeavesService;
+import se.inera.intyg.rehabstod.application.sickleave.GetActiveSickLeavesResponseService;
+import se.inera.intyg.rehabstod.application.sickleave.GetSickLeaveSummaryService;
+import se.inera.intyg.rehabstod.application.sickleave.SickLeaveController;
+import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeavePrintRequestDTO;
+import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeavesFilterRequestDTO;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.GetActiveSickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.PopulateSickLeaveFilterResponseDTO;
+import se.inera.intyg.rehabstod.infrastructure.logging.pdl.PdlLogSickLeavesService;
 
 @ExtendWith(MockitoExtension.class)
 class SickLeaveControllerTest {

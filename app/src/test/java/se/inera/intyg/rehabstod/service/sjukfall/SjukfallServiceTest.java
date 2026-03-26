@@ -47,13 +47,14 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.rehabstod.application.Urval;
-import se.inera.intyg.rehabstod.application.api.model.Diagnos;
-import se.inera.intyg.rehabstod.application.api.model.PatientData;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
 import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaData;
-import se.inera.intyg.rehabstod.application.hsa.EmployeeNameService;
-import se.inera.intyg.rehabstod.application.pu.PuService;
+import se.inera.intyg.rehabstod.application.certificate.model.Diagnos;
+import se.inera.intyg.rehabstod.application.employee.EmployeeNameService;
+import se.inera.intyg.rehabstod.application.patient.model.PatientData;
+import se.inera.intyg.rehabstod.application.sickleave.SickLeavePersonFilterService;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallPatient;
+import se.inera.intyg.rehabstod.application.sickleave.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.application.sjukfall.SjukfallServiceImpl;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygParametrar;
@@ -67,11 +68,10 @@ import se.inera.intyg.rehabstod.application.sjukfall.mappers.IntygstjanstMapper;
 import se.inera.intyg.rehabstod.application.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.application.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.application.sjukfall.services.SjukfallEngineService;
-import se.inera.intyg.rehabstod.application.sjukfall.srs.RiskPredictionService;
-import se.inera.intyg.rehabstod.application.sjukfall.statistics.StatisticsCalculator;
-import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
+import se.inera.intyg.rehabstod.application.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.application.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.application.user.UserService;
+import se.inera.intyg.rehabstod.application.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
@@ -79,12 +79,12 @@ import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.services.legacy
 import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstIntegrationServiceImpl;
 import se.inera.intyg.rehabstod.infrastructure.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
 import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.service.SparrtjanstIntegrationServiceImpl;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.infrastructure.logging.MonitoringLogService;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.infrastructure.logging.pdl.LogService;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
@@ -94,9 +94,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-24.
- */
+/** Created by Magnus Ekstrand on 2016-02-24. */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class SjukfallServiceTest {
@@ -134,67 +132,49 @@ class SjukfallServiceTest {
   private final IntygParametrar parameters =
       new IntygParametrar(intygsGlapp, MAX_DAGAR_SEDAN_AVSLUT, activeDate);
 
-  @Mock
-  private IntygstjanstIntegrationServiceImpl integrationService;
+  @Mock private IntygstjanstIntegrationServiceImpl integrationService;
 
-  @Mock
-  private StatisticsCalculator statisticsCalculator;
+  @Mock private StatisticsCalculator statisticsCalculator;
 
-  @Mock
-  private MonitoringLogService monitoringLogService;
+  @Mock private MonitoringLogService monitoringLogService;
 
-  @Spy
-  private SjukfallEngineService sjukfallEngine;
+  @Spy private SjukfallEngineService sjukfallEngine;
 
-  @Spy
-  private SjukfallEngineMapperTest sjukfallEngineMapper;
+  @Spy private SjukfallEngineMapperTest sjukfallEngineMapper;
 
-  @Spy
-  private IntygstjanstMapper intygstjanstMapper;
+  @Spy private IntygstjanstMapper intygstjanstMapper;
 
-  @Mock
-  private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+  @Mock private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
-  @Mock
-  private EmployeeNameService employeeNameService;
+  @Mock private EmployeeNameService employeeNameService;
 
-  @Mock
-  private PuService puService;
+  @Mock private SickLeavePersonFilterService sickLeavePersonFilterService;
 
-  @Mock
-  private RiskPredictionService riskPredictionService;
+  @Mock private RiskPredictionService riskPredictionService;
 
-  @Mock
-  private UserPreferencesService userPreferencesService;
+  @Mock private UserPreferencesService userPreferencesService;
 
-  @Spy
-  private SparrtjanstIntegrationServiceImplTest sparrtjanstIntegrationService;
+  @Spy private SparrtjanstIntegrationServiceImplTest sparrtjanstIntegrationService;
 
-  @Mock
-  private HsaOrganizationsService hsaOrganizationsService;
+  @Mock private HsaOrganizationsService hsaOrganizationsService;
 
-  @Mock
-  private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+  @Mock private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
-  @Mock
-  private UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
+  @Mock private UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
 
-  @Mock
-  private UserService userService;
+  @Mock private UserService userService;
 
-  @Mock
-  private LogService logService;
+  @Mock private LogService logService;
 
-  @Mock
-  private PatientIdEncryption patientIdEncryption;
+  @Mock private PatientIdEncryption patientIdEncryption;
 
-  @InjectMocks
-  private SjukfallServiceImpl testee;
+  @InjectMocks private SjukfallServiceImpl testee;
 
   @BeforeEach
   void init() {
     when(integrationService.getAllIntygsDataForPatient(anyString())).thenReturn(createIntygsData());
-    when(puService.filterSekretessForPatientHistory(anyList())).thenAnswer(returnsFirstArg());
+    when(sickLeavePersonFilterService.filterSekretessForPatientHistory(anyList()))
+        .thenAnswer(returnsFirstArg());
 
     when(hsaOrganizationsService.getVardgivareInfo(anyString()))
         .thenAnswer(
@@ -239,7 +219,7 @@ class SjukfallServiceTest {
   @Test
   void testGetByPatient_medSamtyckeForVardgivare() {
     when(samtyckestjanstIntegrationService.checkForConsent(
-        patientId1, lakareId1, vgId1, enhetsId11))
+            patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     List<String> vgHsaId = new ArrayList<>();
@@ -278,7 +258,7 @@ class SjukfallServiceTest {
   @Test
   void testGetByPatientNoConsentPDLLoggingIfNoConsent() {
     when(samtyckestjanstIntegrationService.checkForConsent(
-        patientId1, lakareId1, vgId1, enhetsId11))
+            patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(false);
 
     testee.getByPatient(
@@ -300,7 +280,7 @@ class SjukfallServiceTest {
   @Test
   void testGetByPatientConsentPDLLoggingIfConsentExists() {
     when(samtyckestjanstIntegrationService.checkForConsent(
-        patientId1, lakareId1, vgId1, enhetsId11))
+            patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     testee.getByPatient(
@@ -327,7 +307,7 @@ class SjukfallServiceTest {
   @Test
   void testGetByPatientConsentPDLLoggingOnlyOnceIfActivityAlreadyLogged() {
     when(samtyckestjanstIntegrationService.checkForConsent(
-        patientId1, lakareId1, vgId1, enhetsId11))
+            patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     testee.getByPatient(
@@ -636,7 +616,7 @@ class SjukfallServiceTest {
 
     when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
     when(samtyckestjanstIntegrationService.checkForConsent(
-        patientId1, lakareId1, vgId1, enhetsId11))
+            patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     List<String> vgHsaId = new ArrayList<>();
@@ -702,7 +682,7 @@ class SjukfallServiceTest {
 
     when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
     when(samtyckestjanstIntegrationService.checkForConsent(
-        patientId1, lakareId1, vgId1, enhetsId11))
+            patientId1, lakareId1, vgId1, enhetsId11))
         .thenReturn(true);
 
     List<String> vgHsaId = new ArrayList<>();
@@ -727,13 +707,13 @@ class SjukfallServiceTest {
 
     assertTrue(
         metaData.getKraverSamtycke().stream()
-            .filter(md -> md.getItemId().equals(vgId2) && md.isBidrarTillAktivtSjukfall())
-            .count()
+                .filter(md -> md.getItemId().equals(vgId2) && md.isBidrarTillAktivtSjukfall())
+                .count()
             > 0);
     assertTrue(
         metaData.getKraverSamtycke().stream()
-            .filter(md -> md.getItemId().equals(vgId3) && !md.isBidrarTillAktivtSjukfall())
-            .count()
+                .filter(md -> md.getItemId().equals(vgId3) && !md.isBidrarTillAktivtSjukfall())
+                .count()
             > 0);
   }
 
@@ -793,7 +773,7 @@ class SjukfallServiceTest {
   }
 
   private List<se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallEnhet>
-  createSjukfallEnhetList() {
+      createSjukfallEnhetList() {
     List<se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallEnhet> sjukfallList =
         new ArrayList<>();
 
@@ -949,18 +929,18 @@ class SjukfallServiceTest {
   }
 
   private se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare
-  createVardgivare(String id, String namn) {
+      createVardgivare(String id, String namn) {
     return new se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare(
         id, namn);
   }
 
   private se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet
-  createVardenhet(String id, String namn) {
+      createVardenhet(String id, String namn) {
     return createVardenhet(id, namn, new ArrayList<>());
   }
 
   private se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet
-  createVardenhet(String id, String namn, Mottagning mottagning) {
+      createVardenhet(String id, String namn, Mottagning mottagning) {
     if (mottagning == null) {
       return createVardenhet(id, namn, new ArrayList<>());
     }
@@ -970,7 +950,7 @@ class SjukfallServiceTest {
   }
 
   private se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet
-  createVardenhet(String id, String namn, List<Mottagning> mottagningar) {
+      createVardenhet(String id, String namn, List<Mottagning> mottagningar) {
     se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet vardenhet =
         new se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet(
             id, namn);
@@ -984,7 +964,7 @@ class SjukfallServiceTest {
   }
 
   private se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Mottagning
-  createMottagning(String id, String namn, String parentId) {
+      createMottagning(String id, String namn, String parentId) {
     Mottagning mottagning = new Mottagning();
     mottagning.setId(id);
     mottagning.setNamn(namn);

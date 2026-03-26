@@ -42,6 +42,7 @@ import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Va
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.services.legacy.HsaPersonService;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.util.HsaAttributeExtractor;
+import se.inera.intyg.rehabstod.infrastructure.logging.AuthenticationLogger;
 import se.inera.intyg.rehabstod.infrastructure.repository.AnvandarPreferenceRepository;
 import se.inera.intyg.rehabstod.infrastructure.repository.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences.Preference;
@@ -56,7 +57,6 @@ import se.inera.intyg.rehabstod.infrastructure.security.common.model.UserOrigin;
 import se.inera.intyg.rehabstod.infrastructure.security.exception.HsaServiceException;
 import se.inera.intyg.rehabstod.infrastructure.security.exception.MissingHsaEmployeeInformation;
 import se.inera.intyg.rehabstod.infrastructure.security.exception.MissingMedarbetaruppdragException;
-import se.inera.intyg.rehabstod.infrastructure.logging.AuthenticationLogger;
 
 /**
  * @author andreaskaltenbach
@@ -70,23 +70,18 @@ public class RehabstodUserDetailsService {
 
   public static final String PDL_CONSENT_GIVEN = "user_pdl_consent_given";
 
-  @Autowired
-  private AnvandarPreferenceRepository anvandarPreferenceRepository;
+  @Autowired private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
-  @Autowired
-  private RehabstodUnitChangeService rehabstodUnitChangeService;
+  @Autowired private RehabstodUnitChangeService rehabstodUnitChangeService;
 
   @Autowired(required = false)
   private Optional<UserOrigin> userOrigin;
 
-  @Autowired
-  private HsaOrganizationsService hsaOrganizationsService;
+  @Autowired private HsaOrganizationsService hsaOrganizationsService;
 
-  @Autowired
-  private HsaPersonService hsaPersonService;
+  @Autowired private HsaPersonService hsaPersonService;
 
-  @Autowired
-  private AuthenticationLogger monitoringLogService;
+  @Autowired private AuthenticationLogger monitoringLogService;
 
   @Autowired
   public void setCommonAuthoritiesResolver(CommonAuthoritiesResolver commonAuthoritiesResolver) {

@@ -32,11 +32,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import se.inera.intyg.rehabstod.application.api.model.Lakare;
-import se.inera.intyg.rehabstod.application.api.model.PatientData;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
-import se.inera.intyg.rehabstod.application.hsa.EmployeeNameService;
+import se.inera.intyg.rehabstod.application.certificate.model.Lakare;
+import se.inera.intyg.rehabstod.application.employee.EmployeeNameService;
+import se.inera.intyg.rehabstod.application.patient.model.PatientData;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallPatient;
 import se.inera.intyg.rehabstod.application.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.application.sjukfall.nameresolver.SjukfallEmployeeNameResolverImpl;
 

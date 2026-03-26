@@ -25,13 +25,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.Urval;
-import se.inera.intyg.rehabstod.application.api.model.Lakare;
-import se.inera.intyg.rehabstod.application.api.util.ControllerUtil;
 import se.inera.intyg.rehabstod.application.certificate.CertificateService;
+import se.inera.intyg.rehabstod.application.certificate.model.Lakare;
 import se.inera.intyg.rehabstod.application.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKategori;
-import se.inera.intyg.rehabstod.application.pu.PuService;
+import se.inera.intyg.rehabstod.application.sickleave.SickLeavePersonFilterService;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.OccupationTypeDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.PopulateLUFilterResponseDTO;
@@ -42,6 +41,7 @@ import se.inera.intyg.rehabstod.application.sjukfall.dto.UnansweredCommunication
 import se.inera.intyg.rehabstod.application.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.application.user.FeatureService;
 import se.inera.intyg.rehabstod.application.user.UserService;
+import se.inera.intyg.rehabstod.application.util.ControllerUtil;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
@@ -53,7 +53,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
   private final UserService userService;
   private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
   private final DiagnosKapitelService diagnosKapitelService;
-  private final PuService puService;
+  private final SickLeavePersonFilterService sickLeavePersonFilterService;
   private final FeatureService featureService;
   private final CertificateService certificateService;
 
@@ -63,14 +63,14 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
       UserService userService,
       IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
       DiagnosKapitelService diagnosKapitelService,
-      PuService puService,
+      SickLeavePersonFilterService sickLeavePersonFilterService,
       FeatureService featureService,
       CertificateService certificateService,
       SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver) {
     this.userService = userService;
     this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
     this.diagnosKapitelService = diagnosKapitelService;
-    this.puService = puService;
+    this.sickLeavePersonFilterService = sickLeavePersonFilterService;
     this.featureService = featureService;
     this.certificateService = certificateService;
     this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
@@ -180,7 +180,9 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
     request.setUnitId(unitId);
     request.setCareUnitId(careUnitId);
     request.setProtectedPersonFilterId(
-        puService.shouldFilterSickLeavesOnProtectedPerson(user) ? null : user.getHsaId());
+        sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user)
+            ? null
+            : user.getHsaId());
     if (user.getUrval() == Urval.ISSUED_BY_ME) {
       request.setDoctorId(user.getHsaId());
     }

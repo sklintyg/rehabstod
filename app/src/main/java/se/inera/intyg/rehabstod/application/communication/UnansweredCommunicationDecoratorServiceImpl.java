@@ -24,13 +24,13 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.rehabstod.application.api.model.LUCertificate;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.certificate.model.LUCertificate;
+import se.inera.intyg.rehabstod.application.sickleave.SickLeaveLogMessageFactory;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredQAs;
-import se.inera.intyg.rehabstod.infrastructure.logging.SickLeaveLogMessageFactory;
 
 @Service
 public class UnansweredCommunicationDecoratorServiceImpl

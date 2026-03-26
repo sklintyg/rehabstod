@@ -31,11 +31,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.api.RekoController;
-import se.inera.intyg.rehabstod.application.api.dto.CreateRekoStatusRequestDTO;
-import se.inera.intyg.rehabstod.application.api.dto.GetRekoStatusRequestDTO;
-import se.inera.intyg.rehabstod.application.sjukfall.CreateRekoStatusService;
-import se.inera.intyg.rehabstod.application.sjukfall.GetRekoStatusService;
+import se.inera.intyg.rehabstod.application.reko.CreateRekoStatusService;
+import se.inera.intyg.rehabstod.application.reko.GetRekoStatusService;
+import se.inera.intyg.rehabstod.application.reko.RekoController;
+import se.inera.intyg.rehabstod.application.reko.dto.CreateRekoStatusRequestDTO;
+import se.inera.intyg.rehabstod.application.reko.dto.GetRekoStatusRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
 class RekoControllerTest {

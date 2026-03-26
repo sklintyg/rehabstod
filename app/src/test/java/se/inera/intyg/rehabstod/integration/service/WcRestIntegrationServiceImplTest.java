@@ -50,7 +50,7 @@ import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.WcRestInte
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationResponse;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredQAs;
-import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants;
 
 @ExtendWith(MockitoExtension.class)
 class WcRestIntegrationServiceImplTest {
@@ -62,17 +62,13 @@ class WcRestIntegrationServiceImplTest {
   private static final String SESSION_ID = "test-session-id";
   public static final int MAX_DAYS_OF_UNANSWERED_COMMUNICATION = 30;
 
-  @Mock
-  private RestClient wcRestClient;
+  @Mock private RestClient wcRestClient;
 
-  @Mock
-  private RestClient.RequestBodyUriSpec requestBodyUriSpec;
+  @Mock private RestClient.RequestBodyUriSpec requestBodyUriSpec;
 
-  @Mock
-  private RestClient.RequestBodySpec requestBodySpec;
+  @Mock private RestClient.RequestBodySpec requestBodySpec;
 
-  @Mock
-  private RestClient.ResponseSpec responseSpec;
+  @Mock private RestClient.ResponseSpec responseSpec;
 
   private WcRestIntegrationServiceImpl service;
 

@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.infrastructure.logging.error;
 
-import se.inera.intyg.rehabstod.application.api.dto.ErrorLogRequestDTO;
+import se.inera.intyg.rehabstod.application.logging.dto.ErrorLogRequestDTO;
 
 public interface ErrorLogService {
 

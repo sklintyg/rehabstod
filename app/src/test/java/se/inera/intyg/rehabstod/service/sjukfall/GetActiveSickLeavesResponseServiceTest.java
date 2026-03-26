@@ -39,51 +39,41 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.api.dto.SickLeavesFilterRequestDTO;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.communication.UnansweredCommunicationDecoratorService;
 import se.inera.intyg.rehabstod.application.communication.UnansweredCommunicationFilterService;
-import se.inera.intyg.rehabstod.application.sjukfall.CreateSickLeaveRequestService;
-import se.inera.intyg.rehabstod.application.sjukfall.GetActiveSickLeavesResponseServiceImpl;
-import se.inera.intyg.rehabstod.application.sjukfall.GetActiveSickLeavesService;
-import se.inera.intyg.rehabstod.application.sjukfall.PdlLogSickLeavesService;
+import se.inera.intyg.rehabstod.application.sickleave.CreateSickLeaveRequestService;
+import se.inera.intyg.rehabstod.application.sickleave.GetActiveSickLeavesResponseServiceImpl;
+import se.inera.intyg.rehabstod.application.sickleave.GetActiveSickLeavesService;
+import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeavesFilterRequestDTO;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
-import se.inera.intyg.rehabstod.application.sjukfall.srs.RiskPredictionService;
+import se.inera.intyg.rehabstod.application.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.logging.MonitoringLogService;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.infrastructure.logging.pdl.PdlLogSickLeavesService;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 
 @ExtendWith(MockitoExtension.class)
 class GetActiveSickLeavesResponseServiceTest {
 
-  @Mock
-  private UserService userService;
-  @Mock
-  private MonitoringLogService monitoringLogService;
-  @Mock
-  private PdlLogSickLeavesService pdlLogSickLeavesService;
+  @Mock private UserService userService;
+  @Mock private MonitoringLogService monitoringLogService;
+  @Mock private PdlLogSickLeavesService pdlLogSickLeavesService;
 
-  @Mock
-  private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+  @Mock private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
-  @Mock
-  private RiskPredictionService riskPredictionService;
+  @Mock private RiskPredictionService riskPredictionService;
 
-  @Mock
-  private UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
+  @Mock private UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
 
-  @Mock
-  private UnansweredCommunicationFilterService unansweredCommunicationFilterService;
-  @Mock
-  private CreateSickLeaveRequestService createSickLeaveRequestService;
-  @Mock
-  private GetActiveSickLeavesService getActiveSickLeavesService;
+  @Mock private UnansweredCommunicationFilterService unansweredCommunicationFilterService;
+  @Mock private CreateSickLeaveRequestService createSickLeaveRequestService;
+  @Mock private GetActiveSickLeavesService getActiveSickLeavesService;
 
-  @InjectMocks
-  private GetActiveSickLeavesResponseServiceImpl getActiveSickLeavesResponseService;
+  @InjectMocks private GetActiveSickLeavesResponseServiceImpl getActiveSickLeavesResponseService;
   private SjukfallEnhet sickLeave;
   static RehabstodUser user;
   static final String HSA_ID = "HSA_ID";

@@ -35,30 +35,27 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.api.model.Patient;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.application.sjukfall.PdlLogSickLeavesServiceImpl;
+import se.inera.intyg.rehabstod.application.patient.model.Patient;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.rehabstod.infrastructure.integration.srs.model.RiskSignal;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.infrastructure.logging.pdl.LogService;
+import se.inera.intyg.rehabstod.infrastructure.logging.pdl.PdlLogSickLeavesServiceImpl;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
 
 @ExtendWith(MockitoExtension.class)
 class PdlLogSickLeavesServiceTest {
 
-  @Mock
-  UserService userService;
+  @Mock UserService userService;
 
-  @Mock
-  LogService logService;
+  @Mock LogService logService;
 
-  @InjectMocks
-  PdlLogSickLeavesServiceImpl pdlLogSickLeavesService;
+  @InjectMocks PdlLogSickLeavesServiceImpl pdlLogSickLeavesService;
 
   RehabstodUser user;
   SelectableVardenhet unit;

@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.web.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.rehabstod.application.api.model.Gender;
+import se.inera.intyg.rehabstod.application.sickleave.statistics.model.Gender;
 
 /** Created by martin on 11/02/16. */
 class GenderTest {

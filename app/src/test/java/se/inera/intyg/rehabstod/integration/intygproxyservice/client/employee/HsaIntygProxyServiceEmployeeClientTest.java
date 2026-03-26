@@ -23,10 +23,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.inera.intyg.rehabstod.infrastructure.logging.MdcHelper.LOG_SESSION_ID_HEADER;
-import static se.inera.intyg.rehabstod.infrastructure.logging.MdcHelper.LOG_TRACE_ID_HEADER;
-import static se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants.SESSION_ID_KEY;
-import static se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants.TRACE_ID_KEY;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcHelper.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcHelper.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants.SESSION_ID_KEY;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants.TRACE_ID_KEY;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,8 +45,7 @@ import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceEmployeeClientTest {
 
-  @Mock
-  private RestClient restClient;
+  @Mock private RestClient restClient;
 
   private HsaIntygProxyServiceEmployeeClient hsaIntygProxyServiceEmployeeClient;
 

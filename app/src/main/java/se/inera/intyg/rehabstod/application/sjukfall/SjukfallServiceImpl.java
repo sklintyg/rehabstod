@@ -30,10 +30,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.Urval;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
 import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.application.exceptions.SRSServiceException;
-import se.inera.intyg.rehabstod.application.pu.PuService;
+import se.inera.intyg.rehabstod.application.sickleave.SickLeavePersonFilterService;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallPatient;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.FilteredSjukFallByPatientResult;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygParametrar;
@@ -46,7 +46,7 @@ import se.inera.intyg.rehabstod.application.sjukfall.mappers.IntygstjanstMapper;
 import se.inera.intyg.rehabstod.application.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.application.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.application.sjukfall.services.SjukfallEngineService;
-import se.inera.intyg.rehabstod.application.sjukfall.srs.RiskPredictionService;
+import se.inera.intyg.rehabstod.application.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
@@ -57,18 +57,16 @@ import se.inera.intyg.rehabstod.infrastructure.integration.pu.api.model.PersonSv
 import se.inera.intyg.rehabstod.infrastructure.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
 import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.service.SparrtjanstIntegrationService;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.exception.WcIntegrationException;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.infrastructure.logging.MonitoringLogService;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.infrastructure.logging.pdl.LogService;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityStore;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-/**
- * Created by eriklupander on 2016-02-01.
- */
+/** Created by eriklupander on 2016-02-01. */
 @Service("sjukfallService")
 @RequiredArgsConstructor
 public class SjukfallServiceImpl implements SjukfallService {
@@ -87,7 +85,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
   private final UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
 
-  private final PuService puService;
+  private final SickLeavePersonFilterService sickLeavePersonFilterService;
 
   private final MonitoringLogService monitoringLogService;
 
@@ -128,7 +126,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     final List<SjukfallPatient> rehabstodSjukfall = result.getRehabstodSjukfall();
 
-    puService.enrichSjukfallWithPatientNameAndFilterSekretess(rehabstodSjukfall);
+    sickLeavePersonFilterService.enrichSjukfallWithPatientNameAndFilterSekretess(rehabstodSjukfall);
     sjukfallEmployeeNameResolver.enrichSjukfallPaientWithHsaEmployeeNames(rehabstodSjukfall);
 
     boolean qaInfoError = false;
@@ -190,9 +188,10 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     // Remove intyg from other units for patients with sekretess
     LOG.debug("Calling PU - fetching information about patients 'sekretess' status.");
-    List<IntygData> filteredData = puService.filterSekretessForPatientHistory(data);
+    List<IntygData> filteredData =
+        sickLeavePersonFilterService.filterSekretessForPatientHistory(data);
 
-    PersonSvar personSvar = puService.getPersonSvar(patientId);
+    PersonSvar personSvar = sickLeavePersonFilterService.getPersonSvar(patientId);
     boolean haveSekretess =
         filteredData.size() != data.size() && personSvar.getStatus() != Status.NOT_FOUND;
     data = filteredData;

@@ -29,20 +29,16 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertifi
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.RiskPrediktion;
-import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants;
 
-/**
- * Created by eriklupander on 2017-10-31.
- */
+/** Created by eriklupander on 2017-10-31. */
 @Service
 public class SRSClientServiceImpl implements SRSClientService {
 
-  @Autowired
-  private GetRiskPredictionForCertificateResponderInterface service;
+  @Autowired private GetRiskPredictionForCertificateResponderInterface service;
 
-  @Autowired
-  private GetDiagnosisCodesResponderInterface getDiagnosisCodesService;
+  @Autowired private GetDiagnosisCodesResponderInterface getDiagnosisCodesService;
 
   @Override
   @PerformanceLogging(

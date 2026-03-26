@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.application.communication;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.UnansweredCommunicationFilterType;
 
 @Service

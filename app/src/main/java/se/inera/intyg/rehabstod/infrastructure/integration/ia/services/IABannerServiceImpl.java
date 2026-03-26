@@ -35,8 +35,8 @@ import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.ia.constants.IaCacheConstants;
 import se.inera.intyg.rehabstod.infrastructure.integration.ia.model.Application;
 import se.inera.intyg.rehabstod.infrastructure.integration.ia.model.Banner;
-import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants;
 
 @Service
 @Profile("!ia-stub")
@@ -44,8 +44,7 @@ public class IABannerServiceImpl implements IABannerService {
 
   private static final Logger LOG = LoggerFactory.getLogger(IABannerServiceImpl.class);
 
-  @Qualifier("iaRestTemplate")
-  private final RestTemplate restTemplate;
+  @Qualifier("iaRestTemplate") private final RestTemplate restTemplate;
 
   private final String iaUrl;
 

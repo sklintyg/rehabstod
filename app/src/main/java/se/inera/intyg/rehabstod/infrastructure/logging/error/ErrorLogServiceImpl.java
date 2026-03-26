@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.infrastructure.logging.error;
 
 import org.springframework.stereotype.Service;
-import se.inera.intyg.rehabstod.application.api.dto.ErrorLogRequestDTO;
+import se.inera.intyg.rehabstod.application.logging.dto.ErrorLogRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.logging.MonitoringLogService;
 
 @Service

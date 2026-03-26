@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.rehabstod.infrastructure.logging.HashPatientIdHelper;
+import se.inera.intyg.rehabstod.infrastructure.util.HashPatientIdHelper;
 
 class HashPatientIdHelperTest {
 

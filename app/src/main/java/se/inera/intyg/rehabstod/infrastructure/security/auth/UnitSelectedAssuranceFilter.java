@@ -31,17 +31,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.OncePerRequestFilter;
 import se.inera.intyg.rehabstod.application.user.UserService;
-import se.inera.intyg.rehabstod.infrastructure.logging.HashPatientIdHelper;
+import se.inera.intyg.rehabstod.infrastructure.util.HashPatientIdHelper;
 
-/**
- * Created by marced on 2016-08-23.
- */
+/** Created by marced on 2016-08-23. */
 public class UnitSelectedAssuranceFilter extends OncePerRequestFilter {
 
   private static final Logger LOG = LoggerFactory.getLogger(UnitSelectedAssuranceFilter.class);
 
-  @Autowired
-  private UserService userService;
+  @Autowired private UserService userService;
 
   private String ignoredUrls;
   private List<String> ignoredUrlsList;

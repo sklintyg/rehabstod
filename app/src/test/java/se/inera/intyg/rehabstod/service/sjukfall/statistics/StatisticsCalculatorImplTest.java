@@ -32,15 +32,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.api.model.Diagnos;
-import se.inera.intyg.rehabstod.application.api.model.Gender;
-import se.inera.intyg.rehabstod.application.api.model.Lakare;
-import se.inera.intyg.rehabstod.application.api.model.Patient;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.certificate.model.Diagnos;
+import se.inera.intyg.rehabstod.application.certificate.model.Lakare;
 import se.inera.intyg.rehabstod.application.diagnos.DiagnosGruppLoader;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosGrupp;
+import se.inera.intyg.rehabstod.application.patient.model.Patient;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sickleave.statistics.StatisticsCalculatorImpl;
+import se.inera.intyg.rehabstod.application.sickleave.statistics.model.Gender;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.GenderStat;
-import se.inera.intyg.rehabstod.application.sjukfall.statistics.StatisticsCalculatorImpl;
 
 /** Created by marced on 04/03/16. */
 @ExtendWith(MockitoExtension.class)

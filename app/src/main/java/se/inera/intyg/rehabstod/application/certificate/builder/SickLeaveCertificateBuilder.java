@@ -20,7 +20,7 @@ package se.inera.intyg.rehabstod.application.certificate.builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import se.inera.intyg.rehabstod.application.certificate.dto.SickLeaveCertificate;
+import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeaveCertificate;
 
 public class SickLeaveCertificateBuilder {
 

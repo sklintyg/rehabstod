@@ -20,12 +20,12 @@ package se.inera.intyg.rehabstod.infrastructure.logging.pdl;
 
 import java.util.List;
 import java.util.Map;
-import se.inera.intyg.rehabstod.application.api.model.LUCertificate;
-import se.inera.intyg.rehabstod.application.api.model.PatientData;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
+import se.inera.intyg.rehabstod.application.certificate.model.LUCertificate;
+import se.inera.intyg.rehabstod.application.patient.model.PatientData;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 /**

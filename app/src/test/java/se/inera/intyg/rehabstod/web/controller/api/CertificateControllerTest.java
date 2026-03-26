@@ -30,11 +30,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.api.CertificateController;
-import se.inera.intyg.rehabstod.application.api.dto.GetAGCertificatesForPersonRequest;
-import se.inera.intyg.rehabstod.application.api.dto.GetLUCertificatesForPersonRequest;
+import se.inera.intyg.rehabstod.application.certificate.CertificateController;
 import se.inera.intyg.rehabstod.application.certificate.CertificateService;
-import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
+import se.inera.intyg.rehabstod.application.certificate.dto.GetAGCertificatesForPersonRequest;
+import se.inera.intyg.rehabstod.application.certificate.dto.GetLUCertificatesForPersonRequest;
+import se.inera.intyg.rehabstod.application.util.PatientIdEncryption;
 
 @ExtendWith(MockitoExtension.class)
 class CertificateControllerTest {

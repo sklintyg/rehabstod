@@ -30,7 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.hsa.EmployeeNameServiceImpl;
+import se.inera.intyg.rehabstod.application.employee.EmployeeNameServiceImpl;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.services.legacy.HsaEmployeeService;
 

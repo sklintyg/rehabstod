@@ -33,11 +33,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.api.dto.SickLeavesFilterRequestDTO;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKategori;
-import se.inera.intyg.rehabstod.application.pu.PuService;
-import se.inera.intyg.rehabstod.application.sjukfall.CreateSickLeaveRequestServiceImpl;
+import se.inera.intyg.rehabstod.application.sickleave.CreateSickLeaveRequestServiceImpl;
+import se.inera.intyg.rehabstod.application.sickleave.SickLeavePersonFilterService;
+import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeavesFilterRequestDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.SickLeaveLengthInterval;
 import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Mottagning;
@@ -54,7 +54,7 @@ import se.inera.intyg.rehabstod.infrastructure.security.common.model.Role;
 class CreateSickLeaveRequestServiceImplTest {
 
   @Mock private UserService userService;
-  @Mock private PuService puService;
+  @Mock private SickLeavePersonFilterService sickLeavePersonFilterService;
 
   @InjectMocks private CreateSickLeaveRequestServiceImpl getSickLeaveRequestService;
   private static final String HSA_ID = "hsaId";
@@ -73,7 +73,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeUnitId() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var response =
@@ -85,7 +86,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallExcludeUnitId() {
       final RehabstodUser user =
           getRehabstodUser(false, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var response =
@@ -101,7 +103,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeCareUnitIdFromSubUnit() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var response =
@@ -113,7 +116,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeCareUnitId() {
       final RehabstodUser user =
           getRehabstodUser(false, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var response =
@@ -129,7 +133,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeFromPatientAge() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult = 25;
@@ -143,7 +148,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeToPatientAge() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult = 50;
@@ -157,7 +163,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallExcludePatientAge() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var response =
@@ -174,7 +181,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeFromSickLeaveEndDate() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult = LocalDate.now();
@@ -189,7 +197,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeToSickLeaveEndDate() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult = LocalDate.now();
@@ -204,7 +213,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallExcludeSickLeaveEndDate() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var response =
@@ -221,7 +231,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeRekoStatusTypeIds() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult = List.of("rekoId");
@@ -235,7 +246,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallExcludeRekoStatusTypeIds() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var response =
@@ -251,7 +263,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeOccupationTypeIds() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult = List.of("occupationTypeId");
@@ -265,7 +278,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallExcludeOccupationTypeIds() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var response =
@@ -281,7 +295,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeTextSearch() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult = "textSearch";
@@ -295,7 +310,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallExcludeTextSearch() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var response =
@@ -311,7 +327,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeDoctorIds() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_KOORDINATOR, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult = List.of("doctorId");
@@ -325,7 +342,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeDoctorIdFromUser() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult = List.of("doctorId", HSA_ID);
@@ -339,7 +357,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallExcludeDoctorIds() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_KOORDINATOR, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var response =
@@ -355,7 +374,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeMaxCertificateGap() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult = 5;
@@ -368,7 +388,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallUseDefaultValueIfIncludeParametersFalse() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult = 0;
@@ -385,7 +406,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeMaxDaysSinceSickLeaveCompleted() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult = 10;
@@ -398,7 +420,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallUseDefaultValueIfIncludeParametersFalse() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult = 0;
@@ -415,7 +438,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeSickLeaveLengthIntervals() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult =
@@ -435,7 +459,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallExcludeSickLeaveLengthIntervals() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var response =
@@ -451,7 +476,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeDiagnosisChapters() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var expectedResult =
@@ -478,7 +504,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallExcludeDiagnosisChapters() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var response =
@@ -494,7 +521,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallIncludeHsaId() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(false);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(false);
       when(userService.getUser()).thenReturn(user);
 
       final var response =
@@ -506,7 +534,8 @@ class CreateSickLeaveRequestServiceImplTest {
     void shallNotIncludeHsaId() {
       final RehabstodUser user =
           getRehabstodUser(true, AuthoritiesConstants.ROLE_LAKARE, GAP, DAYS);
-      when(puService.shouldFilterSickLeavesOnProtectedPerson(user)).thenReturn(true);
+      when(sickLeavePersonFilterService.shouldFilterSickLeavesOnProtectedPerson(user))
+          .thenReturn(true);
       when(userService.getUser()).thenReturn(user);
 
       final var response =

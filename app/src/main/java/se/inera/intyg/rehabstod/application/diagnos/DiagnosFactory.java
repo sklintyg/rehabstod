@@ -20,7 +20,7 @@ package se.inera.intyg.rehabstod.application.diagnos;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.rehabstod.application.api.model.Diagnos;
+import se.inera.intyg.rehabstod.application.certificate.model.Diagnos;
 
 /**
  * @author Magnus Ekstrand on 2017-02-17.

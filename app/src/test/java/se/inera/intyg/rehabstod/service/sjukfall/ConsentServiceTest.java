@@ -30,7 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.sjukfall.ConsentServiceImpl;
+import se.inera.intyg.rehabstod.application.consent.ConsentServiceImpl;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare;

@@ -29,17 +29,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.rehabstod.application.api.model.Diagnos;
-import se.inera.intyg.rehabstod.application.api.model.Lakare;
-import se.inera.intyg.rehabstod.application.api.model.Patient;
-import se.inera.intyg.rehabstod.application.api.model.PatientData;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
 import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaData;
+import se.inera.intyg.rehabstod.application.certificate.model.Diagnos;
+import se.inera.intyg.rehabstod.application.certificate.model.Lakare;
 import se.inera.intyg.rehabstod.application.diagnos.DiagnosFactory;
+import se.inera.intyg.rehabstod.application.patient.model.Patient;
+import se.inera.intyg.rehabstod.application.patient.model.PatientData;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallPatient;
 import se.inera.intyg.rehabstod.application.sjukfall.SjukfallServiceException;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
-import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
+import se.inera.intyg.rehabstod.application.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.RekoStatusDTO;
 
 /**

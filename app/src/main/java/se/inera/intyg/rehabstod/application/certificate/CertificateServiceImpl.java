@@ -32,38 +32,38 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.Urval;
-import se.inera.intyg.rehabstod.application.api.dto.GetAGCertificatesForPersonResponse;
-import se.inera.intyg.rehabstod.application.api.dto.GetDoctorsForUnitResponse;
-import se.inera.intyg.rehabstod.application.api.dto.GetLUCertificatesForCareUnitRequest;
-import se.inera.intyg.rehabstod.application.api.dto.GetLUCertificatesForCareUnitResponse;
-import se.inera.intyg.rehabstod.application.api.dto.GetLUCertificatesForPersonResponse;
-import se.inera.intyg.rehabstod.application.api.model.AGCertificate;
-import se.inera.intyg.rehabstod.application.api.model.Diagnos;
-import se.inera.intyg.rehabstod.application.api.model.LUCertificate;
-import se.inera.intyg.rehabstod.application.api.model.Lakare;
-import se.inera.intyg.rehabstod.application.api.model.Patient;
 import se.inera.intyg.rehabstod.application.certificate.dto.BaseCertificate;
 import se.inera.intyg.rehabstod.application.certificate.dto.DiagnosedCertificate;
-import se.inera.intyg.rehabstod.application.certificate.dto.SickLeaveCertificate;
-import se.inera.intyg.rehabstod.application.certificate.dto.SickLeaveCertificate.WorkCapacity;
+import se.inera.intyg.rehabstod.application.certificate.dto.GetAGCertificatesForPersonResponse;
+import se.inera.intyg.rehabstod.application.certificate.dto.GetDoctorsForUnitResponse;
+import se.inera.intyg.rehabstod.application.certificate.dto.GetLUCertificatesForCareUnitRequest;
+import se.inera.intyg.rehabstod.application.certificate.dto.GetLUCertificatesForCareUnitResponse;
+import se.inera.intyg.rehabstod.application.certificate.dto.GetLUCertificatesForPersonResponse;
+import se.inera.intyg.rehabstod.application.certificate.model.AGCertificate;
+import se.inera.intyg.rehabstod.application.certificate.model.Diagnos;
+import se.inera.intyg.rehabstod.application.certificate.model.LUCertificate;
+import se.inera.intyg.rehabstod.application.certificate.model.Lakare;
 import se.inera.intyg.rehabstod.application.communication.UnansweredCommunicationDecoratorService;
 import se.inera.intyg.rehabstod.application.diagnos.DiagnosFactory;
-import se.inera.intyg.rehabstod.application.hsa.EmployeeNameService;
-import se.inera.intyg.rehabstod.application.pu.PuService;
+import se.inera.intyg.rehabstod.application.employee.EmployeeNameService;
+import se.inera.intyg.rehabstod.application.patient.model.Patient;
+import se.inera.intyg.rehabstod.application.sickleave.SickLeavePersonFilterService;
+import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeaveCertificate;
+import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeaveCertificate.WorkCapacity;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.rehabstod.application.sjukfall.komplettering.UnansweredQAsInfoDecorator;
-import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.application.user.UserService;
+import se.inera.intyg.rehabstod.application.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.infrastructure.logging.pdl.LogService;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityStore;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 @Service
@@ -89,7 +89,7 @@ public class CertificateServiceImpl implements CertificateService {
 
   private final HsaOrganizationsService hsaOrganizationsService;
 
-  private final PuService puService;
+  private final SickLeavePersonFilterService sickLeavePersonFilterService;
 
   private final EmployeeNameService employeeNameService;
 
@@ -105,7 +105,7 @@ public class CertificateServiceImpl implements CertificateService {
       UserService userService,
       DiagnosFactory diagnosFactory,
       HsaOrganizationsService hsaOrganizationsService,
-      PuService puService,
+      SickLeavePersonFilterService sickLeavePersonFilterService,
       EmployeeNameService employeeNameService,
       UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService,
       PatientIdEncryption patientIdEncryption) {
@@ -115,7 +115,7 @@ public class CertificateServiceImpl implements CertificateService {
     this.userService = userService;
     this.diagnosFactory = diagnosFactory;
     this.hsaOrganizationsService = hsaOrganizationsService;
-    this.puService = puService;
+    this.sickLeavePersonFilterService = sickLeavePersonFilterService;
     this.employeeNameService = employeeNameService;
     this.unansweredCommunicationDecoratorService = unansweredCommunicationDecoratorService;
     this.patientIdEncryption = patientIdEncryption;
@@ -138,7 +138,7 @@ public class CertificateServiceImpl implements CertificateService {
     diagnosedCertificateList =
         filterOnAge(diagnosedCertificateList, request.getFromAge(), request.getToAge());
 
-    puService.enrichDiagnosedCertificateWithPatientNamesAndFilterSekretess(
+    sickLeavePersonFilterService.enrichDiagnosedCertificateWithPatientNamesAndFilterSekretess(
         diagnosedCertificateList);
 
     var luCertificateList = transformCertificatesBasedOnMetaDataQuery(diagnosedCertificateList);
@@ -309,13 +309,13 @@ public class CertificateServiceImpl implements CertificateService {
 
     if (c.getUnAnsweredComplement() > 0
         && containsIgnoreCase(
-        String.format("Komplettering (%d)", c.getUnAnsweredComplement()), searchText)) {
+            String.format("Komplettering (%d)", c.getUnAnsweredComplement()), searchText)) {
       return true;
     }
 
     if (c.getUnAnsweredOther() > 0
         && containsIgnoreCase(
-        String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()), searchText)) {
+            String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()), searchText)) {
       return true;
     }
 

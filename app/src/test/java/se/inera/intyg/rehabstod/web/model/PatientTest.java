@@ -25,8 +25,8 @@ import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.api.model.Gender;
-import se.inera.intyg.rehabstod.application.api.model.Patient;
+import se.inera.intyg.rehabstod.application.patient.model.Patient;
+import se.inera.intyg.rehabstod.application.sickleave.statistics.model.Gender;
 
 /**
  * @author Magnus Ekstrand on 2017-02-21.
