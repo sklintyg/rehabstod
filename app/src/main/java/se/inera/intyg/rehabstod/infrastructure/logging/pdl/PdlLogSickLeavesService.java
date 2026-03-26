@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.infrastructure.logging.pdl;
 
 import java.util.List;
-import se.inera.intyg.rehabstod.application.sjukfall.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
 

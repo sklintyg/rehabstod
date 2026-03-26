@@ -29,7 +29,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.rehabstod.application.sjukfall.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityPurpose;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;

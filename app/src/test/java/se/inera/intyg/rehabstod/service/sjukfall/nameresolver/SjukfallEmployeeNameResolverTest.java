@@ -35,8 +35,8 @@ import org.mockito.quality.Strictness;
 import se.inera.intyg.rehabstod.application.certificate.model.Lakare;
 import se.inera.intyg.rehabstod.application.employee.EmployeeNameService;
 import se.inera.intyg.rehabstod.application.patient.model.PatientData;
-import se.inera.intyg.rehabstod.application.sjukfall.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.application.sjukfall.model.SjukfallPatient;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallPatient;
 import se.inera.intyg.rehabstod.application.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.application.sjukfall.nameresolver.SjukfallEmployeeNameResolverImpl;
 

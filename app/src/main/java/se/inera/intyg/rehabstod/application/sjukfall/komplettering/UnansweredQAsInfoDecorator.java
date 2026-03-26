@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.application.sjukfall.komplettering;
 
 import java.util.List;
-import se.inera.intyg.rehabstod.application.sjukfall.model.SjukfallPatient;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallPatient;
 
 public interface UnansweredQAsInfoDecorator {
 

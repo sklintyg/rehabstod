@@ -16,9 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.application.sjukfall.dto;
+package se.inera.intyg.rehabstod.application.sickleave.dto;
 
 import java.util.List;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.GetSjukfallRequest;
 
 /** Created by eriklupander on 2016-02-23. */
 public class PrintSjukfallRequest extends GetSjukfallRequest {

@@ -20,7 +20,7 @@ package se.inera.intyg.rehabstod.application.sjukfall.dto;
 
 import java.time.LocalDate;
 import java.util.List;
-import se.inera.intyg.rehabstod.application.sjukfall.model.LangdIntervall;
+import se.inera.intyg.rehabstod.application.sickleave.model.LangdIntervall;
 import se.inera.intyg.rehabstod.application.sjukfall.model.Sortering;
 
 /** Created by Magnus Ekstrand on 03/02/16. */

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.application.sjukfall.model;
+package se.inera.intyg.rehabstod.application.sickleave.model;
 
 import java.time.LocalDate;
 import java.util.List;

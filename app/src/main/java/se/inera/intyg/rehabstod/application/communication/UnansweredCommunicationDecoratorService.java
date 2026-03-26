@@ -20,7 +20,7 @@ package se.inera.intyg.rehabstod.application.communication;
 
 import java.util.List;
 import se.inera.intyg.rehabstod.application.certificate.model.LUCertificate;
-import se.inera.intyg.rehabstod.application.sjukfall.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 
 public interface UnansweredCommunicationDecoratorService {
 

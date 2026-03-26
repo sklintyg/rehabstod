@@ -19,8 +19,8 @@
 package se.inera.intyg.rehabstod.application.sickleave.statistics;
 
 import java.util.List;
+import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.SickLeaveSummary;
-import se.inera.intyg.rehabstod.application.sjukfall.model.SjukfallEnhet;
 
 /**
  * @author marced on 04/03/16.
