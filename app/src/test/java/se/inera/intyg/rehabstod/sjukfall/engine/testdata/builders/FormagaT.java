@@ -16,36 +16,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.sjukfall.testdata.builders;
+package se.inera.intyg.rehabstod.sjukfall.engine.testdata.builders;
 
-import se.inera.intyg.rehabstod.sjukfall.dto.Patient;
+import java.time.LocalDate;
+import se.inera.intyg.rehabstod.sjukfall.dto.Formaga;
 
 /** Created by Magnus Ekstrand on 2016-02-10. */
-public final class PatientT {
+public final class FormagaT {
 
-  private PatientT() {}
+  public FormagaT() {}
 
-  public static class PatientBuilder implements Builder<Patient> {
+  public static class FormagaBuilder implements Builder<Formaga> {
 
-    private String patientId;
-    private String patientNamn;
+    private LocalDate startdatum;
+    private LocalDate slutdatum;
+    private int nedsattning;
 
-    public PatientBuilder() {}
+    public FormagaBuilder() {}
 
-    public PatientBuilder patientId(String patientId) {
-      this.patientId = patientId;
+    public FormagaBuilder startdatum(LocalDate startdatum) {
+      this.startdatum = startdatum;
       return this;
     }
 
-    public PatientBuilder patientNamn(String patientNamn) {
-      this.patientNamn = patientNamn;
+    public FormagaBuilder slutdatum(LocalDate slutdatum) {
+      this.slutdatum = slutdatum;
+      return this;
+    }
+
+    public FormagaBuilder nedsattning(int nedsattning) {
+      this.nedsattning = nedsattning;
       return this;
     }
 
     @Override
-    public Patient build() {
-      Patient patient = Patient.create(patientId, patientNamn);
-      return patient;
+    public Formaga build() {
+      Formaga formaga = new Formaga(startdatum, slutdatum, nedsattning);
+      return formaga;
     }
   }
 }

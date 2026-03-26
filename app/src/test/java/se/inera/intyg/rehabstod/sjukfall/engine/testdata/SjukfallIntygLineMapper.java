@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.sjukfall.testdata;
+package se.inera.intyg.rehabstod.sjukfall.engine.testdata;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Set;
 import se.inera.intyg.rehabstod.sjukfall.dto.Formaga;
 import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
-import se.inera.intyg.rehabstod.sjukfall.testdata.builders.FormagaT;
-import se.inera.intyg.rehabstod.sjukfall.testdata.builders.IntygDataT;
+import se.inera.intyg.rehabstod.sjukfall.engine.testdata.builders.FormagaT;
+import se.inera.intyg.rehabstod.sjukfall.engine.testdata.builders.IntygDataT;
 
 /** Created by Magnus Ekstrand on 2016-02-11. */
 public class SjukfallIntygLineMapper {

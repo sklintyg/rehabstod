@@ -49,7 +49,7 @@ import se.inera.intyg.rehabstod.sjukfall.dto.Vardenhet;
 import se.inera.intyg.rehabstod.sjukfall.dto.Vardgivare;
 import se.inera.intyg.rehabstod.sjukfall.engine.SjukfallIntygEnhetCreator;
 import se.inera.intyg.rehabstod.sjukfall.engine.SjukfallIntygEnhetResolver;
-import se.inera.intyg.rehabstod.sjukfall.testdata.SjukfallIntygGenerator;
+import se.inera.intyg.rehabstod.sjukfall.engine.testdata.SjukfallIntygGenerator;
 
 /** Created by martin on 11/02/16. */
 @ExtendWith(MockitoExtension.class)

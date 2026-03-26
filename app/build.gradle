@@ -9,7 +9,6 @@ tasks.named('bootJar') {
 
 dependencies {
     implementation project(":rehabstod-common")
-    implementation project(":rehabstod-logging")
 
     implementation "se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:${intygHealthcondRehabilitationSchemasVersion}"
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"

@@ -16,10 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.sjukfall.testdata.builders;
+package se.inera.intyg.rehabstod.sjukfall.engine.testdata.builders;
+
+import se.inera.intyg.rehabstod.sjukfall.dto.Patient;
 
 /** Created by Magnus Ekstrand on 2016-02-10. */
-public interface Builder<T> {
+public final class PatientT {
 
-  T build();
+  private PatientT() {}
+
+  public static class PatientBuilder implements Builder<Patient> {
+
+    private String patientId;
+    private String patientNamn;
+
+    public PatientBuilder() {}
+
+    public PatientBuilder patientId(String patientId) {
+      this.patientId = patientId;
+      return this;
+    }
+
+    public PatientBuilder patientNamn(String patientNamn) {
+      this.patientNamn = patientNamn;
+      return this;
+    }
+
+    @Override
+    public Patient build() {
+      Patient patient = Patient.create(patientId, patientNamn);
+      return patient;
+    }
+  }
 }

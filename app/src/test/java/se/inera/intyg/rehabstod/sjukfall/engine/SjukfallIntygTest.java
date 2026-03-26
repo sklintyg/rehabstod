@@ -29,7 +29,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.sjukfall.dto.SjukfallIntyg;
-import se.inera.intyg.rehabstod.sjukfall.testdata.SjukfallIntygGenerator;
+import se.inera.intyg.rehabstod.sjukfall.engine.testdata.SjukfallIntygGenerator;
 
 /** Created by Magnus Ekstrand on 2016-02-16. */
 @ExtendWith(MockitoExtension.class)

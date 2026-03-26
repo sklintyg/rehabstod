@@ -16,36 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.sjukfall.testdata.builders;
-
-import se.inera.intyg.rehabstod.sjukfall.dto.Lakare;
+package se.inera.intyg.rehabstod.sjukfall.engine.testdata.builders;
 
 /** Created by Magnus Ekstrand on 2016-02-10. */
-public final class LakareT {
+public interface Builder<T> {
 
-  public LakareT() {}
-
-  public static class LakareBuilder implements Builder<Lakare> {
-
-    private String hsaId;
-    private String fullstandigtNamn;
-
-    public LakareBuilder() {}
-
-    public LakareBuilder hsaId(String hsaId) {
-      this.hsaId = hsaId;
-      return this;
-    }
-
-    public LakareBuilder fullstandigtNamn(String fullstandigtNamn) {
-      this.fullstandigtNamn = fullstandigtNamn;
-      return this;
-    }
-
-    @Override
-    public Lakare build() {
-      Lakare lakare = Lakare.create(hsaId, fullstandigtNamn);
-      return lakare;
-    }
-  }
+  T build();
 }

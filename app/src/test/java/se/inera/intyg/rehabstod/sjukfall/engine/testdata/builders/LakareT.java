@@ -16,43 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.sjukfall.testdata.builders;
+package se.inera.intyg.rehabstod.sjukfall.engine.testdata.builders;
 
-import java.time.LocalDate;
-import se.inera.intyg.rehabstod.sjukfall.dto.Formaga;
+import se.inera.intyg.rehabstod.sjukfall.dto.Lakare;
 
 /** Created by Magnus Ekstrand on 2016-02-10. */
-public final class FormagaT {
+public final class LakareT {
 
-  public FormagaT() {}
+  public LakareT() {}
 
-  public static class FormagaBuilder implements Builder<Formaga> {
+  public static class LakareBuilder implements Builder<Lakare> {
 
-    private LocalDate startdatum;
-    private LocalDate slutdatum;
-    private int nedsattning;
+    private String hsaId;
+    private String fullstandigtNamn;
 
-    public FormagaBuilder() {}
+    public LakareBuilder() {}
 
-    public FormagaBuilder startdatum(LocalDate startdatum) {
-      this.startdatum = startdatum;
+    public LakareBuilder hsaId(String hsaId) {
+      this.hsaId = hsaId;
       return this;
     }
 
-    public FormagaBuilder slutdatum(LocalDate slutdatum) {
-      this.slutdatum = slutdatum;
-      return this;
-    }
-
-    public FormagaBuilder nedsattning(int nedsattning) {
-      this.nedsattning = nedsattning;
+    public LakareBuilder fullstandigtNamn(String fullstandigtNamn) {
+      this.fullstandigtNamn = fullstandigtNamn;
       return this;
     }
 
     @Override
-    public Formaga build() {
-      Formaga formaga = new Formaga(startdatum, slutdatum, nedsattning);
-      return formaga;
+    public Lakare build() {
+      Lakare lakare = Lakare.create(hsaId, fullstandigtNamn);
+      return lakare;
     }
   }
 }
