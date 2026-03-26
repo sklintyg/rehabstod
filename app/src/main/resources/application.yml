@@ -123,6 +123,9 @@ spring:
           new_generator_mappings: false
   liquibase:
     change-log: classpath:changelog/changelog.xml
+  session:
+    redis:
+      namespace: rehabstod
   data:
     redis:
       timeout: 60s
