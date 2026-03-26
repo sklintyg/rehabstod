@@ -30,8 +30,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.application.communication.UnansweredCommunicationFilterServiceImpl;
-import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.UnansweredCommunicationFilterType;
+import se.inera.intyg.rehabstod.application.sjukfall.model.SjukfallEnhet;
 
 @ExtendWith(MockitoExtension.class)
 class UnansweredCommunicationFilteringServiceTest {

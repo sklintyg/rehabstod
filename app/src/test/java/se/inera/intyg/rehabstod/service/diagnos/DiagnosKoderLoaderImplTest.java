@@ -31,8 +31,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-import se.inera.intyg.rehabstod.application.diagnos.DiagnosKoderLoaderImpl;
-import se.inera.intyg.rehabstod.application.diagnos.IcdCodeConverter;
+import se.inera.intyg.rehabstod.application.diagnos.converter.IcdCodeConverter;
+import se.inera.intyg.rehabstod.application.diagnos.loader.DiagnosKoderLoaderImpl;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties.Resources;
 
@@ -48,6 +48,7 @@ class DiagnosKoderLoaderImplTest {
 
   @TestConfiguration
   static class TestConfig {
+
     @Bean
     public AppProperties appProperties() {
       return new AppProperties(

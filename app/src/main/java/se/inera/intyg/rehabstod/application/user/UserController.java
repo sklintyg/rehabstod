@@ -33,6 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.application.user.dto.ChangeSelectedUnitRequest;
 import se.inera.intyg.rehabstod.application.user.dto.GetUserResponse;
 import se.inera.intyg.rehabstod.application.user.dto.GivePdlLoggingConsentRequest;
+import se.inera.intyg.rehabstod.application.user.service.UserPreferencesService;
+import se.inera.intyg.rehabstod.application.user.service.UserService;
 import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants;
 import se.inera.intyg.rehabstod.infrastructure.repository.AnvandarPreferenceRepository;

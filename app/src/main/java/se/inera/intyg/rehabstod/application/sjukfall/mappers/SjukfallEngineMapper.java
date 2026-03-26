@@ -33,11 +33,11 @@ import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaDa
 import se.inera.intyg.rehabstod.application.certificate.model.Diagnos;
 import se.inera.intyg.rehabstod.application.certificate.model.Lakare;
 import se.inera.intyg.rehabstod.application.diagnos.DiagnosFactory;
+import se.inera.intyg.rehabstod.application.exceptions.SjukfallServiceException;
 import se.inera.intyg.rehabstod.application.patient.model.Patient;
 import se.inera.intyg.rehabstod.application.patient.model.PatientData;
 import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallPatient;
-import se.inera.intyg.rehabstod.application.sjukfall.SjukfallServiceException;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.application.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.RekoStatusDTO;

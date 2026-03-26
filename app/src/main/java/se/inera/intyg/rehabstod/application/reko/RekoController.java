@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.application.reko.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.application.reko.dto.GetRekoStatusRequestDTO;
+import se.inera.intyg.rehabstod.application.reko.service.CreateRekoStatusService;
+import se.inera.intyg.rehabstod.application.reko.service.GetRekoStatusService;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants;

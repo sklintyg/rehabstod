@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.application.user.UserService;
+import se.inera.intyg.rehabstod.application.user.service.UserService;
 import se.inera.intyg.rehabstod.application.util.ControllerUtil;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;

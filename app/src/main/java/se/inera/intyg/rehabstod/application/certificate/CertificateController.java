@@ -35,6 +35,7 @@ import se.inera.intyg.rehabstod.application.certificate.dto.GetLUCertificatesFor
 import se.inera.intyg.rehabstod.application.certificate.dto.GetLUCertificatesForCareUnitResponse;
 import se.inera.intyg.rehabstod.application.certificate.dto.GetLUCertificatesForPersonRequest;
 import se.inera.intyg.rehabstod.application.certificate.dto.GetLUCertificatesForPersonResponse;
+import se.inera.intyg.rehabstod.application.certificate.service.CertificateService;
 import se.inera.intyg.rehabstod.application.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants;

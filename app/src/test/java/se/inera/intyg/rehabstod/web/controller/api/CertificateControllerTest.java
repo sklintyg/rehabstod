@@ -31,9 +31,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.application.certificate.CertificateController;
-import se.inera.intyg.rehabstod.application.certificate.CertificateService;
 import se.inera.intyg.rehabstod.application.certificate.dto.GetAGCertificatesForPersonRequest;
 import se.inera.intyg.rehabstod.application.certificate.dto.GetLUCertificatesForPersonRequest;
+import se.inera.intyg.rehabstod.application.certificate.service.CertificateService;
 import se.inera.intyg.rehabstod.application.util.PatientIdEncryption;
 
 @ExtendWith(MockitoExtension.class)

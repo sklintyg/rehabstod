@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.application.sjukfall.dto;
 
 import java.util.List;
-import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallPatient;
+import se.inera.intyg.rehabstod.application.sjukfall.model.SjukfallPatient;
 
 /** Created by marced on 2018-10-02. */
 public class FilteredSjukFallByPatientResult {

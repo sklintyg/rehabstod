@@ -28,7 +28,7 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-import se.inera.intyg.rehabstod.application.user.UserService;
+import se.inera.intyg.rehabstod.application.user.service.UserService;
 
 @Component
 @RequiredArgsConstructor

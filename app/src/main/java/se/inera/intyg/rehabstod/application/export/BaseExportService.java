@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.rehabstod.application.certificate.model.Diagnos;
-import se.inera.intyg.rehabstod.application.diagnos.DiagnosKapitelService;
+import se.inera.intyg.rehabstod.application.diagnos.service.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.application.sickleave.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.application.sickleave.model.LangdIntervall;
 import se.inera.intyg.rehabstod.application.util.StringUtil;

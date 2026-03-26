@@ -27,9 +27,9 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.rehabstod.application.certificate.model.Diagnos;
-import se.inera.intyg.rehabstod.application.sickleave.dto.PrintSjukfallRequest;
-import se.inera.intyg.rehabstod.application.sickleave.model.LangdIntervall;
-import se.inera.intyg.rehabstod.application.sickleave.model.Sortering;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.PrintSjukfallRequest;
+import se.inera.intyg.rehabstod.application.sjukfall.model.LangdIntervall;
+import se.inera.intyg.rehabstod.application.sjukfall.model.Sortering;
 
 class BaseExportServiceTest {
 

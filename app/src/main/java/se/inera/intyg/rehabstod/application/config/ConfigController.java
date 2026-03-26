@@ -24,7 +24,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.application.config.dto.GetConfigResponse;
-import se.inera.intyg.rehabstod.application.diagnos.DiagnosKapitelService;
+import se.inera.intyg.rehabstod.application.diagnos.service.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.application.dynamiclink.model.DynamicLink;
 import se.inera.intyg.rehabstod.application.dynamiclink.service.DynamicLinkService;
 import se.inera.intyg.rehabstod.infrastructure.integration.ia.services.IABannerService;

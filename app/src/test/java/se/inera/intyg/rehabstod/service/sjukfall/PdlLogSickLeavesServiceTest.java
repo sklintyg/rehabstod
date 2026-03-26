@@ -37,7 +37,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.application.patient.model.Patient;
 import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.application.user.UserService;
+import se.inera.intyg.rehabstod.application.user.service.UserService;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.rehabstod.infrastructure.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;

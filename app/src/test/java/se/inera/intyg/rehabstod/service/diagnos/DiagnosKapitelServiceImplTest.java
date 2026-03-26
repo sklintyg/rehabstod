@@ -31,9 +31,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.diagnos.DiagnosKapitelLoader;
-import se.inera.intyg.rehabstod.application.diagnos.DiagnosKapitelServiceImpl;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.application.diagnos.loader.DiagnosKapitelLoader;
+import se.inera.intyg.rehabstod.application.diagnos.service.DiagnosKapitelServiceImpl;
 
 /** Created by marced on 10/02/16. */
 // CHECKSTYLE:OFF MagicNumber

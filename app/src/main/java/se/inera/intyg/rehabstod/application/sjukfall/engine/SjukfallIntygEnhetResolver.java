@@ -25,10 +25,10 @@ import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.inera.intyg.rehabstod.application.exceptions.SjukfallEngineServiceException;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallIntyg;
-import se.inera.intyg.rehabstod.application.sjukfall.services.SjukfallEngineServiceException;
 
 public class SjukfallIntygEnhetResolver {
 

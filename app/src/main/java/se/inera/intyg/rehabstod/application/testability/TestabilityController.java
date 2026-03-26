@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.application.testability.dto.FakeLoginDTO;
 import se.inera.intyg.rehabstod.application.testability.dto.TestabilityResponseDTO;
+import se.inera.intyg.rehabstod.application.testability.service.TestabilityService;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.CreateSickLeaveRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.TestDataOptionsDTO;
 import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;

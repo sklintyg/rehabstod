@@ -19,8 +19,8 @@
 package se.inera.intyg.rehabstod.application.srs;
 
 import java.util.List;
-import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallPatient;
+import se.inera.intyg.rehabstod.application.sjukfall.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sjukfall.model.SjukfallPatient;
 
 /** Created by eriklupander on 2017-11-01. */
 public interface RiskPredictionService {

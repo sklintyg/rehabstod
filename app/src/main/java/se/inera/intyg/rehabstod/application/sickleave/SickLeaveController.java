@@ -30,6 +30,8 @@ import se.inera.intyg.rehabstod.application.sickleave.dto.PopulateFiltersRespons
 import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeavePrintRequestDTO;
 import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeavesFilterRequestDTO;
 import se.inera.intyg.rehabstod.application.sickleave.dto.SickLeavesResponseDTO;
+import se.inera.intyg.rehabstod.application.sickleave.service.GetActiveSickLeavesResponseService;
+import se.inera.intyg.rehabstod.application.sickleave.service.GetSickLeaveSummaryService;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.SickLeaveSummary;
 import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants;

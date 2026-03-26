@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.application.sjukfall.dto;
 
 import java.util.List;
-import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallPatient;
+import se.inera.intyg.rehabstod.application.sjukfall.model.SjukfallPatient;
 
 /**
  * Encapsulates the response for sjukfall for a patient with a flag indicating whether SRS

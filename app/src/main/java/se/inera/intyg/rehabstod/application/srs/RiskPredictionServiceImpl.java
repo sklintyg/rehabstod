@@ -37,7 +37,7 @@ import se.inera.intyg.rehabstod.application.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.application.patient.model.PatientData;
 import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallPatient;
-import se.inera.intyg.rehabstod.application.user.UserService;
+import se.inera.intyg.rehabstod.application.user.service.UserService;
 import se.inera.intyg.rehabstod.infrastructure.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.infrastructure.integration.srs.service.SRSIntegrationService;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;

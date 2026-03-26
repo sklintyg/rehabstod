@@ -32,9 +32,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.application.diagnos.DiagnosBeskrivningServiceImpl;
-import se.inera.intyg.rehabstod.application.diagnos.DiagnosKoderLoader;
-import se.inera.intyg.rehabstod.application.diagnos.DiagnosServiceException;
+import se.inera.intyg.rehabstod.application.diagnos.loader.DiagnosKoderLoader;
+import se.inera.intyg.rehabstod.application.diagnos.service.DiagnosBeskrivningServiceImpl;
+import se.inera.intyg.rehabstod.application.exceptions.DiagnosServiceException;
 
 /** Created by martin on 10/02/16. */
 @ExtendWith(MockitoExtension.class)

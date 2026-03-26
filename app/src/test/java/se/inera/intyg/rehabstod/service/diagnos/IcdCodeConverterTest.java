@@ -34,7 +34,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import se.inera.intyg.rehabstod.application.diagnos.IcdCodeConverter;
+import se.inera.intyg.rehabstod.application.diagnos.converter.IcdCodeConverter;
 
 @ExtendWith(MockitoExtension.class)
 class IcdCodeConverterTest {

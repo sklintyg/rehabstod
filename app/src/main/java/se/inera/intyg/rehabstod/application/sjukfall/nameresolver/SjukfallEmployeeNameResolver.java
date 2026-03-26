@@ -20,8 +20,8 @@ package se.inera.intyg.rehabstod.application.sjukfall.nameresolver;
 
 import java.util.List;
 import se.inera.intyg.rehabstod.application.certificate.model.Lakare;
-import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.application.sickleave.model.SjukfallPatient;
+import se.inera.intyg.rehabstod.application.sjukfall.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.application.sjukfall.model.SjukfallPatient;
 
 /** Created by eriklupander on 2017-02-23. */
 public interface SjukfallEmployeeNameResolver {

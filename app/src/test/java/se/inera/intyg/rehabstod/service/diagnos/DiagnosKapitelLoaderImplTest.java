@@ -32,8 +32,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-import se.inera.intyg.rehabstod.application.diagnos.DiagnosKapitelLoaderImpl;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.application.diagnos.loader.DiagnosKapitelLoaderImpl;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties.Resources;
 
@@ -45,6 +45,7 @@ class DiagnosKapitelLoaderImplTest {
 
   @TestConfiguration
   static class TestConfig {
+
     @Bean
     public AppProperties appProperties() {
       return new AppProperties(
