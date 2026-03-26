@@ -20,9 +20,7 @@ package se.inera.intyg.rehabstod.application.certificate;
 
 import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 
-/**
- * Created by marced on 2018-09-27.
- */
+/** Created by marced on 2018-09-27. */
 public class IntygAccessControlMetaData {
 
   private IntygData intygData;
@@ -34,8 +32,7 @@ public class IntygAccessControlMetaData {
   private boolean kraverSamtycke;
   private boolean bidrarTillAktivtSjukfall;
 
-  private IntygAccessControlMetaData() {
-  }
+  private IntygAccessControlMetaData() {}
 
   public IntygAccessControlMetaData(
       IntygData intygData,

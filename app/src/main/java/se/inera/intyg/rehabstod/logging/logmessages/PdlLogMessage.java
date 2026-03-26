@@ -187,9 +187,7 @@ public class PdlLogMessage implements Serializable {
     this.userAssignment = userAssignment;
   }
 
-  /**
-   * Returns a copy (new instance) of this, optionally omitting the resourceList.
-   */
+  /** Returns a copy (new instance) of this, optionally omitting the resourceList. */
   public PdlLogMessage copy(boolean includeResourceList) {
     PdlLogMessage msg = new PdlLogMessage(this.activityType, this.purpose);
     msg.setActivityArgs(this.activityArgs);

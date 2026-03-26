@@ -70,23 +70,18 @@ public class RehabstodUserDetailsService {
 
   public static final String PDL_CONSENT_GIVEN = "user_pdl_consent_given";
 
-  @Autowired
-  private AnvandarPreferenceRepository anvandarPreferenceRepository;
+  @Autowired private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
-  @Autowired
-  private RehabstodUnitChangeService rehabstodUnitChangeService;
+  @Autowired private RehabstodUnitChangeService rehabstodUnitChangeService;
 
   @Autowired(required = false)
   private Optional<UserOrigin> userOrigin;
 
-  @Autowired
-  private HsaOrganizationsService hsaOrganizationsService;
+  @Autowired private HsaOrganizationsService hsaOrganizationsService;
 
-  @Autowired
-  private HsaPersonService hsaPersonService;
+  @Autowired private HsaPersonService hsaPersonService;
 
-  @Autowired
-  private AuthenticationLogger monitoringLogService;
+  @Autowired private AuthenticationLogger monitoringLogService;
 
   @Autowired
   public void setCommonAuthoritiesResolver(CommonAuthoritiesResolver commonAuthoritiesResolver) {

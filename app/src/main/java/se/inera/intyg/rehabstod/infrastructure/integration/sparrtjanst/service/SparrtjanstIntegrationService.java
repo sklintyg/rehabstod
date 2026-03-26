@@ -23,21 +23,19 @@ import java.util.Map;
 import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 
-/**
- * Created by marced on 2018-09-28.
- */
+/** Created by marced on 2018-09-28. */
 public interface SparrtjanstIntegrationService {
 
   /**
-   * Updates the corresponding {@link IntygAccessControlMetaData} sparr attributes for each
-   * {@link IntygData} in intygLista.
+   * Updates the corresponding {@link IntygAccessControlMetaData} sparr attributes for each {@link
+   * IntygData} in intygLista.
    *
    * @param currentVardgivarHsaId - The hsaId of the current vardgivare
    * @param currentVardenhetHsaId - The hsaId of the current varenhet
-   * @param userHsaId             - The hsaId of the current user
-   * @param patientId             - The id of the current patient
-   * @param intygAccessMetaData   -Map containing access control metadata
-   * @param intygLista            -Map containing the intyg to process
+   * @param userHsaId - The hsaId of the current user
+   * @param patientId - The id of the current patient
+   * @param intygAccessMetaData -Map containing access control metadata
+   * @param intygLista -Map containing the intyg to process
    */
   void decorateWithBlockStatus(
       String currentVardgivarHsaId,

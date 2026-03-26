@@ -34,33 +34,28 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.api.model.PatientData;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
-import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.application.certificate.dto.DiagnosedCertificate;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.infrastructure.integration.pu.api.model.PersonSvar;
 import se.inera.intyg.rehabstod.infrastructure.integration.pu.api.services.PUService;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.logging.HashUtility;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-/**
- * Created by eriklupander on 2017-09-05.
- */
+/** Created by eriklupander on 2017-09-05. */
 @Service
 public class PuServiceImpl implements PuService {
 
   private static final Logger LOG =
       LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
-  @Autowired
-  private PUService puService;
+  @Autowired private PUService puService;
 
-  @Autowired
-  private UserService userService;
+  @Autowired private UserService userService;
 
-  @Autowired
-  private HashUtility hashUtility;
+  @Autowired private HashUtility hashUtility;
 
   @Override
   public void filterSekretessForSummary(List<SjukfallEnhet> sjukfallList) {
@@ -271,7 +266,7 @@ public class PuServiceImpl implements PuService {
     boolean isNameEmpty =
         item.getPatient() != null
             && (item.getPatient().getNamn().equals(SEKRETESS_SKYDDAD_NAME_UNKNOWN)
-            || item.getPatient().getNamn().equals(""))
+                || item.getPatient().getNamn().equals(""))
             && personSvar.getStatus() == PersonSvar.Status.FOUND;
     String responseFromPU =
         isNameEmpty ? personSvar.getStatus().name() + "_NO_NAME" : personSvar.getStatus().name();
@@ -345,7 +340,7 @@ public class PuServiceImpl implements PuService {
       if (personSvar.getPerson().sekretessmarkering()) {
         if (!(hasLakareRoleAndIsLakare(user, firstPatientDataItem.getLakare().getHsaId())
             && userService.isUserLoggedInOnEnhetOrUnderenhet(
-            firstPatientDataItem.getVardenhetId()))) {
+                firstPatientDataItem.getVardenhetId()))) {
           throw new IllegalStateException(
               "Cannot show patient details for patient having sekretessmarkering");
         }
@@ -449,8 +444,8 @@ public class PuServiceImpl implements PuService {
   private boolean hasLakareRoleAndIsLakare(RehabstodUser user, String issuingDoctorHsaId) {
     return (user.isLakare() && user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE))
         || (user.isLakare()
-        && !user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE)
-        && user.getHsaId().equalsIgnoreCase(issuingDoctorHsaId));
+            && !user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE)
+            && user.getHsaId().equalsIgnoreCase(issuingDoctorHsaId));
   }
 
   private String joinNames(PersonSvar personSvar) {

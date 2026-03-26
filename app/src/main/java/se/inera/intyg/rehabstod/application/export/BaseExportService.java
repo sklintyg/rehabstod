@@ -32,9 +32,7 @@ import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Feature;
 
-/**
- * Created by eriklupander on 2016-02-26.
- */
+/** Created by eriklupander on 2016-02-26. */
 public abstract class BaseExportService {
 
   protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Valda diagnoser";
@@ -78,8 +76,7 @@ public abstract class BaseExportService {
   private static final int SRS_RISK_HIGH = 3;
   private static final String SRS_RISK_HIGH_DESC = "Mycket hög";
 
-  @Autowired
-  protected DiagnosKapitelService diagnosKapitelService;
+  @Autowired protected DiagnosKapitelService diagnosKapitelService;
 
   public static String diagnoseListToString(List<Diagnos> biDiagnoser) {
     if (biDiagnoser != null && !biDiagnoser.isEmpty()) {
@@ -121,10 +118,10 @@ public abstract class BaseExportService {
 
   public static String getQAFilterDisplayValue(Integer qaID) {
     String[] qaStatuses = {
-        FILTER_TITLE_ARENDESTATUS_UTAN,
-        FILTER_TITLE_ARENDESTATUS_MED,
-        FILTER_TITLE_ARENDESTATUS_MED_KOMPLETTERING,
-        FILTER_TITLE_ARENDESTATUS_MED_FRAGOR
+      FILTER_TITLE_ARENDESTATUS_UTAN,
+      FILTER_TITLE_ARENDESTATUS_MED,
+      FILTER_TITLE_ARENDESTATUS_MED_KOMPLETTERING,
+      FILTER_TITLE_ARENDESTATUS_MED_FRAGOR
     };
     if (qaID == null) {
       return FILTER_TITLE_ARENDESTATUS_ALLA;

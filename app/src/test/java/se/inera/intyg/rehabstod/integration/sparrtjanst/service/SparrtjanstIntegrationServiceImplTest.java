@@ -37,9 +37,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaData;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.client.SparrtjanstClientService;
 import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.exception.SparrtjanstIntegrationException;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksResponseType;
 import se.riv.informationsecurity.authorization.blocking.v4.CheckBlocksResultType;
 import se.riv.informationsecurity.authorization.blocking.v4.CheckResultType;
@@ -47,9 +47,7 @@ import se.riv.informationsecurity.authorization.blocking.v4.CheckStatusType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultCodeType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultType;
 
-/**
- * Created by marced on 2018-10-12.
- */
+/** Created by marced on 2018-10-12. */
 @ExtendWith(MockitoExtension.class)
 class SparrtjanstIntegrationServiceImplTest {
 
@@ -67,11 +65,9 @@ class SparrtjanstIntegrationServiceImplTest {
   private List<IntygData> intygList;
   private List<IntygData> intygOnOtherUnitsList;
 
-  @Mock
-  private SparrtjanstClientService sparrtjanstClientService;
+  @Mock private SparrtjanstClientService sparrtjanstClientService;
 
-  @InjectMocks
-  private SparrtjanstIntegrationServiceImpl testee;
+  @InjectMocks private SparrtjanstIntegrationServiceImpl testee;
 
   @BeforeEach
   void setup() {
@@ -111,7 +107,7 @@ class SparrtjanstIntegrationServiceImplTest {
 
     CheckBlocksResponseType response = createResponse(ResultCodeType.OK, CheckStatusType.OK);
     when(sparrtjanstClientService.getCheckBlocks(
-        eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), anyList()))
+            eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), anyList()))
         .thenReturn(response);
 
     testee.decorateWithBlockStatus(
@@ -135,7 +131,7 @@ class SparrtjanstIntegrationServiceImplTest {
 
     CheckBlocksResponseType response = createResponse(ResultCodeType.OK, CheckStatusType.BLOCKED);
     when(sparrtjanstClientService.getCheckBlocks(
-        eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), anyList()))
+            eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), anyList()))
         .thenReturn(response);
 
     testee.decorateWithBlockStatus(
@@ -160,7 +156,7 @@ class SparrtjanstIntegrationServiceImplTest {
     CheckBlocksResponseType response =
         createResponse(ResultCodeType.ERROR, CheckStatusType.BLOCKED);
     when(sparrtjanstClientService.getCheckBlocks(
-        eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), anyList()))
+            eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), anyList()))
         .thenReturn(response);
 
     assertThrows(
@@ -177,7 +173,7 @@ class SparrtjanstIntegrationServiceImplTest {
     CheckBlocksResponseType response = createResponse(ResultCodeType.OK, CheckStatusType.BLOCKED);
     response.getCheckBlocksResult().getCheckResults().remove(0);
     when(sparrtjanstClientService.getCheckBlocks(
-        eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), anyList()))
+            eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), anyList()))
         .thenReturn(response);
 
     assertThrows(

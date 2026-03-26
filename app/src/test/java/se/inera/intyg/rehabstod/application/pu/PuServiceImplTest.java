@@ -44,6 +44,7 @@ import se.inera.intyg.rehabstod.application.api.model.Patient;
 import se.inera.intyg.rehabstod.application.api.model.PatientData;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.rehabstod.infrastructure.integration.pu.api.model.Person;
@@ -51,7 +52,6 @@ import se.inera.intyg.rehabstod.infrastructure.integration.pu.api.model.PersonSv
 import se.inera.intyg.rehabstod.infrastructure.integration.pu.api.services.PUService;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Role;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 /** Created by eriklupander on 2017-09-06. */

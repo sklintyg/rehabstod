@@ -31,9 +31,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.Urval;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
+import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.application.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.application.pu.PuService;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.FilteredSjukFallByPatientResult;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.SjfMetaDataItem;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.SjfMetaDataItemType;
@@ -42,11 +45,9 @@ import se.inera.intyg.rehabstod.application.sjukfall.komplettering.UnansweredQAs
 import se.inera.intyg.rehabstod.application.sjukfall.mappers.IntygstjanstMapper;
 import se.inera.intyg.rehabstod.application.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.application.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
+import se.inera.intyg.rehabstod.application.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.application.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.application.user.UserService;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.services.legacy.HsaOrganizationsService;
@@ -59,16 +60,13 @@ import se.inera.intyg.rehabstod.infrastructure.integration.wc.exception.WcIntegr
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.logging.MonitoringLogService;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.logging.pdl.LogService;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygParametrar;
-import se.inera.intyg.rehabstod.application.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-/**
- * Created by eriklupander on 2016-02-01.
- */
+/** Created by eriklupander on 2016-02-01. */
 @Service("sjukfallService")
 @RequiredArgsConstructor
 public class SjukfallServiceImpl implements SjukfallService {

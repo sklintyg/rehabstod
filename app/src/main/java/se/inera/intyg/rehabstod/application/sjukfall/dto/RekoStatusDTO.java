@@ -28,5 +28,4 @@ import lombok.NoArgsConstructor;
 public class RekoStatusDTO {
 
   private EngineRekoStatusTypeDTO status;
-
 }

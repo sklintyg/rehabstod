@@ -35,12 +35,12 @@ import se.inera.intyg.rehabstod.application.api.model.Patient;
 import se.inera.intyg.rehabstod.application.api.model.PatientData;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
+import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.application.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.application.sjukfall.SjukfallServiceException;
-import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
-import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaData;
-import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
+import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.RekoStatusDTO;
 
 /**
  * @author Magnus Ekstrand on 2017-09-01.
@@ -48,16 +48,12 @@ import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO
 @Component
 public class SjukfallEngineMapper {
 
-  @Autowired
-  private DiagnosFactory diagnosFactory;
-  @Autowired
-  private PatientIdEncryption patientIdEncryption;
+  @Autowired private DiagnosFactory diagnosFactory;
+  @Autowired private PatientIdEncryption patientIdEncryption;
 
   // api
 
-  /**
-   * Mapping from SjukfallEngine's format to Rehabstod internal format.
-   */
+  /** Mapping from SjukfallEngine's format to Rehabstod internal format. */
   public SjukfallEnhet mapToSjukfallEnhetDto(
       se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallEnhet from,
       int maxDagarSedanAvslut,
@@ -104,9 +100,7 @@ public class SjukfallEngineMapper {
             from.getRekoStatus().getStatus().getId(), from.getRekoStatus().getStatus().getName()));
   }
 
-  /**
-   * Mapping from SjukfallEngine's format to Rehabstod internal format.
-   */
+  /** Mapping from SjukfallEngine's format to Rehabstod internal format. */
   public SjukfallPatient mapToSjukfallPatientDto(
       se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatient from,
       Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
@@ -142,11 +136,10 @@ public class SjukfallEngineMapper {
     return to;
   }
 
-  /**
-   * Mapping from SjukfallEngine's format to Rehabstod internal format.
-   */
+  /** Mapping from SjukfallEngine's format to Rehabstod internal format. */
   public PatientData mapSjukfallIntygToPatientData(
-      se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallIntyg from, IntygAccessControlMetaData iacm) {
+      se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallIntyg from,
+      IntygAccessControlMetaData iacm) {
     PatientData to = new PatientData();
 
     try {
@@ -205,7 +198,8 @@ public class SjukfallEngineMapper {
     return getDiagnos(from);
   }
 
-  private List<Diagnos> mapDiagnos(List<se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKod> from) {
+  private List<Diagnos> mapDiagnos(
+      List<se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKod> from) {
     return Optional.ofNullable(from).orElse(Collections.emptyList()).stream()
         .map(this::mapDiagnos)
         .collect(Collectors.toList());

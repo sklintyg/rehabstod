@@ -32,9 +32,11 @@ import se.inera.intyg.rehabstod.application.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.application.pu.PuService;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.OccupationTypeDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.PopulateLUFilterResponseDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.PopulateSickLeaveFilterResponseDTO;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.UnansweredCommunicationFilterType;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.UnansweredCommunicationFilterTypeDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
@@ -44,8 +46,6 @@ import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.PopulateFilter
 import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.RekoStatusTypeDTO;
 
 @Service
 public class PopulateFiltersServiceImpl implements PopulateFiltersService {
@@ -111,7 +111,8 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
   }
 
   private List<OccupationTypeDTO> convertOccupationTypes(
-      List<se.inera.intyg.rehabstod.application.sjukfall.dto.EngineOccupationTypeDTO> occupationTypeDTOList) {
+      List<se.inera.intyg.rehabstod.application.sjukfall.dto.EngineOccupationTypeDTO>
+          occupationTypeDTOList) {
     if (occupationTypeDTOList == null) {
       return Collections.emptyList();
     }
@@ -122,16 +123,12 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         .collect(Collectors.toList());
   }
 
-  private List<RekoStatusTypeDTO>
-      convertRekoStatuses(List<EngineRekoStatusTypeDTO> list) {
+  private List<RekoStatusTypeDTO> convertRekoStatuses(List<EngineRekoStatusTypeDTO> list) {
     if (list == null) {
       return Collections.emptyList();
     }
     return list.stream()
-        .map(
-            status ->
-                new RekoStatusTypeDTO(
-                    status.getId(), status.getName()))
+        .map(status -> new RekoStatusTypeDTO(status.getId(), status.getName()))
         .collect(Collectors.toList());
   }
 

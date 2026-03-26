@@ -439,7 +439,8 @@ class SjukfallLangdCalculatorTest {
   @Test
   void testMergeIntervalsSimple() {
 
-    List<se.inera.intyg.rehabstod.application.sjukfall.engine.LocalDateInterval> intervals = new ArrayList<>();
+    List<se.inera.intyg.rehabstod.application.sjukfall.engine.LocalDateInterval> intervals =
+        new ArrayList<>();
     final se.inera.intyg.rehabstod.application.sjukfall.engine.LocalDateInterval a =
         createInterval("2016-01-01", "2016-01-20");
     final se.inera.intyg.rehabstod.application.sjukfall.engine.LocalDateInterval b =
@@ -448,7 +449,8 @@ class SjukfallLangdCalculatorTest {
     intervals.add(b);
 
     final List<se.inera.intyg.rehabstod.application.sjukfall.engine.LocalDateInterval> result =
-        se.inera.intyg.rehabstod.application.sjukfall.engine.SjukfallLangdCalculator.mergeIntervals(intervals);
+        se.inera.intyg.rehabstod.application.sjukfall.engine.SjukfallLangdCalculator.mergeIntervals(
+            intervals);
 
     assertEquals(1, result.size());
     assertEquals(a.getStartDate(), result.get(0).getStartDate());
@@ -458,7 +460,8 @@ class SjukfallLangdCalculatorTest {
   @Test
   void testMergeIntervalsDontMergeDiscreteIntervals() {
 
-    List<se.inera.intyg.rehabstod.application.sjukfall.engine.LocalDateInterval> intervals = new ArrayList<>();
+    List<se.inera.intyg.rehabstod.application.sjukfall.engine.LocalDateInterval> intervals =
+        new ArrayList<>();
     final se.inera.intyg.rehabstod.application.sjukfall.engine.LocalDateInterval a =
         createInterval("2016-01-01", "2016-01-20");
     final se.inera.intyg.rehabstod.application.sjukfall.engine.LocalDateInterval b =
@@ -467,7 +470,8 @@ class SjukfallLangdCalculatorTest {
     intervals.add(b);
 
     final List<se.inera.intyg.rehabstod.application.sjukfall.engine.LocalDateInterval> result =
-        se.inera.intyg.rehabstod.application.sjukfall.engine.SjukfallLangdCalculator.mergeIntervals(intervals);
+        se.inera.intyg.rehabstod.application.sjukfall.engine.SjukfallLangdCalculator.mergeIntervals(
+            intervals);
 
     assertEquals(2, result.size());
     assertTrue(result.contains(a));
@@ -499,7 +503,8 @@ class SjukfallLangdCalculatorTest {
     final se.inera.intyg.rehabstod.application.sjukfall.engine.LocalDateInterval c =
         createInterval("2016-01-02", "2016-03-08");
 
-    List<se.inera.intyg.rehabstod.application.sjukfall.engine.LocalDateInterval> intervals = new ArrayList<>();
+    List<se.inera.intyg.rehabstod.application.sjukfall.engine.LocalDateInterval> intervals =
+        new ArrayList<>();
     intervals.add(a);
     intervals.add(aCopy);
     intervals.add(b1);
@@ -507,7 +512,8 @@ class SjukfallLangdCalculatorTest {
     intervals.add(c);
 
     final List<se.inera.intyg.rehabstod.application.sjukfall.engine.LocalDateInterval> result =
-        se.inera.intyg.rehabstod.application.sjukfall.engine.SjukfallLangdCalculator.mergeIntervals(intervals);
+        se.inera.intyg.rehabstod.application.sjukfall.engine.SjukfallLangdCalculator.mergeIntervals(
+            intervals);
     assertEquals(1, result.size());
     assertEquals(c.getStartDate(), result.get(0).getStartDate());
     assertEquals(b2.getEndDate(), result.get(0).getEndDate());

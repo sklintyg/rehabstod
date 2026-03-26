@@ -76,8 +76,7 @@ public class DiagnosKapitel {
     }
   }
 
-  public DiagnosKapitel() {
-  }
+  public DiagnosKapitel() {}
 
   public DiagnosKapitel(DiagnosKategori from, DiagnosKategori to, String name) {
     this.from = from;
@@ -113,9 +112,7 @@ public class DiagnosKapitel {
     return from.getId() + SEPARATOR + to.getId();
   }
 
-  /**
-   * Determines if a given diagnosKategori is considered to be included in this DiagnosKapitel.
-   */
+  /** Determines if a given diagnosKategori is considered to be included in this DiagnosKapitel. */
   public boolean includes(Optional<DiagnosKategori> diagnosKategori) {
     if (diagnosKategori.isPresent()) {
       // We use the fact that a char has a numerical value in a natural order (for A-Z at least)

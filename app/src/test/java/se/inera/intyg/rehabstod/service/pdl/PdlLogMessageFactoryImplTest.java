@@ -30,22 +30,20 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
+import se.inera.intyg.rehabstod.infrastructure.security.common.model.Role;
 import se.inera.intyg.rehabstod.logging.logmessages.ActivityPurpose;
 import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.logging.logmessages.PdlLogMessage;
 import se.inera.intyg.rehabstod.logging.logmessages.PdlResource;
 import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
-import se.inera.intyg.rehabstod.infrastructure.security.common.model.Role;
 import se.inera.intyg.rehabstod.logging.pdl.PdlLogMessageFactoryImpl;
 import se.inera.intyg.rehabstod.logging.pdl.dto.LogUtil;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 
-/**
- * Created by eriklupander on 2016-03-03.
- */
+/** Created by eriklupander on 2016-03-03. */
 class PdlLogMessageFactoryImplTest {
 
   private static final AppProperties APP_PROPERTIES =

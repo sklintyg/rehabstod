@@ -42,19 +42,18 @@ import se.inera.intyg.rehabstod.application.api.model.Diagnos;
 import se.inera.intyg.rehabstod.application.api.model.LUCertificate;
 import se.inera.intyg.rehabstod.application.api.model.Lakare;
 import se.inera.intyg.rehabstod.application.api.model.Patient;
-import se.inera.intyg.rehabstod.application.communication.UnansweredCommunicationDecoratorService;
-import se.inera.intyg.rehabstod.application.diagnos.DiagnosFactory;
-import se.inera.intyg.rehabstod.application.hsa.EmployeeNameService;
-import se.inera.intyg.rehabstod.application.pu.PuService;
-import se.inera.intyg.rehabstod.application.sjukfall.komplettering.UnansweredQAsInfoDecorator;
-import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
-import se.inera.intyg.rehabstod.application.user.UserService;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.application.certificate.dto.BaseCertificate;
 import se.inera.intyg.rehabstod.application.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.rehabstod.application.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.rehabstod.application.certificate.dto.SickLeaveCertificate.WorkCapacity;
+import se.inera.intyg.rehabstod.application.communication.UnansweredCommunicationDecoratorService;
+import se.inera.intyg.rehabstod.application.diagnos.DiagnosFactory;
+import se.inera.intyg.rehabstod.application.hsa.EmployeeNameService;
+import se.inera.intyg.rehabstod.application.pu.PuService;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKod;
+import se.inera.intyg.rehabstod.application.sjukfall.komplettering.UnansweredQAsInfoDecorator;
+import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
+import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.services.legacy.HsaOrganizationsService;
@@ -62,8 +61,9 @@ import se.inera.intyg.rehabstod.infrastructure.integration.it.service.Intygstjan
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityStore;
+import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.logging.pdl.LogService;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 @Service
@@ -309,13 +309,13 @@ public class CertificateServiceImpl implements CertificateService {
 
     if (c.getUnAnsweredComplement() > 0
         && containsIgnoreCase(
-        String.format("Komplettering (%d)", c.getUnAnsweredComplement()), searchText)) {
+            String.format("Komplettering (%d)", c.getUnAnsweredComplement()), searchText)) {
       return true;
     }
 
     if (c.getUnAnsweredOther() > 0
         && containsIgnoreCase(
-        String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()), searchText)) {
+            String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()), searchText)) {
       return true;
     }
 

@@ -63,7 +63,7 @@ public class SjukfallIntygEnhetCreator {
       map.computeIfAbsent(k, k1 -> new ArrayList<>());
       SjukfallIntyg v =
           new SjukfallIntyg.SjukfallIntygBuilder(
-              i, parameters.getAktivtDatum(), parameters.getMaxAntalDagarSedanSjukfallAvslut())
+                  i, parameters.getAktivtDatum(), parameters.getMaxAntalDagarSedanSjukfallAvslut())
               .build();
       map.get(k).add(v);
     }
@@ -78,8 +78,8 @@ public class SjukfallIntygEnhetCreator {
         .filter(
             e ->
                 e.getValue().stream()
-                    .filter(o -> o.isAktivtIntyg() || o.isNyligenAvslutat())
-                    .count()
+                        .filter(o -> o.isAktivtIntyg() || o.isNyligenAvslutat())
+                        .count()
                     > 0)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }

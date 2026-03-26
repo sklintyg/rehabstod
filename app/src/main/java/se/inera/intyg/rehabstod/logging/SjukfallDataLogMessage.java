@@ -22,15 +22,12 @@ import se.inera.intyg.rehabstod.logging.logmessages.ActivityPurpose;
 import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.logging.logmessages.PdlLogMessage;
 
-/**
- * Created by eriklupander on 2016-02-19.
- */
+/** Created by eriklupander on 2016-02-19. */
 public abstract class SjukfallDataLogMessage {
 
   private static final long serialVersionUID = -4683928451142580674L;
 
-  private SjukfallDataLogMessage() {
-  }
+  private SjukfallDataLogMessage() {}
 
   /**
    * Creates a PdlLogMessage object injected with ActivityType.READ and

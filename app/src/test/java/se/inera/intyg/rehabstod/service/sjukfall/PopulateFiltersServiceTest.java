@@ -48,6 +48,10 @@ import se.inera.intyg.rehabstod.application.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.application.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.application.filter.PopulateFiltersServiceImpl;
 import se.inera.intyg.rehabstod.application.pu.PuService;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKategori;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineOccupationTypeDTO;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.Lakare;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.PopulateLUFilterResponseDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.UnansweredCommunicationFilterType;
 import se.inera.intyg.rehabstod.application.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
@@ -64,10 +68,6 @@ import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKategori;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.Lakare;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineOccupationTypeDTO;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
 
 @ExtendWith(MockitoExtension.class)
 class PopulateFiltersServiceTest {
@@ -111,7 +111,8 @@ class PopulateFiltersServiceTest {
   DiagnosKategori diagnosisChapterTo = new DiagnosKategori(LETTER_TO, NUMBER_TO);
   DiagnosKategori diagnosisChapterFrom = new DiagnosKategori(LETTER_FROM, NUMBER_FROM);
   EngineRekoStatusTypeDTO rekoStatus = new EngineRekoStatusTypeDTO("REKO_1", "Ingen");
-  EngineOccupationTypeDTO EngineOccupationTypeDTO = new EngineOccupationTypeDTO("OCCUPATION_STUDIER", "Studier");
+  EngineOccupationTypeDTO EngineOccupationTypeDTO =
+      new EngineOccupationTypeDTO("OCCUPATION_STUDIER", "Studier");
   se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKapitel enabledDiagnosisChapter =
       new se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKapitel(
           diagnosisChapterTo, diagnosisChapterFrom, DIAGNOSIS_CHAPTER_NAME);
@@ -459,13 +460,15 @@ class PopulateFiltersServiceTest {
         @Test
         void shouldConvertOccupationTypeId() {
           final var response = populateActiveFilters.populateSickLeaveFilters();
-          assertEquals(EngineOccupationTypeDTO.getId(), response.getOccupationTypes().get(0).getId());
+          assertEquals(
+              EngineOccupationTypeDTO.getId(), response.getOccupationTypes().get(0).getId());
         }
 
         @Test
         void shouldConvertOccupationTypeName() {
           final var response = populateActiveFilters.populateSickLeaveFilters();
-          assertEquals(EngineOccupationTypeDTO.getName(), response.getOccupationTypes().get(0).getName());
+          assertEquals(
+              EngineOccupationTypeDTO.getName(), response.getOccupationTypes().get(0).getName());
         }
 
         @Nested

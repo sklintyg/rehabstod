@@ -35,11 +35,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.application.sjukfall.GetActiveSickLeavesServiceImpl;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallEnhet;
 
 @ExtendWith(MockitoExtension.class)
 class GetActiveSickLeavesServiceImplTest {

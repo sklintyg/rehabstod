@@ -27,26 +27,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaData;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.client.SparrtjanstClientService;
 import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.exception.SparrtjanstIntegrationException;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksResponseType;
 import se.riv.informationsecurity.authorization.blocking.v4.CheckBlocksResultType;
 import se.riv.informationsecurity.authorization.blocking.v4.CheckResultType;
 import se.riv.informationsecurity.authorization.blocking.v4.CheckStatusType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultCodeType;
 
-/**
- * Created by marced on 2018-09-28.
- */
+/** Created by marced on 2018-09-28. */
 @Service
 public class SparrtjanstIntegrationServiceImpl implements SparrtjanstIntegrationService {
 
   private static final Logger LOG =
       LoggerFactory.getLogger(SparrtjanstIntegrationServiceImpl.class);
 
-  @Autowired
-  private SparrtjanstClientService sparrtjanstClientService;
+  @Autowired private SparrtjanstClientService sparrtjanstClientService;
 
   @Override
   public void decorateWithBlockStatus(

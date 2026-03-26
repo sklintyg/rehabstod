@@ -67,8 +67,7 @@ public class DiagnosKapitel {
     this.name = name;
   }
 
-  public DiagnosKapitel() {
-  }
+  public DiagnosKapitel() {}
 
   public String getName() {
     return name;

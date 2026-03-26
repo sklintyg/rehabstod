@@ -23,9 +23,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.Lakare;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineOccupationTypeDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.Lakare;
 
 @Data
 @NoArgsConstructor

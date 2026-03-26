@@ -34,9 +34,7 @@ import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallIntyg;
 import se.inera.intyg.rehabstod.application.sjukfall.engine.testdata.SjukfallIntygGenerator;
 
-/**
- * Created by Magnus Ekstrand on 10/02/16.
- */
+/** Created by Magnus Ekstrand on 10/02/16. */
 @ExtendWith(MockitoExtension.class)
 class SjukfallIntygEnhetResolverReduceRightTest {
 

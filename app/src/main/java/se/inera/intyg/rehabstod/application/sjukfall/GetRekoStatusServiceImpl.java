@@ -21,11 +21,11 @@ package se.inera.intyg.rehabstod.application.sjukfall;
 import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.api.util.ControllerUtil;
+import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.GetRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
-import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
 
 @Service
 public class GetRekoStatusServiceImpl implements GetRekoStatusService {

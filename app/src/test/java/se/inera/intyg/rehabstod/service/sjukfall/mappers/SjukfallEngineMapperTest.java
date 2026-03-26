@@ -41,12 +41,12 @@ import se.inera.intyg.rehabstod.application.api.model.Diagnos;
 import se.inera.intyg.rehabstod.application.api.model.PatientData;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.api.model.SjukfallPatient;
-import se.inera.intyg.rehabstod.application.diagnos.DiagnosFactory;
-import se.inera.intyg.rehabstod.application.sjukfall.mappers.SjukfallEngineMapper;
-import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.application.certificate.IntygAccessControlMetaData;
+import se.inera.intyg.rehabstod.application.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.EngineRekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.application.sjukfall.mappers.SjukfallEngineMapper;
+import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
 
 /**
  * @author Magnus Ekstrand on 2017-09-22.
@@ -79,23 +79,20 @@ class SjukfallEngineMapperTest {
   private static final String REKO_STATUS_NAME = "REKO_1 Name";
   private static final LocalDate AKTIVTDATUM = LocalDate.now();
 
-  @Mock
-  private DiagnosFactory diagnosFactory;
+  @Mock private DiagnosFactory diagnosFactory;
 
-  @Mock
-  private PatientIdEncryption patientIdEncryption;
+  @Mock private PatientIdEncryption patientIdEncryption;
 
-  @InjectMocks
-  private SjukfallEngineMapper testee = new SjukfallEngineMapper();
+  @InjectMocks private SjukfallEngineMapper testee = new SjukfallEngineMapper();
 
   @BeforeEach
   void beforeEach() {
     when(diagnosFactory.getDiagnos(DIAGNOS, DIAGNOS_KOD, "Palindrom reumatism"))
         .thenReturn(createDiagnos(DIAGNOS, DIAGNOS_KOD, "Palindrom reumatism"));
     when(diagnosFactory.getDiagnos(
-        BIDIAGNOS,
-        "S666",
-        "Skada på multipla böjmuskler och deras senor på handleds- och handnivå"))
+            BIDIAGNOS,
+            "S666",
+            "Skada på multipla böjmuskler och deras senor på handleds- och handnivå"))
         .thenReturn(
             createDiagnos(
                 BIDIAGNOS,
@@ -159,7 +156,8 @@ class SjukfallEngineMapperTest {
   @Test
   void testMappingOfSjukfallPatient() {
     // given
-    se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
+    se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatient from =
+        createSjukfallPatient();
     Map<String, IntygAccessControlMetaData> intygAccessMetaData =
         createMockIAMD(from.getSjukfallIntygList().get(0).getIntygId(), true, true);
     // when
@@ -193,7 +191,8 @@ class SjukfallEngineMapperTest {
   @Test
   void testMappingOfSjukfallPatientClearDataVardgivare() {
     // given
-    se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
+    se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatient from =
+        createSjukfallPatient();
     Map<String, IntygAccessControlMetaData> intygAccessMetaData =
         createMockIAMD(from.getSjukfallIntygList().get(0).getIntygId(), false, true);
     // when
@@ -219,7 +218,8 @@ class SjukfallEngineMapperTest {
   @Test
   void testMappingOfSjukfallPatientClearDataVardenhet() {
     // given
-    se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
+    se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatient from =
+        createSjukfallPatient();
     Map<String, IntygAccessControlMetaData> intygAccessMetaData =
         createMockIAMD(from.getSjukfallIntygList().get(0).getIntygId(), true, false);
     // when
@@ -323,7 +323,8 @@ class SjukfallEngineMapperTest {
     return enhet;
   }
 
-  private se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatient createSjukfallPatient() {
+  private se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatient
+      createSjukfallPatient() {
 
     se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatient patient =
         new se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallPatient();
@@ -338,11 +339,12 @@ class SjukfallEngineMapperTest {
     return patient;
   }
 
-  private List<se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallIntyg> createSjukfallIntygList() {
+  private List<se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallIntyg>
+      createSjukfallIntygList() {
     return Arrays.asList(
         new se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallIntyg(
-            new se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallIntyg.SjukfallIntygBuilder(
-                createIntygData(), AKTIVTDATUM, MAX_DAGAR_SEDAN_AVSLUT)));
+            new se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallIntyg
+                .SjukfallIntygBuilder(createIntygData(), AKTIVTDATUM, MAX_DAGAR_SEDAN_AVSLUT)));
   }
 
   private se.inera.intyg.rehabstod.application.sjukfall.dto.SjukfallIntyg createSjukfallIntyg() {
@@ -378,14 +380,17 @@ class SjukfallEngineMapperTest {
   }
 
   private se.inera.intyg.rehabstod.application.sjukfall.dto.Patient createPatient() {
-    return se.inera.intyg.rehabstod.application.sjukfall.dto.Patient.create(PERSONNUMMER, PERSONNAMN);
+    return se.inera.intyg.rehabstod.application.sjukfall.dto.Patient.create(
+        PERSONNUMMER, PERSONNAMN);
   }
 
-  private se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKod createDiagnosKod(String diagnos) {
+  private se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKod createDiagnosKod(
+      String diagnos) {
     return se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKod.create(diagnos);
   }
 
-  private List<se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKod> createBiDiagnoser(String diagnos) {
+  private List<se.inera.intyg.rehabstod.application.sjukfall.dto.DiagnosKod> createBiDiagnoser(
+      String diagnos) {
     return Arrays.asList(createDiagnosKod(diagnos));
   }
 
@@ -407,10 +412,12 @@ class SjukfallEngineMapperTest {
   }
 
   private se.inera.intyg.rehabstod.application.sjukfall.dto.Vardgivare createVardivare() {
-    return se.inera.intyg.rehabstod.application.sjukfall.dto.Vardgivare.create(VARDGIVAREID, VARDGIVARENAMN);
+    return se.inera.intyg.rehabstod.application.sjukfall.dto.Vardgivare.create(
+        VARDGIVAREID, VARDGIVARENAMN);
   }
 
   private se.inera.intyg.rehabstod.application.sjukfall.dto.Vardenhet createVardenhet() {
-    return se.inera.intyg.rehabstod.application.sjukfall.dto.Vardenhet.create(VARDENHETID, VARDENHETNAMN);
+    return se.inera.intyg.rehabstod.application.sjukfall.dto.Vardenhet.create(
+        VARDENHETID, VARDENHETNAMN);
   }
 }
