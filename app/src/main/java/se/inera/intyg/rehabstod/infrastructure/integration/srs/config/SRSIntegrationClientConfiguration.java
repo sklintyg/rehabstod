@@ -30,13 +30,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateResponderInterface;
-import se.inera.intyg.rehabstod.infrastructure.integration.srs.config.properties.SrsProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.SrsProperties;
 
 // CHECKSTYLE:ON LineLength
 
 /**
- * Declares and bootstraps the Intygstjänst client for {@link
- * GetRiskPredictionForCertificateResponderInterface}
+ * Declares and bootstraps the Intygstjänst client for
+ * {@link GetRiskPredictionForCertificateResponderInterface}
  *
  * <p>Somewhat "hackish" use of profiles:
  *
@@ -64,14 +64,14 @@ public class SRSIntegrationClientConfiguration {
 
   @Bean
   public GetRiskPredictionForCertificateResponderInterface
-      getRiskPredictionForCertificateWebServiceClient() {
+  getRiskPredictionForCertificateWebServiceClient() {
     // CHECKSTYLE:OFF LineLength
     JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
     proxyFactoryBean.setAddress(srsWsUrl);
     proxyFactoryBean.setServiceClass(GetRiskPredictionForCertificateResponderInterface.class);
     GetRiskPredictionForCertificateResponderInterface
         getRiskPredictionForCertificateResponderInterface =
-            (GetRiskPredictionForCertificateResponderInterface) proxyFactoryBean.create();
+        (GetRiskPredictionForCertificateResponderInterface) proxyFactoryBean.create();
     Client client = ClientProxy.getClient(getRiskPredictionForCertificateResponderInterface);
     applyTimeouts(client);
     return getRiskPredictionForCertificateResponderInterface;

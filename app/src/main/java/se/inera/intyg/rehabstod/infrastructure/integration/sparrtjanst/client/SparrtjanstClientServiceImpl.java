@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
-import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.config.properties.SparrtjanstProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.SparrtjanstProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.exception.SparrtjanstIntegrationException;
 import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.util.SparrtjanstUtil;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
@@ -36,7 +36,9 @@ import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksType;
 import se.riv.informationsecurity.authorization.blocking.v4.InformationEntityType;
 
-/** Created by marced 2018-09-28. */
+/**
+ * Created by marced 2018-09-28.
+ */
 @Service
 public class SparrtjanstClientServiceImpl implements SparrtjanstClientService {
 

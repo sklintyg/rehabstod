@@ -28,7 +28,7 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.config.properties.SparrtjanstProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.SparrtjanstProperties;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
 
 // CHECKSTYLE:ON LineLength

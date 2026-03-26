@@ -33,12 +33,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.IntygData;
-import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.config.properties.SparrtjanstProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.SparrtjanstProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.util.SparrtjanstUtil;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksType;
 
-/** Created by marced on 2018-10-16. */
+/**
+ * Created by marced on 2018-10-16.
+ */
 @ExtendWith(MockitoExtension.class)
 class SparrtjanstClientServiceImplTest {
 
@@ -50,7 +52,8 @@ class SparrtjanstClientServiceImplTest {
   private LocalDateTime date1 = LocalDateTime.now().minusMonths(2);
   private LocalDateTime date2 = LocalDateTime.now().minusDays(1);
 
-  @Mock private CheckBlocksResponderInterface service;
+  @Mock
+  private CheckBlocksResponderInterface service;
 
   private SparrtjanstClientServiceImpl testee;
 

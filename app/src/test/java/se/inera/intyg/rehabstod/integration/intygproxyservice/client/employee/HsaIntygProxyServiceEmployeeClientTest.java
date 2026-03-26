@@ -38,14 +38,15 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.RequestBodyUriSpec;
 import org.springframework.web.client.RestClient.ResponseSpec;
-import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.config.properties.HsaIntygProxyServiceProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.HsaIntygProxyServiceProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto.employee.GetEmployeeRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto.employee.GetEmployeeResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
 class HsaIntygProxyServiceEmployeeClientTest {
 
-  @Mock private RestClient restClient;
+  @Mock
+  private RestClient restClient;
 
   private HsaIntygProxyServiceEmployeeClient hsaIntygProxyServiceEmployeeClient;
 

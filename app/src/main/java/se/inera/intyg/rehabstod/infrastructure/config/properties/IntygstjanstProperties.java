@@ -16,14 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.infrastructure.integration.srs.config.properties;
+package se.inera.intyg.rehabstod.infrastructure.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "app.integration.srs")
-public record SrsProperties(
+@ConfigurationProperties(prefix = "app.integration.intygstjanst")
+public record IntygstjanstProperties(
+    String scheme,
+    String baseUrl,
+    int port,
+    String hostUrl,
     String logicalAddress,
-    String getRiskPredictionUrl,
-    String getDiagnosisCodesUrl,
-    int connectionTimeout,
-    int receiveTimeout) {}
+    String listSickLeavesForPersonUrl,
+    ServiceTimeouts service,
+    RestTimeouts rest) {
+
+  public record ServiceTimeouts(int connectionTimeout, int receiveTimeout) {
+
+  }
+
+  public record RestTimeouts(int connectionRequestTimeout, int connectionTimeout) {
+
+  }
+}

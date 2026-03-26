@@ -31,7 +31,7 @@ import org.slf4j.MDC;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import se.inera.intyg.rehabstod.infrastructure.integration.wc.config.properties.WebcertProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.WebcertProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationResponse;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;

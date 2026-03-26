@@ -16,22 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.infrastructure.integration.it.config.properties;
+package se.inera.intyg.rehabstod.infrastructure.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "app.integration.intygstjanst")
-public record IntygstjanstProperties(
-    String scheme,
-    String baseUrl,
-    int port,
-    String hostUrl,
-    String logicalAddress,
-    String listSickLeavesForPersonUrl,
-    ServiceTimeouts service,
-    RestTimeouts rest) {
+@ConfigurationProperties(prefix = "app.ntjp")
+public record NtjpProperties(
+    String baseUrl, Certificate certificate, String keyManagerPassword, Truststore truststore) {
 
-  public record ServiceTimeouts(int connectionTimeout, int receiveTimeout) {}
+  public record Certificate(String file, String type, String password) {
 
-  public record RestTimeouts(int connectionRequestTimeout, int connectionTimeout) {}
+  }
+
+  public record Truststore(String file, String type, String password) {
+
+  }
 }

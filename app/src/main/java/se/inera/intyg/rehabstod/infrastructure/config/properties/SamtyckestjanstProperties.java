@@ -16,9 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.logging.config;
+package se.inera.intyg.rehabstod.infrastructure.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "app.security")
-public record SecurityProperties(String hashSalt, String aesEncryptionKey) {}
+@ConfigurationProperties(prefix = "app.integration.samtyckestjanst")
+public record SamtyckestjanstProperties(
+    String logicalAddress,
+    String checkConsentUrl,
+    String registerExtendedConsentUrl,
+    int connectionTimeout,
+    int receiveTimeout) {
+
+}

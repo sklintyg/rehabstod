@@ -38,8 +38,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.RequestBodyUriSpec;
 import org.springframework.web.client.RestClient.ResponseSpec;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.HsaIntygProxyServiceProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.Unit;
-import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.config.properties.HsaIntygProxyServiceProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto.organization.GetUnitRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto.organization.GetUnitResponseDTO;
 
@@ -49,7 +49,8 @@ class HsaIntygProxyServiceUnitClientTest {
   private static final Unit UNIT = new Unit();
   private static final String HSA_ID = "hsaId";
 
-  @Mock private RestClient restClient;
+  @Mock
+  private RestClient restClient;
 
   private HsaIntygProxyServiceUnitClient hsaIntygProxyServiceUnitClient;
 

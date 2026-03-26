@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.rehabstod.infrastructure.integration.samtyckestjanst.config.properties.NtjpProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.NtjpProperties;
 
 @Component
 @Profile("!rhs-samtyckestjanst-stub")

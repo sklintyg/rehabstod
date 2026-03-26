@@ -24,7 +24,7 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
 import java.nio.charset.StandardCharsets;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.rehabstod.logging.config.SecurityProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.SecurityProperties;
 
 @Component
 public class HashUtility {

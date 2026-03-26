@@ -16,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.infrastructure.integration.wc.config.properties;
+package se.inera.intyg.rehabstod.infrastructure.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "app.integration.webcert")
-public record WebcertProperties(
-    String scheme,
-    String baseUrl,
-    int port,
-    String launchUrlTemplate,
-    String sithsIdpUrl,
-    int getAdditionsMaxAgeDays) {}
+@ConfigurationProperties(prefix = "app.integration.intyg-proxy-service")
+public record PuIntygProxyServiceProperties(
+    String baseUrl, String personEndpoint, String personsEndpoint) {
+
+}

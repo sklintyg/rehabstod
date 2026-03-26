@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.infrastructure.integration.pu.intygproxyservice
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
-import se.inera.intyg.rehabstod.infrastructure.integration.pu.intygproxyservice.config.properties.PuIntygProxyServiceProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.PuIntygProxyServiceProperties;
 
 @Configuration
 public class PURestClientConfig {

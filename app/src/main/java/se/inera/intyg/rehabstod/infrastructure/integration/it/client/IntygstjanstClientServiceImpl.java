@@ -24,14 +24,16 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonType;
-import se.inera.intyg.rehabstod.infrastructure.integration.it.config.properties.IntygstjanstProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.IntygstjanstProperties;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 
 // CHECKSTYLE:ON LineLength
 
-/** Created by eriklupander on 2016-01-29. */
+/**
+ * Created by eriklupander on 2016-01-29.
+ */
 @Service
 public class IntygstjanstClientServiceImpl implements IntygstjanstClientService {
 

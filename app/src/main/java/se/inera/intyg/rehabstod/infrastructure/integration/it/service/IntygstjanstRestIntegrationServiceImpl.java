@@ -38,7 +38,7 @@ import org.springframework.web.client.RestClient;
 import se.inera.intyg.rehabstod.application.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.rehabstod.application.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.rehabstod.application.certificate.dto.TypedCertificateRequest;
-import se.inera.intyg.rehabstod.infrastructure.integration.it.config.properties.IntygstjanstProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.IntygstjanstProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.GetRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.PopulateFiltersRequestDTO;

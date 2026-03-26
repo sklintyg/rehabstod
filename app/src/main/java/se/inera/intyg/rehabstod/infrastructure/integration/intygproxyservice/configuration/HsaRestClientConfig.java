@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.co
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
-import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.config.properties.HsaIntygProxyServiceProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.HsaIntygProxyServiceProperties;
 
 @Configuration
 public class HsaRestClientConfig {

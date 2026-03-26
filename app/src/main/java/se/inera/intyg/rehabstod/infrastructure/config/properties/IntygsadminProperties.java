@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.config.properties;
+package se.inera.intyg.rehabstod.infrastructure.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "app.integration.sparrtjanst")
-public record SparrtjanstProperties(
-    String logicalAddress, String checkBlocksUrl, int connectionTimeout, int receiveTimeout) {}
+@ConfigurationProperties(prefix = "app.integration.intygsadmin")
+public record IntygsadminProperties(String url, String cron, long cacheExpirySeconds) {
+
+}

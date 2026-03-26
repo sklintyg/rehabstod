@@ -16,15 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.infrastructure.integration.samtyckestjanst.config.properties;
+package se.inera.intyg.rehabstod.infrastructure.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "app.ntjp")
-public record NtjpProperties(
-    String baseUrl, Certificate certificate, String keyManagerPassword, Truststore truststore) {
+@ConfigurationProperties(prefix = "app.integration.webcert")
+public record WebcertProperties(
+    String scheme,
+    String baseUrl,
+    int port,
+    String launchUrlTemplate,
+    String sithsIdpUrl,
+    int getAdditionsMaxAgeDays) {
 
-  public record Certificate(String file, String type, String password) {}
-
-  public record Truststore(String file, String type, String password) {}
 }

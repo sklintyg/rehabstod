@@ -39,8 +39,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.RequestBodyUriSpec;
 import org.springframework.web.client.RestClient.ResponseSpec;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.HsaIntygProxyServiceProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.CredentialInformation;
-import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.config.properties.HsaIntygProxyServiceProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto.authorization.GetCredentialInformationResponseDTO;
 
@@ -50,7 +50,8 @@ class HsaIntygProxyServiceCredentialInformationForPersonClientTest {
   private static final List<CredentialInformation> CREDENTIAL_INFORMATIONS =
       List.of(new CredentialInformation());
 
-  @Mock private RestClient restClient;
+  @Mock
+  private RestClient restClient;
 
   private HsaIntygProxyServiceCredentialInformationForPersonClient
       credentialInformationForPersonClient;

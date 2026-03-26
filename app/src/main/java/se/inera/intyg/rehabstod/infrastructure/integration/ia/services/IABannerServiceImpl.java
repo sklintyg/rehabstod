@@ -31,7 +31,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.rehabstod.infrastructure.integration.ia.config.properties.IntygsadminProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.IntygsadminProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.ia.constants.IaCacheConstants;
 import se.inera.intyg.rehabstod.infrastructure.integration.ia.model.Application;
 import se.inera.intyg.rehabstod.infrastructure.integration.ia.model.Banner;
@@ -44,7 +44,8 @@ public class IABannerServiceImpl implements IABannerService {
 
   private static final Logger LOG = LoggerFactory.getLogger(IABannerServiceImpl.class);
 
-  @Qualifier("iaRestTemplate") private final RestTemplate restTemplate;
+  @Qualifier("iaRestTemplate")
+  private final RestTemplate restTemplate;
 
   private final String iaUrl;
 

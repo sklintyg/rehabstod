@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.rehabstod.infrastructure.integration.it.config.properties.IntygstjanstProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.IntygstjanstProperties;
 
 @Configuration
 public class IntygstjanstRestIntegrationConfiguration {

@@ -25,7 +25,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.rehabstod.infrastructure.integration.samtyckestjanst.config.properties.SamtyckestjanstProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.SamtyckestjanstProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.samtyckestjanst.exception.SamtyckestjanstIntegrationException;
 import se.inera.intyg.rehabstod.infrastructure.integration.samtyckestjanst.util.SamtyckestjanstUtil;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
@@ -41,7 +41,9 @@ import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.AssertionTypeType;
 import se.riv.informationsecurity.authorization.consent.v2.ScopeType;
 
-/** Created by Magnus Ekstrand 2018-10-10. */
+/**
+ * Created by Magnus Ekstrand 2018-10-10.
+ */
 @Service
 public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientService {
 
@@ -93,7 +95,7 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
 
   /**
    * @see SamtyckestjanstClientService#registerExtendedConsent(String, String, String, Personnummer,
-   *     String, LocalDateTime, LocalDateTime, ActionType) registerConsent
+   * String, LocalDateTime, LocalDateTime, ActionType) registerConsent
    */
   @Override
   @PerformanceLogging(

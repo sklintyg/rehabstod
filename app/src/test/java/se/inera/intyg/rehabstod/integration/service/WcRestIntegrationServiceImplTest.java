@@ -45,7 +45,7 @@ import org.slf4j.MDC;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
-import se.inera.intyg.rehabstod.infrastructure.integration.wc.config.properties.WebcertProperties;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.WebcertProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.WcRestIntegrationServiceImpl;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationResponse;
@@ -62,13 +62,17 @@ class WcRestIntegrationServiceImplTest {
   private static final String SESSION_ID = "test-session-id";
   public static final int MAX_DAYS_OF_UNANSWERED_COMMUNICATION = 30;
 
-  @Mock private RestClient wcRestClient;
+  @Mock
+  private RestClient wcRestClient;
 
-  @Mock private RestClient.RequestBodyUriSpec requestBodyUriSpec;
+  @Mock
+  private RestClient.RequestBodyUriSpec requestBodyUriSpec;
 
-  @Mock private RestClient.RequestBodySpec requestBodySpec;
+  @Mock
+  private RestClient.RequestBodySpec requestBodySpec;
 
-  @Mock private RestClient.ResponseSpec responseSpec;
+  @Mock
+  private RestClient.ResponseSpec responseSpec;
 
   private WcRestIntegrationServiceImpl service;
 
