@@ -37,8 +37,8 @@ import se.inera.intyg.rehabstod.application.sjukfall.testability.TestabilityServ
 import se.inera.intyg.rehabstod.application.testability.FakeLoginService;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.CreateSickLeaveRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.TestDataOptionsDTO;
-import se.inera.intyg.rehabstod.logging.MdcLogConstants;
-import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 
 @Slf4j
 @RestController

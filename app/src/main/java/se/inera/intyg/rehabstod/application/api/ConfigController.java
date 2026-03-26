@@ -28,10 +28,12 @@ import se.inera.intyg.rehabstod.application.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.infrastructure.dynamiclink.model.DynamicLink;
 import se.inera.intyg.rehabstod.infrastructure.dynamiclink.service.DynamicLinkService;
 import se.inera.intyg.rehabstod.infrastructure.integration.ia.services.IABannerService;
-import se.inera.intyg.rehabstod.logging.MdcLogConstants;
-import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 
-/** Created by marced on 2016-02-09. */
+/**
+ * Created by marced on 2016-02-09.
+ */
 @RestController
 @RequestMapping("/api/config")
 public class ConfigController {
@@ -41,17 +43,21 @@ public class ConfigController {
   protected static final String PROJECT_VERSION_PROPERTY = "project.version";
   protected static final String SITHS_IDP_URL = "app.integration.webcert.siths-idp-url";
 
-  @Autowired private DiagnosKapitelService diagnosKapitelService;
+  @Autowired
+  private DiagnosKapitelService diagnosKapitelService;
 
-  @Autowired private DynamicLinkService dynamicLinkService;
+  @Autowired
+  private DynamicLinkService dynamicLinkService;
 
-  @Autowired private IABannerService iaBannerService;
+  @Autowired
+  private IABannerService iaBannerService;
 
   /**
    * Note - using Environment injection instead of @Value since the latter has some issues when
    * injected into the context of this @RestController.
    */
-  @Autowired private Environment env;
+  @Autowired
+  private Environment env;
 
   @RequestMapping(value = "")
   @PerformanceLogging(

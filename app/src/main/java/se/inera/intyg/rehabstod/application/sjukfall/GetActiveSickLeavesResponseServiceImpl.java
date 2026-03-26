@@ -33,10 +33,10 @@ import se.inera.intyg.rehabstod.application.sjukfall.nameresolver.SjukfallEmploy
 import se.inera.intyg.rehabstod.application.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
-import se.inera.intyg.rehabstod.logging.MonitoringLogService;
-import se.inera.intyg.rehabstod.logging.SickLeaveLogMessageFactory;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.infrastructure.logging.MonitoringLogService;
+import se.inera.intyg.rehabstod.infrastructure.logging.SickLeaveLogMessageFactory;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
 
 @Service
 public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeavesResponseService {

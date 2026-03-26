@@ -48,12 +48,14 @@ import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Va
 import se.inera.intyg.rehabstod.infrastructure.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.logging.pdl.LogService;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.infrastructure.logging.pdl.LogService;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-/** Created by Magnus Ekstrand on 03/02/16. */
+/**
+ * Created by Magnus Ekstrand on 03/02/16.
+ */
 @ExtendWith(MockitoExtension.class)
 class ConsentControllerTest {
 
@@ -65,13 +67,17 @@ class ConsentControllerTest {
 
   private static final int DAYS = 30;
 
-  @Mock LogService logServiceMock;
+  @Mock
+  LogService logServiceMock;
 
-  @Mock private UserService userServiceMock;
+  @Mock
+  private UserService userServiceMock;
 
-  @Mock private ConsentService consentServiceMock;
+  @Mock
+  private ConsentService consentServiceMock;
 
-  @InjectMocks ConsentController testee = new ConsentController();
+  @InjectMocks
+  ConsentController testee = new ConsentController();
 
   @BeforeEach
   void before() {

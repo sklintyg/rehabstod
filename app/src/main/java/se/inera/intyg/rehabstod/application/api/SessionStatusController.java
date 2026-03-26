@@ -27,8 +27,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.application.api.dto.GetSessionStatusResponse;
 import se.inera.intyg.rehabstod.infrastructure.security.filter.SessionTimeoutFilter;
-import se.inera.intyg.rehabstod.logging.MdcLogConstants;
-import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 
 /**
  * Reports basic information about the current session status. This controller works in cooperation
@@ -42,7 +42,7 @@ import se.inera.intyg.rehabstod.logging.PerformanceLogging;
  * @see SessionTimeoutFilter
  * @see org.springframework.security.web.context.SecurityContextRepository SecurityContextRepository
  * @see org.springframework.security.web.context.HttpSessionSecurityContextRepository
- *     HttpSessionSecurityContextRepository
+ * HttpSessionSecurityContextRepository
  */
 @RestController
 @RequestMapping(SessionStatusController.SESSION_STATUS_REQUEST_MAPPING)

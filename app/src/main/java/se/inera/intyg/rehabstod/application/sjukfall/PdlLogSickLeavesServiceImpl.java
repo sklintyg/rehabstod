@@ -28,9 +28,9 @@ import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityStore;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.logging.pdl.LogService;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.infrastructure.logging.pdl.LogService;
 
 @Service
 public class PdlLogSickLeavesServiceImpl implements PdlLogSickLeavesService {

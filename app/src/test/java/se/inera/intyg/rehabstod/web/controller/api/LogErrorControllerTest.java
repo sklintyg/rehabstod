@@ -28,14 +28,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.application.api.LogErrorController;
 import se.inera.intyg.rehabstod.application.api.dto.ErrorDataDTO;
 import se.inera.intyg.rehabstod.application.api.dto.ErrorLogRequestDTO;
-import se.inera.intyg.rehabstod.logging.error.ErrorLogService;
+import se.inera.intyg.rehabstod.infrastructure.logging.error.ErrorLogService;
 
 @ExtendWith(MockitoExtension.class)
 class LogErrorControllerTest {
 
-  @Mock private ErrorLogService errorLogService;
+  @Mock
+  private ErrorLogService errorLogService;
 
-  @InjectMocks private LogErrorController logErrorController;
+  @InjectMocks
+  private LogErrorController logErrorController;
 
   @Test
   void shallCallErrorLogService() {

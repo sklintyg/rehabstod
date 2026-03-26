@@ -27,9 +27,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.application.api.dto.ErrorDataDTO;
-import se.inera.intyg.rehabstod.logging.MdcLogConstants;
-import se.inera.intyg.rehabstod.logging.PerformanceLogging;
-import se.inera.intyg.rehabstod.logging.error.ErrorLogService;
+import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.error.ErrorLogService;
 
 @RestController
 @RequestMapping("/api/log")

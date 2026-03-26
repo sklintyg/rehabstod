@@ -31,8 +31,8 @@ import se.inera.intyg.rehabstod.infrastructure.security.auth.UnitSelectedAssuran
 import se.inera.intyg.rehabstod.infrastructure.security.filter.PrincipalUpdatedFilter;
 import se.inera.intyg.rehabstod.infrastructure.security.filter.RequestContextHolderUpdateFilter;
 import se.inera.intyg.rehabstod.infrastructure.security.filter.SessionTimeoutFilter;
-import se.inera.intyg.rehabstod.logging.MdcServletFilter;
-import se.inera.intyg.rehabstod.logging.MdcUserServletFilter;
+import se.inera.intyg.rehabstod.infrastructure.logging.MdcServletFilter;
+import se.inera.intyg.rehabstod.infrastructure.logging.MdcUserServletFilter;
 
 @Configuration
 public class FilterConfig {
@@ -59,7 +59,7 @@ public class FilterConfig {
   // --- Filter #3 ---
   @Bean
   public FilterRegistrationBean<RequestContextHolderUpdateFilter>
-      requestContextHolderUpdateFilterRegistration() {
+  requestContextHolderUpdateFilterRegistration() {
     FilterRegistrationBean<RequestContextHolderUpdateFilter> reg = new FilterRegistrationBean<>();
     reg.setFilter(new RequestContextHolderUpdateFilter());
     reg.addUrlPatterns("/*");
@@ -120,8 +120,8 @@ public class FilterConfig {
   // --- Filter #9 ---
   @Bean
   public FilterRegistrationBean<UnitSelectedAssuranceFilter>
-      unitSelectedAssuranceFilterRegistration(
-          UnitSelectedAssuranceFilter unitSelectedAssuranceFilter) {
+  unitSelectedAssuranceFilterRegistration(
+      UnitSelectedAssuranceFilter unitSelectedAssuranceFilter) {
     unitSelectedAssuranceFilter.setIgnoredUrls(
         SESSION_STATUS_CHECK_URI + ",/api/config,/api/user,/api/user/andraenhet");
     FilterRegistrationBean<UnitSelectedAssuranceFilter> reg = new FilterRegistrationBean<>();
@@ -135,8 +135,8 @@ public class FilterConfig {
   // --- Filter #10 ---
   @Bean
   public FilterRegistrationBean<PdlConsentGivenAssuranceFilter>
-      pdlConsentGivenAssuranceFilterRegistration(
-          PdlConsentGivenAssuranceFilter pdlConsentGivenAssuranceFilter) {
+  pdlConsentGivenAssuranceFilterRegistration(
+      PdlConsentGivenAssuranceFilter pdlConsentGivenAssuranceFilter) {
     pdlConsentGivenAssuranceFilter.setIgnoredUrls(
         SESSION_STATUS_CHECK_URI
             + ","

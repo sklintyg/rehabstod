@@ -71,12 +71,14 @@ import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.Authori
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Feature;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.Role;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.logging.pdl.LogService;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.infrastructure.logging.pdl.LogService;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-/** Created by Magnus Ekstrand on 03/02/16. */
+/**
+ * Created by Magnus Ekstrand on 03/02/16.
+ */
 @ExtendWith(MockitoExtension.class)
 class SjukfallControllerTest {
 
@@ -106,14 +108,20 @@ class SjukfallControllerTest {
         }
       };
 
-  @Mock RehabstodUser rehabstodUser;
-  @Mock UserService userService;
-  @Mock LogService logService;
-  @Mock private SjukfallService sjukfallService;
+  @Mock
+  RehabstodUser rehabstodUser;
+  @Mock
+  UserService userService;
+  @Mock
+  LogService logService;
+  @Mock
+  private SjukfallService sjukfallService;
 
-  @InjectMocks private SjukfallController sjukfallController;
+  @InjectMocks
+  private SjukfallController sjukfallController;
 
-  @Mock private PatientIdEncryption patientIdEncryption;
+  @Mock
+  private PatientIdEncryption patientIdEncryption;
 
   @Nested
   class GetSjukfallByUnitTests {
@@ -158,14 +166,14 @@ class SjukfallControllerTest {
 
       try (MockedStatic<PDLActivityStore> pdlActivityStore = mockStatic(PDLActivityStore.class)) {
         when(sjukfallService.getByPatient(
-                anyString(),
-                anyString(),
-                isNull(),
-                anyString(),
-                any(Urval.class),
-                any(IntygParametrar.class),
-                anyCollection(),
-                anyCollection()))
+            anyString(),
+            anyString(),
+            isNull(),
+            anyString(),
+            any(Urval.class),
+            any(IntygParametrar.class),
+            anyCollection(),
+            anyCollection()))
             .thenReturn(new SjukfallPatientResponse(result, new SjfMetaData(), false, false));
 
         sjukfallController.getSjukfallForPatient(request);
@@ -212,14 +220,14 @@ class SjukfallControllerTest {
 
       try (MockedStatic<PDLActivityStore> pdlActivityStore = mockStatic(PDLActivityStore.class)) {
         when(sjukfallService.getByPatient(
-                anyString(),
-                anyString(),
-                isNull(),
-                anyString(),
-                any(Urval.class),
-                any(IntygParametrar.class),
-                anyCollection(),
-                anyCollection()))
+            anyString(),
+            anyString(),
+            isNull(),
+            anyString(),
+            any(Urval.class),
+            any(IntygParametrar.class),
+            anyCollection(),
+            anyCollection()))
             .thenReturn(new SjukfallPatientResponse(result, new SjfMetaData(), false, false));
 
         sjukfallController.getSjukfallForPatient(request);
@@ -261,7 +269,7 @@ class SjukfallControllerTest {
       request.setPatientId(expectedPatientId);
 
       when(sjukfallService.getByPatient(
-              any(), any(), any(), patientIdCaptor.capture(), any(), any(), any(), any()))
+          any(), any(), any(), patientIdCaptor.capture(), any(), any(), any(), any()))
           .thenReturn(mock(SjukfallPatientResponse.class));
 
       sjukfallController.getSjukfallForPatient(request);
@@ -280,7 +288,7 @@ class SjukfallControllerTest {
       when(patientIdEncryption.decrypt(encryptedPatientId)).thenReturn(expectedPatientId);
 
       when(sjukfallService.getByPatient(
-              any(), any(), any(), patientIdCaptor.capture(), any(), any(), any(), any()))
+          any(), any(), any(), patientIdCaptor.capture(), any(), any(), any(), any()))
           .thenReturn(mock(SjukfallPatientResponse.class));
 
       sjukfallController.getSjukfallForPatient(request);
@@ -309,14 +317,14 @@ class SjukfallControllerTest {
 
       when(userService.getUser()).thenReturn(user);
       when(sjukfallService.getByPatient(
-              anyString(),
-              anyString(),
-              anyString(),
-              anyString(),
-              any(Urval.class),
-              any(IntygParametrar.class),
-              anyCollection(),
-              anyCollection()))
+          anyString(),
+          anyString(),
+          anyString(),
+          anyString(),
+          any(Urval.class),
+          any(IntygParametrar.class),
+          anyCollection(),
+          anyCollection()))
           .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false, false));
 
       sjukfallController.getSjukfallForPatient(request);
@@ -344,14 +352,14 @@ class SjukfallControllerTest {
       when(userService.getUser()).thenReturn(user);
 
       when(sjukfallService.getByPatient(
-              anyString(),
-              anyString(),
-              anyString(),
-              anyString(),
-              any(Urval.class),
-              any(IntygParametrar.class),
-              anyCollection(),
-              anyCollection()))
+          anyString(),
+          anyString(),
+          anyString(),
+          anyString(),
+          any(Urval.class),
+          any(IntygParametrar.class),
+          anyCollection(),
+          anyCollection()))
           .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false, false));
 
       sjukfallController.getSjukfallForPatient(request);
@@ -389,14 +397,14 @@ class SjukfallControllerTest {
 
       when(userService.getUser()).thenReturn(user);
       when(sjukfallService.getByPatient(
-              anyString(),
-              anyString(),
-              anyString(),
-              anyString(),
-              any(Urval.class),
-              any(IntygParametrar.class),
-              anyCollection(),
-              anyCollection()))
+          anyString(),
+          anyString(),
+          anyString(),
+          anyString(),
+          any(Urval.class),
+          any(IntygParametrar.class),
+          anyCollection(),
+          anyCollection()))
           .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false, false));
 
       sjukfallController.getSjukfallForPatient(request);
@@ -441,14 +449,14 @@ class SjukfallControllerTest {
 
       when(userService.getUser()).thenReturn(user);
       when(sjukfallService.getByPatient(
-              anyString(),
-              anyString(),
-              anyString(),
-              anyString(),
-              any(Urval.class),
-              any(IntygParametrar.class),
-              anyCollection(),
-              anyCollection()))
+          anyString(),
+          anyString(),
+          anyString(),
+          anyString(),
+          any(Urval.class),
+          any(IntygParametrar.class),
+          anyCollection(),
+          anyCollection()))
           .thenReturn(
               new SjukfallPatientResponse(listOfSjukfallPatient, new SjfMetaData(), false, false));
 

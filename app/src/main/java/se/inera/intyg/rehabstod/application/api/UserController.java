@@ -43,8 +43,8 @@ import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPrefer
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.infrastructure.security.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.infrastructure.security.authorities.CommonAuthoritiesResolver;
-import se.inera.intyg.rehabstod.logging.MdcLogConstants;
-import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 
 @RestController
 @RequestMapping("/api/user")
@@ -53,15 +53,20 @@ public class UserController {
   private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
   private static final int ACCESSTOKEN_EXPIRE_LIMIT_MINUTES = 10;
 
-  @Autowired private UserService userService;
+  @Autowired
+  private UserService userService;
 
-  @Autowired private UserPreferencesService userPreferencesService;
+  @Autowired
+  private UserPreferencesService userPreferencesService;
 
-  @Autowired private AnvandarPreferenceRepository anvandarPreferenceRepository;
+  @Autowired
+  private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
-  @Autowired private RehabstodUnitChangeService rehabstodUnitChangeService;
+  @Autowired
+  private RehabstodUnitChangeService rehabstodUnitChangeService;
 
-  @Autowired private CommonAuthoritiesResolver commonAuthoritiesResolver;
+  @Autowired
+  private CommonAuthoritiesResolver commonAuthoritiesResolver;
 
   @RequestMapping(value = "", method = RequestMethod.GET)
   public GetUserResponse getUser() {
@@ -69,7 +74,9 @@ public class UserController {
     return new GetUserResponse(user);
   }
 
-  /** Changes the selected care unit in the security context for the logged in user. */
+  /**
+   * Changes the selected care unit in the security context for the logged in user.
+   */
   @RequestMapping(
       value = "/andraenhet",
       method = RequestMethod.POST,

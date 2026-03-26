@@ -18,10 +18,10 @@
  */
 package se.inera.intyg.rehabstod.infrastructure.integration.it.service;
 
-import static se.inera.intyg.rehabstod.logging.MdcHelper.LOG_SESSION_ID_HEADER;
-import static se.inera.intyg.rehabstod.logging.MdcHelper.LOG_TRACE_ID_HEADER;
-import static se.inera.intyg.rehabstod.logging.MdcLogConstants.SESSION_ID_KEY;
-import static se.inera.intyg.rehabstod.logging.MdcLogConstants.TRACE_ID_KEY;
+import static se.inera.intyg.rehabstod.infrastructure.logging.MdcHelper.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.rehabstod.infrastructure.logging.MdcHelper.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants.SESSION_ID_KEY;
+import static se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants.TRACE_ID_KEY;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -46,8 +46,8 @@ import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.PopulateFilter
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesResponseDTO;
-import se.inera.intyg.rehabstod.logging.MdcLogConstants;
-import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 
 @Profile("!rhs-it-stub")
 @Service

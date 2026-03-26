@@ -26,14 +26,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.application.api.dto.ErrorLogRequestDTO;
-import se.inera.intyg.rehabstod.logging.MonitoringLogService;
-import se.inera.intyg.rehabstod.logging.error.ErrorLogServiceImpl;
+import se.inera.intyg.rehabstod.infrastructure.logging.MonitoringLogService;
+import se.inera.intyg.rehabstod.infrastructure.logging.error.ErrorLogServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class ErrorLogServiceImplTest {
 
-  @Mock private MonitoringLogService monitoringLogService;
-  @InjectMocks private ErrorLogServiceImpl errorLogService;
+  @Mock
+  private MonitoringLogService monitoringLogService;
+  @InjectMocks
+  private ErrorLogServiceImpl errorLogService;
 
   private static final String ERROR_MESSAGE = "errorMessage";
   private static final String ERROR_ID = "errorId";

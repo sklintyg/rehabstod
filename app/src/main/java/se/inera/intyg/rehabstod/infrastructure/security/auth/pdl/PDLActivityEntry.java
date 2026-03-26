@@ -20,8 +20,8 @@ package se.inera.intyg.rehabstod.infrastructure.security.auth.pdl;
 
 import java.io.Serializable;
 import java.util.Objects;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
 
 /**
  * @author marced on 22/02/16.

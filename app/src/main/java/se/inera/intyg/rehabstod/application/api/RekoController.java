@@ -29,8 +29,8 @@ import se.inera.intyg.rehabstod.application.api.dto.GetRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.application.sjukfall.CreateRekoStatusService;
 import se.inera.intyg.rehabstod.application.sjukfall.GetRekoStatusService;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.RekoStatusDTO;
-import se.inera.intyg.rehabstod.logging.MdcLogConstants;
-import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 
 @RestController
 @RequestMapping("/api/reko")

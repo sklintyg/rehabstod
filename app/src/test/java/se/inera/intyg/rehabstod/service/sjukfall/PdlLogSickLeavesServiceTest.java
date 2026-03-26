@@ -44,18 +44,21 @@ import se.inera.intyg.rehabstod.infrastructure.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.logging.pdl.LogService;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.infrastructure.logging.pdl.LogService;
 
 @ExtendWith(MockitoExtension.class)
 class PdlLogSickLeavesServiceTest {
 
-  @Mock UserService userService;
+  @Mock
+  UserService userService;
 
-  @Mock LogService logService;
+  @Mock
+  LogService logService;
 
-  @InjectMocks PdlLogSickLeavesServiceImpl pdlLogSickLeavesService;
+  @InjectMocks
+  PdlLogSickLeavesServiceImpl pdlLogSickLeavesService;
 
   RehabstodUser user;
   SelectableVardenhet unit;

@@ -61,9 +61,9 @@ import se.inera.intyg.rehabstod.infrastructure.integration.it.service.Intygstjan
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityStore;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.logging.pdl.LogService;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.infrastructure.logging.pdl.LogService;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 @Service
@@ -309,13 +309,13 @@ public class CertificateServiceImpl implements CertificateService {
 
     if (c.getUnAnsweredComplement() > 0
         && containsIgnoreCase(
-            String.format("Komplettering (%d)", c.getUnAnsweredComplement()), searchText)) {
+        String.format("Komplettering (%d)", c.getUnAnsweredComplement()), searchText)) {
       return true;
     }
 
     if (c.getUnAnsweredOther() > 0
         && containsIgnoreCase(
-            String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()), searchText)) {
+        String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()), searchText)) {
       return true;
     }
 

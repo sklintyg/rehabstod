@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.application.filter.PopulateFiltersService;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.PopulateLUFilterResponseDTO;
-import se.inera.intyg.rehabstod.logging.MdcLogConstants;
-import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 
 @RestController
 @RequestMapping("/api/lu")

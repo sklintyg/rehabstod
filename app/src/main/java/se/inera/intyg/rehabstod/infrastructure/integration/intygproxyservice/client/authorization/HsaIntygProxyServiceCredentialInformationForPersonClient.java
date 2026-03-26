@@ -31,8 +31,8 @@ import org.springframework.web.client.RestClient;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto.authorization.GetCredentialInformationRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.intygproxyservice.dto.authorization.GetCredentialInformationResponseDTO;
-import se.inera.intyg.rehabstod.logging.MdcLogConstants;
-import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 
 @Service
 public class HsaIntygProxyServiceCredentialInformationForPersonClient {

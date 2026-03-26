@@ -30,7 +30,7 @@ import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredQAs;
-import se.inera.intyg.rehabstod.logging.SickLeaveLogMessageFactory;
+import se.inera.intyg.rehabstod.infrastructure.logging.SickLeaveLogMessageFactory;
 
 @Service
 public class UnansweredCommunicationDecoratorServiceImpl

@@ -37,8 +37,8 @@ import se.inera.intyg.rehabstod.application.api.dto.GetLUCertificatesForPersonRe
 import se.inera.intyg.rehabstod.application.api.dto.GetLUCertificatesForPersonResponse;
 import se.inera.intyg.rehabstod.application.certificate.CertificateService;
 import se.inera.intyg.rehabstod.application.sjukfall.util.PatientIdEncryption;
-import se.inera.intyg.rehabstod.logging.MdcLogConstants;
-import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 
 @RestController
 @RequestMapping("/api/certificate")

@@ -28,7 +28,7 @@ import se.inera.intyg.rehabstod.application.api.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.application.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.infrastructure.integration.it.service.IntygstjanstRestIntegrationService;
-import se.inera.intyg.rehabstod.logging.SickLeaveLogMessageFactory;
+import se.inera.intyg.rehabstod.infrastructure.logging.SickLeaveLogMessageFactory;
 
 @Service
 public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesService {

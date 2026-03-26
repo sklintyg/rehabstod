@@ -34,17 +34,21 @@ import se.inera.intyg.rehabstod.application.sjukfall.GetActiveSickLeavesResponse
 import se.inera.intyg.rehabstod.application.sjukfall.GetSickLeaveSummaryService;
 import se.inera.intyg.rehabstod.application.sjukfall.PdlLogSickLeavesService;
 import se.inera.intyg.rehabstod.application.sjukfall.dto.SickLeaveSummary;
-import se.inera.intyg.rehabstod.logging.MdcLogConstants;
-import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 
 @RestController
 @RequestMapping("/api/sickleaves")
 public class SickLeaveController {
 
-  @Autowired private GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
-  @Autowired private GetSickLeaveSummaryService getSickLeaveSummaryService;
-  @Autowired private PopulateFiltersService populateFiltersService;
-  @Autowired private PdlLogSickLeavesService pdlLogSickLeavesService;
+  @Autowired
+  private GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
+  @Autowired
+  private GetSickLeaveSummaryService getSickLeaveSummaryService;
+  @Autowired
+  private PopulateFiltersService populateFiltersService;
+  @Autowired
+  private PdlLogSickLeavesService pdlLogSickLeavesService;
 
   private static final boolean INCLUDE_PARAMETERS = true;
   private static final boolean SHOULD_PDL_LOG = true;

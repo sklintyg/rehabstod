@@ -39,19 +39,23 @@ import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.support.destination.DestinationResolutionException;
 import se.inera.intyg.rehabstod.application.user.UserService;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.logging.pdl.LogServiceImpl;
-import se.inera.intyg.rehabstod.logging.pdl.PdlLogMessageFactoryImpl;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.infrastructure.logging.pdl.LogServiceImpl;
+import se.inera.intyg.rehabstod.infrastructure.logging.pdl.PdlLogMessageFactoryImpl;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 
-/** Created by eriklupander on 2016-03-03. */
+/**
+ * Created by eriklupander on 2016-03-03.
+ */
 @ExtendWith(MockitoExtension.class)
 class LogServiceImplTest {
 
-  @Mock private JmsTemplate template = mock(JmsTemplate.class);
+  @Mock
+  private JmsTemplate template = mock(JmsTemplate.class);
 
-  @Mock private UserService userService;
+  @Mock
+  private UserService userService;
 
   @Spy
   private PdlLogMessageFactoryImpl pdlLogMessageFactory =
@@ -66,7 +70,8 @@ class LogServiceImplTest {
               null,
               null));
 
-  @InjectMocks private LogServiceImpl testee;
+  @InjectMocks
+  private LogServiceImpl testee;
 
   @Test
   void testSendPdlReadMessage() {

@@ -73,9 +73,11 @@ import se.inera.intyg.rehabstod.infrastructure.security.common.model.UserOrigin;
 import se.inera.intyg.rehabstod.infrastructure.security.common.model.UserOriginType;
 import se.inera.intyg.rehabstod.infrastructure.security.exception.HsaServiceException;
 import se.inera.intyg.rehabstod.infrastructure.security.exception.MissingMedarbetaruppdragException;
-import se.inera.intyg.rehabstod.logging.AuthenticationLogger;
+import se.inera.intyg.rehabstod.infrastructure.logging.AuthenticationLogger;
 
-/** Created by marced on 29/01/16. */
+/**
+ * Created by marced on 29/01/16.
+ */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class RehabstodUserDetailsServiceTest {
@@ -111,17 +113,23 @@ class RehabstodUserDetailsServiceTest {
   @InjectMocks
   private RehabstodUserDetailsService userDetailsService = new RehabstodUserDetailsService();
 
-  @Mock private HsaOrganizationsService hsaOrganizationsService;
+  @Mock
+  private HsaOrganizationsService hsaOrganizationsService;
 
-  @Mock private HsaPersonService hsaPersonService;
+  @Mock
+  private HsaPersonService hsaPersonService;
 
-  @Mock private UserOrigin userOrigin;
+  @Mock
+  private UserOrigin userOrigin;
 
-  @Mock private AuthenticationLogger monitoringLogService;
+  @Mock
+  private AuthenticationLogger monitoringLogService;
 
-  @Mock private AnvandarPreferenceRepository anvandarPreferenceRepository;
+  @Mock
+  private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
-  @Mock private RehabstodUnitChangeService rehabstodUnitChangeService;
+  @Mock
+  private RehabstodUnitChangeService rehabstodUnitChangeService;
 
   @BeforeAll
   public static void setupAuthoritiesConfiguration() throws Exception {

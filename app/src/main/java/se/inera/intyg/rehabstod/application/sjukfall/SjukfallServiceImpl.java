@@ -59,14 +59,16 @@ import se.inera.intyg.rehabstod.infrastructure.integration.sparrtjanst.service.S
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.exception.WcIntegrationException;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.infrastructure.security.auth.pdl.PDLActivityStore;
-import se.inera.intyg.rehabstod.logging.MonitoringLogService;
-import se.inera.intyg.rehabstod.logging.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.logging.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.logging.pdl.LogService;
+import se.inera.intyg.rehabstod.infrastructure.logging.MonitoringLogService;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.infrastructure.logging.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.infrastructure.logging.pdl.LogService;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-/** Created by eriklupander on 2016-02-01. */
+/**
+ * Created by eriklupander on 2016-02-01.
+ */
 @Service("sjukfallService")
 @RequiredArgsConstructor
 public class SjukfallServiceImpl implements SjukfallService {

@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.rehabstod.infrastructure.integration.wc.service;
 
-import static se.inera.intyg.rehabstod.logging.MdcHelper.LOG_SESSION_ID_HEADER;
-import static se.inera.intyg.rehabstod.logging.MdcHelper.LOG_TRACE_ID_HEADER;
-import static se.inera.intyg.rehabstod.logging.MdcLogConstants.EVENT_TYPE_ACCESSED;
-import static se.inera.intyg.rehabstod.logging.MdcLogConstants.SESSION_ID_KEY;
-import static se.inera.intyg.rehabstod.logging.MdcLogConstants.TRACE_ID_KEY;
+import static se.inera.intyg.rehabstod.infrastructure.logging.MdcHelper.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.rehabstod.infrastructure.logging.MdcHelper.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants.EVENT_TYPE_ACCESSED;
+import static se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants.SESSION_ID_KEY;
+import static se.inera.intyg.rehabstod.infrastructure.logging.MdcLogConstants.TRACE_ID_KEY;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ import org.springframework.web.client.RestClient;
 import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationResponse;
-import se.inera.intyg.rehabstod.logging.PerformanceLogging;
+import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
 
 @Service
 @RequiredArgsConstructor
