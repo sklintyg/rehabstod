@@ -47,7 +47,7 @@ server:
 
 management:
   server:
-    port: 8032
+    port: 8230
 
 logging:
   structured:
