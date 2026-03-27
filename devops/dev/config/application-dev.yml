@@ -1,0 +1,77 @@
+app:
+  domain-name: rs.localtest.me
+  security:
+    hash-salt: salt
+    aes-encryption-key: "McQfTjWmZq4t7w!z%C*F-JaNdRgUkXp2"
+  pdl:
+    logging-queue-name: dev.logging.queue
+  cache:
+    default-expiry-seconds: 60
+  saml:
+    keystore:
+      alias: localhost
+      file: "file:///${application.dir}/certifikat/localhost.p12"
+      password: password
+    idp-metadata-location: "file:${application.dir}/config/idp-inera.xml"
+  ntjp:
+    base-url: "http://localhost:8030/services/stubs"
+    certificate:
+      password: dummy
+    key-manager-password: dummy
+    truststore:
+      password: dummy
+  resources:
+    features-configuration-file: "file:///${application.dir}/config/features.yaml"
+  integration:
+    intygstjanst:
+      scheme: http
+      base-url: localhost
+      port: 8180
+    webcert:
+      scheme: http
+      base-url: localhost
+      port: 8120
+      launch-url-template: "https://wc.localtest.me/webcert/web/user/launch/certificate/{id}?origin=rs"
+      siths-idp-url: /saml2/authenticate/siths
+    sparrtjanst:
+      logical-address: SPARRTJANSTDEV
+    samtyckestjanst:
+      logical-address: SAMTYCKESTJANSTDEV
+    intygsadmin:
+      url: "http://localhost:8170"
+    intyg-proxy-service:
+      base-url: "http://localhost:18020"
+
+server:
+  port: 8030
+
+management:
+  server:
+    port: 8230
+
+logging:
+  structured:
+    format:
+      console: ""
+
+spring:
+  main:
+    banner-mode: console
+  output:
+    ansi:
+      enabled: always
+  datasource:
+    url: "jdbc:mysql://localhost:3306/rehabstod?useSSL=false&serverTimezone=Europe/Stockholm&allowPublicKeyRetrieval=true"
+    username: rehabstod
+    password: rehabstod
+    hikari:
+      maximum-pool-size: 5
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: redis
+  activemq:
+    broker-url: "tcp://localhost:61616?jms.nonBlockingRedelivery=true&jms.redeliveryPolicy.maximumRedeliveries=3&jms.redeliveryPolicy.maximumRedeliveryDelay=6000&jms.redeliveryPolicy.initialRedeliveryDelay=4000&jms.redeliveryPolicy.useExponentialBackOff=true&jms.redeliveryPolicy.backOffMultiplier=2"
+    user: activemqUser
+    password: activemqPassword

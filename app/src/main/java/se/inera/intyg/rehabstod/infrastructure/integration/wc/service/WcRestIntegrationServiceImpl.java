@@ -1,0 +1,78 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package se.inera.intyg.rehabstod.infrastructure.integration.wc.service;
+
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcHelper.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcHelper.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants.EVENT_TYPE_ACCESSED;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants.SESSION_ID_KEY;
+import static se.inera.intyg.rehabstod.infrastructure.logging.mdc.MdcLogConstants.TRACE_ID_KEY;
+
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
+import se.inera.intyg.rehabstod.infrastructure.config.properties.AppProperties;
+import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationRequest;
+import se.inera.intyg.rehabstod.infrastructure.integration.wc.service.dto.UnansweredCommunicationResponse;
+import se.inera.intyg.rehabstod.infrastructure.logging.PerformanceLogging;
+
+@Service
+@RequiredArgsConstructor
+public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
+
+  private static final Logger LOG = LoggerFactory.getLogger(WcRestIntegrationServiceImpl.class);
+
+  private final RestClient wcRestClient;
+  private final AppProperties appProperties;
+
+  @Override
+  @PerformanceLogging(
+      eventAction = "get-unanswered-communication-for-patients",
+      eventType = EVENT_TYPE_ACCESSED)
+  public UnansweredCommunicationResponse getUnansweredCommunicationForPatients(
+      UnansweredCommunicationRequest request) {
+    final var url = "/internalapi/unanswered-communication";
+
+    try {
+      return wcRestClient
+          .post()
+          .uri(
+              uriBuilder ->
+                  uriBuilder
+                      .scheme(appProperties.integration().webcert().scheme())
+                      .host(appProperties.integration().webcert().baseUrl())
+                      .port(appProperties.integration().webcert().port())
+                      .path(url)
+                      .build())
+          .body(request)
+          .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+          .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+          .contentType(MediaType.APPLICATION_JSON)
+          .retrieve()
+          .body(UnansweredCommunicationResponse.class);
+    } catch (Exception e) {
+      LOG.error("Error getting unanswered communication from Webcert", e);
+      return new UnansweredCommunicationResponse(null, true);
+    }
+  }
+}
