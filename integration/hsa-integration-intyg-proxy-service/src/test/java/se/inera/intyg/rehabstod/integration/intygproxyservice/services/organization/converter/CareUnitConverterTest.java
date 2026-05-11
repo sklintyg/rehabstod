@@ -21,12 +21,9 @@ package se.inera.intyg.rehabstod.integration.intygproxyservice.services.organiza
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static se.inera.intyg.rehabstod.integration.intygproxyservice.services.organization.OrganizationUtil.DEFAULT_ARBETSPLATSKOD;
 
@@ -42,6 +39,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.rehabstod.integration.hsatk.model.Address;
 import se.inera.intyg.rehabstod.integration.hsatk.model.Commission;
 import se.inera.intyg.rehabstod.integration.hsatk.model.HealthCareUnitMember;
 import se.inera.intyg.rehabstod.integration.hsatk.model.HealthCareUnitMembers;
@@ -67,8 +65,6 @@ class CareUnitConverterTest {
       LocalDateTime.now(ZoneId.systemDefault()).minusYears(1L);
   private static final LocalDateTime ACTIVE_END_DATE =
       LocalDateTime.now(ZoneId.systemDefault()).plusYears(1L);
-
-  @Mock private UnitAddressConverter unitAddressConverter;
 
   @Mock private CareUnitMemberConverter careUnitMemberConverter;
 
@@ -282,16 +278,6 @@ class CareUnitConverterTest {
     @Nested
     class AddressTest {
 
-      @BeforeEach
-      void setup() {
-        when(unitAddressConverter.convertAddress(any(List.class))).thenReturn(ADDRESS);
-
-        when(unitAddressConverter.convertCity(any(List.class))).thenReturn(CITY);
-
-        when(unitAddressConverter.convertZipCode(any(List.class), anyString()))
-            .thenReturn(ZIP_CODE);
-      }
-
       @Test
       void shouldConvertAddress() {
         final var commission = getCommission();
@@ -300,7 +286,6 @@ class CareUnitConverterTest {
 
         final var response = converter.convert(commission, unit, members);
 
-        verify(unitAddressConverter).convertAddress(unit.getPostalAddress());
         assertEquals(ADDRESS, response.getPostadress());
       }
 
@@ -312,7 +297,6 @@ class CareUnitConverterTest {
 
         final var response = converter.convert(commission, unit, members);
 
-        verify(unitAddressConverter).convertCity(unit.getPostalAddress());
         assertEquals(CITY, response.getPostort());
       }
 
@@ -324,7 +308,6 @@ class CareUnitConverterTest {
 
         final var response = converter.convert(commission, unit, members);
 
-        verify(unitAddressConverter).convertZipCode(unit.getPostalAddress(), unit.getPostalCode());
         assertEquals(ZIP_CODE, response.getPostnummer());
       }
     }
@@ -464,39 +447,32 @@ class CareUnitConverterTest {
     }
 
     @Nested
-    class Address {
+    class AddressTest {
+
+      @BeforeEach
+      void init() {
+        unit.setAddress(new Address(ADDRESS, ZIP_CODE, CITY));
+      }
 
       @Test
-      void shouldUpdateAddressIfPostalAddressIsNotNull() {
-        when(unitAddressConverter.convertAddress(anyList())).thenReturn(ADDRESS);
+      void shouldUpdateAddress() {
 
         final var careUnit = converter.convert(unit, unitMembers);
         assertEquals(ADDRESS, careUnit.getPostadress());
       }
 
       @Test
-      void shouldUpdateCityIfPostalAddressIsNotNull() {
-        when(unitAddressConverter.convertCity(anyList())).thenReturn(CITY);
+      void shouldUpdateCity() {
 
         final var careUnit = converter.convert(unit, unitMembers);
         assertEquals(CITY, careUnit.getPostort());
       }
 
       @Test
-      void shouldUpdateZipCodeIfPostalAddressIsNotNull() {
-        when(unitAddressConverter.convertZipCode(anyList(), nullable(String.class)))
-            .thenReturn(ZIP_CODE);
+      void shouldUpdateZipCode() {
 
         final var careUnit = converter.convert(unit, unitMembers);
         assertEquals(ZIP_CODE, careUnit.getPostnummer());
-      }
-
-      @Test
-      void shouldNotUpdateAddressFieldsIfPostalAddressIsNull() {
-        setAddress(unit);
-
-        converter.convert(unit, unitMembers);
-        verifyNoInteractions(unitAddressConverter);
       }
     }
 
@@ -570,8 +546,7 @@ class CareUnitConverterTest {
     final var unit = new Unit();
     unit.setMail("MAIL");
     unit.setTelephoneNumber(List.of("PHONE_NUMBER1", "PHONE_NUMBER2"));
-    unit.setPostalCode("ZIP");
-    unit.setPostalAddress(List.of("A1", "A2"));
+    unit.setAddress(new Address(ADDRESS, ZIP_CODE, CITY));
 
     return unit;
   }
@@ -629,9 +604,5 @@ class CareUnitConverterTest {
   private void setEmailAndPhoneNumber(Unit unit, List<String> phoneNumber) {
     unit.setMail(UNIT_EMAIL);
     unit.setTelephoneNumber(phoneNumber);
-  }
-
-  private void setAddress(Unit unit) {
-    unit.setPostalAddress(null);
   }
 }

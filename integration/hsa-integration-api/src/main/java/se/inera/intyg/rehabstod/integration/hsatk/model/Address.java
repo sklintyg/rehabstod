@@ -19,19 +19,5 @@
 package se.inera.intyg.rehabstod.integration.hsatk.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import lombok.Data;
 
-@Data
-public class Unit implements Serializable {
-
-  protected LocalDateTime unitStartDate;
-  protected LocalDateTime unitEndDate;
-  protected String unitHsaId;
-  protected String unitName;
-  protected Address address;
-  protected String mail;
-  protected List<String> telephoneNumber = new ArrayList<>();
-}
+public record Address(String address, String zipCode, String city) implements Serializable {}
