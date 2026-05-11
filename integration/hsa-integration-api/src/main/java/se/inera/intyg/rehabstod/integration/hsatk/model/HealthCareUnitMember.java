@@ -35,8 +35,7 @@ public class HealthCareUnitMember implements Serializable {
   protected LocalDateTime healthCareUnitMemberEndDate;
   protected List<String> healthCareUnitMemberPrescriptionCode = new ArrayList<>();
   protected List<String> healthCareUnitMemberTelephoneNumber = new ArrayList<>();
-  protected List<String> healthCareUnitMemberpostalAddress = new ArrayList<>();
-  protected String healthCareUnitMemberpostalCode;
+  protected Address address;
   protected Boolean feignedHealthCareUnitMember;
   protected Boolean archivedHealthCareUnitMember;
 }
