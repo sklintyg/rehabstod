@@ -25,13 +25,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
+import se.inera.intyg.rehabstod.persistence.PersistenceTestApplication;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 
 /** Created by eriklupander on 2015-08-05. */
-@DataJpaTest
+@SpringBootTest(classes = PersistenceTestApplication.class)
 @TestPropertySource("classpath:config/test.properties")
 @Transactional
 class AnvandarPreferenceRepositoryTest {
