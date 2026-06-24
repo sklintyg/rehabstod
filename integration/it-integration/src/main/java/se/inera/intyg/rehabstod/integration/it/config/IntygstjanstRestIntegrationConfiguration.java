@@ -37,7 +37,7 @@ public class IntygstjanstRestIntegrationConfiguration {
   public RestTemplate itRestTemplate() {
     final var httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
     httpRequestFactory.setConnectionRequestTimeout(requestTimeout);
-    httpRequestFactory.setConnectTimeout(connectionTimeout);
+    httpRequestFactory.setConnectionRequestTimeout(connectionTimeout);
 
     return new RestTemplate(httpRequestFactory);
   }

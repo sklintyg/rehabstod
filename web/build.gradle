@@ -30,7 +30,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     implementation "ch.qos.logback:logback-classic"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     implementation "com.google.guava:guava"
     implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring"
     implementation "net.javacrumbs.shedlock:shedlock-spring"

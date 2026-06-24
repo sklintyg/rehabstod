@@ -44,16 +44,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.saml2.core.Saml2X509Credential;
 import org.springframework.security.saml2.provider.service.authentication.DefaultSaml2AuthenticatedPrincipal;
-import org.springframework.security.saml2.provider.service.authentication.OpenSaml4AuthenticationProvider;
+import org.springframework.security.saml2.provider.service.authentication.OpenSaml5AuthenticationProvider;
 import org.springframework.security.saml2.provider.service.authentication.Saml2Authentication;
 import org.springframework.security.saml2.provider.service.registration.InMemoryRelyingPartyRegistrationRepository;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrations;
 import org.springframework.security.saml2.provider.service.web.DefaultRelyingPartyRegistrationResolver;
 import org.springframework.security.saml2.provider.service.web.RelyingPartyRegistrationResolver;
-import org.springframework.security.saml2.provider.service.web.authentication.OpenSaml4AuthenticationRequestResolver;
+import org.springframework.security.saml2.provider.service.web.authentication.OpenSaml5AuthenticationRequestResolver;
 import org.springframework.security.saml2.provider.service.web.authentication.Saml2AuthenticationRequestResolver;
-import org.springframework.security.saml2.provider.service.web.authentication.logout.OpenSaml4LogoutRequestResolver;
+import org.springframework.security.saml2.provider.service.web.authentication.logout.OpenSaml5LogoutRequestResolver;
 import org.springframework.security.saml2.provider.service.web.authentication.logout.Saml2LogoutRequestResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
@@ -209,12 +209,12 @@ public class WebSecurityConfig {
     return new IneraCookieSerializer();
   }
 
-  private OpenSaml4AuthenticationProvider getOpenSaml4AuthenticationProvider() {
-    final var authenticationProvider = new OpenSaml4AuthenticationProvider();
+  private OpenSaml5AuthenticationProvider getOpenSaml4AuthenticationProvider() {
+    final var authenticationProvider = new OpenSaml5AuthenticationProvider();
     authenticationProvider.setResponseAuthenticationConverter(
         responseToken -> {
           final var authentication =
-              OpenSaml4AuthenticationProvider.createDefaultResponseAuthenticationConverter()
+              OpenSaml5AuthenticationProvider.createDefaultResponseAuthenticationConverter()
                   .convert(responseToken);
           if (!(authentication != null && authentication.isAuthenticated())) {
             return null;
@@ -246,8 +246,8 @@ public class WebSecurityConfig {
       RelyingPartyRegistrationRepository registrations) {
     RelyingPartyRegistrationResolver registrationResolver =
         new DefaultRelyingPartyRegistrationResolver(registrations);
-    OpenSaml4AuthenticationRequestResolver authenticationRequestResolver =
-        new OpenSaml4AuthenticationRequestResolver(registrationResolver);
+    OpenSaml5AuthenticationRequestResolver authenticationRequestResolver =
+        new OpenSaml5AuthenticationRequestResolver(registrationResolver);
     authenticationRequestResolver.setAuthnRequestCustomizer(
         context -> context.getAuthnRequest().setAttributeConsumingServiceIndex(1));
     return authenticationRequestResolver;
@@ -256,7 +256,7 @@ public class WebSecurityConfig {
   @Bean
   Saml2LogoutRequestResolver logoutRequestResolver(
       RelyingPartyRegistrationRepository registrations) {
-    final var logoutRequestResolver = new OpenSaml4LogoutRequestResolver(registrations);
+    final var logoutRequestResolver = new OpenSaml5LogoutRequestResolver(registrations);
     logoutRequestResolver.setParametersConsumer(
         parameters -> {
           final var token = (Saml2AuthenticationToken) parameters.getAuthentication();

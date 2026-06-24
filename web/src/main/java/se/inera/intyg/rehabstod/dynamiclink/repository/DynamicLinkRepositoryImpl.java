@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.rehabstod.dynamiclink.repository;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Collections;
@@ -34,7 +32,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
+import se.inera.intyg.rehabstod.config.CustomObjectMapper;
 import se.inera.intyg.rehabstod.dynamiclink.model.DynamicLink;
+import tools.jackson.core.type.TypeReference;
 
 /** Created by eriklupander on 2017-05-03. */
 @Service
@@ -59,7 +59,7 @@ public class DynamicLinkRepositoryImpl implements DynamicLinkRepository {
 
     try {
       List<DynamicLink> dynamicLinks =
-          new ObjectMapper()
+          CustomObjectMapper.create()
               .readValue(
                   resourceLoader.getResource(location).getInputStream(),
                   new TypeReference<List<DynamicLink>>() {});

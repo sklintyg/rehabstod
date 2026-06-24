@@ -1,5 +1,5 @@
 dependencies {
-    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "tools.jackson.core:jackson-databind"
     implementation "com.google.guava:guava:${guavaVersion}"
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
     implementation "org.slf4j:slf4j-api"

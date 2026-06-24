@@ -19,37 +19,22 @@
 package se.inera.intyg.rehabstod.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
-public class CustomObjectMapper extends ObjectMapper {
+/** Factory for creating a consistently configured {@link ObjectMapper}. */
+public final class CustomObjectMapper {
 
-  public CustomObjectMapper() {
-    setSerializationInclusion(JsonInclude.Include.ALWAYS);
-    configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    registerModule(new Module());
+  private CustomObjectMapper() {}
 
-    setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
-  }
-
-  private static final class Module extends SimpleModule {
-
-    private Module() {
-      addSerializer(LocalDateTime.class, LocalDateTimeSerializer.INSTANCE);
-      addDeserializer(LocalDateTime.class, LocalDateTimeDeserializer.INSTANCE);
-
-      addSerializer(LocalDate.class, LocalDateSerializer.INSTANCE);
-      addDeserializer(LocalDate.class, LocalDateDeserializer.INSTANCE);
-    }
+  /** Creates a new {@link ObjectMapper} with the application's standard configuration. */
+  public static ObjectMapper create() {
+    return JsonMapper.builder()
+        .changeDefaultPropertyInclusion(v -> v.withValueInclusion(JsonInclude.Include.ALWAYS))
+        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        .defaultDateFormat(new SimpleDateFormat("yyyy-MM-dd"))
+        .build();
   }
 }

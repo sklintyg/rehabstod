@@ -22,13 +22,14 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import javax.net.ssl.SSLContext;
+import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
 import org.apache.hc.core5.ssl.TrustStrategy;
+import org.apache.hc.core5.util.Timeout;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -45,13 +46,21 @@ public class TlsConfig {
       throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
     TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
 
-    SSLContext sslContext =
+    var sslContext =
         org.apache.hc.core5.ssl.SSLContexts.custom()
             .loadTrustMaterial(null, acceptingTrustStrategy)
             .build();
 
+    RequestConfig requestConfig =
+        RequestConfig.custom()
+            .setConnectTimeout(Timeout.ofMilliseconds(RESTTEMPLATE_TIMEOUT_MS))
+            .setConnectionRequestTimeout(Timeout.ofMilliseconds(RESTTEMPLATE_TIMEOUT_MS))
+            .setResponseTimeout(Timeout.ofMilliseconds(RESTTEMPLATE_TIMEOUT_MS))
+            .build();
+
     CloseableHttpClient httpClient =
         HttpClients.custom()
+            .setDefaultRequestConfig(requestConfig)
             .setConnectionManager(
                 PoolingHttpClientConnectionManagerBuilder.create()
                     .setSSLSocketFactory(
@@ -62,11 +71,6 @@ public class TlsConfig {
                     .build())
             .build();
 
-    HttpComponentsClientHttpRequestFactory requestFactory =
-        new HttpComponentsClientHttpRequestFactory();
-    requestFactory.setConnectionRequestTimeout(RESTTEMPLATE_TIMEOUT_MS);
-    requestFactory.setConnectTimeout(RESTTEMPLATE_TIMEOUT_MS);
-    requestFactory.setHttpClient(httpClient);
-    return new RestTemplate(requestFactory);
+    return new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClient));
   }
 }

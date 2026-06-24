@@ -2,7 +2,7 @@ dependencies {
     implementation project(':rehabstod-pu-integration-api')
     implementation project(":rehabstod-logging")
 
-    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "tools.jackson.core:jackson-databind"
     implementation "org.springframework:spring-web"
     implementation "org.springframework:spring-context"
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"

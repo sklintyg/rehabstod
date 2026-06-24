@@ -35,9 +35,21 @@ allprojects {
 
     repositories {
         mavenLocal()
-        maven { url "https://nexus.drift.inera.se/repository/it-public/" }
-        maven { url 'https://build.shibboleth.net/nexus/content/repositories/releases/' }
         mavenCentral()
+        maven {
+            url "https://nexus.drift.inera.se/repository/it-public/"
+            content {
+                excludeGroupByRegex "org\\.opensaml.*"
+                excludeGroupByRegex "net\\.shibboleth.*"
+            }
+        }
+        maven {
+            url 'https://build.shibboleth.net/maven/releases/'
+            content {
+                includeGroupByRegex "org\\.opensaml.*"
+                includeGroupByRegex "net\\.shibboleth.*"
+            }
+        }
     }
 }
 
