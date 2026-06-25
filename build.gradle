@@ -7,12 +7,12 @@ plugins {
 }
 
 ext {
-    blockingSchemaVersion = "4.0.1.4"
-    consentSchemaVersion = "2.0.1.3"
-    intygClinicalprocessSchemasVersion = "1.1.0.1"
-    intygHealthcondRehabilitationSchemasVersion = "1.2.0.1"
-    schemasContractVersion = "2.2.0.1"
-    srsSchemasVersion = "1.0.0.1"
+    blockingSchemaVersion = "4.0.1.5"
+    consentSchemaVersion = "2.0.1.4"
+    intygClinicalprocessSchemasVersion = "1.2.0.1"
+    intygHealthcondRehabilitationSchemasVersion = "1.3.0.1"
+    schemasContractVersion = "2.3.0.1"
+    srsSchemasVersion = "1.1.0.1"
 
     nvdMirror = 'https://vulnz-nvd-mirror-devtest.intyg.nordicmedtest.se'
 }
