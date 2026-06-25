@@ -8,8 +8,7 @@ dependencies {
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
     implementation "org.slf4j:slf4j-api"
 
-    testImplementation "org.springframework:spring-test"
-    testImplementation "org.mockito:mockito-junit-jupiter"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'

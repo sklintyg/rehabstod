@@ -11,6 +11,5 @@ dependencies {
     implementation "org.springframework:spring-context"
     implementation "org.slf4j:slf4j-api"
 
-    testImplementation "org.springframework:spring-test"
-    testImplementation "org.mockito:mockito-junit-jupiter"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
