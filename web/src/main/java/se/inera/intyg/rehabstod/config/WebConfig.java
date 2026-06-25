@@ -18,16 +18,16 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import java.util.List;
 import java.util.Properties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.context.annotation.Primary;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
+import tools.jackson.databind.ObjectMapper;
 
 @Configuration
 @EnableAspectJAutoProxy
@@ -40,15 +40,10 @@ import org.springframework.web.servlet.mvc.WebContentInterceptor;
 })
 public class WebConfig implements WebMvcConfigurer {
 
-  @Override
-  public void extendMessageConverters(final List<HttpMessageConverter<?>> converters) {
-    for (HttpMessageConverter converter : converters) {
-      if (converter instanceof MappingJackson2HttpMessageConverter) {
-        MappingJackson2HttpMessageConverter jsonConverter =
-            (MappingJackson2HttpMessageConverter) converter;
-        jsonConverter.setObjectMapper(new CustomObjectMapper());
-      }
-    }
+  @Primary
+  @Bean
+  public ObjectMapper objectMapper() {
+    return CustomObjectMapper.create();
   }
 
   @Override

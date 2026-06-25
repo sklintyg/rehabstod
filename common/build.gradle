@@ -1,5 +1,4 @@
 dependencies {
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     implementation "org.apache.commons:commons-lang3"
     implementation "org.slf4j:slf4j-api"
     implementation "org.springframework:spring-context"
@@ -7,6 +6,5 @@ dependencies {
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"
 
-    testImplementation "org.mockito:mockito-junit-jupiter"
-    testImplementation "org.springframework:spring-test"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
@@ -47,6 +45,8 @@ import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.schemas.contract.Personnummer;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Implementation of service for logging user actions according to PDL requirements.
@@ -192,7 +192,7 @@ public class LogServiceImpl implements LogService {
   private static final class MC implements MessageCreator {
 
     private final PdlLogMessage logMsg;
-    private final ObjectMapper objectMapper = new CustomObjectMapper();
+    private final ObjectMapper objectMapper = CustomObjectMapper.create();
 
     private MC(PdlLogMessage logMsg) {
       this.logMsg = logMsg;
@@ -202,7 +202,7 @@ public class LogServiceImpl implements LogService {
     public Message createMessage(Session session) throws JMSException {
       try {
         return session.createTextMessage(objectMapper.writeValueAsString(this.logMsg));
-      } catch (JsonProcessingException e) {
+      } catch (JacksonException e) {
         throw new IllegalArgumentException(
             "Could not serialize log message of type '"
                 + logMsg.getClass().getName()

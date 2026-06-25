@@ -34,6 +34,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.Serializable;
+import java.util.Collection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +43,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
@@ -135,7 +137,7 @@ class PrincipalUpdatedFilterTest {
   }
 
   private Authentication buildAuthentication(String state) {
-    return new AbstractAuthenticationToken(null) {
+    return new AbstractAuthenticationToken((Collection<? extends GrantedAuthority>) null) {
       @Override
       public Object getCredentials() {
         return null;

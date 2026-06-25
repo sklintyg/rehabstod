@@ -19,10 +19,7 @@
 package se.inera.intyg.rehabstod.security.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,6 +29,10 @@ import se.inera.intyg.rehabstod.integration.hsatk.model.PersonInformation.PaTitl
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.rehabstod.integration.hsatk.model.legacy.Vardgivare;
+import tools.jackson.core.exc.StreamWriteException;
+import tools.jackson.databind.DatabindException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 public class IntygUser implements UserDetails {
 
@@ -113,11 +114,13 @@ public class IntygUser implements UserDetails {
   @JsonIgnore
   public String getAsJson() {
     try {
-      ObjectMapper om = new ObjectMapper();
-      om.registerModule(new JavaTimeModule());
-      om.setSerializationInclusion(Include.NON_NULL);
+      ObjectMapper om =
+          JsonMapper.builder()
+              .changeDefaultPropertyInclusion(
+                  v -> v.withValueInclusion(JsonInclude.Include.NON_NULL))
+              .build();
       return om.writeValueAsString(this);
-    } catch (JsonProcessingException e) {
+    } catch (StreamWriteException | DatabindException e) {
       throw new RuntimeException(e);
     }
   }

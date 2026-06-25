@@ -19,10 +19,6 @@
 package se.inera.intyg.rehabstod.integration.ia.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -34,21 +30,15 @@ public class Banner implements Serializable {
 
   private UUID id;
 
-  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-  @JsonSerialize(using = LocalDateTimeSerializer.class)
   @JsonFormat(pattern = FORMAT)
   private LocalDateTime createdAt;
 
   private Application application;
   private String message;
 
-  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-  @JsonSerialize(using = LocalDateTimeSerializer.class)
   @JsonFormat(pattern = FORMAT)
   private LocalDateTime displayFrom;
 
-  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-  @JsonSerialize(using = LocalDateTimeSerializer.class)
   @JsonFormat(pattern = FORMAT)
   private LocalDateTime displayTo;
 

@@ -1,6 +1,6 @@
 dependencies {
     implementation "jakarta.xml.bind:jakarta.xml.bind-api"
-    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "com.fasterxml.jackson.core:jackson-annotations"
     implementation "jakarta.xml.ws:jakarta.xml.ws-api"
 
     annotationProcessor 'org.projectlombok:lombok'

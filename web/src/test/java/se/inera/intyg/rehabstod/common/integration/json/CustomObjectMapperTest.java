@@ -20,11 +20,11 @@ package se.inera.intyg.rehabstod.common.integration.json;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.rehabstod.config.CustomObjectMapper;
+import tools.jackson.core.JacksonException;
 
 class CustomObjectMapperTest {
 
@@ -33,15 +33,15 @@ class CustomObjectMapperTest {
   private static final int DAY = 11;
 
   @Test
-  void testLocalDateSerializesIntoYYYYMMDD() throws JsonProcessingException {
+  void testLocalDateSerializesIntoYYYYMMDD() throws JacksonException {
     String serializedLocalDate =
-        new CustomObjectMapper().writeValueAsString(LocalDate.parse("2016-02-11"));
+        CustomObjectMapper.create().writeValueAsString(LocalDate.parse("2016-02-11"));
     assertEquals("\"2016-02-11\"", serializedLocalDate);
   }
 
   @Test
   void testLocalDateDeserializesFromYYYYMMDD() throws IOException {
-    LocalDate localDate = new CustomObjectMapper().readValue("\"2016-02-11\"", LocalDate.class);
+    LocalDate localDate = CustomObjectMapper.create().readValue("\"2016-02-11\"", LocalDate.class);
     assertEquals(YEAR, localDate.getYear());
     assertEquals(MONTH, localDate.getMonthValue());
     assertEquals(DAY, localDate.getDayOfMonth());
