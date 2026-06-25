@@ -34,6 +34,7 @@ public final class CustomObjectMapper {
     return JsonMapper.builder()
         .changeDefaultPropertyInclusion(v -> v.withValueInclusion(JsonInclude.Include.ALWAYS))
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
         .defaultDateFormat(new SimpleDateFormat("yyyy-MM-dd"))
         .build();
   }
