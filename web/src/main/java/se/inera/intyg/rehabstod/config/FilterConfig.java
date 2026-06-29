@@ -22,6 +22,9 @@ import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusControlle
 import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_EXTEND;
 import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_REQUEST_MAPPING;
 
+import jakarta.servlet.DispatcherType;
+import java.util.EnumSet;
+import org.springframework.boot.web.servlet.DelegatingFilterProxyRegistrationBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,7 +44,6 @@ public class FilterConfig {
   // Filters auto-registered by Spring Boot fill the lowest order values:
   //   CharacterEncodingFilter  → Ordered.HIGHEST_PRECEDENCE       (auto)
   //   springSessionRepository  → Ordered.HIGHEST_PRECEDENCE + 50  (auto)
-  //   springSecurityFilterChain → 0 (Spring Security default)     (auto)
   //
   // Our custom filters are placed around the auto-registered ones to preserve
   // the original execution order from ApplicationInitializer.
@@ -49,12 +51,26 @@ public class FilterConfig {
   private static final int ORDER_REQUEST_CONTEXT_HOLDER = -90;
   private static final int ORDER_MDC_SERVLET = -80;
   private static final int ORDER_SESSION_TIMEOUT = -70;
-  // springSecurityFilterChain is at order 0 (auto)
+  private static final int ORDER_SECURITY = 0;
   private static final int ORDER_MDC_USER = 10;
   private static final int ORDER_PRINCIPAL_UPDATED = 20;
   private static final int ORDER_UNIT_SELECTED = 30;
   private static final int ORDER_PDL_CONSENT = 40;
   private static final int ORDER_SECURITY_HEADERS = 100;
+
+  // --- Spring Security filter chain ---
+  // Explicit registration of the springSecurityFilterChain so it runs before the custom /api/*
+  // filters that depend on an established SecurityContext. Mirrors what Spring Boot's
+  // SecurityFilterAutoConfiguration does, but with a guaranteed order under Spring Boot 4.
+  @Bean
+  public DelegatingFilterProxyRegistrationBean securityFilterChainRegistration() {
+    DelegatingFilterProxyRegistrationBean registration =
+        new DelegatingFilterProxyRegistrationBean("springSecurityFilterChain");
+    registration.setOrder(ORDER_SECURITY);
+    registration.setDispatcherTypes(EnumSet.allOf(DispatcherType.class));
+    registration.setName("springSecurityFilterChain");
+    return registration;
+  }
 
   // --- Filter #3 ---
   @Bean

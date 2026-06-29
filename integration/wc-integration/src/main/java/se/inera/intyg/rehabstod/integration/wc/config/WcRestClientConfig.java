@@ -18,15 +18,22 @@
  */
 package se.inera.intyg.rehabstod.integration.wc.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.web.client.RestClient;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 @Configuration
 public class WcRestClientConfig {
 
   @Bean
-  public RestClient wcRestClient() {
-    return RestClient.create();
+  public RestClient wcRestClient(@Qualifier("objectMapper") ObjectMapper objectMapper) {
+    var converter = new JacksonJsonHttpMessageConverter((JsonMapper) objectMapper);
+    return RestClient.builder()
+        .configureMessageConverters(builder -> builder.withJsonConverter(converter))
+        .build();
   }
 }
