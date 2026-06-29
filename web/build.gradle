@@ -84,3 +84,7 @@ tasks.register("appRun") {
     println("######## Running in normal mode ########")
     finalizedBy("bootRun")
 }
+
+cyclonedxBom {
+    xmlOutput = layout.buildDirectory.file('reports/cyclonedx/bom.xml')
+}

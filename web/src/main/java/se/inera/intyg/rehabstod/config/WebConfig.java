@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 @Configuration
 @EnableAspectJAutoProxy
@@ -42,7 +42,7 @@ public class WebConfig implements WebMvcConfigurer {
 
   @Primary
   @Bean
-  public ObjectMapper objectMapper() {
+  public JsonMapper objectMapper() {
     return CustomObjectMapper.create();
   }
 

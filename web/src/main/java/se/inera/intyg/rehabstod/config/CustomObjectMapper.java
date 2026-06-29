@@ -21,16 +21,13 @@ package se.inera.intyg.rehabstod.config;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.text.SimpleDateFormat;
 import tools.jackson.databind.DeserializationFeature;
-import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 
-/** Factory for creating a consistently configured {@link ObjectMapper}. */
 public final class CustomObjectMapper {
 
   private CustomObjectMapper() {}
 
-  /** Creates a new {@link ObjectMapper} with the application's standard configuration. */
-  public static ObjectMapper create() {
+  public static JsonMapper create() {
     return JsonMapper.builder()
         .changeDefaultPropertyInclusion(v -> v.withValueInclusion(JsonInclude.Include.ALWAYS))
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
