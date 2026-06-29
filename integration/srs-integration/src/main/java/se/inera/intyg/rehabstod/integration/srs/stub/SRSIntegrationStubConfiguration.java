@@ -26,7 +26,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import tools.jackson.databind.ObjectMapper;
 
 @Configuration
 @ComponentScan({"se.inera.intyg.rehabstod.integration.srs.stub"})
@@ -38,11 +37,6 @@ public class SRSIntegrationStubConfiguration {
   @Autowired private SRSStub srsStub;
 
   @Autowired private Bus bus;
-
-  @Bean
-  public ObjectMapper objectMapper() {
-    return new ObjectMapper();
-  }
 
   @Bean
   public EndpointImpl srsResponder() {
