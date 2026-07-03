@@ -5,7 +5,7 @@ dependencies {
     implementation "com.google.guava:guava"
     implementation "org.apache.cxf:cxf-rt-frontend-jaxws"
     implementation "org.apache.cxf:cxf-rt-transports-http"
-    implementation "codes.rafael.jaxb2_commons:jaxb2-basics"
+    implementation "codes.rafael.jaxb2_commons:jaxb2-basics-runtime"
     implementation "org.springframework:spring-webmvc"
     implementation "org.springframework.data:spring-data-redis"
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
