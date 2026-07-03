@@ -22,9 +22,6 @@ import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusControlle
 import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_EXTEND;
 import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_REQUEST_MAPPING;
 
-import jakarta.servlet.DispatcherType;
-import java.util.EnumSet;
-import org.springframework.boot.web.servlet.DelegatingFilterProxyRegistrationBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,39 +37,25 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 @Configuration
 public class FilterConfig {
 
-  // Order constants — gaps of 10 allow future insertion without reordering.
-  // Filters auto-registered by Spring Boot fill the lowest order values:
-  //   CharacterEncodingFilter  → Ordered.HIGHEST_PRECEDENCE       (auto)
-  //   springSessionRepository  → Ordered.HIGHEST_PRECEDENCE + 50  (auto)
-  //
-  // Our custom filters are placed around the auto-registered ones to preserve
-  // the original execution order from ApplicationInitializer.
-
-  private static final int ORDER_REQUEST_CONTEXT_HOLDER = -90;
-  private static final int ORDER_MDC_SERVLET = -80;
-  private static final int ORDER_SESSION_TIMEOUT = -70;
-  private static final int ORDER_SECURITY = 0;
-  private static final int ORDER_MDC_USER = 10;
-  private static final int ORDER_PRINCIPAL_UPDATED = 20;
-  private static final int ORDER_UNIT_SELECTED = 30;
-  private static final int ORDER_PDL_CONSENT = 40;
+  // Order 2 — updates RequestContextHolder after spring-session sets up the session
+  private static final int ORDER_REQUEST_CONTEXT_HOLDER = 2;
+  // Order 3 — MDC correlation IDs for logging
+  private static final int ORDER_MDC_SERVLET = 3;
+  // Order 5 — custom session timeout (runs before Spring Security so it can pre-invalidate)
+  private static final int ORDER_SESSION_TIMEOUT = 5;
+  // Order 7 — detects principal changes and touches the Redis session so changes are persisted
+  // Must be directly after Spring Security (order 6) so SecurityContextHolder is still populated.
+  private static final int ORDER_PRINCIPAL_UPDATED = 7;
+  // Order 8 — MDC user details for logging (after security context is established)
+  private static final int ORDER_MDC_USER = 8;
+  // Order 9 — verifies a unit is selected before allowing /api/* access
+  private static final int ORDER_UNIT_SELECTED = 9;
+  // Order 10 — verifies PDL consent before allowing /api/* access
+  private static final int ORDER_PDL_CONSENT = 10;
+  // Order 100 — security response headers (last)
   private static final int ORDER_SECURITY_HEADERS = 100;
 
-  // --- Spring Security filter chain ---
-  // Explicit registration of the springSecurityFilterChain so it runs before the custom /api/*
-  // filters that depend on an established SecurityContext. Mirrors what Spring Boot's
-  // SecurityFilterAutoConfiguration does, but with a guaranteed order under Spring Boot 4.
-  @Bean
-  public DelegatingFilterProxyRegistrationBean securityFilterChainRegistration() {
-    DelegatingFilterProxyRegistrationBean registration =
-        new DelegatingFilterProxyRegistrationBean("springSecurityFilterChain");
-    registration.setOrder(ORDER_SECURITY);
-    registration.setDispatcherTypes(EnumSet.allOf(DispatcherType.class));
-    registration.setName("springSecurityFilterChain");
-    return registration;
-  }
-
-  // --- Filter #3 ---
+  // --- Order 2 ---
   @Bean
   public FilterRegistrationBean<RequestContextHolderUpdateFilter>
       requestContextHolderUpdateFilterRegistration() {
@@ -84,7 +67,7 @@ public class FilterConfig {
     return reg;
   }
 
-  // --- Filter #4 ---
+  // --- Order 3 ---
   @Bean
   public FilterRegistrationBean<MdcServletFilter> mdcServletFilterRegistration(
       MdcServletFilter mdcServletFilter) {
@@ -96,7 +79,7 @@ public class FilterConfig {
     return reg;
   }
 
-  // --- Filter #5 ---
+  // --- Order 5 ---
   @Bean
   public FilterRegistrationBean<SessionTimeoutFilter> sessionTimeoutFilterRegistration() {
     SessionTimeoutFilter filter = new SessionTimeoutFilter();
@@ -109,19 +92,7 @@ public class FilterConfig {
     return reg;
   }
 
-  // --- Filter #7 ---
-  @Bean
-  public FilterRegistrationBean<MdcUserServletFilter> mdcUserServletFilterRegistration(
-      MdcUserServletFilter mdcUserServletFilter) {
-    FilterRegistrationBean<MdcUserServletFilter> reg = new FilterRegistrationBean<>();
-    reg.setFilter(mdcUserServletFilter);
-    reg.addUrlPatterns("/*");
-    reg.setOrder(ORDER_MDC_USER);
-    reg.setName("mdcUserServletFilter");
-    return reg;
-  }
-
-  // --- Filter #8 ---
+  // --- Order 7 ---
   @Bean
   public FilterRegistrationBean<PrincipalUpdatedFilter> principalUpdatedFilterRegistration(
       PrincipalUpdatedFilter principalUpdatedFilter) {
@@ -133,7 +104,19 @@ public class FilterConfig {
     return reg;
   }
 
-  // --- Filter #9 ---
+  // --- Order 8 ---
+  @Bean
+  public FilterRegistrationBean<MdcUserServletFilter> mdcUserServletFilterRegistration(
+      MdcUserServletFilter mdcUserServletFilter) {
+    FilterRegistrationBean<MdcUserServletFilter> reg = new FilterRegistrationBean<>();
+    reg.setFilter(mdcUserServletFilter);
+    reg.addUrlPatterns("/*");
+    reg.setOrder(ORDER_MDC_USER);
+    reg.setName("mdcUserServletFilter");
+    return reg;
+  }
+
+  // --- Order 9 ---
   @Bean
   public FilterRegistrationBean<UnitSelectedAssuranceFilter>
       unitSelectedAssuranceFilterRegistration(
@@ -148,7 +131,7 @@ public class FilterConfig {
     return reg;
   }
 
-  // --- Filter #10 ---
+  // --- Order 10 ---
   @Bean
   public FilterRegistrationBean<PdlConsentGivenAssuranceFilter>
       pdlConsentGivenAssuranceFilterRegistration(
@@ -168,7 +151,7 @@ public class FilterConfig {
     return reg;
   }
 
-  // --- Filter #12 ---
+  // --- Order 100 ---
   @Bean
   public FilterRegistrationBean<RSSecurityHeadersFilter> securityHeadersFilterRegistration() {
     FilterRegistrationBean<RSSecurityHeadersFilter> reg = new FilterRegistrationBean<>();

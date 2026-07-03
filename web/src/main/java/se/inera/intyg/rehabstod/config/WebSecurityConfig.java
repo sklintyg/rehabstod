@@ -43,8 +43,9 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.saml2.core.Saml2X509Credential;
-import org.springframework.security.saml2.provider.service.authentication.DefaultSaml2AuthenticatedPrincipal;
 import org.springframework.security.saml2.provider.service.authentication.OpenSaml5AuthenticationProvider;
+import org.springframework.security.saml2.provider.service.authentication.OpenSaml5AuthenticationProvider.ResponseAuthenticationConverter;
+import org.springframework.security.saml2.provider.service.authentication.Saml2AssertionAuthentication;
 import org.springframework.security.saml2.provider.service.authentication.Saml2Authentication;
 import org.springframework.security.saml2.provider.service.registration.InMemoryRelyingPartyRegistrationRepository;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository;
@@ -177,7 +178,7 @@ public class WebSecurityConfig {
                 saml2
                     .relyingPartyRegistrationRepository(relyingPartyRegistrationRepository)
                     .authenticationManager(
-                        new ProviderManager(getOpenSaml4AuthenticationProvider()))
+                        new ProviderManager(getOpenSaml5AuthenticationProvider()))
                     .failureHandler(customAuthenticationFailureHandler)
                     .defaultSuccessUrl(samlLoginSuccessUrl, samlLoginSuccessUrlAlwaysUse))
         .saml2Logout(
@@ -209,14 +210,12 @@ public class WebSecurityConfig {
     return new IneraCookieSerializer();
   }
 
-  private OpenSaml5AuthenticationProvider getOpenSaml4AuthenticationProvider() {
+  private OpenSaml5AuthenticationProvider getOpenSaml5AuthenticationProvider() {
     final var authenticationProvider = new OpenSaml5AuthenticationProvider();
     authenticationProvider.setResponseAuthenticationConverter(
         responseToken -> {
-          final var authentication =
-              OpenSaml5AuthenticationProvider.createDefaultResponseAuthenticationConverter()
-                  .convert(responseToken);
-          if (!(authentication != null && authentication.isAuthenticated())) {
+          final var authentication = new ResponseAuthenticationConverter().convert(responseToken);
+          if (authentication == null || !authentication.isAuthenticated()) {
             return null;
           }
           final var personId = getAttribute(authentication, EMPLOYEE_HSA_ID);
@@ -232,8 +231,8 @@ public class WebSecurityConfig {
   }
 
   private String getAttribute(Saml2Authentication samlCredential, String attributeId) {
-    final var principal = (DefaultSaml2AuthenticatedPrincipal) samlCredential.getPrincipal();
-    final var attributes = principal.getAttributes();
+    final var assertion = ((Saml2AssertionAuthentication) samlCredential).getCredentials();
+    final var attributes = assertion.getAttributes();
     if (attributes.containsKey(attributeId)) {
       return (String) attributes.get(attributeId).getFirst();
     }
@@ -260,9 +259,11 @@ public class WebSecurityConfig {
     logoutRequestResolver.setParametersConsumer(
         parameters -> {
           final var token = (Saml2AuthenticationToken) parameters.getAuthentication();
-          final var principal =
-              (DefaultSaml2AuthenticatedPrincipal) token.getSaml2Authentication().getPrincipal();
-          final var name = principal.getName();
+          final var samlAuthentication =
+              (Saml2AssertionAuthentication) token.getSaml2Authentication();
+          final var name = samlAuthentication.getName();
+          final var assertion = samlAuthentication.getCredentials();
+
           final var format = "urn:oasis:names:tc:SAML:2.0:nameid-format:transient";
           final var logoutRequest = parameters.getLogoutRequest();
           final var nameId = logoutRequest.getNameID();
@@ -271,7 +272,7 @@ public class WebSecurityConfig {
 
           final var sessionIndex =
               new MySessionIndex("urn:oasis:names:tc:SAML:2.0:protocol", "SessionIndex", "saml2p");
-          sessionIndex.setValue(principal.getSessionIndexes().getFirst());
+          sessionIndex.setValue(assertion.getSessionIndexes().getFirst());
           logoutRequest.getSessionIndexes().add(sessionIndex);
         });
     return logoutRequestResolver;
