@@ -30,16 +30,16 @@ public class Banner implements Serializable {
 
   private UUID id;
 
-  @JsonFormat(pattern = FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = FORMAT)
   private LocalDateTime createdAt;
 
   private Application application;
   private String message;
 
-  @JsonFormat(pattern = FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = FORMAT)
   private LocalDateTime displayFrom;
 
-  @JsonFormat(pattern = FORMAT)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = FORMAT)
   private LocalDateTime displayTo;
 
   private BannerPriority priority;
