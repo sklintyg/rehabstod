@@ -46,7 +46,6 @@ import org.springframework.security.saml2.core.Saml2X509Credential;
 import org.springframework.security.saml2.provider.service.authentication.OpenSaml5AuthenticationProvider;
 import org.springframework.security.saml2.provider.service.authentication.OpenSaml5AuthenticationProvider.ResponseAuthenticationConverter;
 import org.springframework.security.saml2.provider.service.authentication.Saml2AssertionAuthentication;
-import org.springframework.security.saml2.provider.service.authentication.Saml2Authentication;
 import org.springframework.security.saml2.provider.service.registration.InMemoryRelyingPartyRegistrationRepository;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrations;
@@ -215,23 +214,30 @@ public class WebSecurityConfig {
     authenticationProvider.setResponseAuthenticationConverter(
         responseToken -> {
           final var authentication = new ResponseAuthenticationConverter().convert(responseToken);
-          if (authentication == null || !authentication.isAuthenticated()) {
+
+          if (!(authentication instanceof Saml2AssertionAuthentication assertionAuthentication)) {
+            throw new IllegalStateException(
+                "Expected Saml2AssertionAuthentication from default SAML converter");
+          }
+
+          if (!assertionAuthentication.isAuthenticated()) {
             return null;
           }
-          final var personId = getAttribute(authentication, EMPLOYEE_HSA_ID);
-          final var authMethod = getAttribute(authentication, AUTHN_METHOD);
+
+          final var personId = getAttribute(assertionAuthentication, EMPLOYEE_HSA_ID);
+          final var authMethod = getAttribute(assertionAuthentication, AUTHN_METHOD);
           final var principal =
               rehabstodUserDetailsService.buildUserPrincipal(personId, authMethod);
           final var saml2AuthenticationToken =
-              new Saml2AuthenticationToken(principal, authentication);
+              new Saml2AuthenticationToken(principal, assertionAuthentication);
           saml2AuthenticationToken.setAuthenticated(true);
           return saml2AuthenticationToken;
         });
     return authenticationProvider;
   }
 
-  private String getAttribute(Saml2Authentication samlCredential, String attributeId) {
-    final var assertion = ((Saml2AssertionAuthentication) samlCredential).getCredentials();
+  private String getAttribute(Saml2AssertionAuthentication samlCredential, String attributeId) {
+    final var assertion = samlCredential.getCredentials();
     final var attributes = assertion.getAttributes();
     if (attributes.containsKey(attributeId)) {
       return (String) attributes.get(attributeId).getFirst();
@@ -258,9 +264,8 @@ public class WebSecurityConfig {
     final var logoutRequestResolver = new OpenSaml5LogoutRequestResolver(registrations);
     logoutRequestResolver.setParametersConsumer(
         parameters -> {
-          final var token = (Saml2AuthenticationToken) parameters.getAuthentication();
           final var samlAuthentication =
-              (Saml2AssertionAuthentication) token.getSaml2Authentication();
+              (Saml2AssertionAuthentication) parameters.getAuthentication();
           final var name = samlAuthentication.getName();
           final var assertion = samlAuthentication.getCredentials();
 

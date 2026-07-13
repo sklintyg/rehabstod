@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
-import static se.inera.intyg.rehabstod.auth.AuthenticationConstants.RELYING_PARTY_REGISTRATION_ID;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticatedPrincipal;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
@@ -43,7 +40,7 @@ import se.inera.intyg.rehabstod.service.Urval;
 /**
  * @author pebe on 2015-08-11.
  */
-public class RehabstodUser extends IntygUser implements Serializable, Saml2AuthenticatedPrincipal {
+public class RehabstodUser extends IntygUser implements Serializable {
 
   private static final long serialVersionUID = 8711015219408194075L;
 
@@ -298,15 +295,5 @@ public class RehabstodUser extends IntygUser implements Serializable, Saml2Authe
   private void readObject(java.io.ObjectInputStream stream)
       throws java.io.IOException, ClassNotFoundException {
     stream.defaultReadObject();
-  }
-
-  @Override
-  public String getName() {
-    return "";
-  }
-
-  @Override
-  public String getRelyingPartyRegistrationId() {
-    return RELYING_PARTY_REGISTRATION_ID;
   }
 }
